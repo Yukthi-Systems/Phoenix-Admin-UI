@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Reaptcha from "react-google-recaptcha";
+import { RECAPTCHA_SITE_KEY } from "@/constants/constants";
 import {
   ArrowLeft,
   Loader,
@@ -270,7 +271,7 @@ const Step1InitiateIdentityReset = ({
           <div className="flex justify-center overflow-x-auto">
             <Reaptcha
               ref={recaptchaRef}
-              sitekey="6LdnqnksAAAAADb9pV-s81jk_nEoHP34trkZ457b"
+              sitekey={RECAPTCHA_SITE_KEY}
               action="IDENTITY_PASSWORD_RESET"
               size="normal"
               onChange={onRecaptchaVerify}

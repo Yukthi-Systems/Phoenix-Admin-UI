@@ -26,6 +26,7 @@ echo "  VITE_COPYRIGHT: \"${VITE_COPYRIGHT}\"," >> ./dist/env-config.js
 echo "  VITE_DNS_API_KEY: \"${VITE_DNS_API_KEY}\"," >> ./dist/env-config.js
 echo "  VITE_RUM_CLIENT_TOKEN: \"${VITE_RUM_CLIENT_TOKEN}\"," >> ./dist/env-config.js
 echo "  VITE_RUM_SITE: \"${VITE_RUM_SITE}\"," >> ./dist/env-config.js
+echo "  VITE_RECAPTCHA_SITE_KEY: \"${VITE_RECAPTCHA_SITE_KEY}\"," >> ./dist/env-config.js
 
 echo "}" >> ./dist/env-config.js
 

@@ -13,7 +13,7 @@ services:
 
     # The ports are used to expose the application to the host machine.
     ports:
-      - "127.0.0.1:3005:3000"
+      - "127.0.0.1:3006:3000"
 
     # On failure or anything went wrong need to make up and running.
     restart: always

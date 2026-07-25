@@ -40,7 +40,7 @@ import { loginFormSchema } from "./validationSchema";
 import { itemsAtom } from "@/store/tfaMethods";
 import SessionGuard from "@/components/layouts/SessionGuard";
 import { useApiHealth, useApiVersion } from "@/hooks/useApiInfo";
-import { BUILD_INFO } from "@/constants/constants";
+import { BUILD_INFO, RECAPTCHA_SITE_KEY } from "@/constants/constants";
 
 const Login = () => {
   const setTFAItems = useSetAtom(itemsAtom);
@@ -380,7 +380,7 @@ const Login = () => {
                       <div className="flex justify-center">
                         <Reaptcha
                           ref={recaptchaRef}
-                          sitekey="6LdnqnksAAAAADb9pV-s81jk_nEoHP34trkZ457b"
+                          sitekey={RECAPTCHA_SITE_KEY}
                           action="LOGIN"
                           size="normal"
                           onChange={onRecaptchaVerify}
