@@ -43,6 +43,10 @@ export const BASE_ORG = getEnv("VITE_BASE_ORG", "YSPL");
 
 export const DNS_API_KEY = getEnv("VITE_DNS_API_KEY", "");
 
+// Observability (OpenObserve RUM/logs)
+export const RUM_CLIENT_TOKEN = getEnv("VITE_RUM_CLIENT_TOKEN", "");
+export const RUM_SITE = getEnv("VITE_RUM_SITE", "");
+
 export const SERVER_ACTIONS = {
   REMOVE_MESSAGE: "rm_msg",
   CLEAR_QUEUE: "clear_queue",

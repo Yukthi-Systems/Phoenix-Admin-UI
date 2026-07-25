@@ -27,6 +27,7 @@ import { userProfileAtom } from "./store/userProfile";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import useDisableDevTools from "./hooks/useDisableDevTools";
+import { RUM_CLIENT_TOKEN, RUM_SITE } from "./constants/constants";
 
 // user data
 const { user_id, display_name, user_email, user_details } =
@@ -34,9 +35,9 @@ const { user_id, display_name, user_email, user_details } =
 
 // config openObserve
 const options = {
-  clientToken: import.meta.env.VITE_RUM_CLIENT_TOKEN || "",
+  clientToken: RUM_CLIENT_TOKEN,
   applicationId: "v3-admin-web-ui-id",
-  site: import.meta.env.VITE_RUM_SITE || "",
+  site: RUM_SITE,
   service: "v3-admin-web-ui",
   env: "dev",
   version: "0.0.1",
