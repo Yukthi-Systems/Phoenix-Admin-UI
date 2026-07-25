@@ -1,0 +1,520 @@
+/*
+ * Copyright (C) 2026 Yukthi Systems Private Limited
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * version 3 along with this program. If not, see
+ * <https://www.gnu.org/licenses/>.
+ */
+
+/* Thin - 100 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-Thin.woff2") format("woff2");
+}
+
+/* Extra Light - 200 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-ExtraLight.woff2") format("woff2");
+}
+
+/* Light - 300 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-Light.woff2") format("woff2");
+}
+
+/* Regular - 400 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-Regular.woff2") format("woff2");
+}
+
+/* Medium - 500 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-Medium.woff2") format("woff2");
+}
+
+/* Semi Bold - 600 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-SemiBold.woff2") format("woff2");
+}
+
+/* Bold - 700 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-Bold.woff2") format("woff2");
+}
+
+/* Extra Bold - 800 */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-ExtraBold.woff2") format("woff2");
+}
+
+/* Italic */
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter/Inter-Italic.woff2") format("woff2");
+}
+
+@import "tailwindcss";
+
+/* Tailwind v4 defaults `dark:` to the `prefers-color-scheme` media query,
+   which ignores the app's own light/dark toggle (a `.dark`/`.light` class
+   on <html>, set by useApplyTheme). Repoint it at that class so `dark:`
+   utilities track the in-app theme instead of the OS/browser scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+}
+
+@layer base {
+  :root {
+    --background: 220 15% 97%;
+    --foreground: 220 20% 18%;
+    --muted: 220 12% 93%;
+    --muted-foreground: 220 8% 48%;
+    --border: 220 10% 87%;
+
+    --card: 220 18% 99%;
+    --card-foreground: 220 20% 18%;
+
+    --primary: 210 80% 50%;
+    --primary-foreground: 220 18% 99%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 220 18% 99%;
+
+    --success: 140 60% 42%;
+    --success-foreground: 220 18% 99%;
+
+    --warning: 40 88% 48%;
+    --warning-foreground: 220 20% 18%;
+
+    --accent: 220 12% 90%;
+    --accent-foreground: 220 20% 18%;
+  }
+
+  .dark {
+    --background: 240 21% 7%;
+    --foreground: 240 5% 95%;
+    --border: 240 16% 18%;
+    --muted: 240 21% 11%;
+    --muted-foreground: 240 5% 65%;
+
+    --card: 240 21% 9%;
+    --card-foreground: 240 5% 95%;
+
+    --primary: 262 80% 70%;
+    --primary-foreground: 240 21% 7%;
+
+    --destructive: 348 83% 62%;
+    --destructive-foreground: 240 5% 95%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 240 5% 95%;
+
+    --warning: 45 93% 58%;
+    --warning-foreground: 240 21% 7%;
+
+    --accent: 260 30% 25%;
+    --accent-foreground: 240 5% 95%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-feature-settings: "cv01", "cv03", "cv04", "cv11";
+    /* Dynamic font sizing - better for small laptops (1280x720, 1366x768, 1920x1080) */
+    font-size: clamp(13px, 0.75vw, 17px);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    /* Improved line height for readability */
+    line-height: 1.5;
+  }
+
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1,
+      "cv01",
+      "cv03",
+      "cv04",
+      "cv11";
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  /* Apply Inter to all text elements */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-feature-settings: "cv01", "cv03", "cv04", "cv11";
+  }
+
+  p,
+  span,
+  div,
+  button,
+  input,
+  textarea,
+  select,
+  label {
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-feature-settings: "cv01", "cv03", "cv04", "cv11";
+  }
+}
+
+.container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+@utility cosmic-button {
+  @apply border px-4 py-2 transition-all duration-300 hover:scale-105 active:scale-95;
+}
+
+@utility cosmic-input {
+  @apply rounded-md border px-4 py-2;
+}
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
+#root {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+.active {
+  @apply bg-primary text-primary-foreground rounded-md transition-all duration-300 hover:scale-105 hover:shadow-[0_0_10px_rgba(139,92,246,0.5)];
+}
+
+button {
+  cursor: pointer;
+}
+
+@media print {
+  body.printing {
+    visibility: hidden;
+  }
+
+  body.printing .print-content {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar:horizontal {
+  display: none;
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Ensure no element can cause horizontal overflow */
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+.shadow-light {
+  box-shadow:
+    rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+
+/* ===== CUSTOM SCROLLBAR - LEAN & UNIVERSAL ===== */
+
+/* Webkit Scrollbar (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  color: #fff; /* or conditionally apply based on theme */
+  font-size: 14px;
+}
+
+.main-col {
+  @apply text-primary hover:text-primary/80 active:text-primary/60
+         cursor-pointer font-medium transition-colors duration-150 
+         hover:underline focus-visible:outline-2 focus-visible:outline-offset-2;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Hide native clock icon */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  /* display: none; */
+  position: relative;
+  right: -30px;
+}
+
+.form-grid {
+  @apply grid grid-cols-1 gap-5 md:grid-cols-2 2xl:grid-cols-3;
+}
+
+/* Slightly denser grid: use smaller gaps, break into 3 columns earlier */
+.form-grid-dense {
+  @apply grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3;
+}
+
+
+/* Reset Password: crossfade/slide when switching between Admin/Identity mode or steps */
+@keyframes resetContentFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(var(--reset-slide-x, 0px), var(--reset-slide-y, 6px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.reset-content-fade-in {
+  animation: resetContentFadeIn 0.3s ease-out;
+}
+
+/* Enhanced Tooltip Styles */
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.group:hover > .group-hover\:visible {
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+/* Process Table Improvements */
+.process-table-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+}
+
+.process-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.process-table-wrapper::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+.process-table-wrapper::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+.process-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* CPU Bar Animation */
+@keyframes cpuBarGrow {
+  from {
+    width: 0;
+  }
+}
+
+.cpu-bar-fill {
+  animation: cpuBarGrow 0.3s ease-out;
+}
+
+/* Table Row Transitions */
+.table-row-transition {
+  transition: background-color 0.15s ease-in-out;
+}
+
+/* State Icon Styles */
+.state-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Font Sizing */
+@media (max-width: 1536px) {
+  .process-table-wrapper table {
+    font-size: 0.8125rem;
+  }
+}

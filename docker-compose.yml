@@ -1,0 +1,19 @@
+services:
+  phoenix-admin-ui:
+    # The image is available on Docker Hub, or you can build your own with `build: .`
+    # build: .
+    image: rjyspl/phoenix-admin-ui:latest
+    container_name: phoenix-admin-ui
+
+    # The environment variables are used to configure the application.
+    # Use the correct values for the environment variables.
+    # Load environment variables from the .env file
+    env_file:
+      - .env
+
+    # The ports are used to expose the application to the host machine.
+    ports:
+      - "127.0.0.1:3005:3000"
+
+    # On failure or anything went wrong need to make up and running.
+    restart: always
