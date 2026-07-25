@@ -36,6 +36,7 @@ export const servers = [
   { name: "Cloud - 21", url: "c21", id: "c21", category: "Cloud" },
   { name: "Cloud - 22", url: "c22", id: "c22", category: "Cloud" },
   { name: "Cloud - 23", url: "c23", id: "c23", category: "Cloud" },
+  { name: "Cloud - 24", url: "c24", id: "c24", category: "Cloud" },
   { name: "Cloud - 25", url: "c25", id: "c25", category: "Cloud" },
   { name: "Cloud - 26", url: "c26", id: "c26", category: "Cloud" },
   { name: "Cloud - 27", url: "c27", id: "c27", category: "Cloud" },
@@ -86,9 +87,11 @@ export const servers = [
   },
 
   // Database
+  { name: "PgSQL - 1", url: "pgsql1", id: "pgsql1", category: "Database" },
   { name: "PgSQL - 2", url: "pgsql2", id: "pgsql2", category: "Database" },
   { name: "PgSQL - 3", url: "pgsql3", id: "pgsql3", category: "Database" },
   { name: "PgSQL - 4", url: "pgsql4", id: "pgsql4", category: "Database" },
+  { name: "PgSQL - 5", url: "pgsql5", id: "pgsql5", category: "Database" },
 ];
 
 const ServerSelector = ({
