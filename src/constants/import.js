@@ -624,6 +624,14 @@ export const IMPORT_FIELD_MAPPINGS = {
           normalizedValue === "1"
         );
       },
+      validate: (value, item) => {
+        if (value && item && item.enable_catch_all) {
+          throw new Error(
+            "Enable Catch All and Enable Hybrid Mode cannot both be Yes for the same domain",
+          );
+        }
+        return value;
+      },
     },
 
     {

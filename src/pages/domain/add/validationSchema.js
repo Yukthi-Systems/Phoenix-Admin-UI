@@ -273,7 +273,16 @@ export const domainFormSchema = yup.object().shape({
           .oneOf([null], "Must be null when catch all is disabled"),
     }),
 
-  enable_hybrid_mode: yup.boolean().required(),
+  enable_hybrid_mode: yup
+    .boolean()
+    .required()
+    .test(
+      "not-with-catch-all",
+      "Hybrid Mode and Catch All cannot both be enabled for the same domain",
+      function (value) {
+        return !(value && this.parent.enable_catch_all);
+      },
+    ),
   hybrid_connector_properties: yup
     .mixed()
     .nullable()

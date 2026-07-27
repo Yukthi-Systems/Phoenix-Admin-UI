@@ -40,17 +40,25 @@ const DomainPropertiesStep = ({ register, errors, control, watch }) => {
       <div className="space-y-6">
         {/* Catch All Settings */}
         <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
-          <Switch
-            control={control}
-            name="enable_catch_all"
-            register={register}
-            watch={watch}
-            errors={errors}
-            falseLabel="Catch All Disabled"
-            falseSublabel="Unknown email addresses will be rejected"
-            trueLabel="Catch All Enabled"
-            trueSublabel="Unknown email addresses will be forwarded to specified email"
-          />
+          <div>
+            <Switch
+              control={control}
+              name="enable_catch_all"
+              register={register}
+              watch={watch}
+              errors={errors}
+              disabled={enableHybridMode && !enableCatchAll}
+              falseLabel="Catch All Disabled"
+              falseSublabel="Unknown email addresses will be rejected"
+              trueLabel="Catch All Enabled"
+              trueSublabel="Unknown email addresses will be forwarded to specified email"
+            />
+            {enableHybridMode && !enableCatchAll && (
+              <p className="text-muted-foreground mt-2 text-xs text-left">
+                Disable Hybrid Mode to enable Catch All — only one can be active per domain.
+              </p>
+            )}
+          </div>
 
           {enableCatchAll && (
             <div>
@@ -86,11 +94,17 @@ const DomainPropertiesStep = ({ register, errors, control, watch }) => {
               register={register}
               watch={watch}
               errors={errors}
+              disabled={enableCatchAll && !enableHybridMode}
               falseLabel="Hybrid Mode Disabled"
               falseSublabel="Standard cloud-only or on-premise-only setup"
               trueLabel="Hybrid Mode Enabled"
               trueSublabel="Mixed cloud and on-premise connector configuration"
             />
+            {enableCatchAll && !enableHybridMode && (
+              <p className="text-muted-foreground mt-2 text-xs text-left">
+                Disable Catch All to enable Hybrid Mode — only one can be active per domain.
+              </p>
+            )}
           </div>
 
           {enableHybridMode && (
