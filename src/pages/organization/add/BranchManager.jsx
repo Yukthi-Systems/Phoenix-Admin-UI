@@ -222,7 +222,7 @@ const BranchManager = ({
                       hideLabel
                     />
                   ) : (
-                    <div className="p-2">
+                    <div className="p-2 text-left">
                       {getValues(`details.branches.${id}.name`) || "-"}
                     </div>
                   )}
@@ -244,7 +244,7 @@ const BranchManager = ({
                       />
                     </div>
                   ) : (
-                    <div className="p-2">
+                    <div className="p-2 text-left">
                       <div className="text-sm font-medium">
                         {getValues(`details.branches.${id}.address_one`) || "-"}
                       </div>
@@ -263,7 +263,7 @@ const BranchManager = ({
                       hideLabel
                     />
                   ) : (
-                    <div className="p-2">
+                    <div className="p-2 text-left">
                       {getValues(`details.branches.${id}.city`) || "-"}
                     </div>
                   )}
@@ -277,7 +277,7 @@ const BranchManager = ({
                       hideLabel
                     />
                   ) : (
-                    <div className="p-2">
+                    <div className="p-2 text-left">
                       {getValues(`details.branches.${id}.state`) || "-"}
                     </div>
                   )}
@@ -307,7 +307,7 @@ const BranchManager = ({
                       )}
                     />
                   ) : (
-                    <div className="p-2">
+                    <div className="p-2 text-left">
                       {getValues(`details.branches.${id}.country`) || "-"}
                     </div>
                   )}
@@ -321,7 +321,7 @@ const BranchManager = ({
                       hideLabel
                     />
                   ) : (
-                    <div className="p-2">
+                    <div className="p-2 text-left">
                       {getValues(`details.branches.${id}.pincode`) || "-"}
                     </div>
                   )}

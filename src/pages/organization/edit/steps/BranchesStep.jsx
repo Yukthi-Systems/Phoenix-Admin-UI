@@ -38,16 +38,23 @@ const BranchesStep = ({
         </p>
       </div>
 
-      <fieldset className="border-border rounded-md border p-6">
+      <fieldset className="border-border text-left rounded-md border p-6">
         <div className="mb-4 flex items-center justify-between">
           <legend className="text-foreground text-left text-base font-medium">
             Branch Locations
           </legend>
-          {branchKeys.length === 0 && (
+          {branchKeys.length === 0 ? (
             <span className="text-destructive text-sm">
               At least one branch is required
             </span>
+          ) : (
+            <span className="text-muted-foreground text-sm">
+              {branchKeys.length} {branchKeys.length === 1 ? "branch" : "branches"} added
+            </span>
           )}
+
+
+
         </div>
 
         <BranchManager

@@ -43,9 +43,13 @@ const BranchesStep = ({
           <legend className="text-foreground text-left text-base font-medium">
             Branch Locations
           </legend>
-          {branchKeys.length === 0 && (
+          {branchKeys.length === 0 ? (
             <span className="text-destructive text-sm">
               At least one branch is required
+            </span>
+          ) : (
+            <span className="text-muted-foreground text-sm">
+              {branchKeys.length} {branchKeys.length === 1 ? "branch" : "branches"} added
             </span>
           )}
         </div>
