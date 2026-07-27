@@ -96,7 +96,17 @@ function AddDistributionPolicy() {
     mode: "onChange",
   });
 
+  const validateMembers = () => {
+    if (internalList.length === 0 && externalList.length === 0) {
+      toast("error", "Add at least one Internal or External member");
+      return false;
+    }
+    return true;
+  };
+
   const validateStep = async (stepNumber) => {
+    if (stepNumber === 2 && !validateMembers()) return false;
+
     const fieldsToValidate = getRequiredFieldsForStep(stepNumber);
     if (fieldsToValidate.length === 0) return true;
 
@@ -140,6 +150,7 @@ function AddDistributionPolicy() {
   };
 
       const onSubmit = (formData) => {
+        if (!validateMembers()) return;
         const data = {
             ...formData,
             domain_name: domain_name,

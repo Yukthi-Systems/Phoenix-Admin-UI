@@ -107,7 +107,24 @@ function CopyForwardingPolicy() {
         }
     }, [data, reset, copy_domain_name]);
 
+    const validateMembers = () => {
+        if (
+            forwardToEmails.length === 0 &&
+            fromEmails.length === 0 &&
+            subjectContains.length === 0
+        ) {
+            toast(
+                "error",
+                "Add at least one entry in 'Forward to emails', 'From emails', or 'Specific Email Subject'",
+            );
+            return false;
+        }
+        return true;
+    };
+
     const validateStep = async (stepNumber) => {
+        if (stepNumber === 2 && !validateMembers()) return false;
+
         const fieldsToValidate = getRequiredFieldsForStep(stepNumber);
         if (fieldsToValidate.length === 0) return true;
 
@@ -143,6 +160,7 @@ function CopyForwardingPolicy() {
     };
 
     const onSubmit = (formData) => {
+        if (!validateMembers()) return;
         const data = {
             ...formData,
             forward_to_emails: forwardToEmails,
