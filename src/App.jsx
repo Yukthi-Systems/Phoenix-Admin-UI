@@ -27,7 +27,14 @@ import { userProfileAtom } from "./store/userProfile";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import useDisableDevTools from "./hooks/useDisableDevTools";
-import { RUM_CLIENT_TOKEN, RUM_SITE } from "./constants/constants";
+import {
+  RUM_CLIENT_TOKEN,
+  RUM_SITE,
+  RUM_APPLICATION_ID,
+  RUM_SERVICE,
+  RUM_ORG_IDENTIFIER,
+  BUILD_INFO,
+} from "./constants/constants";
 
 // user data
 const { user_id, display_name, user_email, user_details } =
@@ -36,18 +43,21 @@ const { user_id, display_name, user_email, user_details } =
 // config openObserve
 const options = {
   clientToken: RUM_CLIENT_TOKEN,
-  applicationId: "v3-admin-web-ui-id",
+  applicationId: RUM_APPLICATION_ID,
   site: RUM_SITE,
-  service: "v3-admin-web-ui",
-  env: "dev",
-  version: "0.0.1",
-  organizationIdentifier: "default",
+  service: RUM_SERVICE,
+  env: BUILD_INFO.environment,
+  version: BUILD_INFO.version,
+  organizationIdentifier: RUM_ORG_IDENTIFIER,
   insecureHTTP: false,
   apiVersion: "v1",
 };
 
+// O-Tel/RUM is enabled in Production only, never in test/dev
+const isProductionEnv = BUILD_INFO.environment?.toLowerCase() === "production";
+
 // check the user detail
-if (user_id && options.clientToken && options.site) {
+if (isProductionEnv && user_id && options.clientToken && options.site) {
   openobserveRum.init({
     applicationId: options.applicationId, // required, any string identifying your application
     clientToken: options.clientToken,

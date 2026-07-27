@@ -46,6 +46,9 @@ export const DNS_API_KEY = getEnv("VITE_DNS_API_KEY", "");
 // Observability (OpenObserve RUM/logs)
 export const RUM_CLIENT_TOKEN = getEnv("VITE_RUM_CLIENT_TOKEN", "");
 export const RUM_SITE = getEnv("VITE_RUM_SITE", "");
+export const RUM_APPLICATION_ID = getEnv("VITE_RUM_APPLICATION_ID", "phoenix-admin-ui-id");
+export const RUM_SERVICE = getEnv("VITE_RUM_SERVICE", "phoenix-admin-ui-app");
+export const RUM_ORG_IDENTIFIER = getEnv("VITE_RUM_ORG_IDENTIFIER", "default");
 
 export const RECAPTCHA_SITE_KEY = getEnv("VITE_RECAPTCHA_SITE_KEY", "");
 
