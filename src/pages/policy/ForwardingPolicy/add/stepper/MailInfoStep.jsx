@@ -16,6 +16,7 @@
  */
 
 import { ListEditorEmail } from "@/pages/mailbox/add/ListEditors";
+import { MailboxMultiSelectField } from "@/components/common/MailboxMultiSelectField";
 import React from "react";
 
 function MailInfoStep({
@@ -32,12 +33,12 @@ function MailInfoStep({
     <div>
       <div className="space-y-8">
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-          <ListEditorEmail
-            placeholder="user@yourdomain.com"
+          <MailboxMultiSelectField
             label="Forward to emails"
-            list={forwardToEmails}
-            setList={setForwardToEmails}
-            type="email"
+            domainName={domain_name}
+            value={forwardToEmails}
+            onChange={setForwardToEmails}
+            placeholder="Select a mailbox or type an email..."
           />
           <ListEditorEmail
             placeholder="user@externaldomain.com"
