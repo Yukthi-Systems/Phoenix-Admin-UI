@@ -391,15 +391,16 @@ const ListDomains = () => {
             });
           }
 
-          if (permissions.includes("domain:create")) {
-            actions.push({
-              label: "Copy Domain",
-              icon: Copy,
-              variant: "default",
-              onClick: () => handleCopy(row.original),
-              tooltip: "Copy to another organization",
-            });
-          }
+          // Copy Domain option removed from V3
+          // if (permissions.includes("domain:create")) {
+          //   actions.push({
+          //     label: "Copy Domain",
+          //     icon: Copy,
+          //     variant: "default",
+          //     onClick: () => handleCopy(row.original),
+          //     tooltip: "Copy to another organization",
+          //   });
+          // }
 
           if (permissions.includes("domain:delete") && actions.length > 0) {
             actions.push({ separator: true });
