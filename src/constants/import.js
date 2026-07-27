@@ -1649,6 +1649,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Policy Description",
       type: "string",
       required: false,
+      alwaysSend: true, // backend requires this key present even when empty
       width: 40,
       sampleValue: "Blocks all incoming emails except from trusted domains",
       sampleValue2: "Standard filtering for incoming email security",
@@ -2000,6 +2001,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Policy Description",
       type: "string",
       required: false,
+      alwaysSend: true, // backend requires this key present even when empty
       width: 40,
       sampleValue: "Blocks all incoming emails except from trusted domains",
       sampleValue2: "Standard filtering for incoming email security",
@@ -2136,6 +2138,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Policy Description",
       type: "string",
       required: false,
+      alwaysSend: true, // backend requires this key present even when empty
       width: 40,
       sampleValue: "Blocks all incoming emails except from trusted domains",
       sampleValue2: "Standard filtering for incoming email security",
@@ -2302,6 +2305,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Policy Description",
       type: "string",
       required: false,
+      alwaysSend: true, // backend requires this key present even when empty
       width: 40,
       sampleValue: "Blocks all incoming emails except from trusted domains",
       sampleValue2: "Standard filtering for incoming email security",
@@ -2612,6 +2616,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Policy Description",
       type: "string",
       required: false,
+      alwaysSend: true, // backend requires this key present even when empty
       width: 40,
       sampleValue: "Allows common file types with size limit",
       sampleValue2: "Blocks all executable and potentially dangerous files",

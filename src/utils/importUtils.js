@@ -154,12 +154,13 @@ const parseExcelFile = async (file) => {
 };
 
 const shouldIncludeField = (value, field) => {
-  // Always include required fields
-  if (field.required) {
+  // Always include required fields, and any optional field the backend
+  // expects present in the payload even when empty (e.g. policy_description).
+  if (field.required || field.alwaysSend) {
     return true;
   }
 
-  // For non-required fields, check if value is meaningful
+  // For other non-required fields, check if value is meaningful
   if (value === null || value === undefined || value === "") {
     return false;
   }
