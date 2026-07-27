@@ -30,11 +30,16 @@ import {
   Minimize2,
   Eye,
   Columns,
+  Copy,
+  Check,
 } from "lucide-react";
 import {
   processImportFile,
   bulkCreateItems,
   generateSampleFile,
+  getRowIdentifier,
+  downloadImportResults,
+  buildResultsSummaryText,
 } from "@/utils/importUtils";
 
 const BulkImportModal = ({
@@ -54,6 +59,7 @@ const BulkImportModal = ({
 
   // New state for full-screen data view
   const [isExpanded, setIsExpanded] = useState(false);
+  const [resultsCopied, setResultsCopied] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -236,6 +242,27 @@ const BulkImportModal = ({
       importConfig.sampleFilename || "sample_import",
     );
   }, [importConfig]);
+
+  const handleDownloadResults = useCallback(() => {
+    if (!results || !importConfig) return;
+    downloadImportResults(
+      results,
+      importConfig.fieldMapping,
+      `${importConfig.sampleFilename || "import"}_results`,
+    );
+  }, [results, importConfig]);
+
+  const handleCopyResults = useCallback(async () => {
+    if (!results || !importConfig) return;
+    const summary = buildResultsSummaryText(results, importConfig.fieldMapping);
+    try {
+      await navigator.clipboard.writeText(summary);
+      setResultsCopied(true);
+      setTimeout(() => setResultsCopied(false), 2000);
+    } catch (e) {
+      setError("Unable to copy results to clipboard");
+    }
+  }, [results, importConfig]);
 
   const toggleExpand = () => {
     if (processedData.length > 0) {
@@ -633,11 +660,37 @@ const BulkImportModal = ({
                   {/* Results Summary */}
                   {importStatus === "success" && results && (
                     <div className="bg-success/10 border border-success/20 rounded-lg p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-success" />
-                        <h4 className="font-medium text-success">
-                          Import Complete
-                        </h4>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="w-5 h-5 text-success" />
+                          <h4 className="font-medium text-success">
+                            Import Complete
+                          </h4>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={handleCopyResults}
+                            title="Copy results summary"
+                            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground hover:text-card-foreground hover:bg-muted rounded-md transition-colors"
+                          >
+                            {resultsCopied ? (
+                              <Check className="w-3.5 h-3.5 text-success" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                            {resultsCopied ? "Copied" : "Copy"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleDownloadResults}
+                            title="Download results as CSV"
+                            className="flex items-center gap-1 px-2 py-1 text-xs font-medium text-muted-foreground hover:text-card-foreground hover:bg-muted rounded-md transition-colors"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            Download
+                          </button>
+                        </div>
                       </div>
                       <div className="grid grid-cols-3 gap-4 text-sm mb-2">
                         <div className="text-center">
@@ -669,19 +722,32 @@ const BulkImportModal = ({
                             Failures:
                           </p>
                           <div className="space-y-1">
-                            {results.failed.map((failed, index) => (
-                              <div
-                                key={index}
-                                className="text-xs text-destructive/80 flex gap-2"
-                              >
-                                <span className="font-mono opacity-70">
-                                  #{failed.index + 1}:
-                                </span>
-                                <span className="break-words flex-1">
-                                  {failed.error}
-                                </span>
-                              </div>
-                            ))}
+                            {results.failed.map((failed, index) => {
+                              const identifier = getRowIdentifier(
+                                failed.item,
+                                importConfig?.fieldMapping,
+                              );
+                              return (
+                                <div
+                                  key={index}
+                                  className="text-xs text-destructive/80 flex flex-col gap-0.5"
+                                >
+                                  <div className="flex gap-2">
+                                    <span className="font-mono opacity-70">
+                                      #{failed.index + 1}:
+                                    </span>
+                                    <span className="break-words flex-1">
+                                      {failed.error}
+                                    </span>
+                                  </div>
+                                  {identifier && (
+                                    <span className="ml-6 text-destructive/60 break-words">
+                                      {identifier}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}

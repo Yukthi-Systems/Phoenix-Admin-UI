@@ -491,6 +491,118 @@ const getDefaultSampleValue = (field, isSecond = false) => {
 };
 
 /**
+ * Field key/header patterns that must never surface in failure labels or
+ * exported/copied results (passwords, tokens, etc. are sensitive even when
+ * base64-encoded, since that's trivially reversible).
+ */
+const SENSITIVE_FIELD_PATTERN = /password|secret|token|api[_-]?key/i;
+
+/**
+ * Get nested object value using dot notation (mirrors setNestedValue)
+ */
+const getNestedValue = (obj, path) => {
+  return path
+    .split(".")
+    .reduce(
+      (acc, key) => (acc && typeof acc === "object" ? acc[key] : undefined),
+      obj,
+    );
+};
+
+const formatFieldValue = (value) => {
+  if (value === null || value === undefined || value === "") return "";
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (Array.isArray(value)) return value.join(", ");
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
+};
+
+/**
+ * Build a short, non-sensitive identifier for a row (e.g. "First Name: John,
+ * Email Prefix: john.doe") so failure lists can show which record failed,
+ * not just its row number. Prefers required fields; falls back to the first
+ * couple of fields if none are marked required. Sensitive fields are always
+ * excluded.
+ */
+export const getRowIdentifier = (item, fieldMapping = []) => {
+  if (!item || !fieldMapping.length) return "";
+
+  const safeFields = fieldMapping.filter(
+    (field) => !SENSITIVE_FIELD_PATTERN.test(field.key || field.header || ""),
+  );
+  const requiredFields = safeFields.filter((field) => field.required);
+  const fieldsToUse = (requiredFields.length ? requiredFields : safeFields).slice(
+    0,
+    3,
+  );
+
+  return fieldsToUse
+    .map((field) => {
+      const value = formatFieldValue(getNestedValue(item, field.key));
+      return value ? `${field.csvHeader || field.header}: ${value}` : null;
+    })
+    .filter(Boolean)
+    .join(", ");
+};
+
+/**
+ * Combine successful + failed results (ordered by original row index) into
+ * plain rows suitable for CSV export or clipboard copy. Sensitive fields
+ * (passwords, tokens, etc.) are always excluded.
+ */
+export const buildResultsExportRows = (results, fieldMapping = []) => {
+  const safeFields = fieldMapping.filter(
+    (field) => !SENSITIVE_FIELD_PATTERN.test(field.key || field.header || ""),
+  );
+
+  const combined = [
+    ...results.successful.map((entry) => ({ ...entry, status: "Success" })),
+    ...results.failed.map((entry) => ({ ...entry, status: "Failed" })),
+  ].sort((a, b) => a.index - b.index);
+
+  return combined.map((entry) => {
+    const row = { Row: entry.index + 1, Status: entry.status };
+    safeFields.forEach((field) => {
+      row[field.csvHeader || field.header] = formatFieldValue(
+        getNestedValue(entry.item, field.key),
+      );
+    });
+    row.Error = entry.status === "Failed" ? entry.error : "";
+    return row;
+  });
+};
+
+/**
+ * Download the combined import results (success + failure) as a CSV file.
+ */
+export const downloadImportResults = (
+  results,
+  fieldMapping,
+  filename = "import_results",
+) => {
+  const rows = buildResultsExportRows(results, fieldMapping);
+  const csvContent = Papa.unparse(rows);
+  downloadFile(csvContent, `${filename}.csv`, "text/csv");
+};
+
+/**
+ * Build a plain-text summary of the import results, suitable for copying to
+ * the clipboard.
+ */
+export const buildResultsSummaryText = (results, fieldMapping) => {
+  const rows = buildResultsExportRows(results, fieldMapping);
+  const lines = rows.map((row) => {
+    const { Row, Status, Error, ...fields } = row;
+    const fieldsText = Object.entries(fields)
+      .filter(([, value]) => value !== "")
+      .map(([key, value]) => `${key}: ${value}`)
+      .join(", ");
+    return `#${Row} [${Status}]${fieldsText ? " " + fieldsText : ""}${Error ? " - " + Error : ""}`;
+  });
+  return `Import Results (${results.successful.length} succeeded, ${results.failed.length} failed, ${results.total} total)\n\n${lines.join("\n")}`;
+};
+
+/**
  * Download file utility
  */
 const downloadFile = (content, filename, mimeType) => {
