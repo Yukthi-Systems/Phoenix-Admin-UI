@@ -17,6 +17,7 @@
 
 import { SelectField } from '@/components/common/Inputs';
 import { ListEditorEmail } from '@/pages/mailbox/add/ListEditors';
+import { MailboxMultiSelectField } from '@/components/common/MailboxMultiSelectField';
 import React from 'react'
 import { ruleList } from './PolicyInfoStep';
 
@@ -78,14 +79,12 @@ function MailInfoStep({
                 />
 
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-                    <ListEditorEmail
-                        placeholder="user@yourdomain.com"
+                    <MailboxMultiSelectField
                         label="Internal Members"
-                        list={internalList}
-                        setList={setInternalList}
-                        type="email"
-                        hasDropdown={true}
                         domainName={domain_name}
+                        value={internalList}
+                        onChange={setInternalList}
+                        placeholder="Select a mailbox or type an email..."
                     />
                     <ListEditorEmail
                         placeholder="user@externaldomain.com"
