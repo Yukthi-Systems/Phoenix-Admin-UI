@@ -117,13 +117,17 @@ const AddOrganization = () => {
         ...parentOrg,
         size: Math.max(
           0,
-          Number(parentOrgDetails.quota_allocated) -
-            Number(parentOrgDetails.quota_utilized),
+          Math.round(
+            (Number(parentOrgDetails.quota_allocated) -
+              Number(parentOrgDetails.quota_utilized)) *
+              100,
+          ) / 100,
         ),
         identitiesAllocated: parentOrgDetails.allocated_email_identities,
         identitiesUtilized: parentOrgDetails.utilized_email_identities,
         email_service_enabled: parentOrgDetails.email_service_enabled ?? false,
         chat_service_enabled: parentOrgDetails.chat_service_enabled ?? false,
+        file_service_enabled: parentOrgDetails.file_service_enabled ?? false,
       }
     : parentOrg;
 
@@ -243,8 +247,11 @@ const AddOrganization = () => {
 
   const handleParentOrgSelect = (organization) => {
     let size =
-      Number(organization?.quota_allocated) -
-      Number(organization?.quota_utilized) || 10000000;
+      Math.round(
+        (Number(organization?.quota_allocated) -
+          Number(organization?.quota_utilized)) *
+          100,
+      ) / 100 || 10000000;
     setParentOrg({
       id: organization.organization_id,
       name: organization.organization_name,
@@ -253,6 +260,7 @@ const AddOrganization = () => {
       identitiesUtilized: organization?.utilized_email_identities ?? null,
       email_service_enabled: organization?.email_service_enabled ?? false,
       chat_service_enabled: organization?.chat_service_enabled ?? false,
+      file_service_enabled: organization?.file_service_enabled ?? false,
     });
 
     setValue("parent_organization_id", organization.organization_id, {
