@@ -123,10 +123,20 @@ const parseExcelFile = async (file) => {
         headers.forEach((header, index) => {
           let cellValue = rowValues[index];
 
-          // Handle Rich Text (ExcelJS sometimes returns objects)
+          // Handle non-primitive cell values (ExcelJS sometimes returns objects)
           if (cellValue && typeof cellValue === 'object') {
-             if (cellValue.text) cellValue = cellValue.text;
+             if (Array.isArray(cellValue.richText)) {
+               // Rich text cell (mixed formatting within one cell) — concatenate the runs
+               cellValue = cellValue.richText.map((run) => run.text || "").join("");
+             } else if (cellValue.text) cellValue = cellValue.text;
              else if (cellValue.result) cellValue = cellValue.result;
+             else if (cellValue instanceof Date) {
+               // leave dates as-is, handled elsewhere
+             } else {
+               // Unrecognized object shape — fall back to empty rather than
+               // letting "[object Object]" silently fail downstream validation
+               cellValue = "";
+             }
           }
 
           const value = cellValue === undefined || cellValue === null ? "" : cellValue;
