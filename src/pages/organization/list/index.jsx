@@ -425,6 +425,23 @@ const OrganizationTreeView = () => {
           </div>
 
           <div className="w-full h-[calc(100vh-270px)] overflow-y-auto relative">
+            {defaultOrgDetails && (
+              <OrganizationTreeNode
+                organization={defaultOrgDetails}
+                level={0}
+                expandedOrgs={expandedOrgs}
+                setExpandedOrgs={setExpandedOrgs}
+                onDelete={handleDelete}
+                permissions={permissions}
+                ancestors={new Set()}
+                fetchData={fetchData}
+                parentAvailableSpace={rootParentAvailableSpace}
+                parentAvailableIdentities={rootParentAvailableIdentities}
+                checkingDeleteId={checkingDeleteId}
+                isParentPlaceholder
+                disableExpand
+              />
+            )}
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary mr-3" />
@@ -433,7 +450,7 @@ const OrganizationTreeView = () => {
                 </span>
               </div>
             ) : rootOrganizations.length === 0 ? (
-              <div className="flex items-center justify-center py-12">
+              <div className="flex items-center justify-center py-8">
                 <div className="text-center">
                   <div className="text-muted-foreground mb-2">
                     No organizations found
@@ -454,12 +471,18 @@ const OrganizationTreeView = () => {
                   <OrganizationTreeNode
                     key={org.organization_id}
                     organization={org}
-                    level={0}
+                    level={1}
                     expandedOrgs={expandedOrgs}
                     setExpandedOrgs={setExpandedOrgs}
                     onDelete={handleDelete}
                     permissions={permissions}
-                    ancestors={new Set()}
+                    ancestors={
+                      new Set(
+                        defaultOrgDetails
+                          ? [defaultOrgDetails.organization_id]
+                          : [],
+                      )
+                    }
                     fetchData={fetchData}
                     parentAvailableSpace={rootParentAvailableSpace}
                     parentAvailableIdentities={rootParentAvailableIdentities}

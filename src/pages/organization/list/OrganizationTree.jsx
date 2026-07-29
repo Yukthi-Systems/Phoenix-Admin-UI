@@ -79,6 +79,14 @@ const OrganizationTreeNode = ({
   parentAvailableIdentities = 0,
   parentIsActive = true,
   checkingDeleteId = null,
+  // True when this row is the always-visible "root" placeholder for the
+  // current organization, labeled accordingly, so its ID is always
+  // visible/copyable (e.g. for use as the Parent Organization ID in bulk import).
+  isParentPlaceholder = false,
+  // Hides the expand/collapse toggle — used for the parent placeholder row,
+  // whose children are already rendered separately (the normal root list),
+  // so its own expand mechanism would just re-fetch and show the same list again.
+  disableExpand = false,
 }) => {
   const [children, setChildren] = useState([]);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -347,6 +355,10 @@ const OrganizationTreeNode = ({
   const childAncestors = new Set([...ancestors, organization.organization_id]);
 
   const renderExpandButton = () => {
+    if (disableExpand) {
+      return <div className="w-5 h-5 mr-2 flex-shrink-0" />;
+    }
+
     if (isCircular) {
       return (
         <div className="flex items-center justify-center w-5 h-5 mr-2">
@@ -535,6 +547,14 @@ const OrganizationTreeNode = ({
                   }`}
               >
                 {organization.organization_name}
+                {isParentPlaceholder && (
+                  <span
+                    className="text-xs text-primary ml-1"
+                    title="This is your organization, shown because there are no organizations in this list. Use its ID as the Parent Organization ID for bulk-importing child organizations."
+                  >
+                    (Parent)
+                  </span>
+                )}
                 {isCircular && (
                   <span
                     className="text-xs text-warning ml-1"
