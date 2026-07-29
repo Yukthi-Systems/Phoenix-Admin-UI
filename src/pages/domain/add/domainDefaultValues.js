@@ -19,7 +19,12 @@
 
 import { generateSecretCode } from "@/utils/secretCode";
 
-export const domainDefaultValues = {
+// A factory, not a static object: `domainDefaultValues` used to call
+// generateSecretCode() once at module-evaluation time, so every domain
+// created in the same session (until a full page reload) got the exact
+// same anti_phishing_secret_code. Generating it fresh each time these
+// defaults are requested gives every domain its own code.
+export const getDomainDefaultValues = () => ({
   activate: false,
   anti_phishing_secret_code: generateSecretCode() || "",
   details: {
@@ -62,4 +67,4 @@ export const domainDefaultValues = {
     description: "",
     folder_name: "",
   },
-};
+});

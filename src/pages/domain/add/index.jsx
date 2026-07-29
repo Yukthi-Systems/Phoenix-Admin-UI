@@ -23,7 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect, useState } from "react";
 import { useAddDomain } from "@/hooks/useDomain";
 import { useToastify } from "@/hooks/useToastify";
-import { domainDefaultValues } from "./domainDefaultValues";
+import { getDomainDefaultValues } from "./domainDefaultValues";
 import { useNavigate } from "react-router-dom";
 import { userProfileAtom } from "@/store/userProfile";
 import AccessDenied from "@/components/common/AccessDenied";
@@ -194,6 +194,9 @@ const AddDomain = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [createdDomainResult, setCreatedDomainResult] = useState(null);
+  // Generated once per mount, not per render - useForm only reads this on
+  // its first render anyway.
+  const [initialDefaultValues] = useState(getDomainDefaultValues);
 
   const {
     register,
@@ -206,7 +209,7 @@ const AddDomain = () => {
     getValues,
     setValue,
   } = useForm({
-    defaultValues: domainDefaultValues,
+    defaultValues: initialDefaultValues,
     resolver: yupResolver(domainFormSchema),
     mode: "onChange",
   });
@@ -302,7 +305,9 @@ const AddDomain = () => {
 
   useEffect(() => {
     if (organization_id) {
-      reset();
+      // Regenerate the anti-phishing code on reset too, so switching
+      // organizations doesn't leave a stale code sitting in the form.
+      reset(getDomainDefaultValues());
       setCurrentStep(1);
       setCompletedSteps([]);
     }
