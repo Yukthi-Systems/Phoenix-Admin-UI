@@ -27,11 +27,7 @@ const ContactsStep = ({
   register,
   getValues,
   setValue,
-  permissions,
 }) => {
-  if (!permissions.includes("crm:service:view")) {
-    return null;
-  }
 
   return (
     <div className="space-y-6">

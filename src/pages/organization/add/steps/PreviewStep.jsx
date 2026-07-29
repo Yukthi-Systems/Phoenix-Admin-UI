@@ -31,7 +31,6 @@ const PreviewStep = ({
   contactKeys,
   getValues,
   parentOrg,
-  permissions,
 }) => {
   const PreviewSection = ({ title, children, icon: Icon }) => (
     <div className="border-border bg-card/50 rounded-lg border p-5 text-left">
@@ -195,45 +194,43 @@ const PreviewStep = ({
         </div>
       </PreviewSection>
 
-      {permissions.includes("crm:service:view") && (
-        <PreviewSection title="Contacts" icon={Users}>
-          <p className="text-muted-foreground mb-2 text-sm font-medium">
-            Total Contacts: {contactKeys.length}
-          </p>
-          <div className="space-y-3">
-            {contactKeys.map((id, index) => {
-              const contact = getValues(`details.contact_info.${id}`);
-              return (
-                <div key={id} className="bg-accent/30 rounded-md p-3">
-                  <p className="text-foreground mb-1 text-sm font-medium">
-                    {index + 1}. {contact?.name || "Unnamed Contact"}
+      <PreviewSection title="Contacts" icon={Users}>
+        <p className="text-muted-foreground mb-2 text-sm font-medium">
+          Total Contacts: {contactKeys.length}
+        </p>
+        <div className="space-y-3">
+          {contactKeys.map((id, index) => {
+            const contact = getValues(`details.contact_info.${id}`);
+            return (
+              <div key={id} className="bg-accent/30 rounded-md p-3">
+                <p className="text-foreground mb-1 text-sm font-medium">
+                  {index + 1}. {contact?.name || "Unnamed Contact"}
+                </p>
+                {contact?.phone && (
+                  <p className="text-muted-foreground text-xs">
+                    Phone: {contact.phone}
                   </p>
-                  {contact?.phone && (
-                    <p className="text-muted-foreground text-xs">
-                      Phone: {contact.phone}
-                    </p>
-                  )}
-                  {contact?.email && (
-                    <p className="text-muted-foreground text-xs">
-                      Email: {contact.email}
-                    </p>
-                  )}
-                  {contact?.type && (
-                    <p className="text-muted-foreground text-xs">
-                      Type: {contact.type}
-                    </p>
-                  )}
-                  {contact?.notes && (
-                    <p className="text-muted-foreground text-xs">
-                      Notes: {contact.notes}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </PreviewSection>
-      )}
+                )}
+                {contact?.email && (
+                  <p className="text-muted-foreground text-xs">
+                    Email: {contact.email}
+                  </p>
+                )}
+                {contact?.type && (
+                  <p className="text-muted-foreground text-xs">
+                    Type: {contact.type}
+                  </p>
+                )}
+                {contact?.notes && (
+                  <p className="text-muted-foreground text-xs">
+                    Notes: {contact.notes}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </PreviewSection>
 
       <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
         <div className="flex items-start gap-3">
@@ -248,15 +245,9 @@ const PreviewStep = ({
                 {formData.name}
               </span>{" "}
               is configured with {branchKeys.length} branch
-              {branchKeys.length !== 1 ? "es" : ""}
-              {permissions.includes("crm:service:view") && (
-                <>
-                  {" "}
-                  and {contactKeys.length} contact
-                  {contactKeys.length !== 1 ? "s" : ""}
-                </>
-              )}{" "}
-              and ready to be created.
+              {branchKeys.length !== 1 ? "es" : ""} and {contactKeys.length}{" "}
+              contact
+              {contactKeys.length !== 1 ? "s" : ""} and ready to be created.
             </p>
           </div>
         </div>

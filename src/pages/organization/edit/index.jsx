@@ -70,16 +70,22 @@ const STEPS = [
   },
 ];
 
-const getRequiredFieldsForStep = (stepIndex) => {
-  const step = STEPS[stepIndex - 1];
+// Takes the (possibly permission-filtered) steps array so the lookup always
+// matches what's actually shown in the stepper, instead of assuming a fixed
+// position from the full STEPS.
+const getRequiredFieldsForStep = (steps, stepIndex) => {
+  const step = steps[stepIndex - 1];
   if (!step) return [];
   return step.fields;
 };
 
+// Step renderer map — keyed by step id, not position. Positions shift when
+// steps are filtered by permission (e.g. "contacts" removed), so a fixed
+// numeric map would render the wrong component for the current step.
 const STEP_RENDERER = {
-  1: (props) => <OrganizationDetailsStep {...props} />,
-  2: (props) => <BranchesStep {...props} />,
-  3: (props) => <ContactsStep {...props} />,
+  "organization-details": (props) => <OrganizationDetailsStep {...props} />,
+  branches: (props) => <BranchesStep {...props} />,
+  contacts: (props) => <ContactsStep {...props} />,
 };
 
 const EditOrganization = () => {
@@ -89,6 +95,9 @@ const EditOrganization = () => {
 
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const navigate = useNavigate();
+
+  // Contacts is not gated by any permission — always shown as a step.
+  const filteredSteps = STEPS;
   const { mutate, isPending } = useEditOrganization();
   const toast = useToastify();
   const { mutate: renameOrg } = useRenameOrganizationStatus();
@@ -150,18 +159,15 @@ const EditOrganization = () => {
   });
 
   const validateStep = async (stepNumber) => {
-    const fieldsToValidate = getRequiredFieldsForStep(stepNumber);
+    const fieldsToValidate = getRequiredFieldsForStep(filteredSteps, stepNumber);
+    const stepId = filteredSteps[stepNumber - 1]?.id;
 
-    if (stepNumber === 2 && branchKeys.length === 0) {
+    if (stepId === "branches" && branchKeys.length === 0) {
       toast("error", "At least one branch is required");
       return false;
     }
 
-    if (
-      stepNumber === 3 &&
-      permissions.includes("crm:service:view") &&
-      contactKeys.length === 0
-    ) {
+    if (stepId === "contacts" && contactKeys.length === 0) {
       toast("error", "At least one contact is required");
       return false;
     }
@@ -221,7 +227,7 @@ const EditOrganization = () => {
       return;
     }
 
-    if (permissions.includes("crm:service:view") && contactKeys.length === 0) {
+    if (contactKeys.length === 0) {
       toast("error", "At least one contact is required");
       return;
     }
@@ -383,11 +389,7 @@ const EditOrganization = () => {
     );
   }
 
-  const filteredSteps = permissions.includes("crm:service:view")
-    ? STEPS
-    : STEPS.filter((step) => step.id !== "contacts");
-
-  const StepComponent = STEP_RENDERER[currentStep];
+  const StepComponent = STEP_RENDERER[filteredSteps[currentStep - 1]?.id];
   const stepProps = {
     register,
     errors,
