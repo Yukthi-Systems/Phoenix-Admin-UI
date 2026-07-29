@@ -35,6 +35,7 @@ import StepperFormLayout from "@/components/layouts/FormLayout";
 import DataFechError from "@/components/common/DataFechError";
 import DataLoading from "@/components/common/DataLoading";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
+import { normalizeDomainDetailsForForm } from "@/utils/domainUtils";
 
 const STEPS = [
   {
@@ -284,46 +285,7 @@ const EditDomain = () => {
 
   useEffect(() => {
     if (domain) {
-      const notifyAt = domain?.max_password_age_properties?.notify_at || [
-        2, 5, 9,
-      ];
-      const hasMaxPasswordAge = domain?.max_password_age > 0;
-
-      reset({
-        details: {
-          address: domain?.details?.address || "",
-          description: domain?.details?.description || "",
-        },
-        anti_phishing_secret_code: domain?.anti_phishing_secret_code || "",
-        caution_id: domain?.caution_id || null,
-        disclaimer_id: domain?.disclaimer_id || null,
-        domain_name: domain?.domain_name || "",
-        session_timeout: domain?.session_timeout || 720,
-        filter_policy_id: domain?.filter_policy_id || null,
-        attachment_policy_id: domain?.attachment_policy_id || null,
-        enable_max_password_age: hasMaxPasswordAge,
-        max_password_age: domain?.max_password_age || 90,
-        notify_1: notifyAt[0] || 2,
-        notify_2: notifyAt[1] || 5,
-        notify_3: notifyAt[2] || 9,
-
-        enable_catch_all: domain?.catch_all || false,
-        catch_all_forwarding_address:
-          domain?.catch_all_forward_to_email || null,
-        enable_hybrid_mode: domain?.is_hybrid || false,
-        hybrid_connector_properties: {
-          description: domain?.connector_properties?.description || "",
-          fqdn: domain?.connector_properties?.fqdn || "",
-          ipv4: domain?.connector_properties?.ipv4 || "",
-          ipv6: domain?.connector_properties?.ipv6 || "",
-          port: domain?.connector_properties?.port || 25,
-        },
-        spam_destination: domain?.spam_destination || "Folder",
-        spam_destination_properties: {
-          description: domain?.spam_destination_properties?.description || "",
-          folder_name: domain?.spam_destination_properties?.folder_name ? decodeURIComponent(domain?.spam_destination_properties?.folder_name) : "",
-        },
-      });
+      reset(normalizeDomainDetailsForForm(domain));
     }
   }, [domain, reset]);
 

@@ -80,6 +80,7 @@ import StatusBadge from "@/components/common/StatusBadge";
 import { Input } from "@/components/common/Inputs";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
 import { getDomain, getDomains } from "@/api/domain";
+import { normalizeDomainDetailsForForm } from "@/utils/domainUtils";
 import { FIELD_MAPPINGS } from "@/constants/export";
 import useExport from "@/hooks/useExport";
 import { useUserTimezone } from "@/hooks/useTimezone";
@@ -196,7 +197,35 @@ const ListDomains = () => {
   };
 
   const fetchDomainsForExport = async ({ organization_id, page, pageSize }) => {
-    return await getDomains(organization_id, page, pageSize);
+    const listResponse = await getDomains(organization_id, page, pageSize);
+    const leanDomains = listResponse?.domains?.domains || [];
+
+    // The list response only carries a handful of fields — everything the
+    // import template needs (hybrid/catch-all/spam/password-age settings,
+    // etc.) only lives in the per-domain details response. Enrich each row
+    // so the export matches the import template field-for-field.
+    const enrichedDomains = await Promise.all(
+      leanDomains.map(async (domain) => {
+        try {
+          const detail = (await getDomain(domain.domain_name))?.domain_details;
+          return { ...domain, ...normalizeDomainDetailsForForm(detail) };
+        } catch (err) {
+          console.error(
+            `Failed to fetch details for domain "${domain.domain_name}" during export`,
+            err,
+          );
+          return domain;
+        }
+      }),
+    );
+
+    return {
+      ...listResponse,
+      domains: {
+        ...listResponse.domains,
+        domains: enrichedDomains,
+      },
+    };
   };
 
   const handleCopy = (row) => {

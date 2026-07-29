@@ -171,6 +171,13 @@ export const FIELD_MAPPINGS = {
     },
   ],
 
+  // Headers here are kept in sync 1:1 with the domain bulk-import template
+  // (IMPORT_FIELD_MAPPINGS.domains in src/constants/import.js) so an exported
+  // domains file can be re-imported without editing — e.g. for migrating
+  // domains between environments. The values are sourced from a normalized
+  // domain_details object (see fetchDomainsForExport in domain/list/index.jsx
+  // and normalizeDomainDetailsForForm in src/utils/domainUtils.js), not the
+  // lean domain-list row, since most of these fields aren't in the list response.
   domains: [
     {
       key: "domain_name",
@@ -179,23 +186,136 @@ export const FIELD_MAPPINGS = {
       width: 30,
     },
     {
-      key: "quota_allocated",
-      header: "Quota Allocated",
-      type: "number",
-      width: 15,
-    },
-    {
-      key: "quota_utilized",
-      header: "Quota Utilized",
-      type: "number",
-      width: 15,
-    },
-    {
       key: "is_active",
       header: "Status",
-      type: "string",
       width: 12,
       transform: (value) => (value ? "Active" : "Inactive"),
+    },
+    {
+      key: "session_timeout",
+      header: "Session Timeout (Minutes)",
+      type: "number",
+      width: 20,
+    },
+    {
+      key: "caution_id",
+      header: "Caution ID",
+      type: "string",
+      width: 20,
+    },
+    {
+      key: "disclaimer_id",
+      header: "Disclaimer ID",
+      type: "string",
+      width: 20,
+    },
+    {
+      key: "details.address",
+      header: "Address",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "details.description",
+      header: "Details Description",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "enable_max_password_age",
+      header: "Enable Password Age Policy",
+      type: "boolean",
+      width: 15,
+    },
+    {
+      key: "max_password_age",
+      header: "Max Password Age (Days)",
+      type: "number",
+      width: 15,
+    },
+    {
+      key: "notify_1",
+      header: "Notification 1 (Days Before)",
+      type: "number",
+      width: 20,
+    },
+    {
+      key: "notify_2",
+      header: "Notification 2 (Days Before)",
+      type: "number",
+      width: 20,
+    },
+    {
+      key: "notify_3",
+      header: "Notification 3 (Days Before)",
+      type: "number",
+      width: 20,
+    },
+    {
+      key: "enable_catch_all",
+      header: "Enable Catch All",
+      type: "boolean",
+      width: 15,
+    },
+    {
+      key: "catch_all_forwarding_address",
+      header: "Catch All Email",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "enable_hybrid_mode",
+      header: "Enable Hybrid Mode",
+      type: "boolean",
+      width: 15,
+    },
+    {
+      key: "hybrid_connector_properties.description",
+      header: "Hybrid Description",
+      type: "string",
+      width: 35,
+    },
+    {
+      key: "hybrid_connector_properties.fqdn",
+      header: "Hybrid FQDN",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "hybrid_connector_properties.ipv4",
+      header: "Hybrid IPv4",
+      type: "string",
+      width: 20,
+    },
+    {
+      key: "hybrid_connector_properties.ipv6",
+      header: "Hybrid IPv6",
+      type: "string",
+      width: 25,
+    },
+    {
+      key: "hybrid_connector_properties.port",
+      header: "Hybrid Port",
+      type: "number",
+      width: 12,
+    },
+    {
+      key: "spam_destination",
+      header: "Spam Destination",
+      type: "string",
+      width: 15,
+    },
+    {
+      key: "spam_destination_properties.description",
+      header: "Spam Policy Description",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "spam_destination_properties.folder_name",
+      header: "Spam Folder Name",
+      type: "string",
+      width: 25,
     },
     {
       key: "created_at",

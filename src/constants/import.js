@@ -317,27 +317,6 @@ export const IMPORT_FIELD_MAPPINGS = {
       },
     },
     {
-      key: "allocate_quota",
-      header: "Quota Allocated (GB)",
-      csvHeader: "Quota Allocated (GB)",
-      type: "number",
-      required: true,
-      width: 15,
-      defaultValue: 0.1,
-      sampleValue: 5.0,
-      sampleValue2: 10.0,
-      transform: (value) => {
-        const num = Number(value);
-        if (isNaN(num) || num < 0.1) return 0.1;
-        // Check precision (max 2 decimal places)
-        const decimal = num.toString().split(".")[1];
-        if (decimal && decimal.length > 2) {
-          throw new Error("Maximum precision is 0.01 GB (10 MB)");
-        }
-        return num;
-      },
-    },
-    {
       key: "session_timeout",
       header: "Session Timeout (Minutes)",
       csvHeader: "Session Timeout (Minutes)",
@@ -397,7 +376,12 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Address",
       csvHeader: "Address",
       type: "string",
-      required: true,
+      // Backend's `details` is a generic dict — no sub-field is actually
+      // enforced server-side, and real domains commonly have this blank.
+      // alwaysSend so the `details` object itself always survives (it IS a
+      // required key on the backend, even though its contents aren't checked).
+      required: false,
+      alwaysSend: true,
       width: 30,
       sampleValue: "123 Company Street, City, State",
       sampleValue2: "456 Business Ave, Town, State",
@@ -407,28 +391,14 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Details Description",
       csvHeader: "Details Description",
       type: "string",
-      required: true,
+      // Backend's `details` is a generic dict — no sub-field is actually
+      // enforced server-side, and real domains commonly have this blank.
+      required: false,
+      alwaysSend: true,
       width: 30,
       sampleValue: "Primary company domain for email services",
       sampleValue2: "Secondary organization domain",
     },
-    {
-      key: "max_number_of_mailboxes",
-      header: "Max Mailboxes",
-      csvHeader: "Max Mailboxes",
-      type: "number",
-      required: true,
-      width: 15,
-      defaultValue: 0,
-      sampleValue: 100,
-      sampleValue2: 200,
-      transform: (value) => {
-        const num = Number(value);
-        if (isNaN(num) || num < 0) return 0;
-        return num;
-      },
-    },
-
     // Updated Password Age Configuration
     {
       key: "enable_max_password_age",
@@ -662,6 +632,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Hybrid FQDN",
       type: "string",
       required: false,
+      // Backend's ConnectorProperties.fqdn is a required (non-Optional) str —
+      // must always be sent, even as "", or the create request 422s.
+      alwaysSend: true,
       width: 30,
       sampleValue: "",
       sampleValue2: "hybrid.company.org",
@@ -669,11 +642,11 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (item && item.enable_hybrid_mode) {
           if (!value || !value.trim()) {
             // Not required on its own — enforced together with IPv4 below.
-            return undefined;
+            return "";
           }
           return value;
         }
-        return undefined;
+        return "";
       },
     },
     {
@@ -682,6 +655,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Hybrid IPv4",
       type: "string",
       required: false,
+      // Backend's ConnectorProperties.ipv4 is a required (non-Optional) str —
+      // must always be sent, even as "", or the create request 422s.
+      alwaysSend: true,
       width: 20,
       sampleValue: "",
       sampleValue2: "10.0.0.5",
@@ -694,7 +670,7 @@ export const IMPORT_FIELD_MAPPINGS = {
                 "Either Hybrid FQDN or Hybrid IPv4 is required when hybrid mode is enabled",
               );
             }
-            return undefined;
+            return "";
           }
           if (
             !/^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/.test(
@@ -705,7 +681,7 @@ export const IMPORT_FIELD_MAPPINGS = {
           }
           return value;
         }
-        return undefined;
+        return "";
       },
     },
     {
@@ -761,14 +737,20 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "select",
       required: true,
       width: 15,
-      defaultValue: "Folder",
+      defaultValue: "FOLDER",
+      // Must match the manual Add/Edit Domain form's options exactly
+      // (src/pages/domain/add/steps/SpamDestination.jsx) and the backend's
+      // yup .oneOf(["FOLDER","INBOX","TRASH","DELETE","SEND_DIGEST","SPAM"]).
       options: [
-        { value: "Folder", label: "Folder" },
-        { value: "Inbox", label: "Inbox" },
-        { value: "Trash", label: "Trash" },
+        { value: "INBOX", label: "Inbox" },
+        { value: "SPAM", label: "Spam" },
+        { value: "TRASH", label: "Trash" },
+        { value: "DELETE", label: "Permanently Delete" },
+        { value: "SEND_DIGEST", label: "Send Digest" },
+        { value: "FOLDER", label: "Custom Folder" },
       ],
-      sampleValue: "Folder",
-      sampleValue2: "Trash",
+      sampleValue: "FOLDER",
+      sampleValue2: "TRASH",
     },
     {
       key: "spam_destination_properties.description",

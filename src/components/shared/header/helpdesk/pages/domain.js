@@ -49,17 +49,6 @@ export const domainHelp = {
               },
             ],
           },
-          {
-            key: "max_number_of_mailboxes",
-            title: "Maximum Mailboxes",
-            description:
-              "Set the maximum number of mailboxes allowed for this domain.",
-            tips: [
-              "Consider your organization's size",
-              "Can be adjusted later",
-              "Affects quota allocation",
-            ],
-          },
         ],
       },
       {
