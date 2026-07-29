@@ -57,6 +57,9 @@ import {
   FileCheck,
   AlertTriangle,
   Copy,
+  Building2,
+  MessageSquareWarning,
+  FileText,
 } from "lucide-react";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
 import { useMemo, useState } from "react";
@@ -68,6 +71,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import DNSRecordsModal from "../list/DNSRecord";
 import EditModelBox from "@/components/common/EditModelBox";
 import DropdownButton from "@/components/common/DropdownButton";
+import { useGetOrganizationDetail } from "@/hooks/useOrganization";
+import { useUserTimezone } from "@/hooks/useTimezone";
 
 const DomainDetails = () => {
   const toast = useToastify();
@@ -101,6 +106,21 @@ const DomainDetails = () => {
   const { data: txtKeyData, isLoading: txtKeyLoading } = useGetDomainTxtKey(
     domain && !domain.is_dns_txt_verified ? domain_name : undefined,
   );
+  const { data: managingOrg } = useGetOrganizationDetail(domain?.managed_by);
+  const { formatUserDateNice } = useUserTimezone();
+  const [phishingCodeCopied, setPhishingCodeCopied] = useState(false);
+
+  const handleCopyPhishingCode = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        domain?.anti_phishing_secret_code || "",
+      );
+      setPhishingCodeCopied(true);
+      setTimeout(() => setPhishingCodeCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   const handleCopyTxtKey = async () => {
     try {
@@ -542,6 +562,111 @@ const DomainDetails = () => {
               )}
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <InfoCard icon={Building2} title="Domain Information">
+                  <InfoItem
+                    label="Managed By"
+                    value={
+                      managingOrg?.organization_name || domain?.managed_by
+                    }
+                    link={
+                      domain?.managed_by
+                        ? `/organization/${domain.managed_by}`
+                        : undefined
+                    }
+                  />
+                  <InfoItem
+                    label="Created"
+                    value={
+                      domain?.created_at
+                        ? formatUserDateNice(domain.created_at)
+                        : "Unknown"
+                    }
+                  />
+                  <InfoItem
+                    label="Address"
+                    value={domain?.details?.address || "Not set"}
+                  />
+                  <InfoItem
+                    label="Description"
+                    value={domain?.details?.description || "Not set"}
+                  />
+                  <InfoItem
+                    label="Anti-Phishing Code"
+                    value={
+                      <button
+                        onClick={handleCopyPhishingCode}
+                        className="group flex items-center justify-end gap-1.5 p-0 m-0 bg-transparent border-none cursor-pointer text-right"
+                        title="Copy to clipboard"
+                      >
+                        <span className="text-sm font-medium text-card-foreground text-right break-all">
+                          {domain?.anti_phishing_secret_code || "Not set"}
+                        </span>
+                        {phishingCodeCopied ? (
+                          <CheckCircle className="h-3.5 w-3.5 text-success shrink-0" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                        )}
+                      </button>
+                    }
+                  />
+                </InfoCard>
+
+                <InfoCard icon={MessageSquareWarning} title="Caution Message">
+                  {domain?.caution_id ? (
+                    <>
+                      <InfoItem
+                        label="Status"
+                        value={<BooleanIndicator value={true} />}
+                      />
+                      <InfoItem
+                        label="Caution ID"
+                        link={`/caution/${domain.caution_id}`}
+                        value={domain.caution_id}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <InfoItem
+                        label="Status"
+                        value={<BooleanIndicator value={false} />}
+                      />
+                      <div className="bg-muted/20 mt-2 rounded p-2 text-center">
+                        <span className="text-muted-foreground text-xs">
+                          No caution message configured
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </InfoCard>
+
+                <InfoCard icon={FileText} title="Disclaimer">
+                  {domain?.disclaimer_id ? (
+                    <>
+                      <InfoItem
+                        label="Status"
+                        value={<BooleanIndicator value={true} />}
+                      />
+                      <InfoItem
+                        label="Disclaimer ID"
+                        link={`/disclaimer/${domain.disclaimer_id}`}
+                        value={domain.disclaimer_id}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <InfoItem
+                        label="Status"
+                        value={<BooleanIndicator value={false} />}
+                      />
+                      <div className="bg-muted/20 mt-2 rounded p-2 text-center">
+                        <span className="text-muted-foreground text-xs">
+                          No disclaimer configured
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </InfoCard>
+
                 <InfoCard icon={Shield} title="Spam Protection">
                   <InfoItem
                     label="Destination"

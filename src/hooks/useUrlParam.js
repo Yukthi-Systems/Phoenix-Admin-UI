@@ -32,8 +32,13 @@ export const useUrlParam = (paramName, defaultValue = "") => {
   const setValue = useCallback(
     (newValue) => {
       setSearchParams(
-        (prev) => {
-          const newParams = new URLSearchParams(prev);
+        () => {
+          // Read from window.location directly instead of the `prev` passed
+          // by react-router: that value is captured from this hook's last
+          // render and goes stale the moment another setSearchParams call
+          // (e.g. a pagination reset) fires in the same tick, silently
+          // clobbering that other update.
+          const newParams = new URLSearchParams(window.location.search);
           if (newValue === null || newValue === undefined || newValue === "") {
             newParams.delete(paramName);
           } else {

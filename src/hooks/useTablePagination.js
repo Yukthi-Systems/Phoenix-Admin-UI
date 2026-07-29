@@ -64,12 +64,17 @@ export const useTablePagination = (defaultPageSize = PER_PAGE, maxPageSize = nul
       updateUiInfo({ pageSize: next.pageSize });
     }
 
-    setSearchParams((prev) => {
-      // Update URL parameters
-      const newParams = new URLSearchParams(prev);
+    setSearchParams(() => {
+      // Read from window.location directly instead of the `prev` passed by
+      // react-router: that value is captured from this hook's last render
+      // and goes stale the moment another setSearchParams call (e.g. the
+      // search box writing its own param) fires in the same tick, silently
+      // clobbering that other update - which is how a stale page number
+      // could survive a search and be combined with the new query.
+      const newParams = new URLSearchParams(window.location.search);
       newParams.set("page", String(next.pageIndex + 1)); // Convert back to 1-based
       newParams.set("perPage", String(next.pageSize));
-      
+
       return newParams;
     });
   }, [pageIndex, pageSize, setSearchParams, updateUiInfo, maxPageSize]);
