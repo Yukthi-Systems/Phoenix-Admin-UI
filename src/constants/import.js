@@ -16,6 +16,7 @@
  */
 
 import { ALLOWED_EXTENSIONS, GLOBAL_BLOCKED } from "./blockedFileTypes";
+import { generateSecretCode } from "@/utils/secretCode";
 
 export const IMPORT_FIELD_MAPPINGS = {
   cautions: [
@@ -346,6 +347,38 @@ export const IMPORT_FIELD_MAPPINGS = {
         }
 
         return num;
+      },
+    },
+    {
+      key: "anti_phishing_secret_code",
+      header: "Anti-Phishing Secret Code",
+      csvHeader: "Anti-Phishing Secret Code",
+      type: "string",
+      // Backend requires this on every domain creation, but it's absent
+      // from exports/files created before this column existed. alwaysSend
+      // (rather than required) so a missing/blank value falls through to
+      // validate() and gets auto-generated instead of failing the import.
+      required: false,
+      alwaysSend: true,
+      width: 25,
+      sampleValue: "Secure Phrase 1",
+      sampleValue2: "Another Safe Code",
+      validate: (value) => {
+        const trimmed = typeof value === "string" ? value.trim() : "";
+        if (!trimmed) {
+          return generateSecretCode();
+        }
+        if (trimmed.length < 4 || trimmed.length > 20) {
+          throw new Error(
+            "Anti-Phishing Secret Code must be between 4 and 20 characters",
+          );
+        }
+        if (!/^[A-Za-z0-9_ -]+$/.test(trimmed)) {
+          throw new Error(
+            "Anti-Phishing Secret Code may only contain letters, numbers, spaces, underscores (_) and hyphens (-)",
+          );
+        }
+        return trimmed;
       },
     },
 

@@ -198,6 +198,12 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
     {
+      key: "anti_phishing_secret_code",
+      header: "Anti-Phishing Secret Code",
+      type: "string",
+      width: 25,
+    },
+    {
       key: "caution_id",
       header: "Caution ID",
       type: "string",
