@@ -16,14 +16,25 @@
  */
 
 import React from "react";
+import { useAtomValue } from "jotai";
+import { Info } from "lucide-react";
 import { Switch } from "@/components/common/Switch";
 import { RestrictionPolicyInfiniteSelectionField } from "@/components/common/infiniteSelectors/RestrictionPolicyInfiniteSelectionField";
 import { DepartmentInfiniteSelectField } from "@/components/common/infiniteSelectors/DepartmentInfiniteSelectionField";
 import { Input } from "@/components/common/Inputs";
+import { parentOrgAtom, selectedOrganizationAtom } from "@/store/userInfo";
+import { SERVICE_KEYS, SERVICE_LABELS, isServiceEnabledForOrg } from "@/constants/serviceAccess";
 
 function IdentityPoliciesStep({ register, errors, control, watch, organization_id, domain_name, isEdit }) {
   const is_mailbox_enabled = watch("is_mailbox_enabled");
   const is_files_enabled = watch("is_files_enabled");
+
+  const parentOrg = useAtomValue(parentOrgAtom);
+  const selectedOrg = useAtomValue(selectedOrganizationAtom);
+
+  const isMailboxServiceEnabled = isServiceEnabledForOrg(SERVICE_KEYS.EMAIL, parentOrg, selectedOrg);
+  const isChatServiceEnabled = isServiceEnabledForOrg(SERVICE_KEYS.CHAT, parentOrg, selectedOrg);
+  const isFileServiceEnabled = isServiceEnabledForOrg(SERVICE_KEYS.FILE, parentOrg, selectedOrg);
 
   return (
     <div className="space-y-6">
@@ -66,36 +77,65 @@ function IdentityPoliciesStep({ register, errors, control, watch, organization_i
           <div className="md:col-span-2 border-t border-border pt-6 space-y-6">
             <h4 className="text-sm font-semibold text-foreground">Services & Applications</h4>
 
+            {!(isMailboxServiceEnabled && isChatServiceEnabled && isFileServiceEnabled) && (
+              <div className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-primary">
+                <Info className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                <p className="text-xs text-left">
+                  Some services below are unavailable because they aren't
+                  enabled for this organization. Enable them from the
+                  organization's settings first.
+                </p>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Switch
-                control={control}
-                name="is_mailbox_enabled"
-                register={register}
-                watch={watch}
-                errors={errors}
-                falseLabel="Mailbox Disabled"
-                trueLabel="Mailbox Enabled"
-              />
+              {isMailboxServiceEnabled ? (
+                <Switch
+                  control={control}
+                  name="is_mailbox_enabled"
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  falseLabel="Mailbox Disabled"
+                  trueLabel="Mailbox Enabled"
+                />
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {SERVICE_LABELS[SERVICE_KEYS.EMAIL]} is not enabled for this organization.
+                </p>
+              )}
 
-              <Switch
-                control={control}
-                name="is_chat_enabled"
-                register={register}
-                watch={watch}
-                errors={errors}
-                falseLabel="Chat Disabled"
-                trueLabel="Chat Enabled"
-              />
+              {isChatServiceEnabled ? (
+                <Switch
+                  control={control}
+                  name="is_chat_enabled"
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  falseLabel="Chat Disabled"
+                  trueLabel="Chat Enabled"
+                />
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {SERVICE_LABELS[SERVICE_KEYS.CHAT]} is not enabled for this organization.
+                </p>
+              )}
 
-              <Switch
-                control={control}
-                name="is_files_enabled"
-                register={register}
-                watch={watch}
-                errors={errors}
-                falseLabel="Files Disabled"
-                trueLabel="Files Enabled"
-              />
+              {isFileServiceEnabled ? (
+                <Switch
+                  control={control}
+                  name="is_files_enabled"
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  falseLabel="Files Disabled"
+                  trueLabel="Files Enabled"
+                />
+              ) : (
+                <p className="text-xs text-muted-foreground">
+                  {SERVICE_LABELS[SERVICE_KEYS.FILE]} is not enabled for this organization.
+                </p>
+              )}
             </div>
 
             {(is_mailbox_enabled || is_files_enabled) && (
