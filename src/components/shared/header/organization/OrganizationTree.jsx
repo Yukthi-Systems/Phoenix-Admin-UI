@@ -34,6 +34,7 @@ import {
 } from "@/hooks/useOrganization";
 import { userProfileAtom } from "@/store/userProfile";
 import OrganizationLogo from "../../OrgLogo";
+import IdentityProgress from "@/components/common/IdentityProgress";
 import { selectedOrganizationAtom, userInfoAtom } from "@/store/userInfo";
 import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo"; // ✅ New Hook
 
@@ -41,6 +42,11 @@ const OrganizationSelector = ({
   selectedOrgId,
   selectedOrgName,
   onSelect,
+  // Optional gate called with the clicked organization right before it
+  // would be auto-applied (written to the atoms/uiInfo). Return `false` to
+  // veto the auto-apply for this click - onSelect still fires so the
+  // caller can apply it itself later (e.g. after a confirmation modal).
+  onBeforeSelect,
   placeholder = "Select Organization",
   label = "Organization:",
   disabled = false,
@@ -393,6 +399,17 @@ const OrganizationSelector = ({
       }
     }
 
+    // Lets a caller (e.g. the header switcher, which confirms before
+    // applying) veto the automatic apply below. onBeforeSelect receives
+    // the full organization data and is fully responsible for whatever
+    // happens next (e.g. stashing it and applying later once the user
+    // confirms) - onSelect is intentionally not called here, since this
+    // click hasn't actually been applied.
+    if (onBeforeSelect && onBeforeSelect(completeOrgData) === false) {
+      setIsOpen(false);
+      return;
+    }
+
     updateUserInfoAtom(completeOrgData);
 
     if (saveToUiInfo) {
@@ -459,6 +476,11 @@ const OrganizationSelector = ({
                 {organization.quota_utilized || 0}GB /{" "}
                 {organization.quota_allocated || 0}GB
               </span>
+              <IdentityProgress
+                utilized={organization.utilized_email_identities}
+                allocated={organization.allocated_email_identities}
+                className="!text-xs"
+              />
             </div>
           </div>
         </div>
