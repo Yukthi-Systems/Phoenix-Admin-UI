@@ -76,6 +76,7 @@ import { useTablePagination } from "@/hooks/useTablePagination";
 import DomainSelector from "@/components/shared/DomainSelector";
 import StatusBadge from "@/components/common/StatusBadge";
 import EditModelBox from "@/components/common/EditModelBox";
+import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 
 const ProvisionBadge = ({ service, present, enabled }) => {
   if (!present) {
@@ -99,6 +100,7 @@ const ProvisionBadge = ({ service, present, enabled }) => {
 const ListIdentities = () => {
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { organization_id } = useAtomValue(userInfoAtom);
+  const { data: orgDetails } = useGetOrganizationDetail(organization_id);
   const navigate = useNavigate();
   const [domainName, setDomainName] = useState(null);
   const [searchQuery, setSearchQuery] = useUrlParam("search", "");
@@ -795,21 +797,35 @@ const ListIdentities = () => {
     if (!domainName) return [];
     const options = [];
 
+    const isIdentityQuotaFull = orgDetails
+      ? Number(orgDetails.allocated_email_identities) !== -1 &&
+        Number(orgDetails.utilized_email_identities || 0) >=
+          Number(orgDetails.allocated_email_identities || 0)
+      : false;
+
+    const fullMessage = "Organization has no email identities left";
+
     if (permissions.includes("identity:create")) {
       options.push({
         label: "Add Single Identity",
-        description: "Create one identity blueprint",
+        description: isIdentityQuotaFull
+          ? fullMessage
+          : "Create one identity blueprint",
         icon: <Plus className="h-4 w-4" />,
         onClick: handleAddIdentity,
+        disabled: isIdentityQuotaFull,
       });
     }
 
     if (permissions.includes("identity:create") && isImportAvailable) {
       options.push({
         label: "Import",
-        description: "Import multiple identities from file",
+        description: isIdentityQuotaFull
+          ? fullMessage
+          : "Import multiple identities from file",
         icon: <Upload className="h-4 w-4" />,
         onClick: handleImport,
+        disabled: isIdentityQuotaFull,
       });
     }
 
@@ -828,6 +844,7 @@ const ListIdentities = () => {
     isImportAvailable,
     domainName,
     isExportAvailable,
+    orgDetails,
   ]);
 
   const identityCopyConfig = {
