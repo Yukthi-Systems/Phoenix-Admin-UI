@@ -33,7 +33,6 @@ import {
   useUpdateUserTFA,
 } from "@/hooks/useTFA";
 import { userProfileAtom } from "@/store/userProfile";
-import { userInfoAtom } from "@/store/userInfo";
 import { useAtomValue } from "jotai";
 import { useState } from "react";
 import DeleteModelBox from "@/components/common/DeleteModelBox";
@@ -55,8 +54,12 @@ const DisableTFA = ({
   isEmailAuth = false,
   isTOTPAuth = false,
 }) => {
-  const { user_id, display_name } = useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
+  // organization_id comes off the user's own profile, not
+  // userInfoAtom.organization_id - that tracks whatever org is currently
+  // browsed via the top org switcher and has no bearing on the logged-in
+  // user's own 2FA devices.
+  const { user_id, display_name, organization_id } =
+    useAtomValue(userProfileAtom);
   const toast = useToastify();
   const queryClient = useQueryClient();
 

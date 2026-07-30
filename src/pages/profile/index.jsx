@@ -39,7 +39,6 @@ import {
 import TwoFactAuth from "./TwoFactAuth";
 import BackupCode from "./BackupCode";
 import ProfilePicture from "./ProfilePic";
-import { userInfoAtom } from "@/store/userInfo";
 import { useToastify } from "@/hooks/useToastify";
 import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 import { useQueryClient } from "@tanstack/react-query";
@@ -56,7 +55,13 @@ import ResendButtonWithTimer from "@/components/common/ResendButtonWithTimer";
 const MyProfile = () => {
   const setProfile = useSetAtom(userProfileAtom);
   const userDetails = useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
+  // organization_id comes off the user's own profile, matching the key
+  // FullLayout.jsx fetches the "profile" query under - not
+  // userInfoAtom.organization_id, which tracks whatever org is currently
+  // browsed via the top org switcher. Using that here would both send the
+  // wrong org to email/SMS verification and desync the profile cache key
+  // used below from the one FullLayout actually populated.
+  const organization_id = userDetails?.organization_id;
   const { data: orgDetail } = useGetOrganizationDetail(organization_id);
   const toast = useToastify();
   const queryClient = useQueryClient();
@@ -74,7 +79,6 @@ const MyProfile = () => {
   const [verifyType, setVerifyType] = useState("");
   const [otp, setOtp] = useState("");
   const [orgName, setOrgName] = useState("");
-  const queryProfile = useQueryClient();
   const handleOpenBackupCode = () => {
     setBackupCodeView(true);
   };
@@ -157,16 +161,19 @@ const MyProfile = () => {
     const queryParams = { otp_code: UpperCase };
 
     const onSuccess = async () => {
-      const newUserData = await queryClient.getQueryData([
+      // Invalidate (and wait for the refetch) before reading the cache
+      // back out - reading it first would just hand back the
+      // pre-verification snapshot.
+      await queryClient.invalidateQueries({
+        queryKey: ["profile", user_id, organization_id],
+      });
+      const newUserData = queryClient.getQueryData([
         "profile",
         user_id,
         organization_id,
       ]);
-      await queryProfile.invalidateQueries({
-        queryKey: ["profile", userDetails?.user_id, organization_id],
-      });
-      if (newUserData) {
-        setProfile(newUserData?.user_details);
+      if (newUserData?.user_details) {
+        setProfile(newUserData.user_details);
       }
       toast("success", "Verification Successful.");
       setOtp("");

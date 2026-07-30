@@ -24,6 +24,12 @@ function EditModelBox({
   handleCancel = () => {},
   children,
   outsideClick = true,
+  // "default" keeps the existing bounded-dialog sizing every other caller
+  // relies on. "large" is for content-heavy flows (e.g. the 2FA setup
+  // wizard) that need real estate: it goes edge-to-edge full screen on
+  // small viewports (avoiding a scroll-within-a-scroll) and settles into
+  // a big-but-bounded dialog from `sm` up.
+  size = "default",
 }) {
   if (!isOpen) return null;
 
@@ -33,6 +39,11 @@ function EditModelBox({
     }
   };
 
+  const sizeClasses =
+    size === "large"
+      ? "w-full h-full rounded-none sm:w-[90vw] sm:h-auto sm:max-w-4xl sm:max-h-[92vh] sm:rounded-lg"
+      : "min-w-sm max-w-[80vw] max-h-[90vh] rounded-lg";
+
   return (
     <>
       {isOpen && (
@@ -41,7 +52,7 @@ function EditModelBox({
           onMouseDown={handleBackdropClick}
         >
           {/* Added 'flex flex-col' to handle layout and scrolling properly */}
-          <div className="bg-card rounded-lg min-w-sm max-w-[80vw] max-h-[90vh] flex flex-col overflow-hidden shadow-lg p-4 border border-border">
+          <div className={`bg-card ${sizeClasses} flex flex-col overflow-hidden shadow-lg p-4 border border-border`}>
             {/* Added 'flex-shrink-0' to prevent header from shrinking */}
             <div className="w-auto flex justify-between items-center mb-2 flex-shrink-0">
               <p className="text-xl font-medium text-card-foreground">

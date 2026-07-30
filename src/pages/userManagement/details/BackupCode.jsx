@@ -24,6 +24,7 @@ import { userInfoAtom } from "@/store/userInfo";
 import { useAtomValue } from "jotai";
 import { AlertTriangle, Key, RefreshCw, Shield } from "lucide-react";
 import { useState } from "react";
+import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 
 function BackupCode({
   isOpen = false,
@@ -32,6 +33,7 @@ function BackupCode({
   name = "User",
 }) {
   const { organization_id } = useAtomValue(userInfoAtom);
+  const { data: orgDetail } = useGetOrganizationDetail(organization_id);
   const [totpBackupCode, setTotpBackupCode] = useState([]);
   const [showTOTP, setShowTOTP] = useState(false);
   const { mutate: genBackup, isPending } = useGenerateBackupCode();
@@ -74,7 +76,11 @@ function BackupCode({
   const renderContent = () => {
     if (showTOTP) {
       return (
-        <StepBackupCode backupCode={totpBackupCode} onNext={handleClose} />
+        <StepBackupCode
+          backupCode={totpBackupCode}
+          onNext={handleClose}
+          orgName={orgDetail?.organization_name}
+        />
       );
     }
 

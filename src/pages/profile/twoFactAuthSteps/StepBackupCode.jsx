@@ -30,13 +30,18 @@ import BackupCodePrint from "./BackupCodePrint";
 import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 
-const StepBackupCode = ({ onNext, backupCode = [] }) => {
+const StepBackupCode = ({ onNext, backupCode = [], orgName = "" }) => {
   const componentRef = useRef(null);
   const [copiedCodes, setCopiedCodes] = useState(new Set());
+  const title = orgName ? `${orgName} - Backup Codes` : "Backup Codes";
+  const fileSlug = (orgName || "backup_codes")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
 
   const printFn = useReactToPrint({
     contentRef: componentRef,
-    documentTitle: "Mail Service 25 - Backup Codes",
+    documentTitle: title,
   });
 
   const copyToClipboard = async (code, index) => {
@@ -88,7 +93,7 @@ const StepBackupCode = ({ onNext, backupCode = [] }) => {
       <div className="bg-warning/10 border border-warning/20 rounded-md p-3 mb-4">
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-warning flex-shrink-0" />
-          <p className="text-sm text-warning-foreground">
+          <p className="text-sm text-warning">
             Print or download these codes and keep them safe. Each code can only
             be used once.
           </p>
@@ -159,8 +164,8 @@ const StepBackupCode = ({ onNext, backupCode = [] }) => {
 
           {backupCode.length > 0 && (
             <PDFDownloadLink
-              document={<BackupCodePDF data={backupCode} />}
-              fileName="mail_service_25_backup_codes.pdf"
+              document={<BackupCodePDF data={backupCode} orgName={orgName} />}
+              fileName={`${fileSlug}_backup_codes.pdf`}
               className="inline-flex items-center gap-1 bg-primary text-primary-foreground hover:bg-primary/90 text-sm px-3 py-2 rounded transition-colors"
             >
               {({ loading }) => (
@@ -184,7 +189,7 @@ const StepBackupCode = ({ onNext, backupCode = [] }) => {
 
       {/* Hidden Print Component */}
       <div className="hidden">
-        <BackupCodePrint ref={componentRef} codes={backupCode} />
+        <BackupCodePrint ref={componentRef} codes={backupCode} orgName={orgName} />
       </div>
     </div>
   );

@@ -17,11 +17,11 @@
 
 import React, { forwardRef } from "react";
 
-const BackupCodePrint = forwardRef(({ codes = [] }, ref) => {
+const BackupCodePrint = forwardRef(({ codes = [], orgName = "" }, ref) => {
   return (
     <div ref={ref} className="p-6 font-sans">
       <h1 className="text-2xl font-bold text-center mb-8">
-        Mail Service 25 - Backup Codes
+        {orgName ? `${orgName} - Backup Codes` : "Backup Codes"}
       </h1>
       <div className="grid grid-cols-2 gap-4 w-[400px] mx-auto border p-4 rounded">
         {codes.length > 0 ? (

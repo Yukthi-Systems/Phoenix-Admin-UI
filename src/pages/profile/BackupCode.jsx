@@ -20,15 +20,20 @@ import EditModelBox from "@/components/common/EditModelBox";
 import StepBackupCode from "./twoFactAuthSteps/StepBackupCode";
 import { useBackupCheck, useGenerateBackupCode } from "@/hooks/useTFA";
 import { useToastify } from "@/hooks/useToastify";
-import { userInfoAtom } from "@/store/userInfo";
 import { userProfileAtom } from "@/store/userProfile";
 import { useAtomValue } from "jotai";
 import { Button } from "@/components/common/Buttons";
 import { Key, RefreshCw, Shield, AlertTriangle, Info } from "lucide-react";
+import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 
 function BackupCode({ isOpen = false, setIsOpen = () => {} }) {
-  const { user_id, display_name } = useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
+  // organization_id comes off the user's own profile, not
+  // userInfoAtom.organization_id - that tracks whatever org is currently
+  // browsed via the top org switcher and has no bearing on the logged-in
+  // user's own backup codes.
+  const { user_id, display_name, organization_id } =
+    useAtomValue(userProfileAtom);
+  const { data: orgDetail } = useGetOrganizationDetail(organization_id);
   const [totpBackupCode, setTotpBackupCode] = useState([]);
   const [showTOTP, setShowTOTP] = useState(false);
   const { mutate: genBackup, isPending } = useGenerateBackupCode();
@@ -71,7 +76,11 @@ function BackupCode({ isOpen = false, setIsOpen = () => {} }) {
   const renderContent = () => {
     if (showTOTP) {
       return (
-        <StepBackupCode backupCode={totpBackupCode} onNext={handleClose} />
+        <StepBackupCode
+          backupCode={totpBackupCode}
+          onNext={handleClose}
+          orgName={orgDetail?.organization_name}
+        />
       );
     }
 

@@ -19,7 +19,6 @@ import React, { useEffect } from "react";
 import { locales, timezones } from "@/utils/constants";
 import { userProfileAtom } from "@/store/userProfile";
 import { useAtomValue, useSetAtom } from "jotai";
-import { userInfoAtom } from "@/store/userInfo";
 import { useToastify } from "@/hooks/useToastify";
 import { useUpdateUser } from "@/hooks/useUser";
 import { useQueryClient } from "@tanstack/react-query";
@@ -38,7 +37,11 @@ import PhoneInput from "@/components/common/PhoneInput";
 
 function EditProfile({ editProfile = false, setEditProfile = () => { } }) {
   const userDetails = useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
+  // organization_id comes off the user's own profile, matching the key
+  // FullLayout.jsx fetches the "profile" query under - not
+  // userInfoAtom.organization_id, which tracks whatever org is currently
+  // browsed via the top org switcher.
+  const { organization_id } = userDetails || {};
   const toast = useToastify();
   const { mutate, isPending } = useUpdateUser();
   const queryProfile = useQueryClient();

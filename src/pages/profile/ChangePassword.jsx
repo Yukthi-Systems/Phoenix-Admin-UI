@@ -19,7 +19,6 @@ import React from "react";
 import EditModelBox from "@/components/common/EditModelBox";
 import { useToastify } from "@/hooks/useToastify";
 import { useAtomValue } from "jotai";
-import { userInfoAtom } from "@/store/userInfo";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Input, PasswordInput } from "@/components/common/Inputs";
@@ -33,7 +32,11 @@ function ChangePassword({
   setChangePassword = () => {},
 }) {
   const userDetails = useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
+  // organization_id comes off the user's own profile, not
+  // userInfoAtom.organization_id - that tracks whatever org is currently
+  // browsed via the top org switcher and has no bearing on the logged-in
+  // user's own password change.
+  const { organization_id } = userDetails || {};
   const toast = useToastify();
   const { mutate, isPending } = useChangePassword();
 

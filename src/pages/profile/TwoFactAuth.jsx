@@ -30,7 +30,6 @@ import {
   useValidateTFA,
 } from "@/hooks/useTFA";
 import { useAtomValue, useSetAtom } from "jotai";
-import { userInfoAtom } from "@/store/userInfo";
 import { userProfileAtom } from "@/store/userProfile";
 import { useToastify } from "@/hooks/useToastify";
 import { useQueryClient } from "@tanstack/react-query";
@@ -58,9 +57,12 @@ function TwoFactAuth({
   const toast = useToastify();
   const queryClient = useQueryClient();
 
-  const { user_id, user_email, display_name, primary_phone } =
+  // organization_id here is deliberately read off the user's own profile,
+  // not userInfoAtom.organization_id - that one tracks whatever org the
+  // admin is currently browsing via the top org switcher, and this modal
+  // manages the logged-in user's own 2FA, not that of the browsed org.
+  const { user_id, user_email, display_name, primary_phone, organization_id } =
     useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
   const { data: orgDetail } = useGetOrganizationDetail(organization_id);
 
   const [step, setStep] = useState(0);
@@ -114,13 +116,19 @@ function TwoFactAuth({
     );
   };
 
-  const getUserData = () => {
+  const getUserData = async () => {
+    // Awaiting invalidateQueries lets the active "profile" query (kept
+    // mounted by FullLayout) refetch before we read it back out - reading
+    // getQueryData first would just hand back the pre-mutation snapshot.
+    await queryClient.invalidateQueries({
+      queryKey: ["profile", user_id, organization_id],
+    });
     const userData = queryClient.getQueryData([
       "profile",
       user_id,
       organization_id,
     ]);
-    setProfile(userData?.user_details ?? null);
+    if (userData?.user_details) setProfile(userData.user_details);
   };
 
   const handleVerifyClick = () => {
@@ -252,6 +260,7 @@ function TwoFactAuth({
       {
         onSuccess: (res) => {
           toast("success", res?.message || "2FA disabled");
+          getUserData();
           setTwoFactAuth(false);
         },
         onError: handleError,
@@ -426,9 +435,15 @@ function TwoFactAuth({
     <EditModelBox
       isOpen={twoFactAuth}
       label={hasActive ? "" : ""}
-      showCancel={false}
+      // "large" goes full screen on small viewports so the wizard content
+      // doesn't need its own inner scroll on top of the page scroll. That
+      // removes the backdrop-click escape hatch on mobile, so keep an
+      // explicit close button visible.
+      size="large"
+      showCancel={true}
+      handleCancel={() => setTwoFactAuth(false)}
     >
-      <div className="w-[75vw]  mt-4">
+      <div className="w-full max-w-2xl mx-auto mt-4">
         {hasActive ? (
           <DisableTFA
             setHasActive={() => setHasActive(false)}
