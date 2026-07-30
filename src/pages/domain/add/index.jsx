@@ -53,8 +53,6 @@ const STEPS = [
     label: "Domain Properties",
     description: "Advanced settings",
     fields: [
-      "enable_catch_all",
-      "catch_all_forwarding_address",
       "enable_hybrid_mode",
       "hybrid_connector_properties.description",
       "hybrid_connector_properties.fqdn",
@@ -100,7 +98,6 @@ const getRequiredFieldsForStep = (stepIndex, watchValues) => {
 
   let requiredFields = [...step.fields];
   const {
-    enable_catch_all,
     enable_hybrid_mode,
     enable_max_password_age,
     spam_destination,
@@ -108,10 +105,6 @@ const getRequiredFieldsForStep = (stepIndex, watchValues) => {
 
   // Conditionally remove fields based on toggles
   if (stepIndex === 2) {
-    if (!enable_catch_all)
-      requiredFields = requiredFields.filter(
-        (f) => f !== "catch_all_forwarding_address",
-      );
     if (!enable_hybrid_mode)
       requiredFields = requiredFields.filter(
         (f) => !f.startsWith("hybrid_connector_properties"),
@@ -216,7 +209,6 @@ const AddDomain = () => {
 
   const watchedValues = {
     spam_destination: watch("spam_destination"),
-    enable_catch_all: watch("enable_catch_all"),
     enable_hybrid_mode: watch("enable_hybrid_mode"),
     enable_max_password_age: watch("enable_max_password_age"),
   };

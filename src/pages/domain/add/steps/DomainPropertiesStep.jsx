@@ -15,11 +15,11 @@
  * <https://www.gnu.org/licenses/>.
  */
 
+import { Info } from "lucide-react";
 import { Input } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 
 const DomainPropertiesStep = ({ register, errors, control, watch }) => {
-  const enableCatchAll = watch("enable_catch_all");
   const enableHybridMode = watch("enable_hybrid_mode");
 
   return (
@@ -29,56 +29,17 @@ const DomainPropertiesStep = ({ register, errors, control, watch }) => {
           Domain Properties
         </h3>
         <p className="text-muted-foreground mt-1 text-sm">
-          Configure advanced domain settings including catch-all and hybrid mode
+          Configure advanced domain settings including hybrid mode
         </p>
       </div>
 
-      <fieldset className="border-border rounded-md border p-6">
-      <legend className="text-foreground  text-left text-base font-medium">
-        Email Handling
-      </legend>
-      <div className="space-y-6">
-        {/* Catch All Settings */}
-        <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
-          <div>
-            <Switch
-              control={control}
-              name="enable_catch_all"
-              register={register}
-              watch={watch}
-              errors={errors}
-              disabled={enableHybridMode}
-              falseLabel="Catch All Disabled"
-              falseSublabel="Unknown email addresses will be rejected"
-              trueLabel="Catch All Enabled"
-              trueSublabel="Unknown email addresses will be forwarded to specified email"
-            />
-            {enableHybridMode && (
-              <p className="text-muted-foreground mt-2 text-xs text-left">
-                Disable Hybrid Mode to enable Catch All — only one can be active per domain.
-              </p>
-            )}
-          </div>
-
-          {enableCatchAll && (
-            <div>
-              <Input
-                type="email"
-                label="Catch All Forwarding Email Address"
-                name="catch_all_forwarding_address"
-                placeholder="catchall@example.com"
-                register={register}
-                errors={errors}
-                isRequired={true}
-              />
-              <p className="text-muted-foreground mt-2 text-xs text-left">
-                The forwarding address must be managed by our service.
-              </p>
-            </div>
-          )}
-        </div>
+      <div className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-primary">
+        <Info className="mt-0.5 h-4 w-4 flex-shrink-0" />
+        <p className="text-xs text-left">
+          Catch-all forwarding isn't available while creating a domain. You
+          can enable it afterwards from the domain's Edit page.
+        </p>
       </div>
-      </fieldset>
 
       <fieldset className="border-border rounded-md border p-6">
       <legend className="text-foreground  text-left text-base font-medium">
@@ -94,17 +55,11 @@ const DomainPropertiesStep = ({ register, errors, control, watch }) => {
               register={register}
               watch={watch}
               errors={errors}
-              disabled={enableCatchAll}
               falseLabel="Hybrid Mode Disabled"
               falseSublabel="Standard cloud-only or on-premise-only setup"
               trueLabel="Hybrid Mode Enabled"
               trueSublabel="Mixed cloud and on-premise connector configuration"
             />
-            {enableCatchAll && (
-              <p className="text-muted-foreground mt-2 text-xs text-left">
-                Disable Catch All to enable Hybrid Mode — only one can be active per domain.
-              </p>
-            )}
           </div>
 
           {enableHybridMode && (

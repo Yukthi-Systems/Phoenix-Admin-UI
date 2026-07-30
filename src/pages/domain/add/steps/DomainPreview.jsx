@@ -19,7 +19,6 @@ import { Check, X, Info, AlertCircle } from "lucide-react";
 
 const DomainPreviewStep = ({ formData, watch }) => {
   // Watch for dynamic values
-  const enableCatchAll = watch("enable_catch_all");
   const enableHybridMode = watch("enable_hybrid_mode");
   const enableMaxPasswordAge = watch("enable_max_password_age");
   const spamDestination = watch("spam_destination");
@@ -138,22 +137,6 @@ const DomainPreviewStep = ({ formData, watch }) => {
       {/* Domain Properties Section */}
       <PreviewSection title="Domain Properties" icon={Info}>
         <div className="space-y-4">
-          {/* Catch All */}
-          <div className="rounded-md bg-accent/30 p-3">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">
-                Catch All
-              </span>
-              <StatusBadge enabled={enableCatchAll} />
-            </div>
-            {enableCatchAll && (
-              <PreviewItem
-                label="Forwarding Address"
-                value={formData.catch_all_forwarding_address}
-              />
-            )}
-          </div>
-
           {/* Hybrid Mode */}
           <div className="rounded-md bg-accent/30 p-3">
             <div className="mb-2 flex items-center justify-between">
