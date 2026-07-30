@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { useGetOrganizations } from "@/hooks/useOrganization";
 import OrganizationLogo from "../../OrgLogo";
+import IdentityProgress from "@/components/common/IdentityProgress";
 import { BASE_ORG } from "@/constants/constants";
 
 const OrganizationTreeItem = ({
@@ -260,6 +261,11 @@ const OrganizationTreeItem = ({
             <span className="text-xs text-muted-foreground">
               {organization.quota_utilized}GB / {organization.quota_allocated}GB
             </span>
+            <IdentityProgress
+              utilized={organization.utilized_email_identities}
+              allocated={organization.allocated_email_identities}
+              className="!text-xs"
+            />
           </div>
         </div>
 

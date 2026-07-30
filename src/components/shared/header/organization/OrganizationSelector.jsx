@@ -34,6 +34,7 @@ import {
 } from "@/hooks/useOrganization";
 import { userProfileAtom } from "@/store/userProfile";
 import OrganizationLogo from "../../OrgLogo";
+import IdentityProgress from "@/components/common/IdentityProgress";
 import { selectedOrganizationAtom, userInfoAtom } from "@/store/userInfo";
 import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo"; // ✅ New Hook
 
@@ -434,6 +435,11 @@ const OrganizationSelector = ({
                 {organization.quota_utilized || 0}GB /{" "}
                 {organization.quota_allocated || 0}GB
               </span>
+              <IdentityProgress
+                utilized={organization.utilized_email_identities}
+                allocated={organization.allocated_email_identities}
+                className="!text-xs"
+              />
             </div>
           </div>
         </div>
