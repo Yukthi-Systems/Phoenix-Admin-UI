@@ -495,14 +495,15 @@ function AuditLog() {
                     {isPending ? "Loading..." : "Search Logs"}
                   </button>
 
-                  <button
+                  {/* Request Logs - commented out for now */}
+                  {/* <button
                     type="button"
                     disabled={isLoad || !!dateValidationError}
                     onClick={handleRequestLogsClick}
                     className="bg-secondary text-nowrap text-secondary-foreground hover:bg-secondary/80 h-10 w-fit rounded border px-4 shadow-sm transition-all duration-200 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isLoad ? "Loading..." : "Request Logs"}
-                  </button>
+                  </button> */}
 
                   <button
                     type="button"

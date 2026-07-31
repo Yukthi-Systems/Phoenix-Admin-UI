@@ -394,14 +394,15 @@ function LoginAttemptsLogs() {
                 {isPending ? "Loading..." : "Submit"}
               </button>
 
-              <button
+              {/* Request Logs - commented out for now */}
+              {/* <button
                 type="button"
                 disabled={isLoad || !domainName || !!dateValidationError}
                 className="border h-10 px-4 rounded bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md w-fit"
                 onClick={requestLogs}
               >
                 {isLoad ? "Loading..." : "Request"}
-              </button>
+              </button> */}
 
               <button
                 type="button"
