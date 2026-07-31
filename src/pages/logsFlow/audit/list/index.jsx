@@ -471,14 +471,15 @@ function AuditLog() {
                         disabledFutureDates
                         value={value}
                         onChange={onChange}
-                        label="Date Range *"
+                        label="Date Range"
+                        isRequired
                         placeholder="Select date range..."
                         includeTime={true}
                         maxDays={30}
                         onValidation={handleDateValidation}
                         error={dateValidationError}
                         // info="Maximum 30 days range allowed"
-                        isClearable={false}
+                        isClearable
                       />
                     )}
                   />

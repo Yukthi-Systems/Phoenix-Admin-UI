@@ -554,13 +554,14 @@ function EmailFlowLog() {
                         disabledFutureDates
                         value={value}
                         onChange={onChange}
-                        label="Date Range *"
+                        label="Date Range"
+                        isRequired
                         placeholder="Select date range..."
                         includeTime={true}
                         maxDays={30}
                         onValidation={handleDateValidation}
                         error={dateValidationError}
-                        isClearable={false}
+                        isClearable
                       />
                     )}
                   />

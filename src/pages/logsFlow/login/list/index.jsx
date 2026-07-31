@@ -368,7 +368,8 @@ function LoginAttemptsLogs() {
                   <DateTimeRangePicker
                     value={value}
                     onChange={onChange}
-                    label="Date Range *"
+                    label="Date Range"
+                    isRequired
                     placeholder="Select date range..."
                     includeTime={true}
                     showPresets={true}
@@ -377,7 +378,7 @@ function LoginAttemptsLogs() {
                     error={dateValidationError}
                     disabledFutureDates
                     // info="Maximum 30 days range allowed"
-                    isClearable={false}
+                    isClearable
                   />
                 )}
               />

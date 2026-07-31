@@ -345,17 +345,6 @@ const DateTimeRangePicker = ({
               <Calendar className="w-4 h-4 text-muted-foreground" />
             </div>
           </button>
-
-          {isClearable && (selected?.from || selected?.to) && !disabled && (
-            <button
-              type="button"
-              onClick={handleClear}
-              className="px-3 py-2 rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-              title="Clear selection"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
         </div>
 
         {isOpen && (
@@ -366,6 +355,21 @@ const DateTimeRangePicker = ({
             } left-0 right-0 bg-card border flex items-center justify-center border-border rounded-lg shadow-lg z-50 min-w-[250px]`}
           >
             <div className="px-3 py-3">
+              {isClearable && (selected?.from || selected?.to) && (
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Select a range
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-destructive transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    Clear
+                  </button>
+                </div>
+              )}
               <div className="calendar-wrapper">
                 <DayPicker
                   mode="range"
