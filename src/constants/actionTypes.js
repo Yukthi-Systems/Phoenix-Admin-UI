@@ -64,6 +64,8 @@ export const ACTION_TYPES = {
   UPDATE_DOMAIN_QUOTA: "update_domain_quota",
   DELETE_DOMAIN: "delete_domain",
   GET_DNS_DETAILS: "get_dns_details",
+  GET_DOMAIN_TXT_KEY: "get_domain_txt_key",
+  VERIFY_DOMAIN_DNS: "verify_domain_dns",
   MOVE_DOMAIN: "move_domain",
 
   // General Policy
@@ -112,6 +114,8 @@ export const ACTION_TYPES = {
   DELETE_ORGANIZATION: "delete_organization",
   UPDATE_ORGANIZATION_STATUS: "update_organization_status",
   UPDATE_ORGANIZATION_QUOTA: "update_organization_quota",
+  UPDATE_ORGANIZATION_IDENTITY_QUOTA: "update_organization_identity_quota",
+  UPLOAD_ORGANIZATION_LOGO: "upload_organization_logo",
   RENAME_ORGANIZATION: "rename_organization",
 
   // Permission Template
@@ -119,18 +123,110 @@ export const ACTION_TYPES = {
 
   // Policy Rules
   GET_POLICY_RULES_LIST: "get_policy_rules_list",
-  CREATE_POLICY_RULES: "create_policy_rules",
+  CREATE_POLICY_RULE: "create_policy_rule",
   GET_POLICY_RULE_DETAILS: "get_policy_rule_details",
   UPDATE_POLICY_RULE: "update_policy_rule",
   DELETE_POLICY_RULE: "delete_policy_rule",
+
+  // Restriction Policy (Geo/IP)
+  GET_RESTRICTION_POLICY_LIST: "get_restriction_policy_list",
+  GET_RESTRICTION_POLICY_DETAILS: "get_restriction_policy_details",
+  CREATE_RESTRICTION_POLICY: "create_restriction_policy",
+  UPDATE_RESTRICTION_POLICY: "update_restriction_policy",
+  DELETE_RESTRICTION_POLICY: "delete_restriction_policy",
+  EXPORT_RESTRICTION_POLICY_LIST: "export_restriction_policy_list",
+
+  // Forwarding Policy
+  GET_FORWARDING_POLICY_LIST: "get_forwarding_policy_list",
+  GET_FORWARDING_POLICY_DETAILS: "get_forwarding_policy_details",
+  CREATE_FORWARDING_POLICY: "create_forwarding_policy",
+  UPDATE_FORWARDING_POLICY: "update_forwarding_policy",
+  DELETE_FORWARDING_POLICY: "delete_forwarding_policy",
+  EXPORT_FORWARDING_POLICY_LIST: "export_forwarding_policy_list",
+
+  // Distribution Policy
+  GET_DISTRIBUTION_POLICY_LIST: "get_distribution_policy_list",
+  GET_DISTRIBUTION_POLICY_DETAILS: "get_distribution_policy_details",
+  CREATE_DISTRIBUTION_POLICY: "create_distribution_policy",
+  UPDATE_DISTRIBUTION_POLICY: "update_distribution_policy",
+  DELETE_DISTRIBUTION_POLICY: "delete_distribution_policy",
+  EXPORT_DISTRIBUTION_POLICY_LIST: "export_distribution_policy_list",
+
+  // Disclaimer
+  GET_DISCLAIMER_LIST: "get_disclaimer_list",
+  GET_DISCLAIMER: "get_disclaimer",
+  CREATE_DISCLAIMER: "create_disclaimer",
+  UPDATE_DISCLAIMER: "update_disclaimer",
+  DELETE_DISCLAIMER: "delete_disclaimer",
+  EXPORT_DISCLAIMER_LIST: "export_disclaimer_list",
+
+  // Identity
+  GET_IDENTITIES_LIST: "get_identities_list",
+  GET_IDENTITY_DETAILS: "get_identity_details",
+  GET_FULL_IDENTITY_INFO_BY_ADMIN: "get_full_identity_info_by_admin",
+  CREATE_IDENTITY: "create_identity",
+  UPDATE_IDENTITY: "update_identity",
+  UPDATE_IDENTITY_PASSWORD: "update_identity_password",
+  DELETE_IDENTITY: "delete_identity",
+  EXPORT_IDENTITIES_LIST: "export_identities_list",
+
+  // Chat Service
+  GET_CHAT_CONFIG: "get_chat_config",
+  UPDATE_CHAT_CONFIG: "update_chat_config",
+  UPDATE_CHAT_QUOTA: "update_chat_quota",
+  CREATE_CHAT_USER: "create_chat_user",
+  TOGGLE_CHAT_USER_STATUS: "toggle_chat_user_status",
+  DELETE_CHAT_USER: "delete_chat_user",
+
+  // File Service
+  GET_FILE_SERVICE_CONFIG: "get_file_service_config",
+  UPDATE_FILE_SERVICE_CONFIG: "update_file_service_config",
+  UPDATE_FILE_USER_QUOTA: "update_file_user_quota",
+  CREATE_FILE_USER: "create_file_user",
+  TOGGLE_FILE_USER_STATUS: "toggle_file_user_status",
+  DELETE_FILE_USER: "delete_file_user",
+
+  // Admin API Keys
+  GET_API_KEYS_LIST: "get_api_keys_list",
+  GET_API_KEY_DETAILS: "get_api_key_details",
+  CREATE_API_KEY: "create_api_key",
+  EDIT_API_KEY: "edit_api_key",
+  DELETE_API_KEY: "delete_api_key",
+
+  // IMAP Sync
+  LIST_IMAP_SYNC_JOBS: "list_imap_sync_jobs",
+  CREATE_IMAP_SYNC_JOB: "create_imap_sync_job",
+
+  // Invoices
+  GET_INVOICE_LIST: "get_invoice_list",
+  GET_GLOBAL_INVOICE_LIST: "get_global_invoice_list",
+  GET_INVOICE_WITH_REVISIONS: "get_invoice_with_revisions",
+  GET_INVOICE_LATEST_ID: "get_invoice_latest_id",
+  CREATE_INITIAL_INVOICE: "create_initial_invoice",
+  UPDATE_INITIAL_INVOICE: "update_initial_invoice",
+  CREATE_REVISION_INVOICE: "create_revision_invoice",
+  UPLOAD_INVOICE: "upload_invoice",
+  DOWNLOAD_INVOICE_REVISION: "download_invoice_revision",
+
+  // Admin Maintenance
+  CREATE_MAINTENANCE_STATUS: "create_maintenance_status",
+  UPDATE_MAINTENANCE_STATUS: "update_maintenance_status",
+  DELETE_MAINTENANCE_STATUS: "delete_maintenance_status",
 
   // Servers
   GET_SERVER_LIST: "get_server_list",
   GET_SERVER_DETAILS: "get_server_details",
   CREATE_SERVER: "create_server",
   UPDATE_SERVER: "update_server",
+  UPDATE_SERVER_STATUS: "update_server_status",
   DELETE_SERVER: "delete_server",
   START_MAILBOX_MIGRATION: "start_mailbox_migration",
+  START_MANUAL_MAILBOX_MIGRATION: "start_manual_mailbox_migration",
+  RECALCULATE_QUOTA: "recalculate_quota",
+  CREATE_EMAIL_SERVER_MAPPINGS: "create_email_server_mappings",
+  GET_PFLOGSUM_REPORT: "get_pflogsum_report",
+  UPDATE_DOMAIN_LOCK: "update_domain_lock",
+  UPDATE_MAILBOX_LOCK: "update_mailbox_lock",
 
   // User
   GET_USER_LIST: "get_user_list",
@@ -139,6 +235,7 @@ export const ACTION_TYPES = {
   DELETE_USER: "delete_user",
   UPDATE_USER_PASSWORD: "update_user_password",
   UPDATE_USER_PERMISSIONS: "update_user_permissions",
+  UPLOAD_USER_PROFILE_PICTURE: "upload_user_profile_picture",
 
   // 2FA
   TFA_GENERATE_QRCODE: "2fa_generate_QRCode",
@@ -148,8 +245,8 @@ export const ACTION_TYPES = {
   TFA_BACKUPCODE_VALIDATION: "2fa_backupcode_validation",
   TFA_TOTP_VALIDATION: "2fa_totp_validation",
   TFA_GET_TOTP_LIST: "2fa_get_totp_list",
-  TFA_EDIT: "2fa_edit",
-  TFA_DELETE: "2fa_delete",
+  TFA_EDIT_TOTP: "2fa_edit_totp",
+  TFA_DELETE_TOTP: "2fa_delete_totp",
   TFA_GENERATE_EMAIL_OTP: "2fa_generate_email_otp",
   TFA_VALIDATE_EMAIL_OTP: "2fa_validate_email_otp",
   TFA_ENABLE_EMAIL_AUTH: "2fa_enable_email_auth",
@@ -162,10 +259,17 @@ export const ACTION_TYPES = {
   TFA_SEND_PHONE_OTP: "2fa_send_phone_otp",
   TFA_GET_BACKUPCODE: "2fa_get_backupcode",
 
-  //Email Client Sessions
+  //Mailbox Sessions
   GET_EMAIL_CLIENT_SESSIONS: "get_email_client_sessions",
   SWITCH_EMAIL_CLIENT_SESSIONS: "switch_email_client_session",
   DELETE_EMAIL_CLIENT_SESSIONS: "delete_email_client_session",
+
+  // Mail 25 App Sessions
+  DELETE_USER_APP_SESSION: "delete_user_app_session",
+
+  // SSO Sessions
+  DELETE_SSO_SESSION: "delete_sso_session",
+  UPDATE_SSO_SESSION_STATUS: "update_sso_session_status",
 
   //Mail Queue
   MAIL_QUEUE_REMOVE: "mailq_remove",
@@ -208,6 +312,10 @@ export const ACTION_TYPE_GROUPS = [
         label: "Update User Permissions",
         value: ACTION_TYPES.UPDATE_USER_PERMISSIONS,
       },
+      {
+        label: "Upload User Profile Picture",
+        value: ACTION_TYPES.UPLOAD_USER_PROFILE_PICTURE,
+      },
     ],
   },
   {
@@ -241,6 +349,8 @@ export const ACTION_TYPE_GROUPS = [
       { label: "Update Domain Quota", value: ACTION_TYPES.UPDATE_DOMAIN_QUOTA },
       { label: "Delete Domain", value: ACTION_TYPES.DELETE_DOMAIN },
       { label: "Get DNS Details", value: ACTION_TYPES.GET_DNS_DETAILS },
+      { label: "Get Domain TXT Key", value: ACTION_TYPES.GET_DOMAIN_TXT_KEY },
+      { label: "Verify Domain DNS", value: ACTION_TYPES.VERIFY_DOMAIN_DNS },
       { label: "Move Domain", value: ACTION_TYPES.MOVE_DOMAIN },
     ],
   },
@@ -290,6 +400,14 @@ export const ACTION_TYPE_GROUPS = [
         value: ACTION_TYPES.UPDATE_ORGANIZATION_QUOTA,
       },
       {
+        label: "Update Organization Identity Quota",
+        value: ACTION_TYPES.UPDATE_ORGANIZATION_IDENTITY_QUOTA,
+      },
+      {
+        label: "Upload Organization Logo",
+        value: ACTION_TYPES.UPLOAD_ORGANIZATION_LOGO,
+      },
+      {
         label: "Rename Organization",
         value: ACTION_TYPES.RENAME_ORGANIZATION,
       },
@@ -302,10 +420,38 @@ export const ACTION_TYPE_GROUPS = [
       { label: "Get Server Details", value: ACTION_TYPES.GET_SERVER_DETAILS },
       { label: "Create Server", value: ACTION_TYPES.CREATE_SERVER },
       { label: "Update Server", value: ACTION_TYPES.UPDATE_SERVER },
+      {
+        label: "Update Server Status",
+        value: ACTION_TYPES.UPDATE_SERVER_STATUS,
+      },
       { label: "Delete Server", value: ACTION_TYPES.DELETE_SERVER },
       {
         label: "Start Mailbox Migration",
         value: ACTION_TYPES.START_MAILBOX_MIGRATION,
+      },
+      {
+        label: "Start Manual Mailbox Migration",
+        value: ACTION_TYPES.START_MANUAL_MAILBOX_MIGRATION,
+      },
+      {
+        label: "Recalculate Quota",
+        value: ACTION_TYPES.RECALCULATE_QUOTA,
+      },
+      {
+        label: "Create Email Server Mappings",
+        value: ACTION_TYPES.CREATE_EMAIL_SERVER_MAPPINGS,
+      },
+      {
+        label: "Get PFLogSumm Report",
+        value: ACTION_TYPES.GET_PFLOGSUM_REPORT,
+      },
+      {
+        label: "Update Domain Lock",
+        value: ACTION_TYPES.UPDATE_DOMAIN_LOCK,
+      },
+      {
+        label: "Update Mailbox Lock",
+        value: ACTION_TYPES.UPDATE_MAILBOX_LOCK,
       },
     ],
   },
@@ -378,7 +524,7 @@ export const ACTION_TYPE_GROUPS = [
       },
       {
         label: "Export General Policy",
-        value: ACTION_TYPES.DELETE_GENERAL_POLICY,
+        value: ACTION_TYPES.EXPORT_GENERAL_POLICY_LIST,
       },
     ],
   },
@@ -441,6 +587,260 @@ export const ACTION_TYPE_GROUPS = [
     ],
   },
   {
+    label: "Policy Rules",
+    options: [
+      {
+        label: "Get Policy Rules List",
+        value: ACTION_TYPES.GET_POLICY_RULES_LIST,
+      },
+      {
+        label: "Get Policy Rule Details",
+        value: ACTION_TYPES.GET_POLICY_RULE_DETAILS,
+      },
+      { label: "Create Policy Rule", value: ACTION_TYPES.CREATE_POLICY_RULE },
+      { label: "Update Policy Rule", value: ACTION_TYPES.UPDATE_POLICY_RULE },
+      { label: "Delete Policy Rule", value: ACTION_TYPES.DELETE_POLICY_RULE },
+    ],
+  },
+  {
+    label: "Restriction Policy (Geo/IP)",
+    options: [
+      {
+        label: "Get Restriction Policy List",
+        value: ACTION_TYPES.GET_RESTRICTION_POLICY_LIST,
+      },
+      {
+        label: "Get Restriction Policy Details",
+        value: ACTION_TYPES.GET_RESTRICTION_POLICY_DETAILS,
+      },
+      {
+        label: "Create Restriction Policy",
+        value: ACTION_TYPES.CREATE_RESTRICTION_POLICY,
+      },
+      {
+        label: "Update Restriction Policy",
+        value: ACTION_TYPES.UPDATE_RESTRICTION_POLICY,
+      },
+      {
+        label: "Delete Restriction Policy",
+        value: ACTION_TYPES.DELETE_RESTRICTION_POLICY,
+      },
+      {
+        label: "Export Restriction Policy",
+        value: ACTION_TYPES.EXPORT_RESTRICTION_POLICY_LIST,
+      },
+    ],
+  },
+  {
+    label: "Forwarding Policy",
+    options: [
+      {
+        label: "Get Forwarding Policy List",
+        value: ACTION_TYPES.GET_FORWARDING_POLICY_LIST,
+      },
+      {
+        label: "Get Forwarding Policy Details",
+        value: ACTION_TYPES.GET_FORWARDING_POLICY_DETAILS,
+      },
+      {
+        label: "Create Forwarding Policy",
+        value: ACTION_TYPES.CREATE_FORWARDING_POLICY,
+      },
+      {
+        label: "Update Forwarding Policy",
+        value: ACTION_TYPES.UPDATE_FORWARDING_POLICY,
+      },
+      {
+        label: "Delete Forwarding Policy",
+        value: ACTION_TYPES.DELETE_FORWARDING_POLICY,
+      },
+      {
+        label: "Export Forwarding Policy",
+        value: ACTION_TYPES.EXPORT_FORWARDING_POLICY_LIST,
+      },
+    ],
+  },
+  {
+    label: "Distribution Policy",
+    options: [
+      {
+        label: "Get Distribution Policy List",
+        value: ACTION_TYPES.GET_DISTRIBUTION_POLICY_LIST,
+      },
+      {
+        label: "Get Distribution Policy Details",
+        value: ACTION_TYPES.GET_DISTRIBUTION_POLICY_DETAILS,
+      },
+      {
+        label: "Create Distribution Policy",
+        value: ACTION_TYPES.CREATE_DISTRIBUTION_POLICY,
+      },
+      {
+        label: "Update Distribution Policy",
+        value: ACTION_TYPES.UPDATE_DISTRIBUTION_POLICY,
+      },
+      {
+        label: "Delete Distribution Policy",
+        value: ACTION_TYPES.DELETE_DISTRIBUTION_POLICY,
+      },
+      {
+        label: "Export Distribution Policy",
+        value: ACTION_TYPES.EXPORT_DISTRIBUTION_POLICY_LIST,
+      },
+    ],
+  },
+  {
+    label: "Disclaimer Management",
+    options: [
+      { label: "Get Disclaimer List", value: ACTION_TYPES.GET_DISCLAIMER_LIST },
+      { label: "Get Disclaimer", value: ACTION_TYPES.GET_DISCLAIMER },
+      { label: "Create Disclaimer", value: ACTION_TYPES.CREATE_DISCLAIMER },
+      { label: "Update Disclaimer", value: ACTION_TYPES.UPDATE_DISCLAIMER },
+      { label: "Delete Disclaimer", value: ACTION_TYPES.DELETE_DISCLAIMER },
+      {
+        label: "Export Disclaimer List",
+        value: ACTION_TYPES.EXPORT_DISCLAIMER_LIST,
+      },
+    ],
+  },
+  {
+    label: "Identity Management",
+    options: [
+      { label: "Get Identities List", value: ACTION_TYPES.GET_IDENTITIES_LIST },
+      {
+        label: "Get Identity Details",
+        value: ACTION_TYPES.GET_IDENTITY_DETAILS,
+      },
+      {
+        label: "Get Full Identity Info (Admin Lookup)",
+        value: ACTION_TYPES.GET_FULL_IDENTITY_INFO_BY_ADMIN,
+      },
+      { label: "Create Identity", value: ACTION_TYPES.CREATE_IDENTITY },
+      { label: "Update Identity", value: ACTION_TYPES.UPDATE_IDENTITY },
+      {
+        label: "Update Identity Password",
+        value: ACTION_TYPES.UPDATE_IDENTITY_PASSWORD,
+      },
+      { label: "Delete Identity", value: ACTION_TYPES.DELETE_IDENTITY },
+      {
+        label: "Export Identities List",
+        value: ACTION_TYPES.EXPORT_IDENTITIES_LIST,
+      },
+    ],
+  },
+  {
+    label: "Chat Service",
+    options: [
+      { label: "Get Chat Config", value: ACTION_TYPES.GET_CHAT_CONFIG },
+      { label: "Update Chat Config", value: ACTION_TYPES.UPDATE_CHAT_CONFIG },
+      { label: "Update Chat Quota", value: ACTION_TYPES.UPDATE_CHAT_QUOTA },
+      { label: "Create Chat User", value: ACTION_TYPES.CREATE_CHAT_USER },
+      {
+        label: "Toggle Chat User Status",
+        value: ACTION_TYPES.TOGGLE_CHAT_USER_STATUS,
+      },
+      { label: "Delete Chat User", value: ACTION_TYPES.DELETE_CHAT_USER },
+    ],
+  },
+  {
+    label: "File Service",
+    options: [
+      {
+        label: "Get File Service Config",
+        value: ACTION_TYPES.GET_FILE_SERVICE_CONFIG,
+      },
+      {
+        label: "Update File Service Config",
+        value: ACTION_TYPES.UPDATE_FILE_SERVICE_CONFIG,
+      },
+      {
+        label: "Update File User Quota",
+        value: ACTION_TYPES.UPDATE_FILE_USER_QUOTA,
+      },
+      { label: "Create File User", value: ACTION_TYPES.CREATE_FILE_USER },
+      {
+        label: "Toggle File User Status",
+        value: ACTION_TYPES.TOGGLE_FILE_USER_STATUS,
+      },
+      { label: "Delete File User", value: ACTION_TYPES.DELETE_FILE_USER },
+    ],
+  },
+  {
+    label: "Admin API Keys",
+    options: [
+      { label: "Get API Keys List", value: ACTION_TYPES.GET_API_KEYS_LIST },
+      { label: "Get API Key Details", value: ACTION_TYPES.GET_API_KEY_DETAILS },
+      { label: "Create API Key", value: ACTION_TYPES.CREATE_API_KEY },
+      { label: "Edit API Key", value: ACTION_TYPES.EDIT_API_KEY },
+      { label: "Delete API Key", value: ACTION_TYPES.DELETE_API_KEY },
+    ],
+  },
+  {
+    label: "IMAP Sync Tool",
+    options: [
+      {
+        label: "List IMAP Sync Jobs",
+        value: ACTION_TYPES.LIST_IMAP_SYNC_JOBS,
+      },
+      {
+        label: "Create IMAP Sync Job",
+        value: ACTION_TYPES.CREATE_IMAP_SYNC_JOB,
+      },
+    ],
+  },
+  {
+    label: "Invoices",
+    options: [
+      { label: "Get Invoice List", value: ACTION_TYPES.GET_INVOICE_LIST },
+      {
+        label: "Get Global Invoice List",
+        value: ACTION_TYPES.GET_GLOBAL_INVOICE_LIST,
+      },
+      {
+        label: "Get Invoice With Revisions",
+        value: ACTION_TYPES.GET_INVOICE_WITH_REVISIONS,
+      },
+      {
+        label: "Get Invoice Latest ID",
+        value: ACTION_TYPES.GET_INVOICE_LATEST_ID,
+      },
+      {
+        label: "Create Initial Invoice",
+        value: ACTION_TYPES.CREATE_INITIAL_INVOICE,
+      },
+      {
+        label: "Update Initial Invoice",
+        value: ACTION_TYPES.UPDATE_INITIAL_INVOICE,
+      },
+      {
+        label: "Create Revision Invoice",
+        value: ACTION_TYPES.CREATE_REVISION_INVOICE,
+      },
+      { label: "Upload Invoice", value: ACTION_TYPES.UPLOAD_INVOICE },
+      {
+        label: "Download Invoice Revision",
+        value: ACTION_TYPES.DOWNLOAD_INVOICE_REVISION,
+      },
+    ],
+  },
+  {
+    label: "Admin Maintenance",
+    options: [
+      {
+        label: "Create Maintenance Status",
+        value: ACTION_TYPES.CREATE_MAINTENANCE_STATUS,
+      },
+      {
+        label: "Update Maintenance Status",
+        value: ACTION_TYPES.UPDATE_MAINTENANCE_STATUS,
+      },
+      {
+        label: "Delete Maintenance Status",
+        value: ACTION_TYPES.DELETE_MAINTENANCE_STATUS,
+      },
+    ],
+  },
+  {
     label: "Permissions",
     options: [
       {
@@ -472,8 +872,8 @@ export const ACTION_TYPE_GROUPS = [
         value: ACTION_TYPES.TFA_GET_TOTP_LIST,
       },
       { label: "TOTP Validation", value: ACTION_TYPES.TFA_TOTP_VALIDATION },
-      { label: "Edit 2FA", value: ACTION_TYPES.TFA_EDIT },
-      { label: "Delete 2FA", value: ACTION_TYPES.TFA_DELETE },
+      { label: "Edit 2FA TOTP", value: ACTION_TYPES.TFA_EDIT_TOTP },
+      { label: "Delete 2FA TOTP", value: ACTION_TYPES.TFA_DELETE_TOTP },
       {
         label: "Generate Email OTP",
         value: ACTION_TYPES.TFA_GENERATE_EMAIL_OTP,
@@ -512,7 +912,7 @@ export const ACTION_TYPE_GROUPS = [
     ],
   },
   {
-    label: "Mailbox Sessions",
+    label: "Session Management",
     options: [
       {
         label: "Get Mailbox Sessions",
@@ -525,6 +925,18 @@ export const ACTION_TYPE_GROUPS = [
       {
         label: "Delete Mailbox Sessions",
         value: ACTION_TYPES.DELETE_EMAIL_CLIENT_SESSIONS,
+      },
+      {
+        label: "Delete Mail 25 App Session",
+        value: ACTION_TYPES.DELETE_USER_APP_SESSION,
+      },
+      {
+        label: "Delete SSO Session",
+        value: ACTION_TYPES.DELETE_SSO_SESSION,
+      },
+      {
+        label: "Update SSO Session Status",
+        value: ACTION_TYPES.UPDATE_SSO_SESSION_STATUS,
       },
     ],
   },
