@@ -324,15 +324,15 @@ function LoginAttemptsLogs() {
   }
 
   return (
-    <div className="px-2 w-full h-full">
-      <div className="w-full flex justify-between items-center mb-2.5 mt-1.5">
+    <div className="px-2 w-full h-full flex flex-col overflow-hidden">
+      <div className="w-full flex justify-between items-center mb-2.5 mt-1.5 shrink-0">
         <Breadcrumbs
           items={[{ name: "Logs" }, { name: "Login Attempts Logs" }]}
         />
       </div>
 
-      <div className="w-full  bg-card rounded-lg shadow-lg  border border-border">
-        <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="w-full bg-card rounded-lg shadow-lg border border-border flex-1 min-h-0 flex flex-col overflow-hidden">
+        <form onSubmit={handleSubmit(onSubmit)} className="shrink-0">
           <div className="w-full mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-4 pt-3 gap-6">
             <Input
               placeholder="Enter EmailId"
@@ -415,7 +415,7 @@ function LoginAttemptsLogs() {
           </div>
         </form>
 
-        <div className="w-full h-[calc(100vh-197px)] mt-4">
+        <div className="w-full mt-4 flex-1 min-h-0 overflow-hidden">
           {!domainName ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center text-muted-foreground">
@@ -430,6 +430,7 @@ function LoginAttemptsLogs() {
               totalCount={totalCount}
               table={table}
               isLoading={isPending}
+              fillContainer
             />
           ) : (
             <NoDataFound content="No login attempt logs found" />

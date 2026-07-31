@@ -418,8 +418,8 @@ function AuditLog() {
 
   return (
     <>
-      <div className="h-full w-full px-2">
-        <div className="mb-4 flex w-full items-center justify-between">
+      <div className="h-full w-full px-2 flex flex-col overflow-hidden">
+        <div className="mb-4 flex w-full items-center justify-between shrink-0">
           <Breadcrumbs items={[{ name: "Logs" }, { name: "Audit Logs" }]} />
           <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <Activity className="h-4 w-4" />
@@ -428,7 +428,7 @@ function AuditLog() {
         </div>
 
         {/* Filter Section */}
-        <div className="bg-card border-border mb-4 w-full rounded-lg border shadow-sm">
+        <div className="bg-card border-border mb-4 w-full rounded-lg border shadow-sm shrink-0">
           <div className="border-border border-b p-4">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid w-full grid-cols-1 gap-6 px-4  md:grid-cols-2 lg:grid-cols-4">
@@ -532,8 +532,8 @@ function AuditLog() {
         </div>
 
         {/* Results Section */}
-        <div className="bg-card border-border w-full rounded-lg border shadow-sm">
-          <div className="border-border border-b p-4">
+        <div className="bg-card border-border w-full rounded-lg border shadow-sm flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="border-border border-b p-4 shrink-0">
             <div className="flex items-center justify-between">
               <h3 className="text-foreground text-sm font-semibold">
                 Audit Log Results
@@ -568,12 +568,13 @@ function AuditLog() {
             </div>
           </div>
 
-          <div className="w-full">
+          <div className="w-full flex-1 min-h-0 overflow-hidden">
             {logList.length !== 0 || isPending ? (
               <Table
                 totalCount={totalCount}
                 table={table}
                 isLoading={isPending}
+                fillContainer
               />
             ) : (
               <div className="p-8">

@@ -29,6 +29,12 @@ const Table = ({
   isLoading = false,
   totalCount = 0,
   cellPadding = "py-0.5",
+  // Default height is a fixed viewport-relative calc, tuned for pages where
+  // the table sits right below a thin header. Pages with a taller filter
+  // area above the table (e.g. multi-field log search forms) need the
+  // table to fill whatever space its flex parent actually gives it instead,
+  // or the page ends up with two independent scrollbars (page + table).
+  fillContainer = false,
 }) => {
   const skeletonRows = Array(5).fill(null);
   const visibleColumns = table.getHeaderGroups()[0]?.headers || [];
@@ -133,9 +139,11 @@ const Table = ({
 
   return (
     <>
-      <div className="w-full h-[calc(100vh-140px)] shadow-lg overflow-hidden rounded-lg bg-card border border-border">
+      <div
+        className={`w-full shadow-lg overflow-hidden rounded-lg bg-card border border-border ${fillContainer ? "h-full" : "h-[calc(100vh-140px)]"}`}
+      >
         <div
-          className="w-full h-[calc(100vh-198px)] overflow-auto relative"
+          className={`w-full overflow-auto relative ${fillContainer ? "h-full" : "h-[calc(100vh-198px)]"}`}
           ref={tableBodyRef}
           tabIndex={0}
         >

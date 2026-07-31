@@ -462,8 +462,8 @@ function EmailFlowLog() {
 
   return (
     <>
-      <div className="px-2 w-full h-full">
-        <div className="w-full flex justify-between items-center mb-4">
+      <div className="px-2 w-full h-full flex flex-col overflow-hidden">
+        <div className="w-full flex justify-between items-center mb-4 shrink-0">
           <Breadcrumbs
             items={[{ name: "Logs" }, { name: "Email Flow Logs" }]}
           />
@@ -474,7 +474,7 @@ function EmailFlowLog() {
         </div>
 
         {/* Filter Section */}
-        <div className="w-full bg-card rounded-lg shadow-sm border border-border mb-4">
+        <div className="w-full bg-card rounded-lg shadow-sm border border-border mb-4 shrink-0">
           <div className="p-4 border-b border-border">
             <div className="flex items-center gap-2 mb-4">
               <Filter className="w-4 h-4 text-primary" />
@@ -603,8 +603,8 @@ function EmailFlowLog() {
         </div>
 
         {/* Results Section */}
-        <div className="w-full bg-card rounded-lg shadow-sm border border-border">
-          <div className="p-4 border-b border-border">
+        <div className="w-full bg-card rounded-lg shadow-sm border border-border flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-border shrink-0">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground">
                 Email Flow Log Results
@@ -639,9 +639,9 @@ function EmailFlowLog() {
             </div>
           </div>
 
-          <div className="w-full">
+          <div className="w-full flex-1 min-h-0 overflow-hidden">
             {!domainName ? (
-              <div className="flex items-center justify-center h-[400px]">
+              <div className="flex items-center justify-center h-full min-h-[400px]">
                 <div className="text-center text-muted-foreground">
                   <p className="text-lg mb-2">Please Select a Domain</p>
                   <p className="text-sm">
@@ -655,6 +655,7 @@ function EmailFlowLog() {
                 totalCount={totalCount}
                 table={table}
                 isLoading={isPending}
+                fillContainer
               />
             ) : (
               <div className="p-8">
