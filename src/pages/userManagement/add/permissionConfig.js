@@ -21,22 +21,12 @@ import { userProfileAtom } from "@/store/userProfile";
 export const baseConfig = {
   general: [
     {
-      category: "users",
-      categoryLabel: "User Management",
+      category: "admin_management",
+      categoryLabel: "Admin Management",
       modules: [
         {
-          name: "user",
-          label: "Admin User",
-          permissions: {
-            view: "user:view",
-            create: "user:create",
-            edit: "user:edit",
-            delete: "user:delete",
-          },
-        },
-        {
           name: "organization",
-          label: "Organization",
+          label: "Organisations",
           permissions: {
             view: "organization:view",
             create: "organization:create",
@@ -45,8 +35,84 @@ export const baseConfig = {
           },
         },
         {
+          name: "dashboard",
+          label: "Organisation Dashboard",
+          permissions: {
+            view: "dashboard:view",
+            create: null,
+            edit: null,
+            delete: null,
+          },
+        },
+        {
+          name: "support_ticket",
+          label: "Support Tickets (User-end)",
+          permissions: {
+            view: "support_ticket:view",
+            create: "support_ticket:create",
+            edit: "support_ticket:edit",
+            delete: null,
+          },
+        },
+        {
+          name: "support_admin",
+          label: "Support Admin",
+          permissions: {
+            view: "support_admin:view",
+            create: "support_admin:create",
+            edit: "support_admin:edit",
+            delete: "support_admin:delete",
+          },
+        },
+        {
+          name: "api_key",
+          label: "Admin API Keys",
+          permissions: {
+            view: "api_keys:view",
+            create: "api_keys:create",
+            edit: "api_keys:edit",
+            delete: "api_keys:delete",
+          },
+        },
+        {
+          name: "imap_sync",
+          label: "IMAP Sync Tool",
+          permissions: {
+            view: "imap_sync:view",
+            create: "imap_sync:create",
+            edit: null,
+            delete: null,
+          },
+        },
+      ],
+    },
+    {
+      category: "user_management",
+      categoryLabel: "User Management",
+      modules: [
+        {
+          name: "domain",
+          label: "Domains",
+          permissions: {
+            view: "domain:view",
+            create: "domain:create",
+            edit: "domain:edit",
+            delete: "domain:delete",
+          },
+        },
+        {
+          name: "departments",
+          label: "Departments",
+          permissions: {
+            view: "department:view",
+            create: "department:create",
+            edit: "department:edit",
+            delete: "department:delete",
+          },
+        },
+        {
           name: "identities",
-          label: "Identities",
+          label: "User Identity",
           permissions: {
             view: "identity:view",
             create: "identity:create",
@@ -55,12 +121,24 @@ export const baseConfig = {
           },
         },
         {
+          name: "mailbox",
+          label: "E-Mail Service (MailBoxes)",
+          permissions: {
+            view: "mailbox:view",
+            create: "mailbox:create",
+            edit: "mailbox:edit",
+            delete: "mailbox:delete",
+          },
+        },
+        {
           name: "chat",
-          label: "Chat",
+          label: "Chat Service",
           permissions: {
             view: "chat:view",
+            create: "chat:create",
             edit: "chat:edit",
-          }
+            delete: "chat:delete",
+          },
         },
         {
           name: "file",
@@ -70,27 +148,27 @@ export const baseConfig = {
             create: "file:create",
             edit: "file:edit",
             delete: "file:delete",
-          }
-        }
+          },
+        },
+        {
+          name: "user",
+          label: "Admin Panel Users",
+          permissions: {
+            view: "user:view",
+            create: "user:create",
+            edit: "user:edit",
+            delete: "user:delete",
+          },
+        },
       ],
     },
     {
       category: "crm",
-      categoryLabel: "CRM (Internal)",
+      categoryLabel: "Customer Relationship Management (CRM)",
       modules: [
         {
-          name: "server",
-          label: "Servers",
-          permissions: {
-            view: "server:view",
-            create: "server:create",
-            edit: "server:edit",
-            delete: "server:delete",
-          },
-        },
-        {
           name: "service",
-          label: "Service",
+          label: "Services",
           permissions: {
             view: "crm:service:view",
             create: "crm:service:create",
@@ -110,7 +188,7 @@ export const baseConfig = {
         },
         {
           name: "invoice",
-          label: "Invoice",
+          label: "Invoices",
           permissions: {
             view: "crm:invoice:view",
             create: "crm:invoice:create",
@@ -118,35 +196,25 @@ export const baseConfig = {
             delete: null,
           },
         },
-        {
-          name: "support_ticket",
-          label: "Support Tickets",
-          permissions: {
-            view: "support_ticket:view",
-            create: "support_ticket:create",
-            edit: "support_ticket:edit",
-            delete: null,
-          },
-        },
-        {
-          name: "support_admin",
-          label: "Support Admin",
-          permissions: {
-            view: "support_admin:view",
-            create: "support_admin:create",
-            edit: "support_admin:edit",
-            delete: "support_admin:delete",
-          },
-        },
       ],
     },
     {
-      category: "migrations",
-      categoryLabel: "Migration Management",
+      category: "server_management",
+      categoryLabel: "Server Management",
       modules: [
         {
+          name: "server",
+          label: "Servers",
+          permissions: {
+            view: "server:view",
+            create: "server:create",
+            edit: "server:edit",
+            delete: "server:delete",
+          },
+        },
+        {
           name: "mailbox_migration",
-          label: "Mailbox Migration",
+          label: "MailBox Migration",
           permissions: {
             view: "mailbox:migration:view",
             create: "mailbox:migration:create",
@@ -164,6 +232,36 @@ export const baseConfig = {
             delete: null,
           },
         },
+        {
+          name: "mailq",
+          label: "Mail Queue",
+          permissions: {
+            view: "mailq:view",
+            create: null,
+            edit: "mailq:edit",
+            delete: null,
+          },
+        },
+        {
+          name: "identity_admin_lookup",
+          label: "E-Mail Identity Admin Lookup",
+          permissions: {
+            view: "identity:admin:view",
+            create: null,
+            edit: null,
+            delete: null,
+          },
+        },
+        {
+          name: "system_maintenance",
+          label: "Admin Maintenance - System Alerts",
+          permissions: {
+            view: null,
+            create: "maintenance:create",
+            edit: "maintenance:edit",
+            delete: "maintenance:delete",
+          },
+        },
       ],
     },
     {
@@ -171,18 +269,8 @@ export const baseConfig = {
       categoryLabel: "Logs",
       modules: [
         {
-          name: "dashboard",
-          label: "Dashboard Metrics",
-          permissions: {
-            view: "dashboard:view",
-            create: null,
-            edit: null,
-            delete: null,
-          },
-        },
-        {
           name: "audit_logs",
-          label: "Audit Logs",
+          label: "Admin Audits",
           permissions: {
             view: "logs:audit:view",
             create: null,
@@ -192,7 +280,7 @@ export const baseConfig = {
         },
         {
           name: "mail_flow_logs",
-          label: "Mail Flow Logs",
+          label: "E-Mail Service - Mail Flow",
           permissions: {
             view: "logs:mail_flow:view",
             create: null,
@@ -202,7 +290,7 @@ export const baseConfig = {
         },
         {
           name: "login_attempts",
-          label: "Email Login Attempts",
+          label: "E-Mail Service - Login Attempts",
           permissions: {
             view: "logs:login_attempts:view",
             create: null,
@@ -213,22 +301,22 @@ export const baseConfig = {
       ],
     },
     {
-      category: "mail_flow",
-      categoryLabel: "Mail Flow",
+      category: "policies",
+      categoryLabel: "All Policies & Restrictions",
       modules: [
         {
-          name: "domain",
-          label: "Domains",
+          name: "restriction_policy",
+          label: "Geo or IP Restriction Policy",
           permissions: {
-            view: "domain:view",
-            create: "domain:create",
-            edit: "domain:edit",
-            delete: "domain:delete",
+            view: "policy:restriction:view",
+            create: "policy:restriction:create",
+            edit: "policy:restriction:edit",
+            delete: "policy:restriction:delete",
           },
         },
         {
           name: "general_policy",
-          label: "General Policy",
+          label: "E-Mail Service - General Policy",
           permissions: {
             view: "policy:general:view",
             create: "policy:general:create",
@@ -238,7 +326,7 @@ export const baseConfig = {
         },
         {
           name: "filters_policy",
-          label: "Filters Policy",
+          label: "E-Mail Service - Filter Policy",
           permissions: {
             view: "policy:filters:view",
             create: "policy:filters:create",
@@ -248,7 +336,7 @@ export const baseConfig = {
         },
         {
           name: "policy_attachment",
-          label: "Policy Attachment",
+          label: "E-Mail Service - Attachment Policy",
           permissions: {
             view: "policy:attachment:view",
             create: "policy:attachment:create",
@@ -257,18 +345,8 @@ export const baseConfig = {
           },
         },
         {
-          name: "restriction_policy",
-          label: "Restriction Policy",
-          permissions: {
-            view: "policy:restriction:view",
-            create: "policy:restriction:create",
-            edit: "policy:restriction:edit",
-            delete: "policy:restriction:delete",
-          },
-        },
-        {
           name: "forwarding_policy",
-          label: "Forwarding Policy",
+          label: "E-Mail Service - Forwarding Rules",
           permissions: {
             view: "policy:forwarding:view",
             create: "policy:forwarding:create",
@@ -278,7 +356,7 @@ export const baseConfig = {
         },
         {
           name: "distribution_policy",
-          label: "Distribution Policy",
+          label: "E-Mail Service - Distribution Policy",
           permissions: {
             view: "policy:distribution:view",
             create: "policy:distribution:create",
@@ -286,30 +364,9 @@ export const baseConfig = {
             delete: "policy:distribution:delete",
           },
         },
-        // 
-        {
-          name: "departments",
-          label: "MailBox Departments",
-          permissions: {
-            view: "department:view",
-            create: "department:create",
-            edit: "department:edit",
-            delete: "department:delete",
-          },
-        },
-        {
-          name: "mailbox",
-          label: "MailBox",
-          permissions: {
-            view: "mailbox:view",
-            create: "mailbox:create",
-            edit: "mailbox:edit",
-            delete: "mailbox:delete",
-          },
-        },
         {
           name: "email_disclaimer",
-          label: "Email Disclaimer",
+          label: "E-Mail Service - Disclaimer Message",
           permissions: {
             view: "disclaimer:view",
             create: "disclaimer:create",
@@ -319,7 +376,7 @@ export const baseConfig = {
         },
         {
           name: "email_caution",
-          label: "Email Caution",
+          label: "E-Mail Service - Caution Message",
           permissions: {
             view: "caution:view",
             create: "caution:create",
@@ -327,9 +384,19 @@ export const baseConfig = {
             delete: "caution:delete",
           },
         },
+      ],
+    },
+    {
+      category: "session_management",
+      categoryLabel: "Session Management",
+      modules: [
         {
-          name: "email_client_sessions",
-          label: "Mailbox Sessions",
+          // Backend has no distinct permission strings per session type —
+          // MailBox/Mail 25 App/SSO session endpoints all check the same
+          // session:view/edit/delete permissions, so these three rows are a
+          // cosmetic split: granting one effectively grants it for all three.
+          name: "mailbox_session",
+          label: "MailBox",
           permissions: {
             view: "session:view",
             create: null,
@@ -337,25 +404,27 @@ export const baseConfig = {
             delete: "session:delete",
           },
         },
-
         {
-          name: "imap_sync",
-          label: "IMAP Sync",
+          // /app/session* endpoints only check session:view and
+          // session:delete — there is no edit/patch endpoint for app
+          // sessions on the backend, hence no edit permission here.
+          name: "mail25_session",
+          label: "Mail 25 App",
           permissions: {
-            view: "imap_sync:view",
-            create: "imap_sync:create",
+            view: "session:view",
+            create: null,
             edit: null,
-            delete: null,
+            delete: "session:delete",
           },
         },
         {
-          name: "identity_admin_lookup",
-          label: "Identity Lookup (Admin)",
+          name: "sso_session",
+          label: "Single Sign-On (SSO)",
           permissions: {
-            view: "identity:admin:view",
+            view: "session:view",
             create: null,
-            edit: null,
-            delete: null,
+            edit: "session:edit",
+            delete: "session:delete",
           },
         },
       ],
@@ -363,19 +432,9 @@ export const baseConfig = {
   ],
   security: [
     {
-      category: "user_security",
-      categoryLabel: "User Security Settings",
+      category: "admin_user_security",
+      categoryLabel: "Admin User Security Management",
       modules: [
-        {
-          name: "2fa",
-          label: "2FA Settings",
-          permissions: {
-            view: "user:security:2fa:view",
-            create: null,
-            edit: "user:security:2fa:edit",
-            delete: null,
-          },
-        },
         {
           name: "2fa_email",
           label: "2FA Email",
@@ -388,7 +447,7 @@ export const baseConfig = {
         },
         {
           name: "2fa_sms",
-          label: "2FA SMS Phone",
+          label: "2FA SMS (Phone-based)",
           permissions: {
             view: null,
             create: null,
@@ -398,7 +457,7 @@ export const baseConfig = {
         },
         {
           name: "totp",
-          label: "TOTP 2FA",
+          label: "2FA TOTP (Scanner-based)",
           permissions: {
             view: "user:security:2fa:totp:view",
             create: null,
@@ -407,18 +466,18 @@ export const baseConfig = {
           },
         },
         {
-          name: "mfa",
-          label: "MFA Settings",
+          name: "backup_codes",
+          label: "Backup Security Codes",
           permissions: {
-            view: null,
+            view: "user:security:backup_codes:view",
             create: null,
-            edit: "user:security:mfa:edit",
+            edit: "user:security:backup_codes:edit",
             delete: null,
           },
         },
         {
           name: "password",
-          label: "User Password",
+          label: "Admin Password Management",
           permissions: {
             view: null,
             create: null,
@@ -427,24 +486,8 @@ export const baseConfig = {
           },
         },
         {
-          name: "backup_codes",
-          label: "Backup Codes",
-          permissions: {
-            view: "user:security:backup_codes:view",
-            create: null,
-            edit: "user:security:backup_codes:edit",
-            delete: null,
-          },
-        },
-      ],
-    },
-    {
-      category: "permissions_management",
-      categoryLabel: "Permissions Management",
-      modules: [
-        {
           name: "user_permissions",
-          label: "User Permissions",
+          label: "Permissions Configuration",
           permissions: {
             view: "user:security:permissions:view",
             create: null,
@@ -460,54 +503,6 @@ export const baseConfig = {
             create: null,
             edit: "user:security:permissions:template:edit",
             delete: null,
-          },
-        },
-      ],
-    },
-    {
-      category: "mail_queue",
-      categoryLabel: "Mail Queue Management",
-      modules: [
-        {
-          name: "mailq",
-          label: "Mail Queue",
-          permissions: {
-            view: "mailq:view",
-            create: null,
-            edit: "mailq:edit",
-            delete: null,
-          },
-        },
-      ],
-    },
-    {
-      category: "maintenance",
-      categoryLabel: "System Maintenance",
-      modules: [
-        {
-          name: "system_maintenance",
-          label: "System Maintenance",
-          permissions: {
-            view: null,
-            create: "maintenance:create",
-            edit: "maintenance:edit",
-            delete: "maintenance:delete",
-          },
-        },
-      ],
-    },
-    {
-      category: "api_keys",
-      categoryLabel: "API Keys",
-      modules: [
-        {
-          name: "api_key",
-          label: "API Keys",
-          permissions: {
-            view: "api_keys:view",
-            create: "api_keys:create",
-            edit: "api_keys:edit",
-            delete: "api_keys:delete",
           },
         },
       ],

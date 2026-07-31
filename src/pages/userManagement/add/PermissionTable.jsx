@@ -23,6 +23,39 @@ import { Eye, Plus, Edit, Trash, Shield, Check, X } from "lucide-react";
 import { getReactSelectStyles } from "@/utils/selectTheme";
 import Select from "react-select";
 
+const ACTIONS = [
+  { key: "view", label: "View", Icon: Eye },
+  { key: "create", label: "Create", Icon: Plus },
+  { key: "edit", label: "Edit", Icon: Edit },
+  { key: "delete", label: "Delete", Icon: Trash },
+];
+
+// Two visual themes reused by the general vs. security sections below —
+// keeping full class strings per key (rather than building them from the
+// variant name) so Tailwind's JIT scanner can see every class literally.
+const VARIANT_STYLES = {
+  primary: {
+    border: "border-border",
+    headerBg: "bg-muted/30",
+    badgeBg: "bg-muted",
+    badgeText: "text-muted-foreground",
+    allBtn: "bg-primary/10 text-primary hover:bg-primary/25",
+    columnBtn: "hover:bg-primary/10 hover:text-primary",
+    rowHover: "hover:bg-primary/5",
+    accent: "accent-primary",
+  },
+  warning: {
+    border: "border-warning/30",
+    headerBg: "bg-warning/10",
+    badgeBg: "bg-warning/20",
+    badgeText: "text-warning",
+    allBtn: "bg-warning/15 text-warning hover:bg-warning/25",
+    columnBtn: "hover:bg-warning/15 hover:text-warning",
+    rowHover: "hover:bg-warning/10",
+    accent: "accent-warning",
+  },
+};
+
 const PermissionTables = ({
   setValue,
   watch,
@@ -149,6 +182,118 @@ const PermissionTables = ({
     return { total, granted };
   };
 
+  const renderSection = (section, variant, isFirstSection) => {
+    const style = VARIANT_STYLES[variant];
+    const stats = getStats(section);
+    const allGranted = stats.total > 0 && stats.granted === stats.total;
+
+    return (
+      <div
+        key={section.category}
+        className={`overflow-hidden rounded-lg border ${style.border}`}
+      >
+        <table className="w-full text-sm">
+          <thead>
+            <tr className={`border-b ${style.border} ${style.headerBg}`}>
+              <th className="p-3 text-left">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <span className="text-card-foreground truncate text-base font-semibold">
+                      {section.categoryLabel}
+                    </span>
+                    <span
+                      className={`${style.badgeBg} ${style.badgeText} shrink-0 rounded px-2 py-0.5 text-xs font-medium`}
+                    >
+                      {stats.granted}/{stats.total}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => toggleAll(section)}
+                    className={`${style.allBtn} flex shrink-0 items-center gap-1 rounded px-2.5 py-1.5 text-xs font-semibold transition-colors`}
+                  >
+                    {allGranted ? <X size={13} /> : <Check size={13} />}
+                    {allGranted ? "Clear all" : "Select all"}
+                  </button>
+                </div>
+              </th>
+              {ACTIONS.map((actionDef, idx) => (
+                <th
+                  key={actionDef.key}
+                  className={`w-20 border-l p-1.5 ${style.border}`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleAll(section, actionDef.key);
+                      if (actionDef.key === "view" && showTooltip) {
+                        setShowTooltip(false);
+                      }
+                    }}
+                    className={`group relative flex w-full flex-col items-center gap-1 rounded py-1.5 transition-colors ${style.columnBtn}`}
+                    title={`Click to toggle all ${actionDef.label} permissions in this section`}
+                  >
+                    <actionDef.Icon size={16} />
+                    <span className="text-[11px] font-semibold">
+                      {actionDef.label}
+                    </span>
+
+                    {/* One-time onboarding hint on the very first column */}
+                    {isFirstSection && idx === 0 && showTooltip && (
+                      <div className="absolute -bottom-14 left-1/2 z-50 -translate-x-1/2 animate-bounce">
+                        <div className="bg-primary text-primary-foreground relative rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap shadow-xl">
+                          Click to assign a whole column
+                          <div className="bg-primary absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45"></div>
+                        </div>
+                      </div>
+                    )}
+                  </button>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {section.modules.map((module, idx) => (
+              <tr
+                key={module.name}
+                className={`border-b last:border-b-0 ${style.border} ${style.rowHover} transition-colors ${idx % 2 ? "bg-muted/5" : ""}`}
+              >
+                <td className="text-card-foreground p-3 text-sm font-medium">
+                  {module.label}
+                </td>
+                {ACTIONS.map(({ key }) => {
+                  const perm = module.permissions[key];
+                  const isAssignable = perm && permissions.includes(perm);
+                  return (
+                    <td
+                      key={key}
+                      className={`border-l p-0 text-center ${style.border}`}
+                    >
+                      {isAssignable ? (
+                        <label className="flex h-full w-full cursor-pointer items-center justify-center py-3">
+                          <input
+                            type="checkbox"
+                            checked={isPermissionGranted(perm)}
+                            onChange={() => togglePermission(perm)}
+                            className={`h-4 w-4 cursor-pointer rounded ${style.accent}`}
+                          />
+                        </label>
+                      ) : (
+                        <span className="text-muted-foreground text-sm">
+                          —
+                        </span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-3">
       {/* Template Selection */}
@@ -187,136 +332,12 @@ const PermissionTables = ({
 
       {/* General Permissions */}
       <div className="space-y-3">
-        {permissionConfig.general.map((section) => {
-          const stats = getStats(section);
-
-          return (
-            <div
-              key={section.category}
-              className="border-border rounded border"
-            >
-              {/* Header */}
-              <div className="border-border bg-muted/20 flex items-center justify-between border-b px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-card-foreground text-sm font-semibold">
-                    {section.categoryLabel}
-                  </span>
-                  <span className="bg-muted text-muted-foreground rounded px-2 py-0.5 text-xs font-medium">
-                    {stats.granted}/{stats.total}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => toggleAll(section)}
-                  className="bg-primary/10 text-primary hover:bg-primary/20 flex items-center gap-1 rounded px-2 py-1 text-xs font-medium"
-                >
-                  {stats.granted === stats.total ? (
-                    <X size={12} />
-                  ) : (
-                    <Check size={12} />
-                  )}
-                  {stats.granted === stats.total ? "Clear" : "All"}
-                </button>
-              </div>
-
-              {/* Table */}
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-border bg-muted/5 border-b">
-                    <th className="p-2 text-left text-xs font-semibold">
-                      Module
-                    </th>
-                    {["view", "create", "edit", "delete"].map((action, idx) => (
-                      <th
-                        key={action}
-                        className="border-border w-16 border-l p-1.5"
-                      >
-                        <button
-                          type="button"
-                          onClick={() => {
-                            toggleAll(section, action);
-                            if (action === "view" && showTooltip) {
-                              setShowTooltip(false);
-                            }
-                          }}
-                          className="hover:text-primary group relative w-full"
-                          title={`Click to assign all ${action} permissions`}
-                        >
-                          {action === "view" && (
-                            <Eye size={15} className="mx-auto" />
-                          )}
-                          {action === "create" && (
-                            <Plus size={15} className="mx-auto" />
-                          )}
-                          {action === "edit" && (
-                            <Edit size={15} className="mx-auto" />
-                          )}
-                          {action === "delete" && (
-                            <Trash size={15} className="mx-auto" />
-                          )}
-
-                          {/* Animated bubble tooltip */}
-                          {action === "view" &&
-                            idx === 0 &&
-                            section === permissionConfig.general[0] &&
-                            showTooltip && (
-                              <div className="absolute -bottom-16 left-1/2 z-50 -translate-x-1/2 animate-bounce">
-                                <div className="bg-primary text-primary-foreground relative rounded-lg px-3 py-2 text-xs font-medium shadow-xl">
-                                  <div className="flex items-center gap-2 whitespace-nowrap">
-                                    <span>
-                                      Click icons to assign column permissions!
-                                    </span>
-                                  </div>
-                                  <div className="bg-primary absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45"></div>
-                                </div>
-                              </div>
-                            )}
-                        </button>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {section.modules.map((module, idx) => (
-                    <tr
-                      key={module.name}
-                      className={`border-border hover:bg-muted/10 border-b last:border-b-0 ${idx % 2 ? "bg-muted/5" : ""}`}
-                    >
-                      <td className="p-2 text-xs font-medium">
-                        {module.label}
-                      </td>
-                      {["view", "create", "edit", "delete"].map((action) => {
-                        const perm = module.permissions[action];
-                        return (
-                          <td
-                            key={action}
-                            className="border-border border-l p-1.5 text-center"
-                          >
-                            {perm && permissions.includes(perm) ? (
-                              <input
-                                type="checkbox"
-                                checked={isPermissionGranted(perm)}
-                                onChange={() => togglePermission(perm)}
-                                className="border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer rounded focus:ring-2"
-                              />
-                            ) : (
-                              <span className="text-muted-foreground text-xs">
-                                —
-                              </span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          );
-        })}
+        {permissionConfig.general.map((section, idx) =>
+          renderSection(section, "primary", idx === 0),
+        )}
       </div>
 
-      {/* Security Permissions - Same Table Format as General */}
+      {/* Security Permissions */}
       {permissions.includes("user:security:permissions:view") && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
@@ -324,104 +345,12 @@ const PermissionTables = ({
             <h4 className="text-card-foreground text-sm font-semibold">
               Security Permissions
             </h4>
-            <span className="text-muted-foreground text-xs">
-              (Sensitive)
-            </span>
+            <span className="text-muted-foreground text-xs">(Sensitive)</span>
           </div>
 
-          {permissionConfig.security.map((section) => {
-            const stats = getStats(section);
-
-            return (
-              <div
-                key={section.category}
-                className="border-warning/30 rounded border"
-              >
-                {/* Header */}
-                <div className="border-warning/30  flex items-center justify-between border-b px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-card-foreground text-sm font-semibold">
-                      {section.categoryLabel}
-                    </span>
-                    <span className="bg-warning/20 text-warning rounded px-2 py-0.5 text-xs font-medium">
-                      {stats.granted}/{stats.total}
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => toggleAll(section)}
-                    className=" text-warning  flex items-center gap-1 rounded px-2 py-1 text-xs font-medium"
-                  >
-                    {stats.granted === stats.total ? <X size={12} /> : <Check size={12} />}
-                    {stats.granted === stats.total ? "Clear" : "All"}
-                  </button>
-                </div>
-
-                {/* Table - Same Format as General */}
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="p-2 text-left text-xs font-semibold">
-                        Module
-                      </th>
-                      {["view", "create", "edit", "delete"].map((action) => (
-                        <th
-                          key={action}
-                          className="border-warning/20 w-16 border-l p-1.5"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => toggleAll(section, action)}
-                            className="hover:text-primary text-muted-foreground w-full"
-                            title={`Click to assign all ${action} permissions`}
-                          >
-                            {action === "view" && <Eye size={15} className="mx-auto" />}
-                            {action === "create" && <Plus size={15} className="mx-auto" />}
-                            {action === "edit" && <Edit size={15} className="mx-auto" />}
-                            {action === "delete" && <Trash size={15} className="mx-auto" />}
-                          </button>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {section.modules.map((module, idx) => (
-                      <tr
-                        key={module.name}
-                        className={`border-warning/20 hover:bg-warning/10 border-b last:border-b-0 `}
-                      >
-                        <td className="p-2 text-xs font-medium">
-                          {module.label}
-                        </td>
-                        {["view", "create", "edit", "delete"].map((action) => {
-                          const perm = module.permissions[action];
-                          return (
-                            <td
-                              key={action}
-                              className="border-warning/20 border-l p-1.5 text-center"
-                            >
-                              {perm && permissions.includes(perm) ? (
-                                <input
-                                  type="checkbox"
-                                  checked={isPermissionGranted(perm)}
-                                  onChange={() => togglePermission(perm)}
-                                  className="border-border text-warning focus:ring-warning h-4 w-4 cursor-pointer rounded focus:ring-2"
-                                />
-                              ) : (
-                                <span className="text-muted-foreground text-xs">
-                                  —
-                                </span>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            );
-          })}
+          {permissionConfig.security.map((section) =>
+            renderSection(section, "warning", false),
+          )}
         </div>
       )}
     </div>
