@@ -729,7 +729,7 @@ export const recalculateQuota = async () => {
 
 export const getPflogsumReport = async (server_host_id, from_when) => {
   const method = "GET";
-  const url = `${__API_URL__}/server/pflogsum/report/${server_host_id}?from_when=${from_when}`;
+  const url = `${API_URL}/server/pflogsum/report/${server_host_id}?from_when=${from_when}`;
 
   try {
     const res = await axios({
@@ -768,7 +768,7 @@ export const getPflogsumReport = async (server_host_id, from_when) => {
  */
 export const getServerProcs = async (server_host_id) => {
   const method = 'GET';
-  const url = `${__API_URL__}/server/procs/list/${server_host_id}`;
+  const url = `${API_URL}/server/procs/list/${server_host_id}`;
 
   try {
     const res = await axios({
