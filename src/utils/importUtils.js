@@ -90,6 +90,28 @@ const parseCSVFile = (file) => {
 };
 
 /**
+ * Recursively unwrap an ExcelJS cell value into a plain primitive.
+ * Handles rich text runs, hyperlink cells (whose `text` can itself be a
+ * rich text object, e.g. when Excel auto-links a domain-like string), and
+ * formula results — any of which can otherwise leak through as a plain
+ * object and get stringified to the literal text "[object Object]".
+ */
+const extractCellValue = (cellValue) => {
+  if (!cellValue || typeof cellValue !== "object") return cellValue;
+  if (cellValue instanceof Date) return cellValue;
+
+  if (Array.isArray(cellValue.richText)) {
+    return cellValue.richText.map((run) => run.text || "").join("");
+  }
+  if (cellValue.text !== undefined) return extractCellValue(cellValue.text);
+  if (cellValue.result !== undefined) return extractCellValue(cellValue.result);
+
+  // Unrecognized object shape — fall back to empty rather than
+  // letting "[object Object]" silently fail downstream validation
+  return "";
+};
+
+/**
  * Parse Excel file using ExcelJS
  */
 const parseExcelFile = async (file) => {
@@ -121,23 +143,7 @@ const parseExcelFile = async (file) => {
         let hasData = false;
 
         headers.forEach((header, index) => {
-          let cellValue = rowValues[index];
-
-          // Handle non-primitive cell values (ExcelJS sometimes returns objects)
-          if (cellValue && typeof cellValue === 'object') {
-             if (Array.isArray(cellValue.richText)) {
-               // Rich text cell (mixed formatting within one cell) — concatenate the runs
-               cellValue = cellValue.richText.map((run) => run.text || "").join("");
-             } else if (cellValue.text) cellValue = cellValue.text;
-             else if (cellValue.result) cellValue = cellValue.result;
-             else if (cellValue instanceof Date) {
-               // leave dates as-is, handled elsewhere
-             } else {
-               // Unrecognized object shape — fall back to empty rather than
-               // letting "[object Object]" silently fail downstream validation
-               cellValue = "";
-             }
-          }
+          const cellValue = extractCellValue(rowValues[index]);
 
           const value = cellValue === undefined || cellValue === null ? "" : cellValue;
           rowData[header] = value;
