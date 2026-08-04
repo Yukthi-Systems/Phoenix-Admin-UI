@@ -34,9 +34,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 function CreatePermissionTemplate() {
-  const { permissions, user_id, permissions_template } =
+  const { permissions, user_id, permissions_template, organization_id } =
     useAtomValue(userProfileAtom);
-  const { organization_id } = useAtomValue(userInfoAtom);
+
   const [templateList, setTemplateList] = useState(permissions_template || {});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [disabled, setDisabled] = useState(false);
@@ -111,8 +111,7 @@ function CreatePermissionTemplate() {
           const tracebackId = error.response?.data?.traceback_id;
           toast(
             "error",
-            `Message: ${message}${
-              tracebackId ? `\nTraceback ID: ${tracebackId}` : ""
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""
             }`,
           );
           console.error(error);
