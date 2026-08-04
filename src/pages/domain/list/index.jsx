@@ -27,6 +27,7 @@ import {
   useGetDomains,
   useAddDomain,
   useDeleteDomain,
+  useUpdateDomain,
   useUpdateDomainSpace,
   useUpdateDomainStatus,
   useMoveDomain,
@@ -73,7 +74,8 @@ import {
   Copy,
   ShieldCheck,
 } from "lucide-react";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
+import BulkImportModal from "@/components/common/BulkImport";
 import { PER_PAGE } from "@/constants/constants";
 import EditModelBox from "@/components/common/EditModelBox";
 import StatusBadge from "@/components/common/StatusBadge";
@@ -123,6 +125,7 @@ const ListDomains = () => {
   const { organization_id } = useAtomValue(userInfoAtom);
   const { mutate, isPending } = useDeleteDomain();
   const { mutate: createDomain } = useAddDomain();
+  const { mutate: updateDomainMutate } = useUpdateDomain();
   const toast = useToastify();
   const queryClient = useQueryClient();
   const { formatUserDateNice } = useUserTimezone();
@@ -268,6 +271,59 @@ const ListDomains = () => {
     handleExportModalClose,
     isExportAvailable,
   } = useExport("domains", fetchDomainsForExport, {}, FIELD_MAPPINGS.domains);
+
+  // Bulk edit: export domains -> edit the file -> re-upload here. Each row
+  // is matched back to an existing domain by "Domain Name" and PATCHed via
+  // updateDomain, the same mutation the single "Edit Domain" form uses.
+  const handleBulkEditDomain = async (domainData) => {
+    const { organization_id: rowOrgId, domain_name, ...rest } = domainData;
+    const data = { ...rest };
+
+    // Mirrors transformFormData in pages/domain/edit/index.jsx: the backend
+    // expects password-age settings nested under max_password_age_properties,
+    // not as the flat enable_max_password_age/max_password_age/notify_1-3
+    // fields the import field mapping produces - keep the two in sync.
+    data.max_password_age_properties = {
+      enable_max_password_age: data.enable_max_password_age || false,
+    };
+    if (data.enable_max_password_age) {
+      data.max_password_age_properties.max_password_age = data.max_password_age;
+      data.max_password_age_properties.notify_at = [
+        data.notify_1,
+        data.notify_2,
+        data.notify_3,
+      ]
+        .filter((v) => v !== undefined && v !== null && v !== "")
+        .sort((a, b) => a - b);
+    } else {
+      data.max_password_age = 0;
+      data.max_password_age_properties.max_password_age = 0;
+      data.max_password_age_properties.notify_at = [];
+    }
+    delete data.enable_max_password_age;
+    delete data.notify_1;
+    delete data.notify_2;
+    delete data.notify_3;
+
+    return new Promise((resolve, reject) => {
+      updateDomainMutate(
+        { organization_id: rowOrgId, domain_name, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("domains", handleBulkEditDomain, "domain_name");
 
   const domains = data?.domains ?? [];
   const totalPages = data?.domains?.total_pages ?? 1;
@@ -562,6 +618,25 @@ const ListDomains = () => {
     queryClient.invalidateQueries(["domains", organization_id]);
   };
 
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_domains",
+      message: `Updated domains via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        organization_id: organization_id,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["domains", organization_id]);
+  };
+
   const handleBulkModalClose = () => {
     setShowBulkDeleteModal(false);
   };
@@ -740,6 +815,16 @@ const ListDomains = () => {
       });
     }
 
+    if (permissions.includes("domain:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple domains",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("domain:view") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -755,6 +840,8 @@ const ListDomains = () => {
     isImportAvailable,
     handleAddDomain,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     isExportAvailable,
     handleExport,
   ]);
@@ -819,7 +906,8 @@ const ListDomains = () => {
           description: domainData.details?.description || "",
           address: domainData.details?.address || "",
         },
-        anti_phishing_secret_code: domainData.anti_phishing_secret_code || generateSecretCode() || "",
+        anti_phishing_secret_code:
+          domainData.anti_phishing_secret_code || generateSecretCode() || "",
 
         enable_catch_all: domainData.catch_all || false,
         catch_all_forwarding_address:
@@ -1005,6 +1093,16 @@ const ListDomains = () => {
         title="Bulk Import"
         description="Upload a CSV or Excel file to create multiple domains at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Domains"
+        description="Export domains, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       {showStatusModal && (

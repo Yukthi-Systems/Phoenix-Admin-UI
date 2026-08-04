@@ -667,6 +667,10 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Hybrid Description",
       type: "string",
       required: false,
+      // Backend's ConnectorProperties.description is a required (non-Optional)
+      // str, same as fqdn/ipv4 below - must always be sent, even as "", or
+      // the request 422s with "Field required".
+      alwaysSend: true,
       width: 35,
       sampleValue: "", // Empty when hybrid disabled
       sampleValue2: "Connection to on-premise Exchange server",
@@ -679,8 +683,7 @@ export const IMPORT_FIELD_MAPPINGS = {
           }
           return value;
         }
-        // Return undefined to prevent object creation when disabled
-        return undefined;
+        return "";
       },
     },
     {
@@ -768,6 +771,10 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Hybrid Port",
       type: "number",
       required: false,
+      // Backend's ConnectorProperties.port is a required (non-Optional) int,
+      // same as fqdn/ipv4 above - must always be sent or the request 422s
+      // with "Field required".
+      alwaysSend: true,
       width: 12,
       defaultValue: 25,
       sampleValue: "",
@@ -783,7 +790,7 @@ export const IMPORT_FIELD_MAPPINGS = {
           }
           return num;
         }
-        return undefined;
+        return 25;
       },
     },
 

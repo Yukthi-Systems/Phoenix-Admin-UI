@@ -36,6 +36,7 @@ import {
 import {
   processImportFile,
   bulkCreateItems,
+  bulkUpdateItems,
   generateSampleFile,
   getRowIdentifier,
   downloadImportResults,
@@ -46,10 +47,25 @@ const BulkImportModal = ({
   isOpen,
   onClose,
   importConfig,
-  title = "Bulk Import",
-  description = "Upload a CSV or Excel file to create multiple items at once.",
+  // "create" adds new items from the file; "edit" matches each row back to
+  // an existing record (via importConfig.matchKey) and updates it instead -
+  // see useBulkEdit in hooks/useImport.js.
+  mode = "create",
+  title,
+  description,
   onComplete,
 }) => {
+  const isEditMode = mode === "edit";
+  const displayTitle = title ?? (isEditMode ? "Bulk Edit" : "Bulk Import");
+  const displayDescription =
+    description ??
+    (isEditMode
+      ? "Upload a previously exported file with your edits to update multiple items at once."
+      : "Upload a CSV or Excel file to create multiple items at once.");
+  const matchKeyLabel = isEditMode
+    ? importConfig?.fieldMapping?.find((f) => f.key === importConfig?.matchKey)
+        ?.header || importConfig?.matchKey
+    : null;
   const [importStatus, setImportStatus] = useState("idle");
   const [progress, setProgress] = useState({});
   const [error, setError] = useState(null);
@@ -82,7 +98,11 @@ const BulkImportModal = ({
   }, []);
 
   const handleClose = useCallback(() => {
-    if (importStatus !== "processing" && importStatus !== "creating") {
+    if (
+      importStatus !== "processing" &&
+      importStatus !== "creating" &&
+      importStatus !== "updating"
+    ) {
       resetState();
       onClose();
     }
@@ -172,7 +192,9 @@ const BulkImportModal = ({
       setImportStatus("ready");
       setProgress({
         status: "ready",
-        message: `Successfully processed ${data.length} items. Ready to import.`,
+        message: isEditMode
+          ? `Successfully processed ${data.length} items. Ready to update.`
+          : `Successfully processed ${data.length} items. Ready to import.`,
         totalItems: data.length,
       });
     } catch (err) {
@@ -189,13 +211,14 @@ const BulkImportModal = ({
   const handleBulkCreate = async () => {
     if (!processedData.length || !importConfig) return;
 
-    setImportStatus("creating");
+    setImportStatus(isEditMode ? "updating" : "creating");
     setError(null);
 
     createAbortController.current = new AbortController();
 
     try {
-      const results = await bulkCreateItems(
+      const runBulkAction = isEditMode ? bulkUpdateItems : bulkCreateItems;
+      const results = await runBulkAction(
         processedData,
         importConfig.createFunction,
         (progressData) => {
@@ -216,7 +239,9 @@ const BulkImportModal = ({
       setImportStatus("success");
       setProgress({
         status: "complete",
-        message: `Import complete! ${results.successful.length} items created successfully.`,
+        message: isEditMode
+          ? `Update complete! ${results.successful.length} items updated successfully.`
+          : `Import complete! ${results.successful.length} items created successfully.`,
         successful: results.successful.length,
         failed: results.failed.length,
         total: results.total,
@@ -248,13 +273,17 @@ const BulkImportModal = ({
     downloadImportResults(
       results,
       importConfig.fieldMapping,
-      `${importConfig.sampleFilename || "import"}_results`,
+      `${importConfig.sampleFilename || (isEditMode ? "update" : "import")}_results`,
     );
-  }, [results, importConfig]);
+  }, [results, importConfig, isEditMode]);
 
   const handleCopyResults = useCallback(async () => {
     if (!results || !importConfig) return;
-    const summary = buildResultsSummaryText(results, importConfig.fieldMapping);
+    const summary = buildResultsSummaryText(
+      results,
+      importConfig.fieldMapping,
+      isEditMode ? "Update" : "Import",
+    );
     try {
       await navigator.clipboard.writeText(summary);
       setResultsCopied(true);
@@ -274,6 +303,7 @@ const BulkImportModal = ({
     switch (importStatus) {
       case "processing":
       case "creating":
+      case "updating":
         return <Clock className="w-5 h-5 text-warning animate-spin" />;
       case "success":
         return <CheckCircle className="w-5 h-5 text-success" />;
@@ -295,21 +325,29 @@ const BulkImportModal = ({
         return "Processing file...";
       case "creating":
         return "Creating items...";
+      case "updating":
+        return "Updating items...";
       case "success":
-        return "Import completed successfully!";
+        return isEditMode
+          ? "Update completed successfully!"
+          : "Import completed successfully!";
       case "cancelled":
         return "Operation cancelled";
       case "error":
-        return error || "Import failed";
+        return error || (isEditMode ? "Update failed" : "Import failed");
       case "ready":
-        return "File processed and ready to import";
+        return isEditMode
+          ? "File processed and ready to update"
+          : "File processed and ready to import";
       default:
-        return description;
+        return displayDescription;
     }
   };
 
   const isProcessing =
-    importStatus === "processing" || importStatus === "creating";
+    importStatus === "processing" ||
+    importStatus === "creating" ||
+    importStatus === "updating";
   const canClose = !isProcessing;
 
   // -- Render Helpers --
@@ -437,7 +475,7 @@ const BulkImportModal = ({
                   <div className="flex items-center gap-3">
                     {getStatusIcon()}
                     <h3 className="text-lg font-semibold text-card-foreground">
-                      {title}
+                      {displayTitle}
                     </h3>
                   </div>
                   <div className="flex items-center gap-2">
@@ -481,28 +519,54 @@ const BulkImportModal = ({
               {/* Scrollable Content (Steps) */}
               <div className="flex-1 overflow-y-auto px-4 pb-4 sm:px-6">
                 <div className="space-y-6">
-                  {/* Step 1: Download Sample */}
+                  {/* Step 1: Download Sample / Export First */}
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center font-bold flex-shrink-0">
                         1
                       </div>
                       <h4 className="font-medium text-card-foreground">
-                        Download Sample File
+                        {isEditMode
+                          ? "Export Your Current Data"
+                          : "Download Sample File"}
                       </h4>
                     </div>
                     <div className="ml-8">
-                      <p className="text-sm text-muted-foreground mb-3">
-                        Download the sample file to see the required format.
-                      </p>
-                      <button
-                        onClick={handleDownloadSample}
-                        disabled={isProcessing}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-muted text-muted-foreground rounded-md hover:bg-muted/80 hover:text-card-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <Download className="w-4 h-4" />
-                        Download Sample Excel File
-                      </button>
+                      {isEditMode ? (
+                        <p className="text-sm text-muted-foreground">
+                          Use the{" "}
+                          <span className="font-medium text-card-foreground">
+                            Export
+                          </span>{" "}
+                          option to download your current data as a file, edit
+                          the values you want to change
+                          {matchKeyLabel ? (
+                            <>
+                              {" "}
+                              (rows are matched to existing records by{" "}
+                              <span className="font-medium text-card-foreground">
+                                {matchKeyLabel}
+                              </span>{" "}
+                              - don't change that column)
+                            </>
+                          ) : null}
+                          , then upload the edited file below.
+                        </p>
+                      ) : (
+                        <>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Download the sample file to see the required format.
+                          </p>
+                          <button
+                            onClick={handleDownloadSample}
+                            disabled={isProcessing}
+                            className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-muted text-muted-foreground rounded-md hover:bg-muted/80 hover:text-card-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <Download className="w-4 h-4" />
+                            Download Sample Excel File
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -588,7 +652,7 @@ const BulkImportModal = ({
                           3
                         </div>
                         <h4 className="font-medium text-card-foreground">
-                          Process & Import
+                          {isEditMode ? "Process & Update" : "Process & Import"}
                         </h4>
                       </div>
                       <div className="ml-8">
@@ -606,7 +670,10 @@ const BulkImportModal = ({
                           <div className="space-y-3">
                             <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
                               <p className="text-sm text-primary font-medium">
-                                Ready to import {processedData.length} items
+                                {isEditMode
+                                  ? "Ready to update"
+                                  : "Ready to import"}{" "}
+                                {processedData.length} items
                               </p>
                             </div>
 
@@ -627,7 +694,7 @@ const BulkImportModal = ({
                                 className="flex-[2] flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium bg-success/80 text-success-foreground rounded-md hover:bg-success/90 transition-colors"
                               >
                                 <Upload className="w-4 h-4" />
-                                Start Import
+                                {isEditMode ? "Start Update" : "Start Import"}
                               </button>
                             </div>
                           </div>
@@ -664,7 +731,7 @@ const BulkImportModal = ({
                         <div className="flex items-center gap-2">
                           <CheckCircle className="w-5 h-5 text-success" />
                           <h4 className="font-medium text-success">
-                            Import Complete
+                            {isEditMode ? "Update Complete" : "Import Complete"}
                           </h4>
                         </div>
                         <div className="flex items-center gap-1">

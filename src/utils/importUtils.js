@@ -15,10 +15,10 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import ExcelJS from 'exceljs';
-import Papa from 'papaparse';
-import { IMPORT_FIELD_MAPPINGS } from '@/constants/import';
-import { formatErrorMessage } from './errorProcessing';
+import ExcelJS from "exceljs";
+import Papa from "papaparse";
+import { IMPORT_FIELD_MAPPINGS } from "@/constants/import";
+import { formatErrorMessage } from "./errorProcessing";
 
 /**
  * Process uploaded file (CSV or Excel) for bulk import
@@ -145,7 +145,8 @@ const parseExcelFile = async (file) => {
         headers.forEach((header, index) => {
           const cellValue = extractCellValue(rowValues[index]);
 
-          const value = cellValue === undefined || cellValue === null ? "" : cellValue;
+          const value =
+            cellValue === undefined || cellValue === null ? "" : cellValue;
           rowData[header] = value;
 
           if (value !== "") hasData = true;
@@ -201,13 +202,19 @@ const validateAndTransformData = (rawData, fieldMapping) => {
       const csvHeader = field.csvHeader || field.header;
       const header = field.header;
       const value =
-        row[csvHeader] !== undefined ? row[csvHeader] :
-        row[csvHeader + "*"] !== undefined ? row[csvHeader + "*"] :
-        row[csvHeader + " *"] !== undefined ? row[csvHeader + " *"] :
-        row[header] !== undefined ? row[header] :
-        row[header + "*"] !== undefined ? row[header + "*"] :
-        row[header + " *"] !== undefined ? row[header + " *"] :
-        undefined;
+        row[csvHeader] !== undefined
+          ? row[csvHeader]
+          : row[csvHeader + "*"] !== undefined
+            ? row[csvHeader + "*"]
+            : row[csvHeader + " *"] !== undefined
+              ? row[csvHeader + " *"]
+              : row[header] !== undefined
+                ? row[header]
+                : row[header + "*"] !== undefined
+                  ? row[header + "*"]
+                  : row[header + " *"] !== undefined
+                    ? row[header + " *"]
+                    : undefined;
 
       try {
         // Apply transformation first
@@ -419,6 +426,77 @@ export const bulkCreateItems = async (
 };
 
 /**
+ * Bulk update existing items using API. Mirrors bulkCreateItems exactly,
+ * except it calls updateFunction (an existing record's ID is expected to
+ * already be present on each item, e.g. from a matchKey column resolved
+ * during import) instead of a create function - kept as a separate
+ * function rather than a "mode" flag on bulkCreateItems so progress/status
+ * text ("Updating" vs "Creating") is never wrong for the operation actually
+ * running.
+ */
+export const bulkUpdateItems = async (
+  items,
+  updateFunction,
+  onProgress,
+  onItemComplete,
+  signal,
+) => {
+  const results = {
+    successful: [],
+    failed: [],
+    total: items.length,
+  };
+
+  for (let i = 0; i < items.length; i++) {
+    if (signal?.aborted) throw new Error("Operation cancelled");
+    const item = items[i];
+    const currentProgress = i + 1;
+
+    try {
+      onProgress?.({
+        status: "updating",
+        message: `Updating item ${currentProgress} of ${items.length}...`,
+        current: currentProgress,
+        total: items.length,
+        percentage: Math.round((currentProgress / items.length) * 100),
+      });
+
+      const result = await updateFunction(item);
+      results.successful.push({ item, result, index: i });
+
+      onItemComplete?.({
+        success: true,
+        item,
+        result,
+        index: i,
+      });
+
+      // Small delay to prevent overwhelming the server
+      if (i < items.length - 1) {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      }
+    } catch (error) {
+      const formattedError = formatErrorMessage(error);
+
+      results.failed.push({
+        item,
+        error: formattedError,
+        index: i,
+      });
+
+      onItemComplete?.({
+        success: false,
+        item,
+        error: formattedError,
+        index: i,
+      });
+    }
+  }
+
+  return results;
+};
+
+/**
  * Generate sample file for download using ExcelJS
  */
 export const generateSampleFile = async (
@@ -459,13 +537,15 @@ export const generateSampleFile = async (
 
     // Set column widths (ExcelJS width is approx chars)
     worksheet.columns = fieldMapping.map((field) => ({
-      width: field.width ? field.width / 7 : 20, 
+      width: field.width ? field.width / 7 : 20,
     }));
 
     // Write Buffer
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-    
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
     // Download
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -548,10 +628,9 @@ export const getRowIdentifier = (item, fieldMapping = []) => {
     (field) => !SENSITIVE_FIELD_PATTERN.test(field.key || field.header || ""),
   );
   const requiredFields = safeFields.filter((field) => field.required);
-  const fieldsToUse = (requiredFields.length ? requiredFields : safeFields).slice(
-    0,
-    3,
-  );
+  const fieldsToUse = (
+    requiredFields.length ? requiredFields : safeFields
+  ).slice(0, 3);
 
   return fieldsToUse
     .map((field) => {
@@ -606,7 +685,11 @@ export const downloadImportResults = (
  * Build a plain-text summary of the import results, suitable for copying to
  * the clipboard.
  */
-export const buildResultsSummaryText = (results, fieldMapping) => {
+export const buildResultsSummaryText = (
+  results,
+  fieldMapping,
+  actionLabel = "Import",
+) => {
   const rows = buildResultsExportRows(results, fieldMapping);
   const lines = rows.map((row) => {
     const { Row, Status, Error, ...fields } = row;
@@ -616,7 +699,7 @@ export const buildResultsSummaryText = (results, fieldMapping) => {
       .join(", ");
     return `#${Row} [${Status}]${fieldsText ? " " + fieldsText : ""}${Error ? " - " + Error : ""}`;
   });
-  return `Import Results (${results.successful.length} succeeded, ${results.failed.length} failed, ${results.total} total)\n\n${lines.join("\n")}`;
+  return `${actionLabel} Results (${results.successful.length} succeeded, ${results.failed.length} failed, ${results.total} total)\n\n${lines.join("\n")}`;
 };
 
 /**
@@ -736,13 +819,19 @@ const validateAndTransformDataForDomains = (
       const csvHeader = field.csvHeader || field.header;
       const header = field.header;
       const value =
-        row[csvHeader] !== undefined ? row[csvHeader] :
-        row[csvHeader + "*"] !== undefined ? row[csvHeader + "*"] :
-        row[csvHeader + " *"] !== undefined ? row[csvHeader + " *"] :
-        row[header] !== undefined ? row[header] :
-        row[header + "*"] !== undefined ? row[header + "*"] :
-        row[header + " *"] !== undefined ? row[header + " *"] :
-        undefined;
+        row[csvHeader] !== undefined
+          ? row[csvHeader]
+          : row[csvHeader + "*"] !== undefined
+            ? row[csvHeader + "*"]
+            : row[csvHeader + " *"] !== undefined
+              ? row[csvHeader + " *"]
+              : row[header] !== undefined
+                ? row[header]
+                : row[header + "*"] !== undefined
+                  ? row[header + "*"]
+                  : row[header + " *"] !== undefined
+                    ? row[header + " *"]
+                    : undefined;
 
       try {
         // Apply transformation first
