@@ -466,12 +466,6 @@ export const navItems = [
         hasPermission: true,
         permissionValue: "user:security:permissions:template:view",
       },
-      {
-        name: "My Profile",
-        icon: <User size={16} />,
-        link: "/profile",
-        hasPermission: false,
-      },
       // Disabled for v2
       // {
       //   name: "API Keys",
