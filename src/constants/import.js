@@ -18,6 +18,28 @@
 import { ALLOWED_EXTENSIONS, GLOBAL_BLOCKED } from "./blockedFileTypes";
 import { generateSecretCode } from "@/utils/secretCode";
 
+// Backend IDs (policy/department/organization/etc.) are UUIDs of any RFC 4122
+// version - e.g. "530b2473-b224-5f54-9185-89189ee72df8" is a v5 UUID, not v4 -
+// so this intentionally accepts any version/variant nibble, not just v4.
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Validator factory for optional foreign-key ID columns (policy IDs,
+ * department ID, etc.): empty values pass through untouched (field is
+ * optional), non-empty values must be a well-formed UUID so a typo'd or
+ * copy-pasted-wrong ID fails fast in the import preview instead of being
+ * silently sent to the backend.
+ */
+const validateOptionalUUID = (fieldLabel) => (value) => {
+  if (!value) return value;
+  const trimmed = String(value).trim();
+  if (!UUID_REGEX.test(trimmed)) {
+    throw new Error(`${fieldLabel} must be a valid ID (UUID)`);
+  }
+  return trimmed;
+};
+
 export const IMPORT_FIELD_MAPPINGS = {
   cautions: [
     {
@@ -390,8 +412,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 20,
-      sampleValue: "CAUTION001",
+      sampleValue: "",
       sampleValue2: "",
+      validate: validateOptionalUUID("Caution ID"),
     },
     {
       key: "disclaimer_id",
@@ -400,8 +423,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 20,
-      sampleValue: "DISCLAIMER001",
+      sampleValue: "",
       sampleValue2: "",
+      validate: validateOptionalUUID("Disclaimer ID"),
     },
 
     {
@@ -899,7 +923,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: false,
       width: 20,
       sampleValue: "",
-      sampleValue2: "POLICY001",
+      sampleValue2: "",
+      validate: validateOptionalUUID("General Policy ID"),
     },
     {
       key: "forwarding_policy_id",
@@ -910,6 +935,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 20,
       sampleValue: "",
       sampleValue2: "",
+      validate: validateOptionalUUID("Forwarding Policy ID"),
     },
     {
       key: "distribution_policy_id",
@@ -925,8 +951,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       // Forwarding. Runs last so general_policy_id/forwarding_policy_id are
       // already present on `item` to check against.
       validate: (value, item) => {
+        const uuidChecked = validateOptionalUUID("Distribution Policy ID")(value);
         if (
-          value &&
+          uuidChecked &&
           item &&
           (item.general_policy_id || item.forwarding_policy_id)
         ) {
@@ -934,7 +961,7 @@ export const IMPORT_FIELD_MAPPINGS = {
             "Distribution Policy cannot be combined with General or Forwarding Policy",
           );
         }
-        return value;
+        return uuidChecked;
       },
     },
   ],
@@ -1147,7 +1174,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: false,
       width: 20,
       sampleValue: "",
-      sampleValue2: "RestrictionID001",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Restriction Policy ID"),
     },
     {
       key: "department_id",
@@ -1157,7 +1185,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: false,
       width: 20,
       sampleValue: "",
-      sampleValue2: "DEPT001",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Department ID"),
     },
     {
       key: "is_mailbox_enabled",
@@ -2924,6 +2953,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       description: "The ID of the existing organization this one belongs under. Find it on the Organization Details page.",
       sampleValue: "530b2473-b224-5f54-9185-89189ee72df8",
       sampleValue2: "530b2473-b224-5f54-9185-89189ee72df8",
+      validate: validateOptionalUUID("Parent Organization ID"),
     },
     {
       key: "details.type",
