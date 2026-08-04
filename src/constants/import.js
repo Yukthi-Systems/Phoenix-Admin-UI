@@ -1685,12 +1685,14 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 30,
       sampleValue: "Strict Incoming Policy",
       sampleValue2: "Standard Incoming Filter",
+      // Mirrors the "Add General Policy" form's yup schema (3-200 chars) -
+      // see src/pages/policy/GeneralPolicy/add/validationSchema.js
       validate: (value) => {
-        if (value.length < 2) {
-          throw new Error("Policy name must be at least 2 characters");
+        if (value.length < 3) {
+          throw new Error("Policy name must be at least 3 characters");
         }
-        if (value.length > 100) {
-          throw new Error("Policy name must not exceed 100 characters");
+        if (value.length > 200) {
+          throw new Error("Policy name must not exceed 200 characters");
         }
         return value.trim();
       },
@@ -1741,13 +1743,18 @@ export const IMPORT_FIELD_MAPPINGS = {
         );
       },
     },
+    // The four blocking toggles + their exception lists below are grouped
+    // and ordered to mirror the "Blocking & Exceptions" step's four
+    // sections (Incoming Email / Outgoing Email / Incoming Domain /
+    // Outgoing Domain Settings) - see BlockingStep.jsx - so the CSV layout
+    // reads the same way the form does.
     {
       key: "block_all_incoming_emails",
-      header: "Block All Incoming",
-      csvHeader: "Block All Incoming",
+      header: "Block All Incoming Emails",
+      csvHeader: "Block All Incoming Emails",
       type: "boolean",
       required: false,
-      width: 18,
+      width: 20,
       defaultValue: false,
       sampleValue: "Yes",
       sampleValue2: "No",
@@ -1761,12 +1768,40 @@ export const IMPORT_FIELD_MAPPINGS = {
       },
     },
     {
-      key: "block_all_outgoing_emails",
-      header: "Block All Outgoing",
-      csvHeader: "Block All Outgoing",
+      key: "incoming_exception_emails",
+      header: "Incoming Exception Emails",
+      csvHeader: "Incoming Exception Emails",
+      type: "array",
+      required: false,
+      width: 35,
+      sampleValue: "admin@trusted.com,support@partner.org",
+      sampleValue2: "contact@client.com,info@supplier.org",
+      transform: (value) => {
+        if (!value || value.trim() === "") return [];
+        return value
+          .split(",")
+          .map((email) => email.trim())
+          .filter((email) => email.length > 0);
+      },
+      validate: (value) => {
+        if (Array.isArray(value)) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          value.forEach((email) => {
+            if (!emailRegex.test(email)) {
+              throw new Error(`Invalid email format: ${email}`);
+            }
+          });
+        }
+        return value;
+      },
+    },
+    {
+      key: "block_all_incoming_domains",
+      header: "Block All Incoming Domains",
+      csvHeader: "Block All Incoming Domains",
       type: "boolean",
       required: false,
-      width: 18,
+      width: 20,
       defaultValue: false,
       sampleValue: "No",
       sampleValue2: "Yes",
@@ -1807,58 +1842,22 @@ export const IMPORT_FIELD_MAPPINGS = {
       },
     },
     {
-      key: "incoming_exception_emails",
-      header: "Incoming Exception Emails",
-      csvHeader: "Incoming Exception Emails",
-      type: "array",
+      key: "block_all_outgoing_emails",
+      header: "Block All Outgoing Emails",
+      csvHeader: "Block All Outgoing Emails",
+      type: "boolean",
       required: false,
-      width: 35,
-      sampleValue: "admin@trusted.com,support@partner.org",
-      sampleValue2: "contact@client.com,info@supplier.org",
+      width: 20,
+      defaultValue: false,
+      sampleValue: "No",
+      sampleValue2: "Yes",
       transform: (value) => {
-        if (!value || value.trim() === "") return [];
-        return value
-          .split(",")
-          .map((email) => email.trim())
-          .filter((email) => email.length > 0);
-      },
-      validate: (value) => {
-        if (Array.isArray(value)) {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          value.forEach((email) => {
-            if (!emailRegex.test(email)) {
-              throw new Error(`Invalid email format: ${email}`);
-            }
-          });
-        }
-        return value;
-      },
-    },
-    {
-      key: "outgoing_exception_domains",
-      header: "Outgoing Exception Domains",
-      csvHeader: "Outgoing Exception Domains",
-      type: "array",
-      required: false,
-      width: 35,
-      sampleValue: "internal.com,subsidiary.org",
-      sampleValue2: "branch.com,division.org",
-      transform: (value) => {
-        if (!value || value.trim() === "") return [];
-        return value
-          .split(",")
-          .map((domain) => domain.trim())
-          .filter((domain) => domain.length > 0);
-      },
-      validate: (value) => {
-        if (Array.isArray(value)) {
-          value.forEach((domain) => {
-            if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(domain)) {
-              throw new Error(`Invalid domain format: ${domain}`);
-            }
-          });
-        }
-        return value;
+        const normalizedValue = String(value).toLowerCase();
+        return (
+          normalizedValue === "yes" ||
+          normalizedValue === "true" ||
+          normalizedValue === "1"
+        );
       },
     },
     {
@@ -1890,20 +1889,63 @@ export const IMPORT_FIELD_MAPPINGS = {
       },
     },
     {
+      key: "block_all_outgoing_domains",
+      header: "Block All Outgoing Domains",
+      csvHeader: "Block All Outgoing Domains",
+      type: "boolean",
+      required: false,
+      width: 20,
+      defaultValue: false,
+      sampleValue: "No",
+      sampleValue2: "Yes",
+      transform: (value) => {
+        const normalizedValue = String(value).toLowerCase();
+        return (
+          normalizedValue === "yes" ||
+          normalizedValue === "true" ||
+          normalizedValue === "1"
+        );
+      },
+    },
+    {
+      key: "outgoing_exception_domains",
+      header: "Outgoing Exception Domains",
+      csvHeader: "Outgoing Exception Domains",
+      type: "array",
+      required: false,
+      width: 35,
+      sampleValue: "internal.com,subsidiary.org",
+      sampleValue2: "branch.com,division.org",
+      transform: (value) => {
+        if (!value || value.trim() === "") return [];
+        return value
+          .split(",")
+          .map((domain) => domain.trim())
+          .filter((domain) => domain.length > 0);
+      },
+      validate: (value) => {
+        if (Array.isArray(value)) {
+          value.forEach((domain) => {
+            if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(domain)) {
+              throw new Error(`Invalid domain format: ${domain}`);
+            }
+          });
+        }
+        return value;
+      },
+    },
+    {
       key: "outgoing_size_limit_mb",
       header: "Outgoing Size Limit (MB)",
       csvHeader: "Outgoing Size Limit (MB)",
       type: "number",
-      required: false,
+      // Matches the "Add General Policy" form, which requires this field
+      // (yup .required() in validationSchema.js) - import must not allow
+      // creating a policy the manual form couldn't.
+      required: true,
       width: 20,
-      defaultValue: 0,
       sampleValue: 25,
       sampleValue2: 50,
-      transform: (value) => {
-        const num = Number(value);
-        if (isNaN(num) || num < 0) return 0;
-        return num;
-      },
     },
   ],
 
