@@ -33,12 +33,13 @@ import { FIELD_MAPPINGS } from "@/constants/export";
 import { useToastify } from "@/hooks/useToastify";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import useExport from "@/hooks/useExport";
 import {
   useDeleteRestrictionPolicy,
   useRestrictionPolicy,
   useAddRestrictionPolicy,
+  useEditRestrictionPolicy,
 } from "@/hooks/useRestrictionPolicy";
 import {
   exportRestrictionPolicy,
@@ -77,7 +78,7 @@ const ListRestrictionPolicy = () => {
   const [openCopy, setOpenCopy] = useState(false);
   const [fullData, setFullData] = useState({});
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   const navigate = useNavigate();
   const { formatUserDateNice } = useUserTimezone();
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
@@ -123,6 +124,7 @@ const ListRestrictionPolicy = () => {
 
   const { mutate, isPending } = useDeleteRestrictionPolicy();
   const { mutate: addRestrictionPolicy } = useAddRestrictionPolicy();
+  const { mutate: editRestrictionPolicyMutate } = useEditRestrictionPolicy();
 
   const {
     selectedCount,
@@ -160,6 +162,33 @@ const ListRestrictionPolicy = () => {
       );
     });
   });
+
+  const handleBulkEditRestrictionPolicy = async (policyData) => {
+    const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
+    const data = { ...rest };
+    return new Promise((resolve, reject) => {
+      editRestrictionPolicyMutate(
+        { org_id: rowOrgId, policy_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit(
+    "restriction_policies",
+    handleBulkEditRestrictionPolicy,
+    "policy_id",
+  );
 
   const {
     isExportModalOpen,
@@ -240,13 +269,28 @@ const ListRestrictionPolicy = () => {
       },
       organization_id: organization_id,
       details: {},
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "restriction_policy",
-      organization_id,
-    ]);
+    queryClient.invalidateQueries(["restriction_policy", organization_id]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_restriction_policy",
+      message: `Updated restriction policies via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {},
+    };
+    ImportActionLog({ values: ActionLog });
+
+    queryClient.invalidateQueries(["restriction_policy", organization_id]);
   };
 
   const onCancel = () => {
@@ -317,10 +361,7 @@ const ListRestrictionPolicy = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries([
-      "restriction_policy",
-      organization_id,
-    ]);
+    queryClient.invalidateQueries(["restriction_policy", organization_id]);
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }
@@ -428,7 +469,9 @@ const ListRestrictionPolicy = () => {
               icon: Edit,
               variant: "default",
               onClick: () =>
-                navigate(`/policies/restrictions/edit/${row?.original?.policy_id}`),
+                navigate(
+                  `/policies/restrictions/edit/${row?.original?.policy_id}`,
+                ),
               tooltip: "Edit Restriction Policy",
             });
           }
@@ -519,6 +562,16 @@ const ListRestrictionPolicy = () => {
       });
     }
 
+    if (permissions.includes("policy:general:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple policies",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("policy:general:create") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -534,6 +587,8 @@ const ListRestrictionPolicy = () => {
     isExportAvailable,
     handleAddRestrictionPolicy,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     handleExport,
   ]);
 
@@ -590,11 +645,7 @@ const ListRestrictionPolicy = () => {
 
         {/* Content */}
         {restrictionPolicies.length !== 0 || isLoading ? (
-          <Table
-            table={table}
-            isLoading={isLoading}
-            totalCount={totalCount}
-          />
+          <Table table={table} isLoading={isLoading} totalCount={totalCount} />
         ) : isError && !isServerError ? (
           <DataErrorWithReload content={error?.response?.data?.message} />
         ) : (
@@ -637,6 +688,16 @@ const ListRestrictionPolicy = () => {
         title="Bulk Import Restriction Policies"
         description="Upload a CSV or Excel file to create multiple restriction policies at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Restriction Policies"
+        description="Export restriction policies, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal

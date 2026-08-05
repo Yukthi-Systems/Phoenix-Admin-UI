@@ -33,12 +33,13 @@ import { FIELD_MAPPINGS } from "@/constants/export";
 import { useToastify } from "@/hooks/useToastify";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import useExport from "@/hooks/useExport";
 import {
   useDeleteForwardingPolicy,
   useForwardingPolicy,
   useAddForwardingPolicy,
+  useEditForwardingPolicy,
 } from "@/hooks/useForwardingPolicy";
 import {
   exportForwardingPolicy,
@@ -77,7 +78,7 @@ const ListForwardingPolicy = () => {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [openCopy, setOpenCopy] = useState(false);
   const [fullData, setFullData] = useState({});
- const { pagination, onPaginationChange: setPagination } =
+  const { pagination, onPaginationChange: setPagination } =
     useTablePagination();
 
   const navigate = useNavigate();
@@ -134,6 +135,7 @@ const ListForwardingPolicy = () => {
 
   const { mutate, isPending } = useDeleteForwardingPolicy();
   const { mutate: addForwardingPolicy } = useAddForwardingPolicy();
+  const { mutate: editForwardingPolicyMutate } = useEditForwardingPolicy();
 
   const {
     selectedCount,
@@ -172,6 +174,33 @@ const ListForwardingPolicy = () => {
       );
     });
   });
+
+  const handleBulkEditForwardingPolicy = async (policyData) => {
+    const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
+    const data = { ...rest, domain_name: domainName };
+    return new Promise((resolve, reject) => {
+      editForwardingPolicyMutate(
+        { org_id: rowOrgId, policy_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit(
+    "forwarding_policies",
+    handleBulkEditForwardingPolicy,
+    "policy_id",
+  );
 
   const {
     isExportModalOpen,
@@ -242,7 +271,7 @@ const ListForwardingPolicy = () => {
 
   const handleImportCompleteWithRefresh = (results) => {
     handleImportComplete(results);
-    const ActionLog ={
+    const ActionLog = {
       action_type: "import_forwarding_policy",
       message: `Imported forwarding policies via bulk import`,
       payload: {
@@ -254,9 +283,33 @@ const ListForwardingPolicy = () => {
       details: {
         domain_name: domainName,
       },
-    }
-    ImportActionLog({values:ActionLog})
-    
+    };
+    ImportActionLog({ values: ActionLog });
+
+    queryClient.invalidateQueries([
+      "forwarding_policy",
+      organization_id,
+      domainName,
+    ]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_forwarding_policy",
+      message: `Updated forwarding policies via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
+
     queryClient.invalidateQueries([
       "forwarding_policy",
       organization_id,
@@ -361,8 +414,11 @@ const ListForwardingPolicy = () => {
   const handleBulkCopy = async (sourceDomain, policyId, targetDomain) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const policyData = await getForwardingPolicyEntry(organization_id, policyId);
-        
+        const policyData = await getForwardingPolicyEntry(
+          organization_id,
+          policyId,
+        );
+
         const copyData = {
           ...policyData,
           policy_name: `${policyData.policy_name} (Copy)`,
@@ -468,7 +524,11 @@ const ListForwardingPolicy = () => {
         accessorKey: "forwarding_type",
         header: "Forwarding Type",
         cell: ({ getValue }) => {
-          return <span className="capitalize">{getValue()?.replace(/_/g, ' ') || 'N/A'}</span>;
+          return (
+            <span className="capitalize">
+              {getValue()?.replace(/_/g, " ") || "N/A"}
+            </span>
+          );
         },
         meta: {
           align: "left",
@@ -512,7 +572,9 @@ const ListForwardingPolicy = () => {
               icon: Edit,
               variant: "default",
               onClick: () =>
-                navigate(`/policies/forwarding/edit/${row?.original?.policy_id}`),
+                navigate(
+                  `/policies/forwarding/edit/${row?.original?.policy_id}`,
+                ),
               tooltip: "Edit Forwarding Policy",
             });
           }
@@ -623,6 +685,20 @@ const ListForwardingPolicy = () => {
       });
     }
 
+    if (
+      permissions.includes("policy:general:edit") &&
+      domainName &&
+      isEditAvailable
+    ) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple policies",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("policy:general:create") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -639,6 +715,8 @@ const ListForwardingPolicy = () => {
     isExportAvailable,
     handleAddForwardingPolicy,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     handleExport,
   ]);
 
@@ -756,6 +834,16 @@ const ListForwardingPolicy = () => {
         title="Bulk Import Forwarding Policies"
         description="Upload a CSV or Excel file to create multiple forwarding policies at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Forwarding Policies"
+        description="Export forwarding policies, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal

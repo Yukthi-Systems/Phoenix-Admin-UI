@@ -33,12 +33,13 @@ import { FIELD_MAPPINGS } from "@/constants/export";
 import { useToastify } from "@/hooks/useToastify";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import useExport from "@/hooks/useExport";
 import {
   useDeleteGeneralPolicy,
   useGeneralPolicy,
   useAddGeneralPolicy,
+  useEditGeneralPolicy,
 } from "@/hooks/useGeneralPolicy";
 import {
   exportGeneralPolicy,
@@ -79,8 +80,8 @@ const ListGeneralPolicy = () => {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [openCopy, setOpenCopy] = useState(false);
   const [fullData, setFullData] = useState({});
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
 
   const navigate = useNavigate();
   const { formatUserDateNice } = useUserTimezone();
@@ -136,6 +137,7 @@ const ListGeneralPolicy = () => {
 
   const { mutate, isPending } = useDeleteGeneralPolicy();
   const { mutate: addGeneralPolicy } = useAddGeneralPolicy();
+  const { mutate: editGeneralPolicyMutate } = useEditGeneralPolicy();
 
   const {
     selectedCount,
@@ -173,6 +175,29 @@ const ListGeneralPolicy = () => {
       );
     });
   });
+
+  const handleBulkEditGeneralPolicy = async (policyData) => {
+    const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
+    const data = { ...rest };
+    return new Promise((resolve, reject) => {
+      editGeneralPolicyMutate(
+        { org_id: rowOrgId, policy_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("general_policies", handleBulkEditGeneralPolicy, "policy_id");
 
   const {
     isExportModalOpen,
@@ -253,8 +278,32 @@ const ListGeneralPolicy = () => {
       details: {
         domain_name: domainName,
       },
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
+
+    queryClient.invalidateQueries([
+      "general_policy",
+      organization_id,
+      domainName,
+    ]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_general_policy",
+      message: `Updated general policies via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
 
     queryClient.invalidateQueries([
       "general_policy",
@@ -315,7 +364,12 @@ const ListGeneralPolicy = () => {
   const handleBulkDelete = async (itemId, itemName = "Unknown Policy") => {
     return new Promise((resolve, reject) => {
       mutate(
-        { org_id: organization_id, policy_id: itemId, domain_name: domainName, policy_name: itemName },
+        {
+          org_id: organization_id,
+          policy_id: itemId,
+          domain_name: domainName,
+          policy_name: itemName,
+        },
         {
           onSuccess: () => {
             resolve();
@@ -587,6 +641,20 @@ const ListGeneralPolicy = () => {
       });
     }
 
+    if (
+      permissions.includes("policy:general:edit") &&
+      domainName &&
+      isEditAvailable
+    ) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple policies",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("policy:general:create") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -603,6 +671,8 @@ const ListGeneralPolicy = () => {
     isExportAvailable,
     handleAddGeneralPolicy,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     handleExport,
   ]);
 
@@ -728,6 +798,16 @@ const ListGeneralPolicy = () => {
         title="Bulk Import General Policies"
         description="Upload a CSV or Excel file to create multiple general policies at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit General Policies"
+        description="Export general policies, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal

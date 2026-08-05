@@ -28,36 +28,36 @@ export const FIELD_MAPPINGS = {
       header: "Caution Name",
       type: "string",
       width: 25,
-    }, 
-    {
-      key:"html_content",
-      header:"HTML Content",
-      type:"string",
-      width:40,
     },
     {
-      key:"text_content",
-      header:"Text Content",
-      type:"string",
-      width:40,
+      key: "html_content",
+      header: "HTML Content",
+      type: "string",
+      width: 40,
     },
     {
-      key:"info.description",
-      header:"Description",
-      type:"string",
-      width:30,
+      key: "text_content",
+      header: "Text Content",
+      type: "string",
+      width: 40,
     },
     {
-      key:"info.severity",
-      header:"Severity",
-      type:"string",
-      width:15,
+      key: "info.description",
+      header: "Description",
+      type: "string",
+      width: 30,
     },
     {
-      key:"info.notes",
-      header:"Notes",
-      type:"string",
-      width:30,
+      key: "info.severity",
+      header: "Severity",
+      type: "string",
+      width: 15,
+    },
+    {
+      key: "info.notes",
+      header: "Notes",
+      type: "string",
+      width: 30,
     },
     {
       key: "created_at",
@@ -87,22 +87,22 @@ export const FIELD_MAPPINGS = {
       width: 25,
     },
     {
-      key:"html_content",
-      header:"HTML Content",
-      type:"string",
-      width:40,
+      key: "html_content",
+      header: "HTML Content",
+      type: "string",
+      width: 40,
     },
     {
-      key:"text_content",
-      header:"Text Content",
-      type:"string",
-      width:40,
+      key: "text_content",
+      header: "Text Content",
+      type: "string",
+      width: 40,
     },
     {
-      key:"info.description",
-      header:"Description",
-      type:"string",
-      width:30,
+      key: "info.description",
+      header: "Description",
+      type: "string",
+      width: 30,
     },
     {
       key: "is_active",
@@ -133,28 +133,28 @@ export const FIELD_MAPPINGS = {
       width: 25,
     },
     {
-      key:"department_details.description",
-      header:"Description",
-      type:"string",
-      width:40,
+      key: "department_details.description",
+      header: "Description",
+      type: "string",
+      width: 40,
     },
     {
-      key:"department_details.address",
-      header:"Address",
-      type:"string",
-      width:30,
+      key: "department_details.address",
+      header: "Address",
+      type: "string",
+      width: 30,
     },
     {
-      key:"department_details.notes",
-      header:"Notes",
-      type:"string",
-      width:30,
+      key: "department_details.notes",
+      header: "Notes",
+      type: "string",
+      width: 30,
     },
     {
-      key:"department_details.authorized_persons",
-      header:"Authorized Persons",
-      type:"string",
-      width:30,
+      key: "department_details.authorized_persons",
+      header: "Authorized Persons",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
@@ -331,15 +331,24 @@ export const FIELD_MAPPINGS = {
     },
   ],
 
+  // Matches bulk_export_mailboxes' actual SELECT (src/database/handlers/mailbox.py
+  // in Phoenix-Admin-API) exactly - that endpoint only ever returns these 8
+  // fields. Headers are aligned to IMPORT_FIELD_MAPPINGS.mailboxes so a bulk
+  // export round-trips straight back through bulk edit without renaming
+  // columns by hand. Previous versions of this mapping listed department_id,
+  // phone/address/description, group members, ip/geo restrictions, and
+  // created_at/updated_at - none of those exist in the actual response
+  // (mailbox lost its own profile fields to Identity in a backend change),
+  // so every one of those columns silently exported blank.
   mailboxes: [
     {
       key: "email",
-      header: "Email Address",
+      header: "E-Mail Identity",
       type: "string",
       width: 35,
     },
     {
-      key: "is_active",
+      key: "is_enabled",
       header: "Status",
       type: "string",
       width: 12,
@@ -347,7 +356,7 @@ export const FIELD_MAPPINGS = {
     },
     {
       key: "quota_allocated",
-      header: "Quota Allocated (GB)",
+      header: "Allocate Space (GB)",
       type: "number",
       width: 18,
     },
@@ -365,81 +374,22 @@ export const FIELD_MAPPINGS = {
       width: 15,
     },
     {
-      key: "is_group",
-      header: "Is Group",
-      type: "string",
-      width: 12,
-      transform: (value) => (value ? "Yes" : "No"),
-    },
-    {
-      key: "department_id",
-      header: "Department ID",
+      key: "general_policy_id",
+      header: "General Policy ID",
       type: "string",
       width: 25,
     },
     {
-      key: "ip_restriction",
-      header: "IP Restrictions",
+      key: "forwarding_policy_id",
+      header: "Forwarding Policy ID",
       type: "string",
       width: 25,
-      transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key: "geo_restriction",
-      header: "Geo Restrictions",
+      key: "distribution_policy_id",
+      header: "Distribution Policy ID",
       type: "string",
-      width: 20,
-      transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
-    },
-    {
-      key: "mailbox_info.phone",
-      header: "Phone",
-      type: "string",
-      width: 15,
-    },
-    {
-      key: "mailbox_info.address",
-      header: "Address",
-      type: "string",
-      width: 30,
-    },
-    {
-      key: "mailbox_info.description",
-      header: "Description",
-      type: "string",
-      width: 35,
-    },
-    {
-      key: "mailbox_info.secondary_email",
-      header: "Secondary Email",
-      type: "string",
-      width: 30,
-    },
-    {
-      key: "group_members.internal",
-      header: "Internal Group Members",
-      type: "string",
-      width: 40,
-      transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
-    },
-    {
-      key: "group_members.external",
-      header: "External Group Members",
-      type: "string",
-      width: 40,
-      transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
-    },
-    {
-      key: "created_at",
-      header: "Created Date",
-      type: "date",
-      width: 20,
-    },
-    {
-      key: "updated_at",
-      header: "Updated Date",
-      type: "date",
-      width: 20,
+      width: 25,
     },
   ],
 
@@ -577,16 +527,16 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
     {
-      key:"policy_description",
-      header:"Policy Description",
-      type:"string",
-      width:40,
+      key: "policy_description",
+      header: "Policy Description",
+      type: "string",
+      width: 40,
     },
     {
-      key:"domain_name",
-      header:"Domain",
-      type:"string",
-      width:25,
+      key: "domain_name",
+      header: "Domain",
+      type: "string",
+      width: 25,
     },
     {
       key: "is_active",
@@ -596,24 +546,24 @@ export const FIELD_MAPPINGS = {
       transform: (value) => (value ? "Active" : "Inactive"),
     },
     {
-      key:"block_all_incoming_emails",
-      header:"Block All Incoming Emails",
-      type:"boolean",
-      width:20,
+      key: "block_all_incoming_emails",
+      header: "Block All Incoming Emails",
+      type: "boolean",
+      width: 20,
       transform: (value) => (value ? "Yes" : "No"),
     },
     {
-      key:"block_all_outgoing_emails",
-      header:"Block All Outgoing Emails",
-      type:"boolean",
-      width:20,
+      key: "block_all_outgoing_emails",
+      header: "Block All Outgoing Emails",
+      type: "boolean",
+      width: 20,
       transform: (value) => (value ? "Yes" : "No"),
     },
     {
-      key:"incoming_exception_domains",
-      header:"Incoming Exception Domains",
-      type:"string",
-      width:30,
+      key: "incoming_exception_domains",
+      header: "Incoming Exception Domains",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
@@ -624,10 +574,10 @@ export const FIELD_MAPPINGS = {
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"outgoing_exception_domains",
-      header:"Outgoing Exception Domains",
-      type:"string",
-      width:30,
+      key: "outgoing_exception_domains",
+      header: "Outgoing Exception Domains",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
@@ -638,10 +588,10 @@ export const FIELD_MAPPINGS = {
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"outgoing_size_limit_mb",
-      header:"Outgoing Size Limit (MB)",
-      type:"number",
-      width:20,
+      key: "outgoing_size_limit_mb",
+      header: "Outgoing Size Limit (MB)",
+      type: "number",
+      width: 20,
       // transform: (value) => (value > 0 ? value : "No Limit"),
     },
     {
@@ -657,7 +607,6 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
   ],
-
 
   filtersPolicies: [
     {
@@ -707,7 +656,7 @@ export const FIELD_MAPPINGS = {
     },
   ],
 
-  distributionPolicies:[
+  distributionPolicies: [
     {
       key: "policy_id",
       header: "Policy ID",
@@ -733,30 +682,30 @@ export const FIELD_MAPPINGS = {
       width: 25,
     },
     {
-      key:"rule_type",
-      header:"Rule Type",
-      type:"string",
-      width:20,
+      key: "rule_type",
+      header: "Rule Type",
+      type: "string",
+      width: 20,
     },
     {
-      key:"internal_members",
-      header:"Internal Members",
-      type:"string",
-      width:30,
+      key: "internal_members",
+      header: "Internal Members",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"external_members",
-      header:"External Members",
-      type:"string",
-      width:30,
+      key: "external_members",
+      header: "External Members",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"specific_emails",
-      header:"Specific Emails",
-      type:"string",
-      width:30,
+      key: "specific_emails",
+      header: "Specific Emails",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
@@ -777,7 +726,7 @@ export const FIELD_MAPPINGS = {
       header: "Updated Date",
       type: "date",
       width: 20,
-    }
+    },
   ],
 
   attachmentPolicies: [
@@ -848,8 +797,8 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
   ],
-  
-  restrictionPolicies:[
+
+  restrictionPolicies: [
     {
       key: "policy_id",
       header: "Policy ID",
@@ -863,16 +812,16 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
     {
-      key:"policy_description",
-      header:"Policy Description",
-      type:"string",
-      width:40,
+      key: "policy_description",
+      header: "Policy Description",
+      type: "string",
+      width: 40,
     },
     {
-      key:"domain_name",
-      header:"Domain",
-      type:"string",
-      width:25,
+      key: "domain_name",
+      header: "Domain",
+      type: "string",
+      width: 25,
     },
     {
       key: "is_active",
@@ -882,17 +831,17 @@ export const FIELD_MAPPINGS = {
       transform: (value) => (value ? "Active" : "Inactive"),
     },
     {
-      key:"geo_restrictions",
-      header:"Geo Restrictions (Country Codes)",
-      type:"string",
-      width:30,
+      key: "geo_restrictions",
+      header: "Geo Restrictions (Country Codes)",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"ip_restrictions",
-      header:"IP Restrictions",
-      type:"string",
-      width:30,
+      key: "ip_restrictions",
+      header: "IP Restrictions",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
@@ -909,7 +858,7 @@ export const FIELD_MAPPINGS = {
     },
   ],
 
-  forwardingPolicies:[
+  forwardingPolicies: [
     {
       key: "policy_id",
       header: "Policy ID",
@@ -923,16 +872,16 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
     {
-      key:"policy_description",
-      header:"Policy Description",
-      type:"string",
-      width:40,
+      key: "policy_description",
+      header: "Policy Description",
+      type: "string",
+      width: 40,
     },
     {
-      key:"domain_name",
-      header:"Domain",
-      type:"string",
-      width:25,
+      key: "domain_name",
+      header: "Domain",
+      type: "string",
+      width: 25,
     },
     {
       key: "is_active",
@@ -942,24 +891,24 @@ export const FIELD_MAPPINGS = {
       transform: (value) => (value ? "Active" : "Inactive"),
     },
     {
-      key:"forward_to_emails",
-      header:"Forward To Emails",
-      type:"string",
-      width:30,
+      key: "forward_to_emails",
+      header: "Forward To Emails",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"from_emails",
-      header:"From Emails",
-      type:"string",
-      width:30,
+      key: "from_emails",
+      header: "From Emails",
+      type: "string",
+      width: 30,
       transform: (value) => (Array.isArray(value) ? value.join(", ") : ""),
     },
     {
-      key:"subject_contains",
-      header:"Subject Contains",
-      type:"string",
-      width:30,
+      key: "subject_contains",
+      header: "Subject Contains",
+      type: "string",
+      width: 30,
     },
     {
       key: "created_at",
@@ -974,7 +923,7 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
   ],
-  
+
   audit_logs: [
     { header: "Date (UTC)", key: "action_timestamp" },
     { header: "Action Type", key: "action_type" },
@@ -1002,12 +951,33 @@ export const FIELD_MAPPINGS = {
     { header: "Last Updated", key: "updated_at" },
   ],
 
+  // Matches list_identities_under_domain's actual SELECT (src/database/handlers/identities.py
+  // in Phoenix-Admin-API) - that endpoint powers both the list view and
+  // "export" (Phoenix-Admin-API's /identities/list route is explicitly
+  // documented as "List/Export"). email_prefix and domain_name are derived
+  // client-side since the backend only returns the full "email"; both plus
+  // department_id are added so the exported file carries everything
+  // IMPORT_FIELD_MAPPINGS.identities needs for a bulk-edit round trip.
+  // Deliberately excludes base64_password - identity's update endpoint
+  // reuses the create schema where password is a required field, and the
+  // single Edit Identity form satisfies that by always sending "" (a
+  // sentinel meaning "leave the password alone"); actual password changes
+  // go through a separate dedicated endpoint. Bulk edit must never carry a
+  // real or blank password value that could overwrite it - see
+  // handleBulkEditIdentity in identity/list/index.jsx.
   identities: [
     {
       key: "email",
-      header: "Email Address",
+      header: "Email Prefix",
       type: "string",
-      width: 35,
+      width: 25,
+      transform: (value) => (value || "").split("@")[0],
+    },
+    {
+      key: "domain_name",
+      header: "Domain",
+      type: "string",
+      width: 25,
     },
     {
       key: "first_name",
@@ -1023,7 +993,7 @@ export const FIELD_MAPPINGS = {
     },
     {
       key: "primary_phone",
-      header: "Phone",
+      header: "Phone Number",
       type: "string",
       width: 15,
     },
@@ -1045,22 +1015,40 @@ export const FIELD_MAPPINGS = {
       header: "App 2FA",
       type: "string",
       width: 12,
-      transform: (value) => (value ? "Enabled" : "Disabled"),
+      // Must be a value the import boolean parser accepts (yes/no,
+      // true/false, active/inactive) - "Enabled"/"Disabled" is not, and
+      // would throw "Invalid boolean value" on reimport.
+      transform: (value) => (value ? "Yes" : "No"),
     },
     {
       key: "is_sms_2fa_enabled",
       header: "SMS 2FA",
       type: "string",
       width: 12,
-      transform: (value) => (value ? "Enabled" : "Disabled"),
+      transform: (value) => (value ? "Yes" : "No"),
     },
     {
       key: "is_email_2fa_enabled",
       header: "Email 2FA",
       type: "string",
       width: 12,
-      transform: (value) => (value ? "Enabled" : "Disabled"),
+      transform: (value) => (value ? "Yes" : "No"),
     },
+    {
+      key: "restriction_policy_id",
+      header: "Restriction Policy ID",
+      type: "string",
+      width: 25,
+    },
+    {
+      key: "department_id",
+      header: "Department ID",
+      type: "string",
+      width: 25,
+    },
+    // Informational only below - not part of the bulk-edit payload
+    // (mailbox/chat/file provisioning has its own resources/endpoints,
+    // out of scope for editing an identity's own fields).
     {
       key: "is_mailbox_present",
       header: "Mailbox Status",
@@ -1096,12 +1084,6 @@ export const FIELD_MAPPINGS = {
           : item.is_file_user_enabled
             ? "Enabled"
             : "Disabled",
-    },
-    {
-      key: "restriction_policy_id",
-      header: "Restriction Policy ID",
-      type: "string",
-      width: 25,
     },
     {
       key: "created_at",

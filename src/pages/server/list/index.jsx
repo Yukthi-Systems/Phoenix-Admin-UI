@@ -29,6 +29,7 @@ import {
   useDeleteServer,
   useGetServers,
   useAddServer,
+  useUpdateServer,
   useUpdateServerStatus,
   useRecaulculateQuota,
 } from "@/hooks/useServer";
@@ -60,7 +61,10 @@ import {
   CheckCircle,
   RefreshCw,
 } from "lucide-react";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
+import useExport from "@/hooks/useExport";
+import { FIELD_MAPPINGS } from "@/constants/export";
+import ExportModal from "@/components/common/ExportModal";
 import { PER_PAGE } from "@/constants/constants";
 import StatusBadge from "@/components/common/StatusBadge";
 import { useUserTimezone } from "@/hooks/useTimezone";
@@ -69,11 +73,12 @@ import EditModelBox from "@/components/common/EditModelBox";
 import { useUrlParam } from "@/hooks/useUrlParam";
 import SearchBar from "@/components/shared/SearchBar";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import { getServers } from "@/api/servers";
 
 const ListServers = () => {
   const navigate = useNavigate();
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -104,6 +109,7 @@ const ListServers = () => {
 
   const { mutate: statusUpdate, isPending: statusLoad } =
     useUpdateServerStatus();
+  const { mutate: updateServerMutate } = useUpdateServer();
 
   const {
     isImportModalOpen,
@@ -120,6 +126,41 @@ const ListServers = () => {
       });
     });
   });
+
+  const handleBulkEditServer = async (serverData) => {
+    const { organization_id: _rowOrgId, server_id, ...rest } = serverData;
+    const data = { ...rest };
+    return new Promise((resolve, reject) => {
+      updateServerMutate(
+        { server_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("servers", handleBulkEditServer, "server_id");
+
+  const fetchServersForExport = async ({ page, pageSize }) => {
+    return await getServers(page, pageSize);
+  };
+
+  const {
+    isExportModalOpen,
+    exportConfig,
+    handleExport,
+    handleExportModalClose,
+    isExportAvailable,
+  } = useExport("servers", fetchServersForExport, {}, FIELD_MAPPINGS.servers);
   const filtered = data?.servers?.filter(
     (s) => s.server_id != "0d069ed3-daaa-534f-9d2d-bd6c34503b84",
   );
@@ -395,6 +436,11 @@ const ListServers = () => {
     queryClient.invalidateQueries(["servers"]);
   };
 
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    queryClient.invalidateQueries(["servers"]);
+  };
+
   const OnStatusChange = () => {
     if (statusId) {
       statusUpdate(
@@ -544,8 +590,36 @@ const ListServers = () => {
       });
     }
 
+    if (permissions.includes("server:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple servers",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
+    if (permissions.includes("server:view") && isExportAvailable) {
+      options.push({
+        label: "Export",
+        description: "Download all servers as Excel file",
+        icon: <Download className="h-4 w-4" />,
+        onClick: handleExport,
+      });
+    }
+
     return options;
-  }, [permissions, isImportAvailable, handleAddServer, handleImport]);
+  }, [
+    permissions,
+    isImportAvailable,
+    handleAddServer,
+    handleImport,
+    isEditAvailable,
+    handleBulkEdit,
+    isExportAvailable,
+    handleExport,
+  ]);
 
   if (!permissions.includes("server:view"))
     return (
@@ -674,6 +748,24 @@ const ListServers = () => {
         onComplete={handleImportCompleteWithRefresh}
       />
 
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Servers"
+        description="Export servers, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
+      />
+
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={handleExportModalClose}
+        exportConfig={exportConfig}
+        title="Export Servers"
+        description="Export all servers to Excel format. This may take a few minutes for large datasets."
+      />
+
       {/* Status Modal */}
       {showStatusModal && (
         <EditModelBox
@@ -725,7 +817,9 @@ const ListServers = () => {
           handleCancel={() => setShowRecalculateModal(false)}
         >
           <div className="w-xl text-left">
-            <p className="mt-2 text-destructive">Are you sure you want to recalculate quotas?</p>
+            <p className="mt-2 text-destructive">
+              Are you sure you want to recalculate quotas?
+            </p>
             <p className="mb-3 mt-4 text-base text-muted-foreground">
               This will recalculate the Servers and domains quota based on
               mailbox allocated spaces. And this is instant, if there are many

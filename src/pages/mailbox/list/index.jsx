@@ -29,6 +29,7 @@ import {
   useGetMailboxes,
   useAddMailbox,
   useDeleteMailbox,
+  useEditMailbox,
   useUpdateMailboxStatus,
   useUpdateMailboxSpace,
   useUpdateMailboxPassword,
@@ -61,7 +62,7 @@ import {
   Copy,
   RefreshCw,
 } from "lucide-react";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import { PER_PAGE } from "@/constants/constants";
 import BulkDeleteModal from "@/components/common/BulkDeleteModal";
 import DeleteModelBox from "@/components/common/DeleteModelBox";
@@ -182,6 +183,9 @@ const ListMailboxes = () => {
   const { mutate: spaceUpdate, isPending: spaceLoad } = useUpdateMailboxSpace();
   const { mutate: passwordUpdate, isPending: passwordLoad } =
     useUpdateMailboxPassword();
+  const { mutate: editMailboxMutate } = useEditMailbox();
+  const { mutate: bulkEditStatusUpdate } = useUpdateMailboxStatus();
+  const { mutate: bulkEditSpaceUpdate } = useUpdateMailboxSpace();
 
   useEffect(() => {
     if (pagination.pageIndex > 0) {
@@ -198,7 +202,9 @@ const ListMailboxes = () => {
     handleImportComplete,
     isImportAvailable,
   } = useBulkImport("mailboxes", async (mailboxData) => {
-    const emailIdentity = String(mailboxData.email_identity || "").toLowerCase();
+    const emailIdentity = String(
+      mailboxData.email_identity || "",
+    ).toLowerCase();
     if (domainName && !emailIdentity.endsWith(`@${domainName.toLowerCase()}`)) {
       throw new Error(
         `E-Mail Identity must belong to the selected domain (${domainName})`,
@@ -228,6 +234,68 @@ const ListMailboxes = () => {
       );
     });
   });
+
+  // Mirrors mailbox/edit/index.jsx's onSubmit: editMailbox only accepts the
+  // three policy IDs (mailbox creation/edit no longer carries identity
+  // profile fields, quota, or enabled state - those have their own
+  // dedicated endpoints, called separately below).
+  const handleBulkEditMailbox = async (mailboxData) => {
+    const emailIdentity = String(
+      mailboxData.email_identity || "",
+    ).toLowerCase();
+    const atIndex = emailIdentity.indexOf("@");
+    if (atIndex <= 0) {
+      throw new Error(`Invalid E-Mail Identity: ${emailIdentity}`);
+    }
+    const email_prefix = emailIdentity.slice(0, atIndex);
+    const domain_name = emailIdentity.slice(atIndex + 1);
+
+    const policyData = {
+      general_policy_id: mailboxData.general_policy_id || null,
+      forwarding_policy_id: mailboxData.forwarding_policy_id || null,
+      distribution_policy_id: mailboxData.distribution_policy_id || null,
+    };
+
+    await new Promise((resolve, reject) => {
+      editMailboxMutate(
+        { domain_name, email_prefix, data: policyData },
+        { onSuccess: resolve, onError: reject },
+      );
+    });
+
+    if (mailboxData.enabled !== undefined) {
+      await new Promise((resolve, reject) => {
+        bulkEditStatusUpdate(
+          { domain_name, email_prefix, status: mailboxData.enabled },
+          { onSuccess: resolve, onError: reject },
+        );
+      });
+    }
+
+    if (mailboxData.allocate_quota !== undefined) {
+      await new Promise((resolve, reject) => {
+        bulkEditSpaceUpdate(
+          {
+            domain_name,
+            email_prefix,
+            space: Number(mailboxData.allocate_quota),
+          },
+          { onSuccess: resolve, onError: reject },
+        );
+      });
+    }
+
+    return { email: emailIdentity };
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("mailboxes", handleBulkEditMailbox, "email_identity");
 
   const {
     isExportModalOpen,
@@ -547,6 +615,25 @@ const ListMailboxes = () => {
     queryClient.invalidateQueries(["mailboxes", domainName]);
   };
 
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_mailboxes",
+      message: `Updated mailboxes via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_Name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["mailboxes", domainName]);
+  };
+
   const OnDelete = () => {
     if (deleteId) {
       const [email_prefix, domain_name] = deleteId.split("@");
@@ -555,10 +642,7 @@ const ListMailboxes = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted mailbox");
-            queryClient.invalidateQueries([
-              "mailboxes",
-              domainName,
-            ]);
+            queryClient.invalidateQueries(["mailboxes", domainName]);
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -593,10 +677,7 @@ const ListMailboxes = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully update mailbox status");
-            queryClient.invalidateQueries([
-              "mailboxes",
-              domainName,
-            ]);
+            queryClient.invalidateQueries(["mailboxes", domainName]);
             removeFromSelection([statusId]);
             setShowStatusModal(false);
             setStatusId("");
@@ -631,10 +712,7 @@ const ListMailboxes = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully updated mailbox quota");
-            queryClient.invalidateQueries([
-              "mailboxes",
-              domainName,
-            ]);
+            queryClient.invalidateQueries(["mailboxes", domainName]);
             queryClient.invalidateQueries(["domains", organization_id]);
             removeFromSelection([deleteId]);
             setSpaceId("");
@@ -666,10 +744,7 @@ const ListMailboxes = () => {
       {
         onSuccess: () => {
           toast("success", "Successfully password is updated");
-          queryClient.invalidateQueries([
-            "mailboxes",
-            domainName,
-          ]);
+          queryClient.invalidateQueries(["mailboxes", domainName]);
           setPasswordId("");
           setShowPasswordModal(false);
           reset({
@@ -787,6 +862,16 @@ const ListMailboxes = () => {
       });
     }
 
+    if (permissions.includes("mailbox:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple mailboxes",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("mailbox:view") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -802,6 +887,8 @@ const ListMailboxes = () => {
     isImportAvailable,
     handleAddMailbox,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     domainName,
     isExportAvailable,
     handleExport,
@@ -924,6 +1011,16 @@ const ListMailboxes = () => {
         title="Bulk Import Mailboxes"
         description="Upload a CSV or Excel file to create multiple mailboxes at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Mailboxes"
+        description="Export mailboxes, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       {showStatusModal && (
@@ -1085,7 +1182,8 @@ const ListMailboxes = () => {
               allocate_quota: mailboxData.quota_allocated || 0.1,
               general_policy_id: mailboxData.general_policy_id || null,
               forwarding_policy_id: mailboxData.forwarding_policy_id || null,
-              distribution_policy_id: mailboxData.distribution_policy_id || null,
+              distribution_policy_id:
+                mailboxData.distribution_policy_id || null,
             };
           },
           copyRoute: (targetDomain) => `/mailbox/copy/${targetDomain}`,

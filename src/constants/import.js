@@ -43,6 +43,22 @@ const validateOptionalUUID = (fieldLabel) => (value) => {
 export const IMPORT_FIELD_MAPPINGS = {
   cautions: [
     {
+      key: "caution_id",
+      header: "Caution ID",
+      csvHeader: "Caution ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Caution ID"),
+    },
+    {
       key: "caution_message_name",
       header: "Caution Name",
       csvHeader: "Caution Name",
@@ -112,6 +128,22 @@ export const IMPORT_FIELD_MAPPINGS = {
   ],
 
   disclaimers: [
+    {
+      key: "disclaimer_id",
+      header: "Disclaimer ID",
+      csvHeader: "Disclaimer ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Disclaimer ID"),
+    },
     {
       key: "disclaimer_name",
       header: "Disclaimer Name",
@@ -184,6 +216,22 @@ export const IMPORT_FIELD_MAPPINGS = {
   ],
 
   departments: [
+    {
+      key: "department_id",
+      header: "Department ID",
+      csvHeader: "Department ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Department ID"),
+    },
     {
       key: "department_name",
       header: "Department Name",
@@ -958,7 +1006,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       // Forwarding. Runs last so general_policy_id/forwarding_policy_id are
       // already present on `item` to check against.
       validate: (value, item) => {
-        const uuidChecked = validateOptionalUUID("Distribution Policy ID")(value);
+        const uuidChecked = validateOptionalUUID("Distribution Policy ID")(
+          value,
+        );
         if (
           uuidChecked &&
           item &&
@@ -1310,6 +1360,22 @@ export const IMPORT_FIELD_MAPPINGS = {
   ],
 
   servers: [
+    {
+      key: "server_id",
+      header: "Server ID",
+      csvHeader: "Server ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Server ID"),
+    },
     {
       key: "host_name",
       header: "Host Name",
@@ -1684,6 +1750,22 @@ export const IMPORT_FIELD_MAPPINGS = {
 
   general_policies: [
     {
+      key: "policy_id",
+      header: "Policy ID",
+      csvHeader: "Policy ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Policy ID"),
+    },
+    {
       key: "policy_name",
       header: "Policy Name",
       csvHeader: "Policy Name",
@@ -1958,6 +2040,22 @@ export const IMPORT_FIELD_MAPPINGS = {
 
   filters_policies: [
     {
+      key: "policy_id",
+      header: "Policy ID",
+      csvHeader: "Policy ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Policy ID"),
+    },
+    {
       key: "policy_name",
       header: "Policy Name",
       csvHeader: "Policy Name",
@@ -2077,6 +2175,22 @@ export const IMPORT_FIELD_MAPPINGS = {
     },
   ],
   restriction_policies: [
+    {
+      key: "policy_id",
+      header: "Policy ID",
+      csvHeader: "Policy ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Policy ID"),
+    },
     {
       key: "policy_name",
       header: "Policy Name",
@@ -2214,6 +2328,22 @@ export const IMPORT_FIELD_MAPPINGS = {
     },
   ],
   distribution_policies: [
+    {
+      key: "policy_id",
+      header: "Policy ID",
+      csvHeader: "Policy ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Policy ID"),
+    },
     {
       key: "policy_name",
       header: "Policy Name",
@@ -2381,6 +2511,22 @@ export const IMPORT_FIELD_MAPPINGS = {
     },
   ],
   forwarding_policies: [
+    {
+      key: "policy_id",
+      header: "Policy ID",
+      csvHeader: "Policy ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Policy ID"),
+    },
     {
       key: "policy_name",
       header: "Policy Name",
@@ -2693,6 +2839,22 @@ export const IMPORT_FIELD_MAPPINGS = {
   ],
   attachment_policies: [
     {
+      key: "policy_id",
+      header: "Policy ID",
+      csvHeader: "Policy ID",
+      type: "string",
+      required: false,
+      // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
+      // generates this on create, so it's never user-entered and is stripped
+      // from create's parsed rows/sample template - see BulkImport.jsx's
+      // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      editOnly: true,
+      width: 15,
+      sampleValue: "",
+      sampleValue2: "",
+      validate: validateOptionalUUID("Policy ID"),
+    },
+    {
       key: "policy_name",
       header: "Policy Name",
       csvHeader: "Policy Name",
@@ -2999,7 +3161,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 40,
-      description: "The ID of the existing organization this one belongs under. Find it on the Organization Details page.",
+      description:
+        "The ID of the existing organization this one belongs under. Find it on the Organization Details page.",
       sampleValue: "530b2473-b224-5f54-9185-89189ee72df8",
       sampleValue2: "530b2473-b224-5f54-9185-89189ee72df8",
       validate: validateOptionalUUID("Parent Organization ID"),

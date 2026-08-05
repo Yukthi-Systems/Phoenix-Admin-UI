@@ -33,12 +33,13 @@ import { FIELD_MAPPINGS } from "@/constants/export";
 import { useToastify } from "@/hooks/useToastify";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import useExport from "@/hooks/useExport";
 import {
   useDeleteDistributionPolicy,
   useDistributionPolicy,
   useAddDistributionPolicy,
+  useEditDistributionPolicy,
 } from "@/hooks/useDistributionPolicy";
 import {
   exportDistributionPolicy,
@@ -78,7 +79,7 @@ const ListDistributionPolicy = () => {
   const [openCopy, setOpenCopy] = useState(false);
   const [fullData, setFullData] = useState({});
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
 
   const navigate = useNavigate();
   const { formatUserDateNice } = useUserTimezone();
@@ -134,6 +135,7 @@ const ListDistributionPolicy = () => {
 
   const { mutate, isPending } = useDeleteDistributionPolicy();
   const { mutate: addDistributionPolicy } = useAddDistributionPolicy();
+  const { mutate: editDistributionPolicyMutate } = useEditDistributionPolicy();
 
   const {
     selectedCount,
@@ -163,7 +165,7 @@ const ListDistributionPolicy = () => {
             ...policyData,
             domain_name: domainName,
           },
-          addLogs: false
+          addLogs: false,
         },
         {
           onSuccess: (result) => resolve(result),
@@ -172,6 +174,33 @@ const ListDistributionPolicy = () => {
       );
     });
   });
+
+  const handleBulkEditDistributionPolicy = async (policyData) => {
+    const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
+    const data = { ...rest, domain_name: domainName };
+    return new Promise((resolve, reject) => {
+      editDistributionPolicyMutate(
+        { org_id: rowOrgId, policy_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit(
+    "distribution_policies",
+    handleBulkEditDistributionPolicy,
+    "policy_id",
+  );
 
   const {
     isExportModalOpen,
@@ -254,8 +283,32 @@ const ListDistributionPolicy = () => {
       details: {
         domain_name: domainName,
       },
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
+
+    queryClient.invalidateQueries([
+      "distribution_policy",
+      organization_id,
+      domainName,
+    ]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_distribution_policy",
+      message: `Updated distribution policies via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
 
     queryClient.invalidateQueries([
       "distribution_policy",
@@ -361,7 +414,10 @@ const ListDistributionPolicy = () => {
   const handleBulkCopy = async (sourceDomain, policyId, targetDomain) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const policyData = await getDistributionPolicyEntry(organization_id, policyId);
+        const policyData = await getDistributionPolicyEntry(
+          organization_id,
+          policyId,
+        );
 
         const copyData = {
           ...policyData,
@@ -468,7 +524,11 @@ const ListDistributionPolicy = () => {
         accessorKey: "distribution_type",
         header: "Distribution Type",
         cell: ({ getValue }) => {
-          return <span className="capitalize">{getValue()?.replace(/_/g, ' ') || 'N/A'}</span>;
+          return (
+            <span className="capitalize">
+              {getValue()?.replace(/_/g, " ") || "N/A"}
+            </span>
+          );
         },
         meta: {
           align: "left",
@@ -512,7 +572,9 @@ const ListDistributionPolicy = () => {
               icon: Edit,
               variant: "default",
               onClick: () =>
-                navigate(`/policies/distribution/edit/${row?.original?.policy_id}`),
+                navigate(
+                  `/policies/distribution/edit/${row?.original?.policy_id}`,
+                ),
               tooltip: "Edit Distribution Policy",
             });
           }
@@ -623,6 +685,20 @@ const ListDistributionPolicy = () => {
       });
     }
 
+    if (
+      permissions.includes("policy:general:edit") &&
+      domainName &&
+      isEditAvailable
+    ) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple policies",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("policy:general:create") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -639,6 +715,8 @@ const ListDistributionPolicy = () => {
     isExportAvailable,
     handleAddDistributionPolicy,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     handleExport,
   ]);
 
@@ -756,6 +834,16 @@ const ListDistributionPolicy = () => {
         title="Bulk Import Distribution Policies"
         description="Upload a CSV or Excel file to create multiple distribution policies at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Distribution Policies"
+        description="Export distribution policies, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal
