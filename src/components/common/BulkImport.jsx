@@ -66,6 +66,14 @@ const BulkImportModal = ({
     ? importConfig?.fieldMapping?.find((f) => f.key === importConfig?.matchKey)
         ?.header || importConfig?.matchKey
     : null;
+  // editOnly fields (e.g. a record's own *_id, used as the bulk-edit
+  // matchKey) only make sense once a record already exists - the backend
+  // generates them, they're never user-entered. Keep them for edit (where
+  // one of them IS the matchKey); strip them for create so they're never
+  // parsed, previewed, or downloadable as part of the sample template.
+  const effectiveFieldMapping = importConfig?.fieldMapping?.filter(
+    (field) => isEditMode || !field.editOnly,
+  );
   const [importStatus, setImportStatus] = useState("idle");
   const [progress, setProgress] = useState({});
   const [error, setError] = useState(null);
@@ -173,7 +181,7 @@ const BulkImportModal = ({
     try {
       const data = await processImportFile(
         selectedFile,
-        importConfig.fieldMapping,
+        effectiveFieldMapping,
         (progressData) => {
           if (processAbortController.current?.signal.aborted) {
             throw new Error("Operation cancelled");
@@ -272,16 +280,16 @@ const BulkImportModal = ({
     if (!results || !importConfig) return;
     downloadImportResults(
       results,
-      importConfig.fieldMapping,
+      effectiveFieldMapping,
       `${importConfig.sampleFilename || (isEditMode ? "update" : "import")}_results`,
     );
-  }, [results, importConfig, isEditMode]);
+  }, [results, importConfig, effectiveFieldMapping, isEditMode]);
 
   const handleCopyResults = useCallback(async () => {
     if (!results || !importConfig) return;
     const summary = buildResultsSummaryText(
       results,
-      importConfig.fieldMapping,
+      effectiveFieldMapping,
       isEditMode ? "Update" : "Import",
     );
     try {
@@ -291,7 +299,7 @@ const BulkImportModal = ({
     } catch (e) {
       setError("Unable to copy results to clipboard");
     }
-  }, [results, importConfig]);
+  }, [results, importConfig, effectiveFieldMapping, isEditMode]);
 
   const toggleExpand = () => {
     if (processedData.length > 0) {
@@ -792,7 +800,7 @@ const BulkImportModal = ({
                             {results.failed.map((failed, index) => {
                               const identifier = getRowIdentifier(
                                 failed.item,
-                                importConfig?.fieldMapping,
+                                effectiveFieldMapping,
                               );
                               return (
                                 <div
@@ -844,7 +852,7 @@ const BulkImportModal = ({
                         Required Columns:
                       </h4>
                       <div className="grid grid-cols-2 gap-2 text-xs">
-                        {importConfig.fieldMapping.map((field, index) => (
+                        {effectiveFieldMapping.map((field, index) => (
                           <div key={index} className="flex items-center gap-2">
                             <span
                               className={`w-2 h-2 rounded-full ${field.required ? "bg-destructive" : "bg-muted-foreground"}`}

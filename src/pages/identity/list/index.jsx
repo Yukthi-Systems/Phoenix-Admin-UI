@@ -51,12 +51,22 @@ import BulkImportModal from "@/components/common/BulkImport";
 import DropdownButton from "@/components/common/DropdownButton";
 import { useToastify } from "@/hooks/useToastify";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import { Trash2, Download, Plus, Upload, Edit, Copy, CheckCircle, XCircle, Lock } from "lucide-react";
+import {
+  Trash2,
+  Download,
+  Plus,
+  Upload,
+  Edit,
+  Copy,
+  CheckCircle,
+  XCircle,
+  Lock,
+} from "lucide-react";
 import { PasswordInput } from "@/components/common/Inputs";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import { PER_PAGE } from "@/constants/constants";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
 import { useUserTimezone } from "@/hooks/useTimezone";
@@ -81,7 +91,9 @@ import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 const ProvisionBadge = ({ service, present, enabled }) => {
   if (!present) {
     return (
-      <span title={`No ${service} service has been created for this identity yet.`}>
+      <span
+        title={`No ${service} service has been created for this identity yet.`}
+      >
         <StatusBadge status="inactive" customText="Not Provisioned" />
       </span>
     );
@@ -112,8 +124,10 @@ const ListIdentities = () => {
   const [deleteId, setDeleteId] = useState("");
   const { pagination, onPaginationChange: setPagination } =
     useTablePagination();
-  const { mutate: deleteMutate, isPending: deletePending } = useDeleteIdentity();
-  const { mutate: updateMutate, isPending: updatePending } = useUpdateIdentity();
+  const { mutate: deleteMutate, isPending: deletePending } =
+    useDeleteIdentity();
+  const { mutate: updateMutate, isPending: updatePending } =
+    useUpdateIdentity();
   const toast = useToastify();
   const queryClient = useQueryClient();
 
@@ -133,7 +147,8 @@ const ListIdentities = () => {
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordEmail, setPasswordEmail] = useState("");
-  const { mutate: updatePassword, isPending: passwordPending } = useUpdateIdentityPassword();
+  const { mutate: updatePassword, isPending: passwordPending } =
+    useUpdateIdentityPassword();
 
   const {
     register: registerPassword,
@@ -155,7 +170,7 @@ const ListIdentities = () => {
           .string()
           .oneOf([yup.ref("password"), null], "Passwords must match")
           .required("Confirm password is required"),
-      })
+      }),
     ),
     mode: "onChange",
   });
@@ -180,7 +195,7 @@ const ListIdentities = () => {
             error.response?.data?.message || error.message || "Unknown error";
           toast("error", `Failed to update password: ${message}`);
         },
-      }
+      },
     );
   };
 
@@ -195,11 +210,7 @@ const ListIdentities = () => {
     setShowCopyModal(true);
   };
 
-  const fetchIdentitiesForExport = async ({
-    domain_name,
-    page,
-    pageSize,
-  }) => {
+  const fetchIdentitiesForExport = async ({ domain_name, page, pageSize }) => {
     return await exportIdentities(domain_name, page, pageSize);
   };
 
@@ -284,7 +295,11 @@ const ListIdentities = () => {
   // independently in parallel with provisionMailboxAndChat - one failing
   // shouldn't block or wait on the other, mirroring identity/add's
   // independent creatingMailbox/creatingChatUser/creatingFileUser calls.
-  const provisionFileUser = ({ email_prefix, email_domain, files_quota_allocated }) => {
+  const provisionFileUser = ({
+    email_prefix,
+    email_domain,
+    files_quota_allocated,
+  }) => {
     const email_identity = `${email_prefix}@${email_domain}`;
     return new Promise((resolve) => {
       createFileUserMutation(
@@ -386,6 +401,61 @@ const ListIdentities = () => {
     },
     { email_domain: domainName },
   );
+
+  // Mirrors identity/edit/index.jsx's onSubmit exactly: only the identity's
+  // own core fields go through updateIdentity - mailbox/chat/file
+  // provisioning are separate resources with their own endpoints, not part
+  // of this payload, and are intentionally not editable via bulk edit here.
+  // base64_password MUST always be "" - update_identity's backend schema is
+  // shared with create's (password is a required field there), and an
+  // empty string is the sentinel the backend treats as "leave the password
+  // alone"; a real edit-identity form value here would silently overwrite
+  // it, and exported files never contain a password anyway.
+  const handleBulkEditIdentity = async (identityData) => {
+    const {
+      organization_id: _rowOrgId,
+      email_domain,
+      email_prefix,
+      ...rest
+    } = identityData;
+
+    const payload = {
+      email_prefix,
+      email_domain,
+      first_name: rest.first_name,
+      last_name: rest.last_name || "",
+      primary_phone_number: rest.primary_phone_number,
+      secondary_email: rest.secondary_email || "",
+      base64_password: "",
+      is_enabled: rest.is_enabled ?? true,
+      is_app_2fa_enabled: rest.is_app_2fa_enabled ?? false,
+      is_sms_2fa_enabled: rest.is_sms_2fa_enabled ?? false,
+      is_email_2fa_enabled: rest.is_email_2fa_enabled ?? false,
+      restriction_policy_id: rest.restriction_policy_id || null,
+      department_id: rest.department_id || null,
+    };
+
+    return new Promise((resolve, reject) => {
+      updateMutate(
+        { data: payload },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("identities", handleBulkEditIdentity, "email_prefix", {
+    email_domain: domainName,
+  });
 
   const identities = data?.data?.identities ?? [];
   const totalCount = data?.data?.total_count ?? 0;
@@ -535,7 +605,9 @@ const ListIdentities = () => {
               icon: Edit,
               variant: "default",
               onClick: () =>
-                navigate(`/identities/edit/${encodeURIComponent(row.original.email)}`),
+                navigate(
+                  `/identities/edit/${encodeURIComponent(row.original.email)}`,
+                ),
               tooltip: "Edit identity",
             });
 
@@ -653,8 +725,27 @@ const ListIdentities = () => {
       details: {
         domain_name: domainName,
       },
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["identities", domainName]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_identities",
+      message: `Updated identities via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
     queryClient.invalidateQueries(["identities", domainName]);
   };
 
@@ -692,7 +783,7 @@ const ListIdentities = () => {
   const OnStatusChange = () => {
     if (statusId) {
       const [email_prefix, domain_name] = statusId.split("@");
-      
+
       // Fetch current info first or prepare details payload
       getIdentity(domain_name, email_prefix)
         .then((res) => {
@@ -724,10 +815,12 @@ const ListIdentities = () => {
               },
               onError: (error) => {
                 const message =
-                  error.response?.data?.message || error.message || "Unknown error";
+                  error.response?.data?.message ||
+                  error.message ||
+                  "Unknown error";
                 toast("error", `Status update failed: ${message}`);
-              }
-            }
+              },
+            },
           );
         })
         .catch((err) => {
@@ -829,6 +922,16 @@ const ListIdentities = () => {
       });
     }
 
+    if (permissions.includes("identity:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple identities",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("identity:view") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -843,6 +946,8 @@ const ListIdentities = () => {
     permissions,
     isImportAvailable,
     domainName,
+    isEditAvailable,
+    handleBulkEdit,
     isExportAvailable,
     orgDetails,
   ]);
@@ -888,7 +993,6 @@ const ListIdentities = () => {
       <div className="h-full w-full px-2">
         <div className="mb-2.5 flex w-full items-center justify-between gap-6">
           <Breadcrumbs items={[{ name: "Identity Management" }]} />
-         
 
           <div className="flex flex-1 gap-2">
             <SearchBar
@@ -909,11 +1013,10 @@ const ListIdentities = () => {
               />
             )}
 
-             
-          <DomainSelector
-            domainName={domainName}
-            setDomainName={setDomainName}
-          />
+            <DomainSelector
+              domainName={domainName}
+              setDomainName={setDomainName}
+            />
 
             {createOptions.length > 0 && (
               <DropdownButton
@@ -959,10 +1062,17 @@ const ListIdentities = () => {
           <div className="w-[380px] p-1 text-left">
             <p className="mb-4 text-base text-card-foreground">
               Are you sure you want to{" "}
-              <span className={statusValue ? "font-semibold text-success" : "font-semibold text-destructive"}>
+              <span
+                className={
+                  statusValue
+                    ? "font-semibold text-success"
+                    : "font-semibold text-destructive"
+                }
+              >
                 {statusValue ? "activate" : "deactivate"}
               </span>{" "}
-              the email identity <span className="font-semibold text-foreground">{statusId}</span>?
+              the email identity{" "}
+              <span className="font-semibold text-foreground">{statusId}</span>?
             </p>
             <div className="flex justify-end gap-3 pt-4 border-t border-border mt-6">
               <Button
@@ -1006,6 +1116,16 @@ const ListIdentities = () => {
         onComplete={handleImportCompleteWithRefresh}
       />
 
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit E-Mail Identities"
+        description="Export identities, edit the fields you want to change, then upload the file here to update them. Passwords are never touched by bulk edit."
+        onComplete={handleEditCompleteWithRefresh}
+      />
+
       <ExportModal
         isOpen={isExportModalOpen}
         onClose={handleExportModalClose}
@@ -1038,7 +1158,11 @@ const ListIdentities = () => {
           className="w-[380px] space-y-4 p-1 text-left"
         >
           <p className="text-sm text-muted-foreground mb-4">
-            Enter a new password for <span className="font-semibold text-foreground">{passwordEmail}</span>.
+            Enter a new password for{" "}
+            <span className="font-semibold text-foreground">
+              {passwordEmail}
+            </span>
+            .
           </p>
           <PasswordInput
             label="New Password"
@@ -1068,11 +1192,7 @@ const ListIdentities = () => {
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={passwordPending}
-            >
+            <Button type="submit" variant="primary" disabled={passwordPending}>
               {passwordPending ? "Updating..." : "Update Password"}
             </Button>
           </div>

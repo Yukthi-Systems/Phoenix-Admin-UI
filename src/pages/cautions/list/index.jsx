@@ -29,6 +29,7 @@ import {
   useDeleteCaution,
   useGetCautions,
   useCreateCaution,
+  useUpdateCaution,
 } from "@/hooks/useCautions";
 import AccessDenied from "@/components/common/AccessDenied";
 import DataFechError from "@/components/common/DataFechError";
@@ -41,7 +42,7 @@ import { userInfoAtom } from "@/store/userInfo";
 import NoDataFound from "@/components/common/NoDataFound";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { Trash2, Plus, Upload, Edit, Download, Copy } from "lucide-react";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import BulkImportModal from "@/components/common/BulkImport";
 import DropdownButton from "@/components/common/DropdownButton";
 import { PER_PAGE } from "@/constants/constants";
@@ -78,6 +79,7 @@ const ListCautions = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useDeleteCaution();
   const { mutate: createCaution } = useCreateCaution();
+  const { mutate: updateCautionMutate } = useUpdateCaution();
   const { data, isLoading, isError, error, refetch } = useGetCautions(
     organization_id,
     pagination.pageIndex + 1,
@@ -86,7 +88,10 @@ const ListCautions = () => {
   );
 
   const { data: domainsData } = useGetDomains(organization_id, 1, 1000);
-  const domainsList = useMemo(() => domainsData?.domains?.domains || [], [domainsData]);
+  const domainsList = useMemo(
+    () => domainsData?.domains?.domains || [],
+    [domainsData],
+  );
   const cautionDomainMap = useMemo(() => {
     const map = {};
     domainsList.forEach((domain) => {
@@ -141,6 +146,29 @@ const ListCautions = () => {
       );
     });
   });
+
+  const handleBulkEditCaution = async (cautionData) => {
+    const { organization_id: rowOrgId, caution_id, ...rest } = cautionData;
+    const data = { ...rest, associated_organization_id: rowOrgId };
+    return new Promise((resolve, reject) => {
+      updateCautionMutate(
+        { organization_id: rowOrgId, caution_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("cautions", handleBulkEditCaution, "caution_id");
 
   const cautions = data?.data.cautions ?? [];
   const totalPages = data?.data?.total_pages ?? 1;
@@ -353,6 +381,25 @@ const ListCautions = () => {
     queryClient.invalidateQueries(["cautions", organization_id]);
   };
 
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_cautions",
+      message: `Updated cautions via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        organization_id: organization_id,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["cautions", organization_id]);
+  };
+
   const OnDelete = () => {
     if (deleteId) {
       mutate(
@@ -490,6 +537,16 @@ const ListCautions = () => {
       });
     }
 
+    if (permissions.includes("caution:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple cautions",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("caution:view") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -505,6 +562,8 @@ const ListCautions = () => {
     isImportAvailable,
     handleAddCaution,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     isExportAvailable,
     handleExport,
   ]);
@@ -598,6 +657,16 @@ const ListCautions = () => {
         title="Bulk Import Cautions"
         description="Upload a CSV or Excel file to create multiple caution messages at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Cautions"
+        description="Export cautions, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal

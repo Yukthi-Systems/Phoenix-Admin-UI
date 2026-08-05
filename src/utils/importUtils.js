@@ -504,6 +504,15 @@ export const generateSampleFile = async (
   format = "excel",
   filename = "sample",
 ) => {
+  // Fields like the record's own *_id (used as the bulk-edit matchKey) only
+  // exist once a record has already been created - the backend generates
+  // them, they're never user-entered - so they're meaningless in a create
+  // sample template and would just confuse someone about to create new
+  // records. The sample is only ever generated for create (bulk edit hides
+  // "Download Sample" entirely in favor of "export your current data"), but
+  // filter defensively rather than relying on that.
+  fieldMapping = fieldMapping.filter((field) => !field.editOnly);
+
   // Create headers
   const headers = fieldMapping.map((field) => {
     const headerText = field.csvHeader || field.header;

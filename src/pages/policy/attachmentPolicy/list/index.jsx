@@ -39,9 +39,10 @@ import {
   useDeleteAttachmentPolicy,
   useGetAttachmentPolicyList,
   useCreateAttachmentPolicy,
+  useEditAttachmentPolicy,
 } from "@/hooks/useAttachmentPolicy";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import AccessDenied from "@/components/common/AccessDenied";
 import DomainSelector from "@/components/shared/DomainSelector";
 import { Trash2, Plus, Upload, Edit, Download, Copy } from "lucide-react";
@@ -77,21 +78,22 @@ const ListAttachmentPolicy = () => {
   const [selectedPolicy, setSelectedPolicy] = useState(null);
   const [openCopy, setOpenCopy] = useState(false);
   const [fullData, setFullData] = useState({});
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
 
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { organization_id } = useAtomValue(userInfoAtom);
   const toast = useToastify();
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error, refetch } = useGetAttachmentPolicyList(
-    organization_id,
-    domainName,
-    searchQuery,
-    pagination.pageIndex + 1,
-    pagination.pageSize,
-  );
+  const { data, isLoading, isError, error, refetch } =
+    useGetAttachmentPolicyList(
+      organization_id,
+      domainName,
+      searchQuery,
+      pagination.pageIndex + 1,
+      pagination.pageSize,
+    );
 
   // Export function for attachment policies
   const fetchAttachmentPolicyForExport = async ({
@@ -129,6 +131,7 @@ const ListAttachmentPolicy = () => {
 
   const { mutate, isPending } = useDeleteAttachmentPolicy();
   const { mutate: addAttachmentPolicy } = useCreateAttachmentPolicy();
+  const { mutate: editAttachmentPolicyMutate } = useEditAttachmentPolicy();
 
   // Bulk selection hook
   const {
@@ -162,7 +165,7 @@ const ListAttachmentPolicy = () => {
             allowed_file_types: policyData.allowed_file_types || [],
             blocked_file_types: policyData.blocked_file_types || [],
           },
-          addLogs : false,
+          addLogs: false,
         },
         {
           onSuccess: (result) => resolve(result),
@@ -171,6 +174,48 @@ const ListAttachmentPolicy = () => {
       );
     });
   });
+
+  const handleBulkEditAttachmentPolicy = async (policyData) => {
+    const {
+      organization_id: rowOrgId,
+      policy_id,
+      domain_name: rowDomainName,
+      ...rest
+    } = policyData;
+    const data = {
+      ...rest,
+      domain_name: rowDomainName,
+      allowed_file_types: rest.allowed_file_types || [],
+      blocked_file_types: rest.blocked_file_types || [],
+    };
+    return new Promise((resolve, reject) => {
+      editAttachmentPolicyMutate(
+        {
+          organization_id: rowOrgId,
+          domain_name: rowDomainName,
+          policy_id,
+          data,
+        },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit(
+    "attachment_policies",
+    handleBulkEditAttachmentPolicy,
+    "policy_id",
+  );
 
   const {
     isExportModalOpen,
@@ -458,8 +503,32 @@ const ListAttachmentPolicy = () => {
       details: {
         domain_name: domainName,
       },
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
+
+    queryClient.invalidateQueries([
+      "attachment_policy_list",
+      organization_id,
+      domainName,
+    ]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_attachment_policy",
+      message: `Updated attachment policies via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
 
     queryClient.invalidateQueries([
       "attachment_policy_list",
@@ -592,6 +661,20 @@ const ListAttachmentPolicy = () => {
       });
     }
 
+    if (
+      permissions.includes("policy:attachment:edit") &&
+      domainName &&
+      isEditAvailable
+    ) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple policies",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("policy:attachment:create") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -608,6 +691,8 @@ const ListAttachmentPolicy = () => {
     domainName,
     handleAddAttachmentPolicy,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     isExportAvailable,
     handleExport,
   ]);
@@ -724,6 +809,16 @@ const ListAttachmentPolicy = () => {
         title="Bulk Import Attachment Policies"
         description="Upload a CSV or Excel file to create multiple attachment policies at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Attachment Policies"
+        description="Export attachment policies, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       {/* Export Modal */}

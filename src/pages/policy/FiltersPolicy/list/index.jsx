@@ -33,12 +33,13 @@ import { FIELD_MAPPINGS } from "@/constants/export";
 import { useToastify } from "@/hooks/useToastify";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import useExport from "@/hooks/useExport";
 import {
   useDeleteFiltersPolicy,
   useFiltersPolicy,
   useAddFiltersPolicy,
+  useEditFiltersPolicy,
 } from "@/hooks/useFiltersPolicy";
 import { exportFiltersPolicy, getFiltersPolicyEntry } from "@/api/filterpolicy";
 
@@ -127,6 +128,7 @@ const ListFiltersPolicy = () => {
 
   const { mutate, isPending } = useDeleteFiltersPolicy();
   const { mutate: addFiltersPolicy } = useAddFiltersPolicy();
+  const { mutate: editFiltersPolicyMutate } = useEditFiltersPolicy();
 
   const {
     selectedCount,
@@ -164,6 +166,29 @@ const ListFiltersPolicy = () => {
       );
     });
   });
+
+  const handleBulkEditFiltersPolicy = async (policyData) => {
+    const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
+    const data = { ...rest };
+    return new Promise((resolve, reject) => {
+      editFiltersPolicyMutate(
+        { org_id: rowOrgId, policy_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("filters_policies", handleBulkEditFiltersPolicy, "policy_id");
 
   const {
     isExportModalOpen,
@@ -238,6 +263,30 @@ const ListFiltersPolicy = () => {
       payload: {
         ...results,
         total_imported: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        domain_name: domainName,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
+
+    queryClient.invalidateQueries([
+      "filters_policy",
+      organization_id,
+      domainName,
+    ]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_filters_policy",
+      message: `Updated filters policies via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
         total_failed: results.failed.length || 0,
       },
       organization_id: organization_id,
@@ -562,6 +611,20 @@ const ListFiltersPolicy = () => {
       });
     }
 
+    if (
+      permissions.includes("policy:filters:edit") &&
+      domainName &&
+      isEditAvailable
+    ) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple policies",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("policy:filters:create") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -579,6 +642,8 @@ const ListFiltersPolicy = () => {
     isExportAvailable,
     handleAddFiltersPolicy,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     handleExport,
   ]);
 
@@ -704,6 +769,16 @@ const ListFiltersPolicy = () => {
         title="Bulk Import Filters Policies"
         description="Upload a CSV or Excel file to create multiple filters policies at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Filters Policies"
+        description="Export filters policies, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal

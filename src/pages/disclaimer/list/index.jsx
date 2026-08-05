@@ -29,6 +29,7 @@ import {
   useDeleteDisclaimer,
   useGetDisclaimers,
   useCreateDisclaimer,
+  useUpdateDisclaimer,
 } from "@/hooks/useDisclaimers";
 import AccessDenied from "@/components/common/AccessDenied";
 import DataFechError from "@/components/common/DataFechError";
@@ -49,7 +50,7 @@ import { userInfoAtom } from "@/store/userInfo";
 import NoDataFound from "@/components/common/NoDataFound";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { Trash2, Download, Plus, Upload, Edit, Copy } from "lucide-react";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import { PER_PAGE } from "@/constants/constants";
 import StatusBadge from "@/components/common/StatusBadge";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
@@ -68,8 +69,8 @@ import { useTablePagination } from "@/hooks/useTablePagination";
 const ListDisclaimers = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useUrlParam("search", "");
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [deleteValue, setDeleteValue] = useState("");
@@ -81,6 +82,7 @@ const ListDisclaimers = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useDeleteDisclaimer();
   const { mutate: createDisclaimer } = useCreateDisclaimer();
+  const { mutate: updateDisclaimerMutate } = useUpdateDisclaimer();
   const { data, isLoading, isError, error, refetch } = useGetDisclaimers(
     organization_id,
     pagination.pageIndex + 1,
@@ -129,7 +131,7 @@ const ListDisclaimers = () => {
             ...disclaimerData,
             associated_organization_id: organization_id,
           },
-          addLog: false
+          addLog: false,
         },
         {
           onSuccess: (result) => resolve(result),
@@ -138,6 +140,33 @@ const ListDisclaimers = () => {
       );
     });
   });
+
+  const handleBulkEditDisclaimer = async (disclaimerData) => {
+    const {
+      organization_id: rowOrgId,
+      disclaimer_id,
+      ...rest
+    } = disclaimerData;
+    const data = { ...rest, associated_organization_id: rowOrgId };
+    return new Promise((resolve, reject) => {
+      updateDisclaimerMutate(
+        { disclaimer_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("disclaimers", handleBulkEditDisclaimer, "disclaimer_id");
 
   const disclaimers = data?.data?.disclaimers ?? [];
   const totalPages = data?.data?.total_pages ?? 1;
@@ -320,8 +349,27 @@ const ListDisclaimers = () => {
       details: {
         organization_id: organization_id,
       },
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["disclaimers", organization_id]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_disclaimers",
+      message: `Updated disclaimers via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        organization_id: organization_id,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
     queryClient.invalidateQueries(["disclaimers", organization_id]);
   };
 
@@ -474,6 +522,16 @@ const ListDisclaimers = () => {
       });
     }
 
+    if (permissions.includes("disclaimer:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple disclaimers",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("disclaimer:view") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -489,6 +547,8 @@ const ListDisclaimers = () => {
     isImportAvailable,
     handleAddDisclaimer,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     isExportAvailable,
     handleExport,
   ]);
@@ -581,6 +641,16 @@ const ListDisclaimers = () => {
         title="Bulk Import Disclaimers"
         description="Upload a CSV or Excel file to create multiple disclaimers at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Disclaimers"
+        description="Export disclaimers, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal

@@ -31,6 +31,7 @@ import {
   useCreateDepartment,
   useDeleteDepartment,
   useGetDepartments,
+  useUpdateDepartment,
 } from "@/hooks/useDepartment";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import {
@@ -49,7 +50,7 @@ import DropdownButton from "@/components/common/DropdownButton";
 import { useToastify } from "@/hooks/useToastify";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { Trash2, Download, Plus, Upload, Edit, Copy } from "lucide-react";
-import useBulkImport from "@/hooks/useImport";
+import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
 import { PER_PAGE } from "@/constants/constants";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
 import { useUserTimezone } from "@/hooks/useTimezone";
@@ -70,13 +71,14 @@ const ListDepartments = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useUrlParam("search", "");
   const { mutate: createDepartmentMutation } = useCreateDepartment();
+  const { mutate: updateDepartmentMutate } = useUpdateDepartment();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [deleteValue, setDeleteValue] = useState("");
   const { formatUserDateNice } = useUserTimezone();
   const [deleteId, setDeleteId] = useState("");
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   const { mutate, isPending } = useDeleteDepartment();
   const toast = useToastify();
   const queryClient = useQueryClient();
@@ -134,7 +136,7 @@ const ListDepartments = () => {
             ...departmentData,
             associated_organization_id: organization_id,
           },
-          addLog: false
+          addLog: false,
         },
         {
           onSuccess: (result) => {
@@ -148,6 +150,33 @@ const ListDepartments = () => {
       );
     });
   });
+
+  const handleBulkEditDepartment = async (departmentData) => {
+    const {
+      organization_id: rowOrgId,
+      department_id,
+      ...rest
+    } = departmentData;
+    const data = { ...rest, associated_organization_id: rowOrgId };
+    return new Promise((resolve, reject) => {
+      updateDepartmentMutate(
+        { department_id, data },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  };
+
+  const {
+    isEditModalOpen,
+    editConfig,
+    handleBulkEdit,
+    handleEditModalClose,
+    handleEditComplete,
+    isEditAvailable,
+  } = useBulkEdit("departments", handleBulkEditDepartment, "department_id");
 
   const departments = data?.data?.departments ?? [];
   const totalPages = data?.data?.total_pages ?? 1;
@@ -339,15 +368,38 @@ const ListDepartments = () => {
       details: {
         organization_id: organization_id,
       },
-    }
-    ImportActionLog({ values: ActionLog })
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["departments", organization_id]);
+  };
+
+  const handleEditCompleteWithRefresh = (results) => {
+    handleEditComplete(results);
+    const ActionLog = {
+      action_type: "bulk_edit_departments",
+      message: `Updated departments via bulk edit`,
+      payload: {
+        ...results,
+        total_updated: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        organization_id: organization_id,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
     queryClient.invalidateQueries(["departments", organization_id]);
   };
 
   const OnDelete = () => {
     if (deleteId) {
       mutate(
-        { organization_id, department_id: deleteId, department_name: deleteValue },
+        {
+          organization_id,
+          department_id: deleteId,
+          department_name: deleteValue,
+        },
         {
           onSuccess: () => {
             toast("success", "Successfully deleted department");
@@ -450,6 +502,16 @@ const ListDepartments = () => {
       });
     }
 
+    if (permissions.includes("department:edit") && isEditAvailable) {
+      options.push({
+        label: "Bulk Edit",
+        description:
+          "Export, edit the file, then re-upload to update multiple departments",
+        icon: <Edit className="h-4 w-4" />,
+        onClick: handleBulkEdit,
+      });
+    }
+
     if (permissions.includes("department:view") && isExportAvailable) {
       options.push({
         label: "Export",
@@ -465,6 +527,8 @@ const ListDepartments = () => {
     isImportAvailable,
     handleAddDepartment,
     handleImport,
+    isEditAvailable,
+    handleBulkEdit,
     isExportAvailable,
     handleExport,
   ]);
@@ -583,6 +647,16 @@ const ListDepartments = () => {
         title="Bulk Import Departments"
         description="Upload a CSV or Excel file to create multiple departments at once."
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <BulkImportModal
+        isOpen={isEditModalOpen}
+        onClose={handleEditModalClose}
+        importConfig={editConfig}
+        mode="edit"
+        title="Bulk Edit Departments"
+        description="Export departments, edit the fields you want to change, then upload the file here to update them."
+        onComplete={handleEditCompleteWithRefresh}
       />
 
       <ExportModal
