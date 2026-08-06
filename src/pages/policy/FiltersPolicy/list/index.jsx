@@ -100,7 +100,13 @@ const ListFiltersPolicy = () => {
     page,
     pageSize,
   }) => {
-    return exportFiltersPolicy(orgId, domain, page, pageSize);
+    const entries = await exportFiltersPolicy(orgId, domain, page, pageSize);
+    // Export is already domain-scoped via the URL param, so the backend
+    // doesn't repeat domain_name on each row - but IMPORT_FIELD_MAPPINGS
+    // requires a "Domain" column (bulk edit can't infer it otherwise), so
+    // inject the domain we already know every row belongs to.
+    const rows = Array.isArray(entries) ? entries : entries?.data || [];
+    return rows.map((entry) => ({ ...entry, domain_name: domain }));
   };
 
   const handleSearch = (query) => {

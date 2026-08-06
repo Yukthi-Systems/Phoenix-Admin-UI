@@ -71,9 +71,16 @@ const BulkImportModal = ({
   // generates them, they're never user-entered. Keep them for edit (where
   // one of them IS the matchKey); strip them for create so they're never
   // parsed, previewed, or downloadable as part of the sample template.
-  const effectiveFieldMapping = importConfig?.fieldMapping?.filter(
-    (field) => isEditMode || !field.editOnly,
-  );
+  // createOnly is the mirror image (e.g. identity's password - required to
+  // create, but never exportable and never sent by bulk edit, which sets it
+  // via a fixed sentinel instead - see handleBulkEditIdentity in
+  // identity/list/index.jsx): strip it for edit so a required-but-absent
+  // column doesn't fail validation before that sentinel is ever reached.
+  const effectiveFieldMapping = importConfig?.fieldMapping?.filter((field) => {
+    if (field.editOnly && !isEditMode) return false;
+    if (field.createOnly && isEditMode) return false;
+    return true;
+  });
   const [importStatus, setImportStatus] = useState("idle");
   const [progress, setProgress] = useState({});
   const [error, setError] = useState(null);

@@ -1118,6 +1118,13 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Password",
       type: "string",
       required: true,
+      // Only ever meaningful for create - exported files never contain a
+      // password column (can't be exported), and bulk edit always sends ""
+      // itself (see handleBulkEditIdentity in identity/list/index.jsx), so
+      // this field must never even be parsed/required during edit or
+      // "Password is required" throws before that "" is ever reached - see
+      // BulkImportModal.jsx's effectiveFieldMapping.
+      createOnly: true,
       width: 25,
       sampleValue: "Password123",
       sampleValue2: "SecurePass456",

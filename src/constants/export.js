@@ -744,13 +744,13 @@ export const FIELD_MAPPINGS = {
     },
     {
       key: "policy_description",
-      header: "Description",
+      header: "Policy Description",
       type: "string",
       width: 40,
     },
     {
       key: "domain_name",
-      header: "Domain",
+      header: "Domain Name",
       type: "string",
       width: 25,
     },
@@ -770,19 +770,21 @@ export const FIELD_MAPPINGS = {
     },
     {
       key: "allowed_file_types",
-      header: "Allowed Types",
+      header: "Allowed File Types",
       type: "string",
       width: 50,
+      // "" not "None" - the import array field splits this string on
+      // reimport; a literal "None" would come back as ["None"] instead of [].
       transform: (value) =>
-        Array.isArray(value) && value.length > 0 ? value.join(", ") : "None",
+        Array.isArray(value) && value.length > 0 ? value.join(", ") : "",
     },
     {
       key: "blocked_file_types",
-      header: "Blocked Types",
+      header: "Blocked File Types",
       type: "string",
       width: 50,
       transform: (value) =>
-        Array.isArray(value) && value.length > 0 ? value.join(", ") : "None",
+        Array.isArray(value) && value.length > 0 ? value.join(", ") : "",
     },
     {
       key: "created_at",
