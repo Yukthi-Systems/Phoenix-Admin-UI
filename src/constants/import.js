@@ -2417,9 +2417,18 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: true,
       width: 15,
       defaultValue: "ANYONE",
-      options: [{ value: "ANYONE", label: "ANYONE" }],
+      // Mirrors ruleList in DistributionPolicy/add/stepper/PolicyInfoStep.jsx -
+      // was previously missing everything but ANYONE, so SPECIFIC_EMAILS
+      // (and GROUP_MEMBER/DOMAIN_MEMBER) would fail import validation even
+      // though they're valid, creatable values via the single Add form.
+      options: [
+        { value: "ANYONE", label: "Anyone" },
+        { value: "GROUP_MEMBER", label: "Group Member" },
+        { value: "DOMAIN_MEMBER", label: "Domain Member" },
+        { value: "SPECIFIC_EMAILS", label: "Specific Emails" },
+      ],
       sampleValue: "ANYONE",
-      sampleValue2: "ANYONE",
+      sampleValue2: "SPECIFIC_EMAILS",
     },
     {
       key: "internal_members",
