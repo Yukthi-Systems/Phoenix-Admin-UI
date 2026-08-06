@@ -199,6 +199,12 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Description",
       type: "string",
       required: false,
+      // Backend's CreateDisclaimerForm.details is a required (non-Optional)
+      // dict - the "details" key must always be sent, even as "", or the
+      // request 422s with "Field required" on "details" itself (not on a
+      // sub-field), since with both description and address empty the
+      // whole nested object was never being created at all.
+      alwaysSend: true,
       width: 30,
       sampleValue: "Legal terms and conditions document",
       sampleValue2: "Privacy policy document",
@@ -209,6 +215,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Address",
       type: "string",
       required: false,
+      alwaysSend: true,
       width: 30,
       sampleValue: "123 Company Street, City, State",
       sampleValue2: "456 Business Ave, Town, State",
