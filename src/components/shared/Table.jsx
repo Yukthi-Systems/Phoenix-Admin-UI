@@ -140,10 +140,10 @@ const Table = ({
   return (
     <>
       <div
-        className={`w-full shadow-lg overflow-hidden rounded-lg bg-card border border-border ${fillContainer ? "h-full" : "h-[calc(100vh-140px)]"}`}
+        className={`w-full shadow-lg overflow-hidden rounded-lg bg-card border border-border ${fillContainer ? "h-full flex flex-col" : "h-[calc(100vh-140px)]"}`}
       >
         <div
-          className={`w-full overflow-auto relative ${fillContainer ? "h-full" : "h-[calc(100vh-198px)]"}`}
+          className={`w-full overflow-auto relative ${fillContainer ? "flex-1 min-h-0" : "h-[calc(100vh-198px)]"}`}
           ref={tableBodyRef}
           tabIndex={0}
         >
@@ -220,7 +220,9 @@ const Table = ({
           )}
         </div>
 
-        <div className="flex items-center justify-between px-6 py-3 border-t border-border bg-muted/20">
+        <div
+          className={`flex items-center justify-between px-6 py-3 border-t border-border bg-muted/20 ${fillContainer ? "shrink-0" : ""}`}
+        >
           <div className="flex items-center gap-3">
             <label
               htmlFor="pageSize"
