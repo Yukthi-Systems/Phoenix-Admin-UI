@@ -26,7 +26,11 @@ export const filtersPolicyValidationSchema = Yup.object().shape({
   policy_name: Yup.string()
     .required("Policy Name is required")
     .min(3, "Policy name must be at least 3 characters")
-    .max(200, "Policy name must not exceed 200 characters"),
+    .max(200, "Policy name must not exceed 200 characters")
+    .matches(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Policy name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
   is_active: Yup.boolean(),
   // delete_mails: Yup.boolean(),
 

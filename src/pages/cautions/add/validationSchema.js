@@ -21,7 +21,11 @@ export const cautionFormSchema = yup.object({
   caution_message_name: yup
     .string()
     .required("Caution message name is required")
-    .max(100, "Caution message name must not exceed 100 characters"),
+    .max(100, "Caution message name must not exceed 100 characters")
+    .matches(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Caution message name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
 
   html_content: yup
     .string()

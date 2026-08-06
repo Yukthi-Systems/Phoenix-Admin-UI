@@ -21,7 +21,11 @@ export const disclaimerFormSchema = yup.object({
   disclaimer_name: yup
     .string()
     .required("Disclaimer name is required")
-    .max(100, "Disclaimer name must not exceed 100 characters"),
+    .max(100, "Disclaimer name must not exceed 100 characters")
+    .matches(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Disclaimer name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
 
   html_content: yup
     .string()

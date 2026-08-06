@@ -24,8 +24,8 @@ export const departmentFormSchema = yup.object().shape({
     .min(2, "Department name must be at least 2 characters")
     .max(100, "Department name must not exceed 100 characters")
     .matches(
-      /^[a-zA-Z0-9\s\-_.&()]+$/,
-      "Department name can only contain letters, numbers, spaces, and common punctuation",
+      /^[a-zA-Z0-9 _-]+$/,
+      "Department name can only contain letters, numbers, spaces, hyphens, and underscores",
     ),
 
   associated_organization_id: yup

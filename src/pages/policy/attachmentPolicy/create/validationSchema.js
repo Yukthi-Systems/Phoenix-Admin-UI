@@ -22,7 +22,11 @@ export const attachmentPolicyValidationSchema = yup.object().shape({
     .string()
     .required("Policy name is required")
     .min(3, "Policy name must be at least 3 characters")
-    .max(100, "Policy name must not exceed 100 characters"),
+    .max(100, "Policy name must not exceed 100 characters")
+    .matches(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Policy name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
   policy_description: yup
     .string()
     .max(500, "Policy description must not exceed 500 characters"),

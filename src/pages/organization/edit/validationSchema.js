@@ -22,7 +22,11 @@ export const organizationFormSchema = yup.object().shape({
     .string()
     .required("Organization name is required")
     .min(2, "Organization name must be at least 2 characters")
-    .max(150, "Organization name has maximum 150 characters"),
+    .max(150, "Organization name has maximum 150 characters")
+    .matches(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Organization name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
   email_service_enabled: yup.boolean().required("Email service status is required"),
   chat_service_enabled: yup.boolean().required("Chat service status is required"),
   file_service_enabled: yup.boolean().required("File service status is required"),

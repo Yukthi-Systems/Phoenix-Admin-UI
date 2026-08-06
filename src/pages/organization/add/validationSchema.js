@@ -81,7 +81,11 @@ export const organizationFormSchema = yup.object().shape({
     .string()
     .required("Organization name is required")
     .min(2, "Organization name must be at least 2 characters")
-    .max(250, "Organization name has maximum 250 characters"),
+    .max(250, "Organization name has maximum 250 characters")
+    .matches(
+      /^[a-zA-Z0-9 _-]+$/,
+      "Organization name can only contain letters, numbers, spaces, hyphens, and underscores",
+    ),
 
   details: yup.object().shape({
     type: yup

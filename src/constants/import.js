@@ -40,6 +40,14 @@ const validateOptionalUUID = (fieldLabel) => (value) => {
   return trimmed;
 };
 
+// Plain display-name fields (policy/department/disclaimer/caution/organization
+// names) only allow letters, numbers, spaces, hyphens, and underscores - unlike
+// domain/email/hostname fields, which need dots/@ and are validated elsewhere.
+// Mirrors the matching add form's yup .matches() check for the same field.
+const NAME_CHARS_REGEX = /^[a-zA-Z0-9 _-]+$/;
+const NAME_CHARS_MESSAGE =
+  "can only contain letters, numbers, spaces, hyphens, and underscores";
+
 export const IMPORT_FIELD_MAPPINGS = {
   cautions: [
     {
@@ -67,6 +75,17 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 25,
       sampleValue: "Important Security Notice",
       sampleValue2: "Data Privacy Alert",
+      // Mirrors the "Add Caution" form's yup schema -
+      // see src/pages/cautions/add/validationSchema.js
+      validate: (value) => {
+        if (value.length > 100) {
+          throw new Error("Caution message name must not exceed 100 characters");
+        }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Caution message name ${NAME_CHARS_MESSAGE}`);
+        }
+        return value;
+      },
     },
     {
       key: "html_content",
@@ -153,6 +172,17 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 25,
       sampleValue: "Terms and Conditions",
       sampleValue2: "Privacy Policy Disclaimer",
+      // Mirrors the "Add Disclaimer" form's yup schema -
+      // see src/pages/disclaimer/add/validationSchema.js
+      validate: (value) => {
+        if (value.length > 100) {
+          throw new Error("Disclaimer name must not exceed 100 characters");
+        }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Disclaimer name ${NAME_CHARS_MESSAGE}`);
+        }
+        return value;
+      },
     },
     {
       key: "html_content",
@@ -255,10 +285,8 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (value.length > 100) {
           throw new Error("Department name must not exceed 100 characters");
         }
-        if (!/^[a-zA-Z0-9\s\-_.&()]+$/.test(value)) {
-          throw new Error(
-            "Department name can only contain letters, numbers, spaces, and common punctuation",
-          );
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Department name ${NAME_CHARS_MESSAGE}`);
         }
         return value;
       },
@@ -1797,6 +1825,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (value.length > 200) {
           throw new Error("Policy name must not exceed 200 characters");
         }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
+        }
         return value.trim();
       },
     },
@@ -2085,6 +2116,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (value.length > 100) {
           throw new Error("Policy name must not exceed 100 characters");
         }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
+        }
         return value.trim();
       },
     },
@@ -2220,6 +2254,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         }
         if (value.length > 100) {
           throw new Error("Policy name must not exceed 100 characters");
+        }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
         }
         return value.trim();
       },
@@ -2373,6 +2410,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         }
         if (value.length > 100) {
           throw new Error("Policy name must not exceed 100 characters");
+        }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
         }
         return value.trim();
       },
@@ -2565,6 +2605,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         }
         if (value.length > 100) {
           throw new Error("Policy name must not exceed 100 characters");
+        }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
         }
         return value.trim();
       },
@@ -2893,6 +2936,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (value.length > 100) {
           throw new Error("Policy name must not exceed 100 characters");
         }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
+        }
         return value.trim();
       },
     },
@@ -3173,6 +3219,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         }
         if (value.length > 250) {
           throw new Error("Organization name must not exceed 250 characters");
+        }
+        if (!NAME_CHARS_REGEX.test(value)) {
+          throw new Error(`Organization name ${NAME_CHARS_MESSAGE}`);
         }
         return value;
       },
