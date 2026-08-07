@@ -196,6 +196,14 @@ export const navItems = [
     serviceName: SERVICE_KEYS.FILE,
     children: [
       {
+        name: "Dashboard",
+        icon: <LayoutDashboard size={16} />,
+        link: "/files/dashboard",
+        hasPermission: true,
+        serviceName: SERVICE_KEYS.FILE,
+        permissionValue: "file:view",
+      },
+      {
         name: "Users",
         icon: <Users size={16} />,
         link: "/files/users",

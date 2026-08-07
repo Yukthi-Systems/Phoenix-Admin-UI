@@ -313,6 +313,7 @@ const EditChatUser = lazyRetry(() => import("@/pages/chat/preference"));
 // Files
 const FilePreference = lazyRetry(() => import("@/pages/files/preference"));
 const FileUserList = lazyRetry(() => import("@/pages/files/users"));
+const FilesDashboard = lazyRetry(() => import("@/pages/files/dashboard"));
 const MaintenanceStatusListing = lazyRetry(
   () => import("@/pages/maintenance/list"),
 );
@@ -1398,6 +1399,14 @@ const Router = [
           },
 
           // Files routes
+          {
+            path: "/files/dashboard",
+            element: (
+              <LazyWrapper>
+                <FilesDashboard />
+              </LazyWrapper>
+            ),
+          },
           {
             path: "/files/preferences",
             element: (
