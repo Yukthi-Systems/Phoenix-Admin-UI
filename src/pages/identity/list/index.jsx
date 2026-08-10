@@ -926,18 +926,25 @@ const ListIdentities = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple identities",
+          totalCount === 0
+            ? "No identities to edit"
+            : "Export, edit the file, then re-upload to update multiple identities",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("identity:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all identities as Excel file",
+        description:
+          totalCount === 0
+            ? "No identities to export"
+            : "Download all identities as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -950,6 +957,7 @@ const ListIdentities = () => {
     handleBulkEdit,
     isExportAvailable,
     orgDetails,
+    totalCount,
   ]);
 
   const identityCopyConfig = {

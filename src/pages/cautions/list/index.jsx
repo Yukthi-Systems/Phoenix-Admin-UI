@@ -541,18 +541,25 @@ const ListCautions = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple cautions",
+          totalCount === 0
+            ? "No cautions to edit"
+            : "Export, edit the file, then re-upload to update multiple cautions",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("caution:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all cautions as Excel file",
+        description:
+          totalCount === 0
+            ? "No cautions to export"
+            : "Download all cautions as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -566,6 +573,7 @@ const ListCautions = () => {
     handleBulkEdit,
     isExportAvailable,
     handleExport,
+    totalCount,
   ]);
   const isServerError =
     !error?.response?.status || error?.response?.status >= 500;

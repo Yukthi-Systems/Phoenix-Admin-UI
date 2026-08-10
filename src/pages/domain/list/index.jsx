@@ -819,18 +819,25 @@ const ListDomains = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple domains",
+          totalCount === 0
+            ? "No domains to edit"
+            : "Export, edit the file, then re-upload to update multiple domains",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("domain:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all domains as Excel file",
+        description:
+          totalCount === 0
+            ? "No domains to export"
+            : "Download all domains as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -844,6 +851,7 @@ const ListDomains = () => {
     handleBulkEdit,
     isExportAvailable,
     handleExport,
+    totalCount,
   ]);
 
   const handlMove = async (currentOrg, domain, targetOrg) => {

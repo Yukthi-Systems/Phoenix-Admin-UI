@@ -1066,20 +1066,17 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue: "",
       sampleValue2: "",
       // Mirrors the mutual-exclusion rule enforced in the single Add Mailbox
-      // form's MailPolicies step: Distribution can't combine with General or
-      // Forwarding. Runs last so general_policy_id/forwarding_policy_id are
-      // already present on `item` to check against.
+      // form's MailPolicies step: Distribution and Forwarding exclude each
+      // other only - General Policy can always be combined with either. Runs
+      // last so forwarding_policy_id is already present on `item` to check
+      // against.
       validate: (value, item) => {
         const uuidChecked = validateOptionalUUID("Distribution Policy ID")(
           value,
         );
-        if (
-          uuidChecked &&
-          item &&
-          (item.general_policy_id || item.forwarding_policy_id)
-        ) {
+        if (uuidChecked && item && item.forwarding_policy_id) {
           throw new Error(
-            "Distribution Policy cannot be combined with General or Forwarding Policy",
+            "Distribution Policy cannot be combined with Forwarding Policy",
           );
         }
         return uuidChecked;
@@ -2147,12 +2144,14 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 30,
       sampleValue: "Spam Filter",
       sampleValue2: "Corporate Allowlist",
+      // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
+      // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
-        if (value.length < 2) {
-          throw new Error("Policy name must be at least 2 characters");
+        if (value.length < 3) {
+          throw new Error("Policy name must be at least 3 characters");
         }
-        if (value.length > 100) {
-          throw new Error("Policy name must not exceed 100 characters");
+        if (value.length > 200) {
+          throw new Error("Policy name must not exceed 200 characters");
         }
         if (!NAME_CHARS_REGEX.test(value)) {
           throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
@@ -2289,12 +2288,14 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 30,
       sampleValue: "Strict Incoming Policy",
       sampleValue2: "Standard Incoming Filter",
+      // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
+      // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
-        if (value.length < 2) {
-          throw new Error("Policy name must be at least 2 characters");
+        if (value.length < 3) {
+          throw new Error("Policy name must be at least 3 characters");
         }
-        if (value.length > 100) {
-          throw new Error("Policy name must not exceed 100 characters");
+        if (value.length > 200) {
+          throw new Error("Policy name must not exceed 200 characters");
         }
         if (!NAME_CHARS_REGEX.test(value)) {
           throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
@@ -2448,12 +2449,14 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 30,
       sampleValue: "Strict Incoming Policy",
       sampleValue2: "Standard Incoming Filter",
+      // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
+      // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
-        if (value.length < 2) {
-          throw new Error("Policy name must be at least 2 characters");
+        if (value.length < 3) {
+          throw new Error("Policy name must be at least 3 characters");
         }
-        if (value.length > 100) {
-          throw new Error("Policy name must not exceed 100 characters");
+        if (value.length > 200) {
+          throw new Error("Policy name must not exceed 200 characters");
         }
         if (!NAME_CHARS_REGEX.test(value)) {
           throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
@@ -2544,9 +2547,8 @@ export const IMPORT_FIELD_MAPPINGS = {
           .map((email) => email.trim())
           .filter((email) => email.length > 0);
       },
-      validate: (value, item) => {
-        // Only validate if is_group is true and value has content
-        if (item && item.is_group && Array.isArray(value) && value.length > 0) {
+      validate: (value) => {
+        if (Array.isArray(value) && value.length > 0) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           value.forEach((email) => {
             if (!emailRegex.test(email)) {
@@ -2574,15 +2576,27 @@ export const IMPORT_FIELD_MAPPINGS = {
           .map((email) => email.trim())
           .filter((email) => email.length > 0);
       },
+      // Runs after internal_members, so item.internal_members is already
+      // populated - mirrors validateMembers() in DistributionPolicy/add's
+      // index.jsx: the single Add form blocks submission (and step 2
+      // navigation) unless at least one Internal or External member exists,
+      // regardless of Rule Type. Checked here rather than on
+      // internal_members so a row with only internal members isn't
+      // incorrectly flagged before external_members has even been parsed.
       validate: (value, item) => {
-        // Only validate if is_group is true and value has content
-        if (item && item.is_group && Array.isArray(value) && value.length > 0) {
+        if (Array.isArray(value) && value.length > 0) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           value.forEach((email) => {
             if (!emailRegex.test(email)) {
               throw new Error(`Invalid external email format: ${email}`);
             }
           });
+        }
+        const internalCount = Array.isArray(item?.internal_members)
+          ? item.internal_members.length
+          : 0;
+        if (internalCount === 0 && value.length === 0) {
+          throw new Error("Add at least one Internal or External member");
         }
         return value;
       },
@@ -2603,13 +2617,12 @@ export const IMPORT_FIELD_MAPPINGS = {
           .map((email) => email.trim())
           .filter((email) => email.length > 0);
       },
-      validate: (value, item) => {
-        // Only validate if is_group is true and value has content
-        if (item && item.is_group && Array.isArray(value) && value.length > 0) {
+      validate: (value) => {
+        if (Array.isArray(value) && value.length > 0) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           value.forEach((email) => {
             if (!emailRegex.test(email)) {
-              throw new Error(`Invalid internal email format: ${email}`);
+              throw new Error(`Invalid specific email format: ${email}`);
             }
           });
         }
@@ -2646,12 +2659,14 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 30,
       sampleValue: "Strict Incoming Policy",
       sampleValue2: "Standard Incoming Filter",
+      // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
+      // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
-        if (value.length < 2) {
-          throw new Error("Policy name must be at least 2 characters");
+        if (value.length < 3) {
+          throw new Error("Policy name must be at least 3 characters");
         }
-        if (value.length > 100) {
-          throw new Error("Policy name must not exceed 100 characters");
+        if (value.length > 200) {
+          throw new Error("Policy name must not exceed 200 characters");
         }
         if (!NAME_CHARS_REGEX.test(value)) {
           throw new Error(`Policy name ${NAME_CHARS_MESSAGE}`);
@@ -2979,9 +2994,11 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 30,
       sampleValue: "Standard Attachment Policy",
       sampleValue2: "Restricted Attachment Policy",
+      // Mirrors the "Add Attachment Policy" form's yup schema (3-100 chars) -
+      // see src/pages/policy/attachmentPolicy/create/validationSchema.js
       validate: (value) => {
-        if (value.length < 2) {
-          throw new Error("Policy name must be at least 2 characters");
+        if (value.length < 3) {
+          throw new Error("Policy name must be at least 3 characters");
         }
         if (value.length > 100) {
           throw new Error("Policy name must not exceed 100 characters");

@@ -566,18 +566,25 @@ const ListRestrictionPolicy = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple policies",
+          totalCount === 0
+            ? "No policies to edit"
+            : "Export, edit the file, then re-upload to update multiple policies",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("policy:general:create") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all restriction policies as Excel file",
+        description:
+          totalCount === 0
+            ? "No restriction policies to export"
+            : "Download all restriction policies as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -590,6 +597,7 @@ const ListRestrictionPolicy = () => {
     isEditAvailable,
     handleBulkEdit,
     handleExport,
+    totalCount,
   ]);
 
   const isServerError =

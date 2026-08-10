@@ -526,18 +526,25 @@ const ListDisclaimers = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple disclaimers",
+          totalCount === 0
+            ? "No disclaimers to edit"
+            : "Export, edit the file, then re-upload to update multiple disclaimers",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("disclaimer:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all disclaimer as Excel file",
+        description:
+          totalCount === 0
+            ? "No disclaimers to export"
+            : "Download all disclaimer as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -551,6 +558,7 @@ const ListDisclaimers = () => {
     handleBulkEdit,
     isExportAvailable,
     handleExport,
+    totalCount,
   ]);
   const isServerError =
     !error?.response?.status || error?.response?.status >= 500;

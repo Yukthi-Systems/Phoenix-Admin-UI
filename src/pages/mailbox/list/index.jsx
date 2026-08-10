@@ -866,18 +866,25 @@ const ListMailboxes = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple mailboxes",
+          totalCount === 0
+            ? "No mailboxes to edit"
+            : "Export, edit the file, then re-upload to update multiple mailboxes",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("mailbox:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all mailboxes as Excel file",
+        description:
+          totalCount === 0
+            ? "No mailboxes to export"
+            : "Download all mailboxes as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -893,6 +900,7 @@ const ListMailboxes = () => {
     isExportAvailable,
     handleExport,
     domainData, // Added dependency to re-calculate when domain usage updates
+    totalCount,
   ]);
 
   if (!permissions.includes("mailbox:view"))

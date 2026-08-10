@@ -115,14 +115,18 @@ function CRMPO() {
     if (permissions.includes("crm:purchase_order:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all Purchase Order as Excel file",
+        description:
+          totalCount === 0
+            ? "No purchase orders to export"
+            : "Download all Purchase Order as Excel file",
         icon: <Download className="w-4 h-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
     return options;
-  }, [permissions, handleAddCRMPO, isExportAvailable, handleExport]);
+  }, [permissions, handleAddCRMPO, isExportAvailable, handleExport, totalCount]);
 
   const formatValue = (val) => {
     const parsedValue = parseFloat(val);

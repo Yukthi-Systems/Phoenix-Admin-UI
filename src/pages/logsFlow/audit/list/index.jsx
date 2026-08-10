@@ -518,8 +518,13 @@ function AuditLog() {
                     <button
                       type="button"
                       onClick={handleExport}
-                      className="bg-background self-end text-foreground hover:bg-muted border-border flex h-10 w-fit items-center gap-2 rounded border px-4 shadow-sm transition-all duration-200 hover:shadow-md"
-                      title="Export Audit Logs"
+                      disabled={totalCount === 0}
+                      className="bg-background self-end text-foreground hover:bg-muted border-border flex h-10 w-fit items-center gap-2 rounded border px-4 shadow-sm transition-all duration-200 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                      title={
+                        totalCount === 0
+                          ? "No audit logs to export"
+                          : "Export Audit Logs"
+                      }
                     >
                       <Download className="h-4 w-4" />
                       Export

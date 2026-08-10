@@ -30,36 +30,34 @@ function MailPolicies({
   organization_id = "",
   domain_name = ""
 }) {
-  const general_policy_id = watch("general_policy_id");
   const forwarding_policy_id = watch("forwarding_policy_id");
   const distribution_policy_id = watch("distribution_policy_id");
 
   const prevDistributionRef = useRef(distribution_policy_id);
   const prevForwardingRef = useRef(forwarding_policy_id);
 
-  // Distribution excludes Forwarding and General; Forwarding excludes Distribution only.
+  // General Policy is always selectable. Forwarding and Distribution are
+  // mutually exclusive with each other only - picking one clears the other.
   useEffect(() => {
     const distributionChanged = distribution_policy_id !== prevDistributionRef.current;
     const forwardingChanged = forwarding_policy_id !== prevForwardingRef.current;
 
-    if (distributionChanged && distribution_policy_id) {
-      if (forwarding_policy_id) setValue("forwarding_policy_id", null, { shouldValidate: true, shouldDirty: true });
-      if (general_policy_id) setValue("general_policy_id", null, { shouldValidate: true, shouldDirty: true });
+    if (distributionChanged && distribution_policy_id && forwarding_policy_id) {
+      setValue("forwarding_policy_id", null, { shouldValidate: true, shouldDirty: true });
     } else if (forwardingChanged && forwarding_policy_id && distribution_policy_id) {
       setValue("distribution_policy_id", null, { shouldValidate: true, shouldDirty: true });
     }
 
     prevDistributionRef.current = distribution_policy_id;
     prevForwardingRef.current = forwarding_policy_id;
-  }, [distribution_policy_id, forwarding_policy_id, general_policy_id, setValue]);
+  }, [distribution_policy_id, forwarding_policy_id, setValue]);
 
   const isForwardingDisabled = !!distribution_policy_id;
-  const isGeneralDisabled = !!distribution_policy_id;
   const isDistributionDisabled = !!forwarding_policy_id;
 
-  let policyHint = "A Distribution Policy cannot be combined with a Forwarding or General Policy. Selecting a Forwarding Policy also disables the Distribution Policy option.";
+  let policyHint = "A Forwarding Policy and a Distribution Policy cannot be combined - selecting one disables the other. General Policy can always be selected alongside either.";
   if (distribution_policy_id) {
-    policyHint = "Distribution Policy is selected, so Forwarding Policy and General Policy are disabled. Clear the Distribution Policy to choose one of them instead.";
+    policyHint = "Distribution Policy is selected, so Forwarding Policy is disabled. Clear the Distribution Policy to choose Forwarding instead.";
   } else if (forwarding_policy_id) {
     policyHint = "Forwarding Policy is selected, so Distribution Policy is disabled. Clear the Forwarding Policy to choose Distribution instead.";
   }
@@ -86,7 +84,6 @@ function MailPolicies({
           url={`/policy/general/list/${organization_id}?domain_name=${domain_name}`}
           organizationId={organization_id}
           placeholder="Select policy..."
-          isDisabled={isGeneralDisabled}
         />
 
         <ForwardingPolicyInfiniteSelectionField

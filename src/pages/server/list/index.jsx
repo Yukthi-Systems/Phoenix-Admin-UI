@@ -594,18 +594,25 @@ const ListServers = () => {
       options.push({
         label: "Bulk Edit",
         description:
-          "Export, edit the file, then re-upload to update multiple servers",
+          totalCount === 0
+            ? "No servers to edit"
+            : "Export, edit the file, then re-upload to update multiple servers",
         icon: <Edit className="h-4 w-4" />,
         onClick: handleBulkEdit,
+        disabled: totalCount === 0,
       });
     }
 
     if (permissions.includes("server:view") && isExportAvailable) {
       options.push({
         label: "Export",
-        description: "Download all servers as Excel file",
+        description:
+          totalCount === 0
+            ? "No servers to export"
+            : "Download all servers as Excel file",
         icon: <Download className="h-4 w-4" />,
         onClick: handleExport,
+        disabled: totalCount === 0,
       });
     }
 
@@ -619,6 +626,7 @@ const ListServers = () => {
     handleBulkEdit,
     isExportAvailable,
     handleExport,
+    totalCount,
   ]);
 
   if (!permissions.includes("server:view"))
