@@ -40,6 +40,26 @@ const validateOptionalUUID = (fieldLabel) => (value) => {
   return trimmed;
 };
 
+/**
+ * Validator factory for a record's own *_id column when it's the bulk-edit
+ * matchKey (see editOnly fields below): unlike validateOptionalUUID, a blank
+ * value is a hard error here, not a pass-through - `field.required: true` is
+ * what actually makes transformFieldValue throw before this ever runs on an
+ * empty value (see transformFieldValue in importUtils.js), but the row still
+ * needs an unambiguous "X is required" message once it gets here, and the
+ * format check for a non-empty value is identical to validateOptionalUUID's.
+ */
+const validateRequiredUUID = (fieldLabel) => (value) => {
+  const trimmed = String(value).trim();
+  if (!trimmed) {
+    throw new Error(`${fieldLabel} is required`);
+  }
+  if (!UUID_REGEX.test(trimmed)) {
+    throw new Error(`${fieldLabel} must be a valid ID (UUID)`);
+  }
+  return trimmed;
+};
+
 // Plain display-name fields (policy/department/disclaimer/caution/organization
 // names) only allow letters, numbers, spaces, hyphens, and underscores - unlike
 // domain/email/hostname fields, which need dots/@ and are validated elsewhere.
@@ -55,16 +75,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Caution ID",
       csvHeader: "Caution ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Caution ID"),
+      validate: validateRequiredUUID("Caution ID"),
     },
     {
       key: "caution_message_name",
@@ -152,16 +175,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Disclaimer ID",
       csvHeader: "Disclaimer ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Disclaimer ID"),
+      validate: validateRequiredUUID("Disclaimer ID"),
     },
     {
       key: "disclaimer_name",
@@ -258,16 +284,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Department ID",
       csvHeader: "Department ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Department ID"),
+      validate: validateRequiredUUID("Department ID"),
     },
     {
       key: "department_name",
@@ -1407,16 +1436,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Server ID",
       csvHeader: "Server ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Server ID"),
+      validate: validateRequiredUUID("Server ID"),
     },
     {
       key: "host_name",
@@ -1796,16 +1828,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Policy ID",
       csvHeader: "Policy ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Policy ID"),
+      validate: validateRequiredUUID("Policy ID"),
     },
     {
       key: "policy_name",
@@ -2089,16 +2124,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Policy ID",
       csvHeader: "Policy ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Policy ID"),
+      validate: validateRequiredUUID("Policy ID"),
     },
     {
       key: "policy_name",
@@ -2228,16 +2266,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Policy ID",
       csvHeader: "Policy ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Policy ID"),
+      validate: validateRequiredUUID("Policy ID"),
     },
     {
       key: "policy_name",
@@ -2384,16 +2425,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Policy ID",
       csvHeader: "Policy ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Policy ID"),
+      validate: validateRequiredUUID("Policy ID"),
     },
     {
       key: "policy_name",
@@ -2579,16 +2623,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Policy ID",
       csvHeader: "Policy ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Policy ID"),
+      validate: validateRequiredUUID("Policy ID"),
     },
     {
       key: "policy_name",
@@ -2909,16 +2956,19 @@ export const IMPORT_FIELD_MAPPINGS = {
       header: "Policy ID",
       csvHeader: "Policy ID",
       type: "string",
-      required: false,
       // Only ever meaningful for bulk EDIT (as the matchKey) - the backend
       // generates this on create, so it's never user-entered and is stripped
       // from create's parsed rows/sample template - see BulkImport.jsx's
       // effectiveFieldMapping and generateSampleFile in importUtils.js.
+      // required: true because a blank matchKey means the row can never be
+      // matched to an existing record - only enforced in edit mode, since
+      // create mode strips this field via effectiveFieldMapping above.
+      required: true,
       editOnly: true,
       width: 15,
       sampleValue: "",
       sampleValue2: "",
-      validate: validateOptionalUUID("Policy ID"),
+      validate: validateRequiredUUID("Policy ID"),
     },
     {
       key: "policy_name",
