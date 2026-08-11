@@ -185,7 +185,6 @@ const ListMailboxes = () => {
     useUpdateMailboxPassword();
   const { mutate: editMailboxMutate } = useEditMailbox();
   const { mutate: bulkEditStatusUpdate } = useUpdateMailboxStatus();
-  const { mutate: bulkEditSpaceUpdate } = useUpdateMailboxSpace();
 
   useEffect(() => {
     if (pagination.pageIndex > 0) {
@@ -272,19 +271,10 @@ const ListMailboxes = () => {
       });
     }
 
-    if (mailboxData.allocate_quota !== undefined) {
-      await new Promise((resolve, reject) => {
-        bulkEditSpaceUpdate(
-          {
-            domain_name,
-            email_prefix,
-            space: Number(mailboxData.allocate_quota),
-          },
-          { onSuccess: resolve, onError: reject },
-        );
-      });
-    }
-
+    // Bulk edit never touches quota - the single Edit Mailbox form doesn't
+    // either (it only manages the three policy IDs, see
+    // src/pages/mailbox/edit/index.jsx). Quota changes go through the
+    // per-row "Allocate Space" modal instead.
     return { email: emailIdentity };
   };
 

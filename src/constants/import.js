@@ -998,6 +998,13 @@ export const IMPORT_FIELD_MAPPINGS = {
       csvHeader: "Allocate Space (GB)",
       type: "number",
       required: true,
+      // Bulk edit never sends quota (see handleBulkEditMailbox in
+      // mailbox/list/index.jsx - it only updates the three policy IDs, same
+      // as the single Edit Mailbox form). createOnly strips this column from
+      // edit mode's effectiveFieldMapping entirely, so a stale "Allocate
+      // Space (GB)" value left over in an exported-then-reuploaded file is
+      // just ignored rather than parsed/validated for nothing.
+      createOnly: true,
       width: 18,
       defaultValue: 0.1,
       sampleValue: 2,
