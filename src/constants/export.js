@@ -622,6 +622,13 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
     {
+    
+      key: "domain_name",
+      header: "Domain",
+      type: "string",
+      width: 25,
+    },
+    {
       key: "is_active",
       header: "Status",
       type: "status",
