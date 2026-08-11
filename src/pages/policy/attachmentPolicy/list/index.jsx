@@ -100,7 +100,17 @@ const ListAttachmentPolicy = () => {
     organization_id,
     domain_name,
   }) => {
-    return await exportAttachmentPolicyList(organization_id, domain_name);
+    const entries = await exportAttachmentPolicyList(
+      organization_id,
+      domain_name,
+    );
+    // Export is already domain-scoped via the URL param, so the backend
+    // doesn't repeat domain_name on each row - but IMPORT_FIELD_MAPPINGS
+    // requires a "Domain" column (bulk edit can't infer it otherwise), so
+    // inject the domain we already know every row belongs to. Same pattern
+    // as fetchFiltersPolicyForExport in FiltersPolicy/list/index.jsx.
+    const rows = Array.isArray(entries) ? entries : entries?.data || [];
+    return rows.map((entry) => ({ ...entry, domain_name }));
   };
 
   // Search handler function

@@ -2322,22 +2322,6 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue2: "Standard filtering for incoming email security",
     },
     {
-      key: "domain",
-      header: "Domain",
-      csvHeader: "Domain",
-      type: "string",
-      required: true,
-      width: 25,
-      sampleValue: "example.com",
-      sampleValue2: "company.org",
-      validate: (value) => {
-        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(value)) {
-          throw new Error("Invalid domain name format");
-        }
-        return value.trim();
-      },
-    },
-    {
       key: "is_active",
       header: "Status",
       csvHeader: "Status",
