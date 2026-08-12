@@ -165,13 +165,16 @@ const ListAttachmentPolicy = () => {
     handleImportComplete,
     isImportAvailable,
   } = useBulkImport("attachment_policies", async (policyData) => {
+    // policyData.domain_name comes straight from the sheet's Domain Name
+    // column, not the currently-selected UI domain - each row is created
+    // under whatever domain that row actually specifies. The backend still
+    // validates it belongs to this org via check_domain_organization_mapping.
     return new Promise((resolve, reject) => {
       addAttachmentPolicy(
         {
           organization_id,
           data: {
             ...policyData,
-            // domain_name: domainName,
             allowed_file_types: policyData.allowed_file_types || [],
             blocked_file_types: policyData.blocked_file_types || [],
           },

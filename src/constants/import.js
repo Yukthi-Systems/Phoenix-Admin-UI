@@ -2467,7 +2467,15 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue2: "Standard filtering for incoming email security",
     },
     {
-      key: "domain",
+      // key must be "domain_name", not "domain" - CreateDistributionPolicyForm
+      // (also reused for edit) requires a "domain_name" field. The list
+      // page's bulk create/edit handlers now send this through unmodified
+      // (see DistributionPolicy/list/index.jsx) rather than overriding it
+      // with the currently-selected UI domain, so this is what actually
+      // determines which domain the policy is created/edited under - it
+      // must match the header text "Domain" for export round-tripping, but
+      // the key itself has to match the backend's expected field name.
+      key: "domain_name",
       header: "Domain",
       csvHeader: "Domain",
       type: "string",
@@ -2677,7 +2685,13 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue2: "Standard filtering for incoming email security",
     },
     {
-      key: "domain",
+      // key must be "domain_name", not "domain" - CreateForwardingPolicyForm
+      // (also reused for edit) requires a "domain_name" field. The list
+      // page's bulk create/edit handlers now send this through unmodified
+      // (see ForwardingPolicy/list/index.jsx) rather than overriding it with
+      // the currently-selected UI domain - the header text stays "Domain"
+      // for export round-tripping, but the key has to match the backend.
+      key: "domain_name",
       header: "Domain",
       csvHeader: "Domain",
       type: "string",

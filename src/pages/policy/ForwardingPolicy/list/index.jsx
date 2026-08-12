@@ -157,13 +157,17 @@ const ListForwardingPolicy = () => {
     handleImportComplete,
     isImportAvailable,
   } = useBulkImport("forwarding_policies", async (policyData) => {
+    // policyData.domain_name comes straight from the sheet's Domain column -
+    // not the currently-selected UI domain (domainName) - so a bulk import
+    // creates each row's policy under whatever domain that row actually
+    // specifies. The backend still validates it belongs to this org via
+    // check_domain_organization_mapping.
     return new Promise((resolve, reject) => {
       addForwardingPolicy(
         {
           org_id: organization_id,
           data: {
             ...policyData,
-            domain_name: domainName,
           },
           addLog: false,
         },
@@ -177,7 +181,9 @@ const ListForwardingPolicy = () => {
 
   const handleBulkEditForwardingPolicy = async (policyData) => {
     const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
-    const data = { ...rest, domain_name: domainName };
+    // Same as bulk create - rest.domain_name is the sheet's value, sent
+    // through unmodified rather than overridden with the UI-selected domain.
+    const data = { ...rest };
     return new Promise((resolve, reject) => {
       editForwardingPolicyMutate(
         { org_id: rowOrgId, policy_id, data },

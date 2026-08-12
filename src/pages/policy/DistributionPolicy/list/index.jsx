@@ -157,13 +157,13 @@ const ListDistributionPolicy = () => {
     handleImportComplete,
     isImportAvailable,
   } = useBulkImport("distribution_policies", async (policyData) => {
+  
     return new Promise((resolve, reject) => {
       addDistributionPolicy(
         {
           org_id: organization_id,
           data: {
             ...policyData,
-            domain_name: domainName,
           },
           addLogs: false,
         },
@@ -177,7 +177,9 @@ const ListDistributionPolicy = () => {
 
   const handleBulkEditDistributionPolicy = async (policyData) => {
     const { organization_id: rowOrgId, policy_id, ...rest } = policyData;
-    const data = { ...rest, domain_name: domainName };
+    // Same as bulk create - rest.domain_name is the sheet's value, sent
+    // through unmodified rather than overridden with the UI-selected domain.
+    const data = { ...rest };
     return new Promise((resolve, reject) => {
       editDistributionPolicyMutate(
         { org_id: rowOrgId, policy_id, data },
