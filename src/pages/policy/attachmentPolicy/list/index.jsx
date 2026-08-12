@@ -598,7 +598,7 @@ const ListAttachmentPolicy = () => {
   const handleBulkDelete = async (itemId) => {
     return new Promise((resolve, reject) => {
       mutate(
-        { organization_id, policy_id: itemId },
+        { organization_id, policy_id: itemId, domain_name: domainName },
         {
           onSuccess: () => {
             resolve();
