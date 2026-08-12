@@ -47,6 +47,24 @@ export const login = async (username, password, recaptcha_token) => {
 
     adminStore.set(notifiTokenAtom, notiToken);
     adminStore.set(csrfTokenAtom, csrfToken);
+
+    // X-Session-Expiry (seconds, from MAX_AGE_OF_CACHE) is sent on every
+    // /login response regardless of whether 2FA follows - confirmed with
+    // backend. The 2FA validation endpoints re-issue the session cookie with
+    // their own fresh MAX_AGE_OF_CACHE window but don't send this header
+    // themselves, so for a 2FA login this timestamp is captured slightly
+    // before the real cookie is set - the displayed countdown runs a little
+    // ahead of the actual expiry rather than behind it, which is the safe
+    // direction to be wrong in (timer hitting zero a bit early beats it
+    // saying you have time when you're already logged out).
+    const sessionExpirySeconds = Number(res.headers["x-session-expiry"]);
+    if (!isNaN(sessionExpirySeconds) && sessionExpirySeconds > 0) {
+      localStorage.setItem(
+        "session_expires_at",
+        String(Date.now() + sessionExpirySeconds * 1000),
+      );
+    }
+
     const { is_totp_2fa_active, is_sms_2fa_active, is_email_2fa_active } =
       res.data?.details || {};
     if (!is_totp_2fa_active && !is_sms_2fa_active && !is_email_2fa_active) {

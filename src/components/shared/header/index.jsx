@@ -30,6 +30,7 @@ import { Centrifuge } from "centrifuge";
 import { toast, Bounce } from "react-toastify";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import ThemeCustomizer from "./ThemeCustomizer";
+import SessionTimer from "./SessionTimer";
 import { useBrowserNotification } from "@/hooks/useBrowserNotification";
 import { uiInfoAtom } from "@/store/uiInfo";
 import NavSearchBar from "@/components/common/LinkSearchbar";
@@ -400,6 +401,9 @@ const Header = () => {
 
       {/* Right Section: Actions and User */}
       <div className="flex items-center gap-3 flex-shrink-0">
+        {/* Session expiry countdown */}
+        <SessionTimer />
+
         {/* Theme Customizer */}
         <ThemeCustomizer />
 
