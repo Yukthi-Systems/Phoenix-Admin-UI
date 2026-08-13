@@ -17,7 +17,8 @@
 
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/store/userProfile";
-import { userInfoAtom } from "@/store/userInfo";
+import { userInfoAtom, parentOrgAtom, selectedOrganizationAtom } from "@/store/userInfo";
+import { SERVICE_KEYS, isServiceEnabledForOrg } from "@/constants/serviceAccess";
 import { Link, useNavigate } from "react-router-dom";
 import { useMemo, useState, useEffect, useRef } from "react";
 import {
@@ -113,6 +114,26 @@ const ListIdentities = () => {
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { organization_id } = useAtomValue(userInfoAtom);
   const { data: orgDetails } = useGetOrganizationDetail(organization_id);
+  const parentOrg = useAtomValue(parentOrgAtom);
+  const selectedOrg = useAtomValue(selectedOrganizationAtom);
+  // Same check Aside.jsx uses to hide nav items for a disabled service - a
+  // service-specific column (Mailbox/Chat/Files) has nothing meaningful to
+  // show when the org can't provision that service at all.
+  const isMailboxServiceEnabled = isServiceEnabledForOrg(
+    SERVICE_KEYS.EMAIL,
+    parentOrg,
+    selectedOrg,
+  );
+  const isChatServiceEnabled = isServiceEnabledForOrg(
+    SERVICE_KEYS.CHAT,
+    parentOrg,
+    selectedOrg,
+  );
+  const isFileServiceEnabled = isServiceEnabledForOrg(
+    SERVICE_KEYS.FILE,
+    parentOrg,
+    selectedOrg,
+  );
   const navigate = useNavigate();
   const [domainName, setDomainName] = useState(null);
   const [searchQuery, setSearchQuery] = useUrlParam("search", "");
@@ -554,39 +575,54 @@ const ListIdentities = () => {
           return <StatusBadge status={getValue()} />;
         },
       },
-      {
-        accessorKey: "is_mailbox_present",
-        header: "Mailbox",
-        cell: ({ row }) => (
-          <ProvisionBadge
-            service="Mailbox"
-            present={row.original.is_mailbox_present}
-            enabled={row.original.is_mailbox_enabled}
-          />
-        ),
-      },
-      {
-        accessorKey: "is_chat_user_present",
-        header: "Chat",
-        cell: ({ row }) => (
-          <ProvisionBadge
-            service="Chat"
-            present={row.original.is_chat_user_present}
-            enabled={row.original.is_chat_user_enabled}
-          />
-        ),
-      },
-      {
-        accessorKey: "is_file_user_present",
-        header: "Files",
-        cell: ({ row }) => (
-          <ProvisionBadge
-            service="Files"
-            present={row.original.is_file_user_present}
-            enabled={row.original.is_file_user_enabled}
-          />
-        ),
-      },
+      // Service-specific columns only make sense when the org can actually
+      // provision that service - see isServiceEnabledForOrg usage in
+      // Aside.jsx, which hides the matching nav items the same way.
+      ...(isMailboxServiceEnabled
+        ? [
+            {
+              accessorKey: "is_mailbox_present",
+              header: "Mailbox",
+              cell: ({ row }) => (
+                <ProvisionBadge
+                  service="Mailbox"
+                  present={row.original.is_mailbox_present}
+                  enabled={row.original.is_mailbox_enabled}
+                />
+              ),
+            },
+          ]
+        : []),
+      ...(isChatServiceEnabled
+        ? [
+            {
+              accessorKey: "is_chat_user_present",
+              header: "Chat",
+              cell: ({ row }) => (
+                <ProvisionBadge
+                  service="Chat"
+                  present={row.original.is_chat_user_present}
+                  enabled={row.original.is_chat_user_enabled}
+                />
+              ),
+            },
+          ]
+        : []),
+      ...(isFileServiceEnabled
+        ? [
+            {
+              accessorKey: "is_file_user_present",
+              header: "Files",
+              cell: ({ row }) => (
+                <ProvisionBadge
+                  service="Files"
+                  present={row.original.is_file_user_present}
+                  enabled={row.original.is_file_user_enabled}
+                />
+              ),
+            },
+          ]
+        : []),
     ];
 
     if (
@@ -672,6 +708,9 @@ const ListIdentities = () => {
     toggleAllCurrentPage,
     toggleItem,
     isItemSelected,
+    isMailboxServiceEnabled,
+    isChatServiceEnabled,
+    isFileServiceEnabled,
   ]);
 
   function handleDelete({ name, id }) {
