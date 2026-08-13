@@ -21,7 +21,7 @@ import { Switch } from "@/components/common/Switch";
 
 export const ruleList = [
   {
-    label: "Emails from anyone can be sent to this mailbox group",
+    label: "Anyone can send mail to this mailbox",
     value: "ANYONE",
   },
   {
@@ -33,7 +33,7 @@ export const ruleList = [
     value: "DOMAIN_MEMBER",
   },
   {
-    label: "Email access is restricted to specific addresses.",
+    label: "Specific users can send mail to this mailbox",
     value: "SPECIFIC_EMAILS",
   },
 ];
