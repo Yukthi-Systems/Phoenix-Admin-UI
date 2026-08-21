@@ -1134,6 +1134,11 @@ export const IMPORT_FIELD_MAPPINGS = {
             "Only letters, numbers, dot, underscore, and hyphen are allowed",
           );
         }
+        if (!/^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*$/.test(value)) {
+          throw new Error(
+            "Symbols (. _ -) can't be at the start/end or appear consecutively",
+          );
+        }
         return value.toLowerCase();
       },
     },
