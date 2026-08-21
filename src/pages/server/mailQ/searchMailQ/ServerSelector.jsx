@@ -92,6 +92,20 @@ export const servers = [
   { name: "PgSQL - 3", url: "pgsql3", id: "pgsql3", category: "Database" },
   { name: "PgSQL - 4", url: "pgsql4", id: "pgsql4", category: "Database" },
   { name: "PgSQL - 5", url: "pgsql5", id: "pgsql5", category: "Database" },
+
+  // Hybrid MX
+  {
+    name: "v3-hybrid-mx1.yukthi.net",
+    url: "h3mx1",
+    id: "h3mx1",
+    category: "Hybrid MX",
+  },
+  {
+    name: "v3-hybrid-mx2.yukthi.net",
+    url: "h3mx2",
+    id: "h3mx2",
+    category: "Hybrid MX",
+  },
 ];
 
 const ServerSelector = ({
