@@ -127,6 +127,7 @@ export const organizationFormSchema = yup.object().shape({
               typeof branch?.city === "string" &&
               branch.city.trim() !== "" &&
               branch.city.length <= 100 &&
+              /[A-Za-zÀ-ÖØ-öø-ÿ]/.test(branch.city) &&
               typeof branch?.state === "string" &&
               branch.state.trim() !== "" &&
               branch.state.length <= 100 &&
