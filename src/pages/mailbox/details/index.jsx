@@ -21,7 +21,6 @@ import { userProfileAtom } from "@/store/userProfile";
 import {
   useDeleteMailbox,
   useGetMailbox,
-  useUpdateMailboxPassword,
   useUpdateMailboxSpace,
   useUpdateMailboxStatus,
 } from "@/hooks/useMailbox";
@@ -33,7 +32,6 @@ import {
   Button,
   DeleteButton,
   EditButton,
-  SubmitButton,
 } from "@/components/common/Buttons";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import DataLoading from "@/components/common/DataLoading";
@@ -53,7 +51,6 @@ import {
   XCircle,
   CheckCircle,
   ChartPie,
-  RectangleEllipsis,
   Trash2,
   ArrowLeft,
   SquarePen,
@@ -66,12 +63,8 @@ import { useUserTimezone } from "@/hooks/useTimezone";
 import { InfoCard, InfoItem } from "@/components/common/InfoCard";
 import { userInfoAtom } from "@/store/userInfo";
 import GetGeneralPolicyName from "@/components/common/GetGeneralPolicyName";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import { passwordFormSchema } from "../list/validationSchema";
 import { useQueryClient } from "@tanstack/react-query";
 import EditModelBox from "@/components/common/EditModelBox";
-import { Input, PasswordInput } from "@/components/common/Inputs";
 import MailboxQuotaAllocationModal from "../list/QuotaAllocation";
 import { domainAtom } from "@/store/domain";
 import GetDistributionPolicyName from "@/components/common/GetDistributionPolicyName";
@@ -95,8 +88,6 @@ const MailboxDetails = () => {
   const [spaceValue, setSpaceValue] = useState("");
   const [spaceId, setSpaceId] = useState("");
   const [currentMail, setCurrentMailData] = useState(null);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [passwordId, setPasswordId] = useState("");
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { email: rawEmail } = useParams();
   const email = decodeURIComponent(rawEmail);
@@ -109,24 +100,7 @@ const MailboxDetails = () => {
   const { mutate: statusUpdate, isPending: statusLoad } =
     useUpdateMailboxStatus();
   const { mutate: spaceUpdate, isPending: spaceLoad } = useUpdateMailboxSpace();
-  const { mutate: passwordUpdate, isPending: passwordLoad } =
-    useUpdateMailboxPassword();
   const queryClient = useQueryClient();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm({
-    defaultValues: {
-      oldPassword: "",
-      password: "",
-      confirmPassword: "",
-    },
-    resolver: yupResolver(passwordFormSchema),
-    mode: "onChange",
-  });
 
   const { data, isLoading, isError, error } = useGetMailbox(
     domain_name,
@@ -157,16 +131,6 @@ const MailboxDetails = () => {
     setSpaceId("");
     setSpaceValue("");
     setShowSpaceModal(false);
-  };
-
-  const handlePassword = (row) => {
-    setPasswordId(row.email);
-    setShowPasswordModal(true);
-  };
-
-  const handlePasswordClose = () => {
-    setPasswordId("");
-    setShowPasswordModal(false);
   };
 
   const OnStatusChange = () => {
@@ -245,32 +209,6 @@ const MailboxDetails = () => {
     }
   };
 
-  const onSubmit = (formData) => {
-    const [email_prefix, domain_name] = passwordId.split("@");
-    let newPassword = btoa(formData.password);
-    passwordUpdate(
-      { domain_name, email_prefix, password: newPassword },
-      {
-        onSuccess: () => {
-          toast("success", "Successfully password is updated");
-          queryClient.invalidateQueries(["mailbox", domain_name, email_prefix]);
-          setPasswordId("");
-          setShowPasswordModal(false);
-        },
-        onError: (error) => {
-          const message =
-            error.response?.data?.message || error.message || "Unknown error";
-          const tracebackId = error.response?.data?.traceback_id;
-          toast(
-            "error",
-            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-          );
-          console.error(error);
-        },
-      },
-    );
-  };
-
   const OnDelete = (deleteId) => {
     if (deleteId) {
       mutate(
@@ -328,12 +266,6 @@ const MailboxDetails = () => {
         onClick: () => handleSpace(mailbox_details),
       });
 
-      options.push({
-        label: "Change Password",
-        description: "Update mailbox password",
-        icon: <RectangleEllipsis className="h-4 w-4" />,
-        onClick: () => handlePassword(mailbox_details),
-      });
     }
 
     if (permissions.includes("mailbox:delete") && !isLoading && !isError) {
@@ -661,47 +593,6 @@ const MailboxDetails = () => {
           domainData={orgDetails}
           mailData={currentMail}
         />
-      )}
-
-      {showPasswordModal && (
-        <EditModelBox
-          isOpen={showPasswordModal}
-          label="Change Password"
-          handleCancel={handlePasswordClose}
-        >
-          <div
-            className="w-xl text-left"
-            onMouseDown={(e) => e.stopPropagation()}
-          >
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="mx-auto space-y-5 rounded-xl px-5 py-2 text-left"
-            >
-              <div className="mt-2 grid grid-cols-1 gap-8">
-                <PasswordInput
-                  placeholder="Enter new password"
-                  label="New Password"
-                  register={register}
-                  errors={errors}
-                  name="password"
-                />
-
-                <Input
-                  type="password"
-                  label="Confirm New Password"
-                  name="confirmPassword"
-                  register={register}
-                  errors={errors}
-                  placeholder="Enter confirm password"
-                />
-              </div>
-
-              <div className="text-center">
-                <SubmitButton label="Change Password" isPending={passwordLoad} />
-              </div>
-            </form>
-          </div>
-        </EditModelBox>
       )}
     </>
   );
