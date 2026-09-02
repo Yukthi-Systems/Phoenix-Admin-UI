@@ -663,7 +663,46 @@ const MailboxDetails = () => {
         />
       )}
 
+      {showPasswordModal && (
+        <EditModelBox
+          isOpen={showPasswordModal}
+          label="Change Password"
+          handleCancel={handlePasswordClose}
+        >
+          <div
+            className="w-xl text-left"
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="mx-auto space-y-5 rounded-xl px-5 py-2 text-left"
+            >
+              <div className="mt-2 grid grid-cols-1 gap-8">
+                <PasswordInput
+                  placeholder="Enter new password"
+                  label="New Password"
+                  register={register}
+                  errors={errors}
+                  name="password"
+                />
 
+                <Input
+                  type="password"
+                  label="Confirm New Password"
+                  name="confirmPassword"
+                  register={register}
+                  errors={errors}
+                  placeholder="Enter confirm password"
+                />
+              </div>
+
+              <div className="text-center">
+                <SubmitButton label="Change Password" isPending={passwordLoad} />
+              </div>
+            </form>
+          </div>
+        </EditModelBox>
+      )}
     </>
   );
 };

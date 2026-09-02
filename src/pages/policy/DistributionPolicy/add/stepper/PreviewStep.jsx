@@ -145,20 +145,24 @@ const PreviewStep = ({
         />
       </PreviewSection>
 
-      {/* Distributions */}
-      {(specificEmails.length > 0 || specificEmails.length > 0) && (
-        <PreviewSection title="Distributions">
-          {specificEmails.length > 0 && (
-            <PreviewList label="Geo Locations" items={specificEmails} />
-          )}
-          {internalList.length > 0 && (
-            <PreviewList label="Internal Lists" items={internalList} />
-          )}
-          {externalList.length > 0 && (
-            <PreviewList label="External Lists" items={externalList} />
-          )}
-        </PreviewSection>
-      )}
+      {/* Group Members */}
+      <PreviewSection title="Group Members" icon={Shield}>
+        <PreviewItem label="Rule Type" value={formData.rule_type} />
+        {specificEmails.length > 0 && (
+          <PreviewList
+            label={`Specific Emails (${specificEmails.length})`}
+            items={specificEmails}
+          />
+        )}
+        <PreviewList
+          label={`Internal Members (${internalList.length})`}
+          items={internalList}
+        />
+        <PreviewList
+          label={`External Members (${externalList.length})`}
+          items={externalList}
+        />
+      </PreviewSection>
 
       {/* Summary Box */}
       <div className="border-primary/20 bg-primary/5 rounded-lg border p-4">
