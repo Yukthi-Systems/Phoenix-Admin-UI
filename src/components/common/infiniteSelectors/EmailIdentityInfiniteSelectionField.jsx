@@ -42,10 +42,22 @@ export function EmailIdentityInfiniteSelectionField({
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const debounceRef = useRef(null);
+  // Tracks an in-flight request so we only dedupe *pagination* calls, and
+  // ignores responses that arrive out of order (stale searches).
+  const inFlightRef = useRef(false);
+  const requestIdRef = useRef(0);
 
   const fetchOptions = async (pageNum = 1, query = "") => {
-    if (!domain_name || loading || (totalPages && pageNum > totalPages)) return;
+    if (!domain_name) return;
+    // Only block additional pages while a request is running. A page-1 /
+    // search request must always go through, otherwise the very first
+    // keystroke (which races the initial load) gets silently dropped.
+    if (pageNum > 1 && (inFlightRef.current || (totalPages && pageNum > totalPages))) {
+      return;
+    }
 
+    const requestId = ++requestIdRef.current;
+    inFlightRef.current = true;
     setLoading(true);
     try {
       const queryParam = query ? encodeURIComponent(query) : "";
@@ -60,6 +72,9 @@ export function EmailIdentityInfiniteSelectionField({
         },
       });
 
+      // A newer request has been fired since; discard this response.
+      if (requestId !== requestIdRef.current) return;
+
       const { identities = [], total_count = 0 } = response.data?.data || {};
       const calculatedTotalPages = Math.ceil(total_count / 100) || 1;
 
@@ -73,7 +88,7 @@ export function EmailIdentityInfiniteSelectionField({
         isDisabled: !item.is_enabled,
       }));
 
-      if (pageNum === 1 || query !== searchQuery) {
+      if (pageNum === 1) {
         setOptions(newOptions);
       } else {
         setOptions((prev) => [...prev, ...newOptions]);
@@ -85,7 +100,10 @@ export function EmailIdentityInfiniteSelectionField({
     } catch (err) {
       console.error("Failed to load email identity options", err);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        inFlightRef.current = false;
+        setLoading(false);
+      }
     }
   };
 
@@ -106,7 +124,7 @@ export function EmailIdentityInfiniteSelectionField({
   };
 
   const handleMenuScrollToBottom = () => {
-    if (!loading && totalPages && page < totalPages) {
+    if (!inFlightRef.current && totalPages && page < totalPages) {
       fetchOptions(page + 1, searchQuery);
     }
   };
