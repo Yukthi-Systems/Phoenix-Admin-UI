@@ -1,0 +1,35 @@
+---
+title: Domain properties
+feature: domain
+flow: create
+step: 2
+summary: Optional hybrid mode for routing mail through an on-premise connector.
+updated: 2026-09-03
+---
+
+## Domain properties
+
+### Hybrid mode
+
+Leave **Hybrid Mode Disabled** for a standard cloud-only or on-premise-only
+setup — this is the common case.
+
+Enable it only when mail for this domain must be relayed through an
+on-premise connector. You then provide:
+
+| Field | Meaning |
+| --- | --- |
+| Description | Label for the connector |
+| FQDN | Hostname of the on-prem relay |
+| IPv4 | Its IP address |
+| Port | SMTP port the relay listens on |
+
+<Callout type="info">
+  Catch-all forwarding is **not** available while creating a domain. Add it
+  afterwards from the domain's **Edit** page.
+</Callout>
+
+<Callout type="tip">
+  Not sure? Disable hybrid mode now — every value on this step can be changed
+  later without recreating the domain.
+</Callout>

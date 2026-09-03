@@ -15,12 +15,15 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { BackButton } from "@/components/common/Buttons";
 import Stepper from "@/components/common/NewStepper";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import RequiredNote from "@/components/common/RequiredNote";
+import DocDrawer from "@/components/docs/DocDrawer";
+import StepDoc from "@/components/docs/StepDoc";
+import { hasFlowDocs } from "@/docs/registry";
 
 /**
  * Enhanced FormLayout - Reusable layout that adapts for Single Step or Multi-Step forms.
@@ -49,7 +52,17 @@ const FormLayout = ({
   allowStepNavigation = true,
   showSubmitOnAllSteps = false,
   showStepper, // Optional: Force show/hide stepper manually
+  // "<feature>/<flow>" (e.g. "domain/create"). When docs exist for it, a
+  // "Guide" button appears that opens a step-aware documentation drawer.
+  docId,
 }) => {
+  const [docOpen, setDocOpen] = useState(false);
+  const docStep = steps.length > 1 ? currentStep : 1;
+  const showDocButton = (() => {
+    if (!docId) return false;
+    const [feature, flow] = docId.split("/");
+    return hasFlowDocs(feature, flow);
+  })();
   const isLastStep = steps.length === 0 || currentStep === steps.length;
   // Auto-hide stepper if there is only one step, unless explicitly overridden
   const shouldShowStepper =
@@ -78,11 +91,21 @@ const FormLayout = ({
   return (
     <div className="h-full w-full overflow-hidden px-2">
       {/* Header with Breadcrumbs and Back Button */}
-      <div className="mb-2.5 flex w-full">
+      <div className="mb-2.5 flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
           <BackButton />
           <Breadcrumbs items={breadcrumbItems} />
         </div>
+        {showDocButton && (
+          <button
+            type="button"
+            onClick={() => setDocOpen((v) => !v)}
+            className="border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm font-medium transition-colors"
+          >
+            <BookOpen className="h-4 w-4" />
+            Guide
+          </button>
+        )}
       </div>
 
       {/* Main Form Container - Converted to Flex Column for dynamic sizing */}
@@ -203,6 +226,16 @@ const FormLayout = ({
           </div>
         </form>
       </div>
+
+      {showDocButton && (
+        <DocDrawer
+          open={docOpen}
+          onClose={() => setDocOpen(false)}
+          title="Guide"
+        >
+          {docOpen && <StepDoc docId={docId} step={docStep} />}
+        </DocDrawer>
+      )}
     </div>
   );
 };

@@ -46,6 +46,7 @@ import {
   ServerCrash,
   ShieldUser,
   Info,
+  BookOpen,
   MailsIcon,
   MonitorSmartphone,
   Filter,
@@ -483,6 +484,12 @@ export const navItems = [
       //   permissionValue: "api_keys:view",
       // },
     ],
+  },
+  {
+    name: "Documentation",
+    icon: <BookOpen size={18} />,
+    link: "/docs",
+    hasPermission: false,
   },
   {
     name: "System Status",

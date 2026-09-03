@@ -1,0 +1,26 @@
+---
+title: Add a domain
+feature: domain
+flow: create
+summary: Register a domain, verify DNS ownership, and set its password and spam policies.
+updated: 2026-09-03
+---
+
+# Add a domain
+
+The **Add Domain** wizard registers a new domain under the currently selected
+organization. It has five steps:
+
+1. **Domain Details** — the domain name and anti-phishing code.
+2. **Domain Properties** — optional hybrid (on-prem relay) configuration.
+3. **Password Properties** — session timeout and password-age policy.
+4. **Spam &amp; Templates** — where spam is delivered, plus caution / disclaimer templates.
+5. **Review** — confirm everything, then create.
+
+<Callout type="info" title="Ownership is verified after creation">
+  A new domain is always created **inactive**. After you submit, a DNS `TXT`
+  record is shown — add it to your DNS zone and run the verification check.
+  The domain activates only once that record is found.
+</Callout>
+
+Open the **Guide** panel on any step to see help for just that step.
