@@ -494,16 +494,18 @@ const ListDomains = () => {
           const canToggleActivation =
             row.original.is_active || row.original.is_dns_txt_verified;
 
-          actions.push({
-            label: row.original.is_active ? "Deactivate" : "Activate",
-            icon: row.original.is_active ? XCircle : CheckCircle,
-            variant: row.original.is_active ? "danger" : "success",
-            disabled: !canToggleActivation,
-            onClick: () => handleStatus(row.original),
-            tooltip: canToggleActivation
-              ? "Toggle status"
-              : "Verify the domain's DNS TXT record before activating",
-          });
+          if (permissions.includes("domain:edit")) {
+            actions.push({
+              label: row.original.is_active ? "Deactivate" : "Activate",
+              icon: row.original.is_active ? XCircle : CheckCircle,
+              variant: row.original.is_active ? "danger" : "success",
+              disabled: !canToggleActivation,
+              onClick: () => handleStatus(row.original),
+              tooltip: canToggleActivation
+                ? "Toggle status"
+                : "Verify the domain's DNS TXT record before activating",
+            });
+          }
 
           if (permissions.includes("domain:delete")) {
             const isCheckingThisRow =
