@@ -24,7 +24,7 @@ export function useApplyTheme() {
   const uiInfo = useAtomValue(uiInfoAtom);
   const prevThemeRef = useRef();
 
-  const theme = uiInfo?.theme?.mode || "dark";
+  const theme = uiInfo?.theme?.mode || "light";
 
   useEffect(() => {
     const root = document.documentElement;
