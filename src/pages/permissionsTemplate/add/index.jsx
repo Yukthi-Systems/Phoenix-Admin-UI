@@ -38,6 +38,7 @@ function CreatePermissionTemplate() {
     useAtomValue(userProfileAtom);
 
   const [templateList, setTemplateList] = useState(permissions_template || {});
+  const [sourceTemplate, setSourceTemplate] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const { mutate, isPending } = useEditPermissionsTemplate();
@@ -145,6 +146,31 @@ function CreatePermissionTemplate() {
     // });
   };
 
+  // Existing templates offered as a starting point for the new one.
+  const templateOptions = Object.keys(templateList || {}).map((key) => ({
+    value: key,
+    label: key,
+  }));
+
+  // Populate the permission grid from an existing template. The template name
+  // field is intentionally left untouched so the user must give the copy a new
+  // name (the duplicate-name guard in onSubmit still enforces this).
+  const populateFromTemplate = (selectedOption) => {
+    setSourceTemplate(selectedOption?.value || "");
+
+    const sourcePermissions = selectedOption
+      ? [...new Set(templateList[selectedOption.value] || [])]
+      : [];
+
+    // Only carry permissions the current admin actually holds, so what gets
+    // saved matches what the grid shows.
+    const assignable = sourcePermissions.filter((perm) =>
+      permissions.includes(perm),
+    );
+
+    setValue("permissions", assignable, { shouldValidate: true });
+  };
+
   const deleteTemplate = (name) => {
     setTemplateList((prev) => {
       const updated = { ...prev };
@@ -201,6 +227,13 @@ function CreatePermissionTemplate() {
                     setValue={setValue}
                     watch={watch}
                     errors={errors}
+                    showDropdown={templateOptions.length > 0}
+                    optionsPermission={templateOptions}
+                    handleAdd={populateFromTemplate}
+                    template={sourceTemplate}
+                    dropdownLabel="Populate from existing template"
+                    dropdownHint="(Optional — copies its permissions, then give this template a new name)"
+                    dropdownPlaceholder="Select a template to copy from..."
                   />
                 </div>
 

@@ -170,6 +170,16 @@ const ListUsers = () => {
         },
       },
       {
+        accessorKey: "user_name",
+        header: t("Username"),
+        cell: ({ getValue }) => (
+          <span className="text-card-foreground">{getValue() || "-"}</span>
+        ),
+        meta: {
+          align: "left",
+        },
+      },
+      {
         accessorKey: "is_active",
         header: t("Status"),
         cell: ({ getValue }) => {

@@ -33,6 +33,9 @@ import { baseConfig } from "../add/permissionConfig";
 const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
   const [openSections, setOpenSections] = useState({});
   const [openSecuritySections, setOpenSecuritySections] = useState({});
+  // When false, categories/modules with nothing granted are hidden so the
+  // reader only sees what this user actually has.
+  const [showAll, setShowAll] = useState(false);
 
   const permissionSet = useMemo(() => new Set(permissions), [permissions]);
 
@@ -40,17 +43,34 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
     return permissionSet.has(permission);
   };
 
+  const moduleHasGrant = (module) =>
+    ["view", "create", "edit", "delete"].some((action) => {
+      const perm = module.permissions[action];
+      return perm && isPermissionGranted(perm);
+    });
+
+  // Sections default to expanded while filtering (showAll === false) so the
+  // granted permissions are visible without extra clicks, and collapsed when
+  // showing everything. An explicit click overrides the default either way.
+  const isSectionOpen = (sectionId) =>
+    sectionId in openSections ? openSections[sectionId] : !showAll;
+
+  const isSecuritySectionOpen = (sectionId) =>
+    sectionId in openSecuritySections
+      ? openSecuritySections[sectionId]
+      : !showAll;
+
   const toggleSection = (sectionId) => {
     setOpenSections((prev) => ({
       ...prev,
-      [sectionId]: !prev[sectionId],
+      [sectionId]: !(sectionId in prev ? prev[sectionId] : !showAll),
     }));
   };
 
   const toggleSecuritySection = (sectionId) => {
     setOpenSecuritySections((prev) => ({
       ...prev,
-      [sectionId]: !prev[sectionId],
+      [sectionId]: !(sectionId in prev ? prev[sectionId] : !showAll),
     }));
   };
 
@@ -128,6 +148,15 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
               {totalStats.grantedPermissions} of {totalStats.totalPermissions}{" "}
               permissions granted
             </p>
+            <label className="mt-2 flex cursor-pointer select-none items-center gap-2 text-xs text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={showAll}
+                onChange={(e) => setShowAll(e.target.checked)}
+                className="h-3.5 w-3.5 cursor-pointer accent-primary"
+              />
+              Show all permissions (including not granted)
+            </label>
           </div>
           <button
             onClick={onClose}
@@ -148,6 +177,7 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
 
             {baseConfig.general.map((section) => {
               const stats = getStats(section);
+              if (!showAll && stats.granted === 0) return null;
 
               return (
                 <div
@@ -161,7 +191,7 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                       onClick={() => toggleSection(section.category)}
                       className="flex items-center gap-1.5 text-left hover:text-primary transition-colors"
                     >
-                      {openSections[section.category] ? (
+                      {isSectionOpen(section.category) ? (
                         <ChevronDown size={14} />
                       ) : (
                         <ChevronRight size={14} />
@@ -176,7 +206,7 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                   </div>
 
                   {/* Table */}
-                  {openSections[section.category] && (
+                  {isSectionOpen(section.category) && (
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-border bg-muted/5 border-b">
@@ -220,7 +250,9 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {section.modules.map((module, idx) => (
+                        {section.modules.map((module, idx) => {
+                          if (!showAll && !moduleHasGrant(module)) return null;
+                          return (
                           <tr
                             key={module.name}
                             className={`border-border hover:bg-muted/10 border-b last:border-b-0 ${
@@ -257,7 +289,8 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                               },
                             )}
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   )}
@@ -280,6 +313,7 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
 
             {baseConfig.security.map((section) => {
               const stats = getStats(section);
+              if (!showAll && stats.granted === 0) return null;
 
               return (
                 <div
@@ -293,7 +327,7 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                       onClick={() => toggleSecuritySection(section.category)}
                       className="flex items-center gap-1.5 text-left hover:text-warning transition-colors"
                     >
-                      {openSecuritySections[section.category] ? (
+                      {isSecuritySectionOpen(section.category) ? (
                         <ChevronDown size={14} />
                       ) : (
                         <ChevronRight size={14} />
@@ -308,7 +342,7 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                   </div>
 
                   {/* Table - Same Format as General */}
-                  {openSecuritySections[section.category] && (
+                  {isSecuritySectionOpen(section.category) && (
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-warning/20 border-b">
@@ -352,10 +386,13 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {section.modules.map((module, idx) => (
+                        {section.modules.map((module, idx) => {
+                          if (!showAll && !moduleHasGrant(module)) return null;
+                          return (
                           <tr
                             key={module.name}
-                            className={`border-warning/20 hover:bg-warning/10 border-b last:border-b-0 
+                            className={`border-warning/20 hover:bg-warning/10 border-b last:border-b-0 ${
+                              idx % 2 ? "bg-warning/5" : ""
                             }`}
                           >
                             <td className="p-1.5 text-[11px] font-medium text-left">
@@ -388,7 +425,8 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                               },
                             )}
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   )}

@@ -23,7 +23,7 @@ export const templateFormSchema = yup.object().shape({
     .required("Permission Template Name is Required")
     .max(100, "Permission Template Name must not exceed 100 characters")
     .matches(
-      /^[a-zA-Z0-9_.-]+$/,
-      "Only letters, numbers, underscores, dots, and hyphens are allowed",
+      /^[a-zA-Z0-9_.-][a-zA-Z0-9_.\- ]*$/,
+      "Only letters, numbers, spaces, underscores, dots, and hyphens are allowed, and it cannot start with a space",
     ),
 });

@@ -64,6 +64,9 @@ const PermissionTables = ({
   optionsPermission = [],
   handleAdd = () => {},
   template = "",
+  dropdownLabel = "Load Permission Template",
+  dropdownHint = "(Optional quick start)",
+  dropdownPlaceholder = "Select template...",
 }) => {
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const currentPermissions = watch("permissions") || [];
@@ -300,10 +303,12 @@ const PermissionTables = ({
       {showDropdown && (
         <div className="border-border bg-card rounded border p-3">
           <label className="text-foreground mb-2 flex items-center gap-2 text-sm font-medium">
-            <span>Load Permission Template</span>
-            <span className="text-muted-foreground text-xs">
-              (Optional quick start)
-            </span>
+            <span>{dropdownLabel}</span>
+            {dropdownHint && (
+              <span className="text-muted-foreground text-xs">
+                {dropdownHint}
+              </span>
+            )}
           </label>
           <Select
             options={optionsPermission}
@@ -311,7 +316,7 @@ const PermissionTables = ({
               optionsPermission.find((opt) => opt.value === template) || null
             }
             onChange={handleAdd}
-            placeholder="Select template..."
+            placeholder={dropdownPlaceholder}
             styles={getReactSelectStyles()}
             isSearchable
             isClearable

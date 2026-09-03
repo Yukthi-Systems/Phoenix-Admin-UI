@@ -33,25 +33,36 @@ import { baseConfig } from "../../userManagement/add/permissionConfig";
 const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
   const [openSections, setOpenSections] = useState({});
   const [openSecuritySections, setOpenSecuritySections] = useState({});
+  // When false, categories/modules with nothing granted are hidden so the
+  // reader only sees what this template actually contains.
+  const [showAll, setShowAll] = useState(false);
 
-  if (!template || !isOpen) return null;
-
-  const { template_name, permissions } = template;
-  const permissionSet = useMemo(() => new Set(permissions), [permissions]);
+  const { template_name, permissions } = template || {};
+  const permissionSet = useMemo(() => new Set(permissions || []), [permissions]);
 
   const isPermissionGranted = (permission) => permissionSet.has(permission);
+
+  // Sections default to expanded while filtering (showAll === false) and
+  // collapsed when showing everything; an explicit click overrides either way.
+  const isSectionOpen = (sectionId) =>
+    sectionId in openSections ? openSections[sectionId] : !showAll;
+
+  const isSecuritySectionOpen = (sectionId) =>
+    sectionId in openSecuritySections
+      ? openSecuritySections[sectionId]
+      : !showAll;
 
   const toggleSection = (sectionId) => {
     setOpenSections((prev) => ({
       ...prev,
-      [sectionId]: !prev[sectionId],
+      [sectionId]: !(sectionId in prev ? prev[sectionId] : !showAll),
     }));
   };
 
   const toggleSecuritySection = (sectionId) => {
     setOpenSecuritySections((prev) => ({
       ...prev,
-      [sectionId]: !prev[sectionId],
+      [sectionId]: !(sectionId in prev ? prev[sectionId] : !showAll),
     }));
   };
 
@@ -104,6 +115,8 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
     return { totalPermissions, grantedPermissions };
   }, [permissionSet]);
 
+  if (!template || !isOpen) return null;
+
   return (
     <>
       <div
@@ -124,6 +137,15 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
               {totalStats.grantedPermissions} of {totalStats.totalPermissions}{" "}
               permissions in this template
             </p>
+            <label className="mt-2 flex cursor-pointer select-none items-center gap-2 text-xs text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={showAll}
+                onChange={(e) => setShowAll(e.target.checked)}
+                className="h-3.5 w-3.5 cursor-pointer accent-primary"
+              />
+              Show all permissions (including not granted)
+            </label>
           </div>
           <button
             onClick={onClose}
@@ -144,7 +166,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
 
             {baseConfig.general.map((section) => {
               const stats = getStats(section);
-              if (stats.granted === 0) return null;
+              if (!showAll && stats.granted === 0) return null;
 
               return (
                 <div
@@ -157,7 +179,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
                       onClick={() => toggleSection(section.category)}
                       className="flex items-center gap-1.5 text-left hover:text-primary transition-colors"
                     >
-                      {openSections[section.category] ? (
+                      {isSectionOpen(section.category) ? (
                         <ChevronDown size={14} />
                       ) : (
                         <ChevronRight size={14} />
@@ -171,7 +193,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
                     </button>
                   </div>
 
-                  {openSections[section.category] && (
+                  {isSectionOpen(section.category) && (
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-border bg-muted/5 border-b">
@@ -226,7 +248,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
                             return perm && isPermissionGranted(perm);
                           });
 
-                          if (!hasAnyPermission) return null;
+                          if (!showAll && !hasAnyPermission) return null;
 
                           return (
                             <tr
@@ -287,7 +309,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
 
             {baseConfig.security.map((section) => {
               const stats = getStats(section);
-              if (stats.granted === 0) return null;
+              if (!showAll && stats.granted === 0) return null;
 
               return (
                 <div
@@ -300,7 +322,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
                       onClick={() => toggleSecuritySection(section.category)}
                       className="flex items-center gap-1.5 text-left hover:text-warning transition-colors"
                     >
-                      {openSecuritySections[section.category] ? (
+                      {isSecuritySectionOpen(section.category) ? (
                         <ChevronDown size={14} />
                       ) : (
                         <ChevronRight size={14} />
@@ -314,7 +336,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
                     </button>
                   </div>
 
-                  {openSecuritySections[section.category] && (
+                  {isSecuritySectionOpen(section.category) && (
                     <table className="w-full text-xs">
                       <thead>
                         <tr className="border-warning/20 bg-warning/5 border-b">
@@ -369,7 +391,7 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
                             return perm && isPermissionGranted(perm);
                           });
 
-                          if (!hasAnyPermission) return null;
+                          if (!showAll && !hasAnyPermission) return null;
 
                           return (
                             <tr
