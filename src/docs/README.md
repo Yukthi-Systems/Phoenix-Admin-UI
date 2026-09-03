@@ -7,8 +7,8 @@ Licensed under the GNU General Public License version 3.
 
 User-facing help authored as **MDX**. It surfaces in two places:
 
-- The header **Help** button (`?` icon). On a page that registered docs it
-  opens a step-aware guide drawer; everywhere else it opens `/docs`.
+- The header **Help** button (`?` icon) — shown **only** on pages that
+  registered docs (via `useDocTarget`); opens a step-aware guide drawer.
 - The standalone **`/docs`** section (linked from the sidebar).
 
 ## File layout
@@ -85,8 +85,9 @@ Pass `docId="<feature>/<flow>"`:
 <FormLayout docId="mailbox/create" steps={STEPS} currentStep={currentStep} ... />
 ```
 
-`FormLayout` calls `useDocTarget` for you — the header **Help** button lights up
-(shows a dot) and its drawer follows `currentStep`.
+`FormLayout` calls `useDocTarget` for you — the header **Help** button appears
+(with a dot) and its drawer follows `currentStep`. On pages/flows with no
+`.mdx`, the button stays hidden.
 
 ### Any other page
 

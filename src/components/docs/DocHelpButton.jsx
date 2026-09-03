@@ -16,42 +16,34 @@
  */
 
 import { useAtom, useAtomValue } from "jotai";
-import { useNavigate } from "react-router-dom";
 import { CircleHelp } from "lucide-react";
 import { docDrawerOpenAtom, docTargetAtom } from "@/store/docs";
 
 /**
- * The single Help affordance in the header.
- * - On a page that registered docs (via `useDocTarget`): toggles the
- *   step-aware documentation drawer.
- * - Everywhere else: opens the /docs section.
+ * Header Help affordance. Rendered only when the current page has registered
+ * documentation (via `useDocTarget`); otherwise nothing shows. Toggles the
+ * step-aware documentation drawer.
  */
 const DocHelpButton = () => {
   const target = useAtomValue(docTargetAtom);
   const [open, setOpen] = useAtom(docDrawerOpenAtom);
-  const navigate = useNavigate();
 
-  const hasPageDoc = Boolean(target);
-
-  const onClick = () => {
-    if (hasPageDoc) setOpen((v) => !v);
-    else navigate("/docs");
-  };
+  if (!target) return null;
 
   return (
     <button
       type="button"
-      onClick={onClick}
-      title={hasPageDoc ? "Guide for this page" : "Documentation"}
-      aria-label={hasPageDoc ? "Guide for this page" : "Documentation"}
+      onClick={() => setOpen((v) => !v)}
+      title="Guide for this page"
+      aria-label="Guide for this page"
       className={`hover:bg-accent relative rounded-lg p-2 transition-all duration-200 ${
-        open && hasPageDoc
+        open
           ? "bg-primary/10 text-foreground ring-primary/20 ring-2"
           : "text-foreground"
       }`}
     >
       <CircleHelp size={20} strokeWidth={1.5} />
-      {hasPageDoc && !open && (
+      {!open && (
         <span className="bg-primary absolute top-1 right-1 h-2 w-2 rounded-full" />
       )}
     </button>
