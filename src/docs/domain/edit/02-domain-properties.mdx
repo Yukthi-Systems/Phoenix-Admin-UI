@@ -1,0 +1,37 @@
+---
+title: Domain properties
+feature: domain
+flow: edit
+step: 2
+summary: Catch-all forwarding and hybrid on-premise routing.
+updated: 2026-09-03
+---
+
+## Domain properties
+
+### Catch-all forwarding
+
+When **enabled**, mail sent to an address that doesn't exist on the domain is
+forwarded to the **catch-all forwarding email address** instead of being
+rejected.
+
+<Callout type="tip">
+  Catch-all can only be turned on here (the Edit page) — it is not available
+  while creating a domain.
+</Callout>
+
+<Callout type="warning">
+  A catch-all address receives a lot of spam. Point it at a monitored mailbox,
+  not a person's inbox.
+</Callout>
+
+### Hybrid mode
+
+Enable only when mail for this domain is relayed through an on-premise
+connector. Provide the connector's description, **FQDN or IPv4** (at least one),
+optional IPv6, and the SMTP **port**.
+
+<Callout type="info">
+  Catch-all and hybrid mode are mutually exclusive — enabling one disables the
+  other in the form.
+</Callout>
