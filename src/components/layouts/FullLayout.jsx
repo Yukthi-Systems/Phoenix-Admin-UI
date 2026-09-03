@@ -31,6 +31,7 @@ import HelpDesk from "../shared/header/helpdesk/HelpDesk";
 import ServiceRouteGuard from "../common/ServiceRouteGuard";
 import PermissionRouteGuard from "../common/PermissionRouteGuard";
 import AIChatInterface from "@/pages/help";
+import DocHelpDrawer from "@/components/docs/DocHelpDrawer";
 import { useGetUserUiInfo } from "@/hooks/useUser";
 import { useEffect, useRef } from "react";
 import { uiInfoAtom } from "@/store/uiInfo";
@@ -198,6 +199,8 @@ const FullLayout = () => {
         </div>
 
         {/* Floating Utilities */}
+        {/* Step-aware documentation drawer, opened from the header Help button */}
+        <DocHelpDrawer />
         {/* Help Desk disabled for v2 */}
         {/* <HelpDesk /> */}
         <ToastContainer

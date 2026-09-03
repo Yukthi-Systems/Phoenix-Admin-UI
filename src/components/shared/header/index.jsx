@@ -34,6 +34,7 @@ import SessionTimer from "./SessionTimer";
 import { useBrowserNotification } from "@/hooks/useBrowserNotification";
 import { uiInfoAtom } from "@/store/uiInfo";
 import NavSearchBar from "@/components/common/LinkSearchbar";
+import DocHelpButton from "@/components/docs/DocHelpButton";
 import OrganizationLogo from "../OrgLogo";
 import { WSS_URL } from "@/constants/constants";
 import { parentOrgAtom } from "@/store/userInfo";
@@ -406,6 +407,9 @@ const Header = () => {
 
         {/* Theme Customizer */}
         <ThemeCustomizer />
+
+        {/* Documentation / page guide */}
+        <DocHelpButton />
 
         {/* Help Button - disabled for v2 */}
         {/* <div className="relative">

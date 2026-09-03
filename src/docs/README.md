@@ -7,8 +7,8 @@ Licensed under the GNU General Public License version 3.
 
 User-facing help authored as **MDX**. It surfaces in two places:
 
-- A **Guide** slide-over inside multi-step create forms, showing help for the
-  current step (`<FormLayout docId="<feature>/<flow>" />`).
+- The header **Help** button (`?` icon). On a page that registered docs it
+  opens a step-aware guide drawer; everywhere else it opens `/docs`.
 - The standalone **`/docs`** section (linked from the sidebar).
 
 ## File layout
@@ -75,15 +75,31 @@ A bare filename (`src="foo.png"`) also resolves as a fallback.
 Pass the full `https://…` URL as `src` to `<Figure>` / `<Video>`. For YouTube
 use `<YouTube>`.
 
-## Wiring a new flow into a create form
+## Wiring a new flow into a form
+
+### Multi-step forms using `FormLayout`
+
+Pass `docId="<feature>/<flow>"`:
 
 ```jsx
 <FormLayout docId="mailbox/create" steps={STEPS} currentStep={currentStep} ... />
 ```
 
-The **Guide** button appears automatically once at least one `.mdx` exists for
-that `docId`. No route changes needed — `/docs/<feature>/<flow>` and the
-sidebar entry are generated from the registry.
+`FormLayout` calls `useDocTarget` for you — the header **Help** button lights up
+(shows a dot) and its drawer follows `currentStep`.
+
+### Any other page
+
+Call the hook directly:
+
+```jsx
+import useDocTarget from "@/hooks/useDocTarget";
+
+useDocTarget("domain/edit", currentStep); // step defaults to 1
+```
+
+No route changes needed — `/docs/<feature>/<flow>` and the sidebar entry are
+generated from the registry once at least one `.mdx` exists.
 
 ## Security
 
