@@ -15,13 +15,28 @@
  * <https://www.gnu.org/licenses/>.
  */
 
+import { useContext } from "react";
+import { DocAssetContext } from "./DocAssetContext";
+import { resolveDocAsset } from "@/docs/assets";
+
 /**
  * <Video src="..." poster="..." caption="..." />
  *
- * Self-hosted or externally hosted video file (mp4/webm). For YouTube use
- * the <YouTube> component instead.
+ * Self-hosted or externally hosted video file (mp4/webm). Local files in a
+ * docs `assets/` folder work with a relative path. For YouTube use the
+ * <YouTube> component instead.
  */
-const Video = ({ src, poster, caption, autoPlay = false, loop = false }) => {
+const Video = ({
+  src: rawSrc,
+  poster: rawPoster,
+  caption,
+  autoPlay = false,
+  loop = false,
+}) => {
+  const baseDir = useContext(DocAssetContext);
+  const src = resolveDocAsset(rawSrc, baseDir);
+  const poster = resolveDocAsset(rawPoster, baseDir);
+
   if (!src) return null;
 
   return (

@@ -64,6 +64,9 @@ const ENTRIES = Object.entries(loaders).map(([key, load]) => {
   const step = isMeta ? 0 : (meta.step ?? filePrefixStep ?? null);
   return {
     key,
+    // Directory relative to src/docs, e.g. "domain/create" - used to resolve
+    // relative asset paths written inside the .mdx file.
+    dir: `${feature}/${flow}`,
     feature: meta.feature || feature,
     flow: meta.flow || flow,
     file,

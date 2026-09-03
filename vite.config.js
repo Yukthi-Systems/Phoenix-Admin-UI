@@ -55,6 +55,9 @@ export default defineConfig(({ mode }) => {
       __API_URL__: JSON.stringify(env.VITE_API_URL || ""),
       __WSS_URL__: JSON.stringify(env.VITE_WSS_URL || ""),
     },
+    // Treat these video containers as assets (mp4/webm/ogg are already default)
+    // so local docs videos in src/docs/**/assets get a hashed URL.
+    assetsInclude: ["**/*.mov", "**/*.m4v"],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

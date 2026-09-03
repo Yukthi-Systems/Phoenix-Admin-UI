@@ -17,6 +17,7 @@
 
 import { MDXProvider } from "@mdx-js/react";
 import mdxComponents from "./mdxComponents";
+import { DocAssetContext } from "./DocAssetContext";
 
 /**
  * Renders a compiled MDX component (`Content`) inside the shared provider and
@@ -24,17 +25,19 @@ import mdxComponents from "./mdxComponents";
  * first-party `.mdx` files under `src/docs`; never pass user-supplied MDX
  * here - it compiles to executable code.
  */
-const DocContent = ({ Content, className = "" }) => {
+const DocContent = ({ Content, baseDir = "", className = "" }) => {
   if (!Content) return null;
 
   return (
-    <MDXProvider components={mdxComponents}>
-      <div
-        className={`prose prose-sm dark:prose-invert prose-headings:scroll-mt-20 prose-a:font-normal prose-img:rounded-md max-w-none ${className}`}
-      >
-        <Content />
-      </div>
-    </MDXProvider>
+    <DocAssetContext.Provider value={baseDir}>
+      <MDXProvider components={mdxComponents}>
+        <div
+          className={`prose prose-sm dark:prose-invert prose-headings:scroll-mt-20 prose-a:font-normal prose-img:rounded-md max-w-none ${className}`}
+        >
+          <Content />
+        </div>
+      </MDXProvider>
+    </DocAssetContext.Provider>
   );
 };
 

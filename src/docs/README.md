@@ -54,12 +54,26 @@ filename prefix (`01-`) is used as a fallback.
 Plain markdown works too: `![alt](url)` gets the same lazy/zoom treatment as
 `<Figure>`, and external links open in a new tab automatically.
 
-### Images
+### Local images & video
 
-- **Local:** drop the file in `src/docs/<feature>/assets/` and reference it
-  relatively: `<Figure src="../assets/foo.png" alt="..." />`. Vite hashes and
-  optimises it at build time.
-- **Remote / image links:** pass the full `https://…` URL as `src`.
+Drop the file in `src/docs/<feature>/assets/` and reference it with a plain
+relative path — every file under any docs `assets/` folder is registered in
+[`assets.js`](./assets.js) and resolved to a hashed, build-optimised URL at
+render time:
+
+```mdx
+<Figure src="../assets/domain-details.png" alt="Domain details" />
+![Domain details](../assets/domain-details.png)
+<Video src="../assets/walkthrough.mp4" poster="../assets/walkthrough-poster.jpg" />
+```
+
+Supported extensions: `png jpg jpeg gif svg webp avif` and `mp4 webm mov m4v ogg`.
+A bare filename (`src="foo.png"`) also resolves as a fallback.
+
+### Remote images & video
+
+Pass the full `https://…` URL as `src` to `<Figure>` / `<Video>`. For YouTube
+use `<YouTube>`.
 
 ## Wiring a new flow into a create form
 

@@ -29,7 +29,7 @@ const Section = ({ entry, anchor }) => {
   return (
     <section id={anchor} className="scroll-mt-24">
       <Suspense fallback={<DataLoading content="Loading section..." />}>
-        <DocContent Content={Lazy} />
+        <DocContent Content={Lazy} baseDir={entry.dir} />
       </Suspense>
     </section>
   );

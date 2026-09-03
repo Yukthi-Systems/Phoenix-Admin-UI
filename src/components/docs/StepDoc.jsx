@@ -63,7 +63,7 @@ const StepDoc = ({ docId, step }) => {
       </div>
 
       <Suspense fallback={<DataLoading content="Loading guide..." />}>
-        <DocContent Content={LazyDoc} />
+        <DocContent Content={LazyDoc} baseDir={entry.dir} />
       </Suspense>
 
       <div className="border-border mt-6 border-t pt-3">

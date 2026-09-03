@@ -15,9 +15,11 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
+import { DocAssetContext } from "./DocAssetContext";
+import { resolveDocAsset } from "@/docs/assets";
 
 /**
  * <Figure src="..." alt="..." caption="..." />
@@ -28,8 +30,10 @@ import { createPortal } from "react-dom";
  *
  * Lazy-loaded, and click-to-zoom into a full-screen lightbox.
  */
-const Figure = ({ src, alt = "", caption, zoom = true }) => {
+const Figure = ({ src: rawSrc, alt = "", caption, zoom = true }) => {
   const [open, setOpen] = useState(false);
+  const baseDir = useContext(DocAssetContext);
+  const src = resolveDocAsset(rawSrc, baseDir);
 
   useEffect(() => {
     if (!open) return;
