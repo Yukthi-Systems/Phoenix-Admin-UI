@@ -17,6 +17,6 @@
 
 import { atomWithStorage } from "jotai/utils";
 
-export const themeAtom = atomWithStorage("theme", "dark", undefined, {
+export const themeAtom = atomWithStorage("theme", "light", undefined, {
   getOnInit: true,
 });
