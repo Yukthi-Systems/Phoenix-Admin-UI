@@ -35,7 +35,7 @@ const DocsPage = () => {
     }`;
 
   return (
-    <div className="flex h-[calc(100vh-96px)] gap-6 px-2">
+    <div className="flex h-[calc(100vh-96px)] gap-6 px-2 text-left">
       {/* Left navigation */}
       <aside className="border-border bg-card w-64 shrink-0 overflow-y-auto rounded-md border p-3">
         <div className="text-card-foreground mb-3 flex items-center gap-2 px-2 text-sm font-semibold">

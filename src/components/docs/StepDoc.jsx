@@ -50,7 +50,7 @@ const StepDoc = ({ docId, step }) => {
   }
 
   return (
-    <div>
+    <div className="text-left">
       <div className="mb-3">
         <p className="text-card-foreground text-base font-semibold">
           {entry.meta.title}

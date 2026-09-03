@@ -32,7 +32,7 @@ const DocContent = ({ Content, baseDir = "", className = "" }) => {
     <DocAssetContext.Provider value={baseDir}>
       <MDXProvider components={mdxComponents}>
         <div
-          className={`prose prose-sm dark:prose-invert prose-headings:scroll-mt-20 prose-a:font-normal prose-img:rounded-md max-w-none ${className}`}
+          className={`prose prose-sm dark:prose-invert prose-headings:scroll-mt-20 prose-a:font-normal prose-img:rounded-md max-w-none text-left ${className}`}
         >
           <Content />
         </div>

@@ -63,7 +63,7 @@ const DocArticle = ({ feature, flow }) => {
   }
 
   return (
-    <article className="mx-auto max-w-3xl pb-24">
+    <article className="mx-auto max-w-3xl pb-24 text-left">
       <header className="mb-6">
         <p className="text-muted-foreground text-xs tracking-wide uppercase">
           {titleCase(feature)}
