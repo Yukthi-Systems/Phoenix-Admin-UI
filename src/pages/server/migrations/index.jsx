@@ -23,10 +23,13 @@ import ServerMigrationKanban from "./Kanban";
 import { Switch } from "@/components/common/Switch";
 import { useForm } from "react-hook-form";
 import { Zap, Hand, Info } from "lucide-react";
+import { userProfileAtom } from "@/store/userProfile";
+import AccessDenied from "@/components/common/AccessDenied";
 
 const ServerMigrations = () => {
   const [selectedServers, setSelectedServers] = useState([]);
   const serverList = useAtomValue(selectedServersAtom);
+  const { permissions = [] } = useAtomValue(userProfileAtom) || {};
 
   const { control, watch } = useForm({
     defaultValues: {
@@ -39,6 +42,10 @@ const ServerMigrations = () => {
   const handleServersChange = (servers) => {
     setSelectedServers(servers);
   };
+
+  if (!permissions.includes("mailbox:migration:view")) {
+    return <AccessDenied content="Don't have the access to view mail migrations" />;
+  }
 
   return (
     <div className="p-6 space-y-6">

@@ -380,7 +380,7 @@ export const navItems = [
         icon: <UploadCloud size={16} />,
         link: "/server/migrations",
         hasPermission: true,
-        permissionValue: "server:view",
+        permissionValue: "mailbox:migration:view",
       },
       {
         name: "Domain Status",

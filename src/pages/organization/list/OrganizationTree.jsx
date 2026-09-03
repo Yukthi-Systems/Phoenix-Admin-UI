@@ -635,7 +635,7 @@ const OrganizationTreeNode = ({
                       },
                     ]
                     : []),
-                  ...(userProfile?.organization_id !== organization.organization_id)
+                  ...(permissions.includes("organization:edit") && userProfile?.organization_id !== organization.organization_id)
                     ? [
                       {
                         label: "Manage Space",
@@ -644,7 +644,7 @@ const OrganizationTreeNode = ({
                         onClick: () => handleSpace(organization),
                         tooltip: "Space allocation",
                       }] : [],
-                  ...(userProfile?.organization_id !== organization.organization_id)
+                  ...(permissions.includes("organization:edit") && userProfile?.organization_id !== organization.organization_id)
                     ? [
                       {
                         label: "Manage Identities",
