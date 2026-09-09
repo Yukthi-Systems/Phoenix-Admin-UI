@@ -1,0 +1,422 @@
+[
+  {
+    "match": "/",
+    "step": null,
+    "file": "dashboard.md"
+  },
+  {
+    "match": "/organization",
+    "step": null,
+    "file": "organization/list.md"
+  },
+  {
+    "match": "/organization/:org_id",
+    "step": null,
+    "file": "organization/list.md"
+  },
+  {
+    "match": "/organization/add",
+    "step": 1,
+    "file": "organization/add/step-1.md"
+  },
+  {
+    "match": "/organization/add",
+    "step": 2,
+    "file": "organization/add/step-2.md"
+  },
+  {
+    "match": "/organization/add",
+    "step": 3,
+    "file": "organization/add/step-3.md"
+  },
+  {
+    "match": "/organization/add",
+    "step": 4,
+    "file": "organization/add/step-4.md"
+  },
+  {
+    "match": "/department",
+    "step": null,
+    "file": "department/list.md"
+  },
+  {
+    "match": "/department/:department_id",
+    "step": null,
+    "file": "department/list.md"
+  },
+  {
+    "match": "/department/add/",
+    "step": 1,
+    "file": "department/add/step-1.md"
+  },
+  {
+    "match": "/department/add/",
+    "step": 2,
+    "file": "department/add/step-2.md"
+  },
+  {
+    "match": "/department/add/",
+    "step": 3,
+    "file": "department/add/step-3.md"
+  },
+  {
+    "match": "/domain",
+    "step": null,
+    "file": "domain/list.md"
+  },
+  {
+    "match": "/domain/:domain_name",
+    "step": null,
+    "file": "domain/list.md"
+  },
+  {
+    "match": "/domain/edit/:domain_name",
+    "step": 1,
+    "file": "domain/edit/step-1.md"
+  },
+  {
+    "match": "/domain/edit/:domain_name",
+    "step": 2,
+    "file": "domain/edit/step-2.md"
+  },
+  {
+    "match": "/domain/edit/:domain_name",
+    "step": 3,
+    "file": "domain/edit/step-3.md"
+  },
+  {
+    "match": "/domain/edit/:domain_name",
+    "step": 4,
+    "file": "domain/edit/step-4.md"
+  },
+  {
+    "match": "/domain/add/",
+    "step": 1,
+    "file": "domain/add/step-1.md"
+  },
+  {
+    "match": "/domain/add/",
+    "step": 2,
+    "file": "domain/add/step-2.md"
+  },
+  {
+    "match": "/domain/add/",
+    "step": 3,
+    "file": "domain/add/step-3.md"
+  },
+  {
+    "match": "/domain/add/",
+    "step": 4,
+    "file": "domain/add/step-4.md"
+  },
+  {
+    "match": "/domain/add/",
+    "step": 5,
+    "file": "domain/add/step-5.md"
+  },
+  {
+    "match": "/identities",
+    "step": null,
+    "file": "identities/list.md"
+  },
+  {
+    "match": "/identities/:email",
+    "step": null,
+    "file": "identities/list.md"
+  },
+  {
+    "match": "/identities/add/:domain_name",
+    "step": 1,
+    "file": "identities/add/step-1.md"
+  },
+  {
+    "match": "/identities/add/:domain_name",
+    "step": 2,
+    "file": "identities/add/step-2.md"
+  },
+  {
+    "match": "/identities/add/:domain_name",
+    "step": 3,
+    "file": "identities/add/step-3.md"
+  },
+  {
+    "match": "/identities/add/:domain_name",
+    "step": 4,
+    "file": "identities/add/step-4.md"
+  },
+  {
+    "match": "/mailbox",
+    "step": null,
+    "file": "mailbox/list.md"
+  },
+  {
+    "match": "/mailbox/:email",
+    "step": null,
+    "file": "mailbox/list.md"
+  },
+  {
+    "match": "/mailbox/add/:domain_name",
+    "step": 1,
+    "file": "mailbox/add/step-1.md"
+  },
+  {
+    "match": "/mailbox/add/:domain_name",
+    "step": 2,
+    "file": "mailbox/add/step-2.md"
+  },
+  {
+    "match": "/mailbox/add/:domain_name",
+    "step": 3,
+    "file": "mailbox/add/step-3.md"
+  },
+  {
+    "match": "/chat/user",
+    "step": null,
+    "file": "chat/users.md"
+  },
+  {
+    "match": "/chat/user/add",
+    "step": null,
+    "file": "chat/users.md"
+  },
+  {
+    "match": "/chat/preference",
+    "step": null,
+    "file": "chat/preference.md"
+  },
+  {
+    "match": "/files/users",
+    "step": null,
+    "file": "files/users.md"
+  },
+  {
+    "match": "/files/preferences",
+    "step": null,
+    "file": "files/preferences.md"
+  },
+  {
+    "match": "/logs/audit-logs",
+    "step": null,
+    "file": "logs/audit-logs.md"
+  },
+  {
+    "match": "/logs/email-flow-logs",
+    "step": null,
+    "file": "logs/email-flow-logs.md"
+  },
+  {
+    "match": "/logs/email-login-attempts",
+    "step": null,
+    "file": "logs/email-login-attempts.md"
+  },
+  {
+    "match": "/email-client-sessions",
+    "step": null,
+    "file": "sessions/email-client-sessions.md"
+  },
+  {
+    "match": "/app-sessions",
+    "step": null,
+    "file": "sessions/app-sessions.md"
+  },
+  {
+    "match": "/sso-sessions",
+    "step": null,
+    "file": "sessions/sso-sessions.md"
+  },
+  {
+    "match": "/user/",
+    "step": null,
+    "file": "admin/users/list.md"
+  },
+  {
+    "match": "/user/:user_id",
+    "step": null,
+    "file": "admin/users/list.md"
+  },
+  {
+    "match": "/user/add/",
+    "step": 1,
+    "file": "admin/users/add/step-1.md"
+  },
+  {
+    "match": "/user/add/",
+    "step": 2,
+    "file": "admin/users/add/step-2.md"
+  },
+  {
+    "match": "/user/add/",
+    "step": 3,
+    "file": "admin/users/add/step-3.md"
+  },
+  {
+    "match": "/user/add/",
+    "step": 4,
+    "file": "admin/users/add/step-4.md"
+  },
+  {
+    "match": "/permissions-template/",
+    "step": null,
+    "file": "admin/permission-templates.md"
+  },
+  {
+    "match": "/permissions-template/add",
+    "step": null,
+    "file": "admin/permission-templates.md"
+  },
+  {
+    "match": "/status",
+    "step": null,
+    "file": "status.md"
+  },
+  {
+    "match": "/policies/general",
+    "step": null,
+    "file": "policy/general/list.md"
+  },
+  {
+    "match": "/policies/general/add/:domain_name",
+    "step": 1,
+    "file": "policy/general/add/step-1.md"
+  },
+  {
+    "match": "/policies/general/add/:domain_name",
+    "step": 2,
+    "file": "policy/general/add/step-2.md"
+  },
+  {
+    "match": "/policies/general/add/:domain_name",
+    "step": 3,
+    "file": "policy/general/add/step-3.md"
+  },
+  {
+    "match": "/policies/filters",
+    "step": null,
+    "file": "policy/filters/list.md"
+  },
+  {
+    "match": "/policies/filters/add/:domain_name",
+    "step": null,
+    "file": "policy/filters/add.md"
+  },
+  {
+    "match": "/policies/attachment",
+    "step": null,
+    "file": "policy/attachment/list.md"
+  },
+  {
+    "match": "/policies/attachments/add/:domain_name",
+    "step": 1,
+    "file": "policy/attachment/add/step-1.md"
+  },
+  {
+    "match": "/policies/attachments/add/:domain_name",
+    "step": 2,
+    "file": "policy/attachment/add/step-2.md"
+  },
+  {
+    "match": "/policies/attachments/add/:domain_name",
+    "step": 3,
+    "file": "policy/attachment/add/step-3.md"
+  },
+  {
+    "match": "/policies/forwarding",
+    "step": null,
+    "file": "policy/forwarding/list.md"
+  },
+  {
+    "match": "/policies/forwarding/add/:domain_name",
+    "step": 1,
+    "file": "policy/forwarding/add/step-1.md"
+  },
+  {
+    "match": "/policies/forwarding/add/:domain_name",
+    "step": 2,
+    "file": "policy/forwarding/add/step-2.md"
+  },
+  {
+    "match": "/policies/forwarding/add/:domain_name",
+    "step": 3,
+    "file": "policy/forwarding/add/step-3.md"
+  },
+  {
+    "match": "/policies/distribution",
+    "step": null,
+    "file": "policy/distribution/list.md"
+  },
+  {
+    "match": "/policies/distribution/add/:domain_name",
+    "step": 1,
+    "file": "policy/distribution/add/step-1.md"
+  },
+  {
+    "match": "/policies/distribution/add/:domain_name",
+    "step": 2,
+    "file": "policy/distribution/add/step-2.md"
+  },
+  {
+    "match": "/policies/distribution/add/:domain_name",
+    "step": 3,
+    "file": "policy/distribution/add/step-3.md"
+  },
+  {
+    "match": "/policies/restrictions",
+    "step": null,
+    "file": "policy/restrictions/list.md"
+  },
+  {
+    "match": "/policies/restrictions/add",
+    "step": 1,
+    "file": "policy/restrictions/add/step-1.md"
+  },
+  {
+    "match": "/policies/restrictions/add",
+    "step": 2,
+    "file": "policy/restrictions/add/step-2.md"
+  },
+  {
+    "match": "/policies/restrictions/add",
+    "step": 3,
+    "file": "policy/restrictions/add/step-3.md"
+  },
+  {
+    "match": "/caution",
+    "step": null,
+    "file": "caution/list.md"
+  },
+  {
+    "match": "/caution/add/",
+    "step": 1,
+    "file": "caution/add/step-1.md"
+  },
+  {
+    "match": "/caution/add/",
+    "step": 2,
+    "file": "caution/add/step-2.md"
+  },
+  {
+    "match": "/caution/add/",
+    "step": 3,
+    "file": "caution/add/step-3.md"
+  },
+  {
+    "match": "/disclaimer",
+    "step": null,
+    "file": "disclaimer/list.md"
+  },
+  {
+    "match": "/disclaimer/add/",
+    "step": 1,
+    "file": "disclaimer/add/step-1.md"
+  },
+  {
+    "match": "/disclaimer/add/",
+    "step": 2,
+    "file": "disclaimer/add/step-2.md"
+  },
+  {
+    "match": "/disclaimer/add/",
+    "step": 3,
+    "file": "disclaimer/add/step-3.md"
+  }
+]
