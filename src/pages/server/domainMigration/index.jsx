@@ -29,14 +29,23 @@ import {
   CheckCircle,
   X,
   ExternalLink,
+  Upload,
 } from "lucide-react";
 import { Button } from "@/components/common/Buttons";
 import { useToastify } from "@/hooks/useToastify";
 import { useLockDomain } from "@/hooks/useServer";
-import { getDomainLockStatus, getDomainMigrationStatus } from "@/api/servers";
+import {
+  getDomainLockStatus,
+  getDomainMigrationStatus,
+  lockDomain as lockDomainApi,
+} from "@/api/servers";
+import useBulkImport from "@/hooks/useImport";
+import BulkImportModal from "@/components/common/BulkImport";
+import { ImportActionLog } from "@/utils/importActionLog";
 import ServerSelector from "../migrations/ServerMultiSelector";
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/store/userProfile";
+import { userInfoAtom } from "@/store/userInfo";
 import AccessDenied from "@/components/common/AccessDenied";
 import { useNavigate } from "react-router-dom";
 
@@ -48,10 +57,80 @@ const DomainMigration = () => {
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
   const [currentAction, setCurrentAction] = useState(null);
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
+  const { organization_id } = useAtomValue(userInfoAtom) || {};
   const toast = useToastify();
   const { mutate: lockDomain, isPending: isLockingDomain } = useLockDomain();
   const navigate = useNavigate();
   const isLoading = isCheckingStatus || isLockingDomain;
+
+  // Bulk "Lock Domain" import: upload a CSV/Excel file whose rows carry a
+  // domain name and a comma-separated list of server IDs. Each row is locked
+  // via the same lockDomain endpoint the manual flow uses (is_locked: true).
+  const {
+    isImportModalOpen,
+    importConfig,
+    handleImport,
+    handleImportModalClose,
+    isImportAvailable,
+  } = useBulkImport("domain_locks", async ({ domain_name, server_ids }) =>
+    // addLog: false - the import writes one aggregate action log on completion
+    // instead of one per row, matching the other bulk-import flows.
+    lockDomainApi(domain_name, true, server_ids, false),
+  );
+
+  const canImport =
+    permissions.includes("domain:migration:view") && isImportAvailable;
+
+  const handleImportCompleteWithRefresh = (results) => {
+    const { successful = [], failed = [], total = 0 } = results;
+
+    // Mirror the completion toast the other bulk imports show (see
+    // handleImportComplete in hooks/useImport.js) with a domain-lock label.
+    if (failed.length === 0) {
+      toast(
+        "success",
+        `Locked ${successful.length} domain${successful.length !== 1 ? "s" : ""} successfully`,
+      );
+    } else if (successful.length === 0) {
+      toast("error", "Failed to lock all domains");
+    } else {
+      toast(
+        "warning",
+        `Locked ${successful.length} domain${successful.length !== 1 ? "s" : ""}. ${failed.length} failed.`,
+      );
+    }
+
+    // Audit-log the bulk action, same as every other import page.
+    ImportActionLog({
+      values: {
+        action_type: "import_domain_locks",
+        message: `Locked domains on servers via bulk import`,
+        payload: {
+          ...results,
+          total,
+          total_imported: successful.length || 0,
+          total_failed: failed.length || 0,
+        },
+        organization_id: organization_id,
+        details: {
+          organization_id: organization_id,
+        },
+      },
+    });
+
+    // If the currently displayed domain was part of the import, its lock
+    // status on screen is now stale - re-fetch it.
+    if (
+      domainStatus &&
+      successful.some(
+        (entry) =>
+          entry.item?.domain_name?.toLowerCase() ===
+          domainStatus.domain?.toLowerCase(),
+      )
+    ) {
+      handleCheckStatus();
+    }
+  };
 
   const handleCheckStatus = async () => {
     if (!domainName.trim()) {
@@ -183,13 +262,24 @@ const DomainMigration = () => {
     <>
       <div className="max-w-4xl mx-auto p-6 space-y-6">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-foreground">
-            Domain Status
-          </h1>
-          <p className="text-muted-foreground">
-            Check domain status and manage domain locking across servers
-          </p>
+        <div className="flex flex-col gap-4 text-left sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold text-foreground">Domain Status</h1>
+            <p className="text-sm text-muted-foreground">
+              Check domain status and manage domain locking across servers
+            </p>
+          </div>
+          {canImport && (
+            <Button
+              variant="outline"
+              onClick={handleImport}
+              disabled={isLoading}
+              icon={Upload}
+              className="flex-shrink-0"
+            >
+              Import Domain Locks
+            </Button>
+          )}
         </div>
 
         <div className="bg-card border rounded-lg p-6 space-y-4">
@@ -478,6 +568,15 @@ const DomainMigration = () => {
           </div>
         </div>
       )}
+
+      <BulkImportModal
+        isOpen={isImportModalOpen}
+        onClose={handleImportModalClose}
+        importConfig={importConfig}
+        title="Import Domain Locks"
+        description="Upload a CSV or Excel file to lock multiple domains on their mail servers. Each row needs a domain name and a comma-separated list of server IDs."
+        onComplete={handleImportCompleteWithRefresh}
+      />
     </>
   );
 };

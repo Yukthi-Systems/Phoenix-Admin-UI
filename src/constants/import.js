@@ -3280,6 +3280,73 @@ export const IMPORT_FIELD_MAPPINGS = {
     },
   ],
 
+  // Bulk "Lock Domain" import (server/domainMigration): each row locks one
+  // domain on one or more mail servers. Mirrors the manual Lock Domain flow -
+  // a domain name plus a server multi-select (max 10) - so the same rules are
+  // enforced here (valid domain, 1..10 well-formed, unique server IDs).
+  domain_locks: [
+    {
+      key: "domain_name",
+      header: "Domain Name",
+      csvHeader: "Domain Name",
+      type: "string",
+      required: true,
+      width: 30,
+      sampleValue: "example.com",
+      sampleValue2: "company.org",
+      validate: (value) => {
+        const trimmed = String(value).trim().toLowerCase();
+        if (!/^[a-zA-Z0-9][a-zA-Z0-9-_.]*\.[a-zA-Z]{2,}$/.test(trimmed)) {
+          throw new Error("Invalid domain name");
+        }
+        return trimmed;
+      },
+    },
+    {
+      key: "server_ids",
+      header: "Server IDs",
+      csvHeader: "Server IDs",
+      // Comma-separated list of the server IDs the domain should be locked on,
+      // e.g. "id1,id2,id3". The backend's lockDomain endpoint takes a plain
+      // array of server ID strings as its body - see lockDomain in
+      // src/api/servers.js.
+      type: "array",
+      required: true,
+      width: 70,
+      sampleValue: "530b2473-b224-5f54-9185-89189ee72df8",
+      sampleValue2:
+        "530b2473-b224-5f54-9185-89189ee72df8,7c9e6679-7425-40de-944b-e07fc1f90ae7",
+      validate: (value) => {
+        const ids = Array.isArray(value)
+          ? value.map((id) => String(id).trim()).filter(Boolean)
+          : String(value)
+              .split(",")
+              .map((id) => id.trim())
+              .filter(Boolean);
+
+        if (ids.length === 0) {
+          throw new Error("At least one Server ID is required");
+        }
+        if (ids.length > 10) {
+          throw new Error("A domain can be locked on at most 10 servers");
+        }
+
+        const seen = new Set();
+        ids.forEach((id) => {
+          if (!UUID_REGEX.test(id)) {
+            throw new Error(`Invalid Server ID: ${id}`);
+          }
+          if (seen.has(id)) {
+            throw new Error(`Duplicate Server ID: ${id}`);
+          }
+          seen.add(id);
+        });
+
+        return ids;
+      },
+    },
+  ],
+
   organizations: [
     {
       key: "name",
