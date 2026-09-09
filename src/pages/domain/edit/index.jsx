@@ -351,6 +351,7 @@ const EditDomain = () => {
         { name: "Edit Domain" },
       ]}
       steps={STEPS}
+      docId="domain/edit"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

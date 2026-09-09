@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-label="Domain details screenshot placeholder">
+  <rect width="1200" height="520" fill="#f1f5f9"/>
+  <rect x="40" y="40" width="1120" height="60" rx="8" fill="#e2e8f0"/>
+  <rect x="40" y="140" width="540" height="44" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="40" y="210" width="540" height="44" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <rect x="620" y="140" width="540" height="114" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="600" y="330" text-anchor="middle" font-family="system-ui, sans-serif" font-size="26" fill="#64748b">
+    Placeholder — replace src/docs/domain/assets/domain-details.svg
+  </text>
+  <text x="600" y="366" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" fill="#94a3b8">
+    with a real screenshot (PNG/JPG/WebP all work)
+  </text>
+</svg>

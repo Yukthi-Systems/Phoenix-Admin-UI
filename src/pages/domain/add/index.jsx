@@ -352,6 +352,7 @@ const AddDomain = () => {
           { name: "Add Domain" },
         ]}
         steps={STEPS}
+        docId="domain/create"
         currentStep={currentStep}
         completedSteps={completedSteps}
         onNext={() =>

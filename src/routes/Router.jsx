@@ -63,6 +63,7 @@ const FollowUpAdmin = lazyRetry(() => import("@/pages/tickets/admin/followUp"));
 // Main Pages
 const Dashboard = lazyRetry(() => import("@/pages/dashboard"));
 const MyProfile = lazyRetry(() => import("@/pages/profile"));
+const DocsPage = lazyRetry(() => import("@/pages/docs"));
 const Test = lazyRetry(() => import("@/pages/test"));
 
 // Domain Management
@@ -1354,6 +1355,24 @@ const Router = [
           {
             path: "/status",
             element: <StatusPage />,
+          },
+
+          // Documentation
+          {
+            path: "/docs",
+            element: (
+              <LazyWrapper>
+                <DocsPage />
+              </LazyWrapper>
+            ),
+          },
+          {
+            path: "/docs/:feature/:flow",
+            element: (
+              <LazyWrapper>
+                <DocsPage />
+              </LazyWrapper>
+            ),
           },
 
           // Chat routes

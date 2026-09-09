@@ -1,0 +1,27 @@
+---
+title: Review & create
+feature: domain
+flow: create
+step: 5
+summary: Confirm the configuration, create the domain, and verify DNS ownership.
+updated: 2026-09-03
+---
+
+## Review &amp; create
+
+The review screen summarises every value from the previous steps. Use the
+stepper at the top to jump back and fix anything before submitting.
+
+### After you click "Create Domain"
+
+1. The domain is created in an **inactive** state.
+2. A dialog shows a DNS **`TXT` verification record**.
+3. Add that record to the domain's DNS zone.
+4. Run the verification check in the dialog.
+5. On success the domain **activates** and you are taken to its detail page.
+
+<Callout type="tip">
+  DNS changes can take a few minutes to propagate. If verification fails
+  immediately, wait and retry — you can also close the dialog and finish
+  verification later from the domain list.
+</Callout>

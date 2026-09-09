@@ -98,6 +98,10 @@
 
 @import "tailwindcss";
 
+/* Typography plugin - `prose` classes used by the in-app documentation
+   viewer (src/components/docs). */
+@plugin "@tailwindcss/typography";
+
 /* Tailwind v4 defaults `dark:` to the `prefers-color-scheme` media query,
    which ignores the app's own light/dark toggle (a `.dark`/`.light` class
    on <html>, set by useApplyTheme). Repoint it at that class so `dark:`

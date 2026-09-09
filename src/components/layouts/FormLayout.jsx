@@ -21,6 +21,7 @@ import { BackButton } from "@/components/common/Buttons";
 import Stepper from "@/components/common/NewStepper";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import RequiredNote from "@/components/common/RequiredNote";
+import useDocTarget from "@/hooks/useDocTarget";
 
 /**
  * Enhanced FormLayout - Reusable layout that adapts for Single Step or Multi-Step forms.
@@ -49,7 +50,11 @@ const FormLayout = ({
   allowStepNavigation = true,
   showSubmitOnAllSteps = false,
   showStepper, // Optional: Force show/hide stepper manually
+  // "<feature>/<flow>" (e.g. "domain/create"). When docs exist for it, the
+  // header Help button opens a step-aware documentation drawer for this form.
+  docId,
 }) => {
+  useDocTarget(docId, steps.length > 1 ? currentStep : 1);
   const isLastStep = steps.length === 0 || currentStep === steps.length;
   // Auto-hide stepper if there is only one step, unless explicitly overridden
   const shouldShowStepper =
