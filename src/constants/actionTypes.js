@@ -226,6 +226,7 @@ export const ACTION_TYPES = {
   CREATE_EMAIL_SERVER_MAPPINGS: "create_email_server_mappings",
   GET_PFLOGSUM_REPORT: "get_pflogsum_report",
   UPDATE_DOMAIN_LOCK: "update_domain_lock",
+  IMPORT_DOMAIN_LOCKS: "import_domain_locks",
   UPDATE_MAILBOX_LOCK: "update_mailbox_lock",
 
   // User
@@ -448,6 +449,10 @@ export const ACTION_TYPE_GROUPS = [
       {
         label: "Update Domain Lock",
         value: ACTION_TYPES.UPDATE_DOMAIN_LOCK,
+      },
+      {
+        label: "Import Domain Locks",
+        value: ACTION_TYPES.IMPORT_DOMAIN_LOCKS,
       },
       {
         label: "Update Mailbox Lock",

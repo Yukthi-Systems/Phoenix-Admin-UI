@@ -528,7 +528,16 @@ export const getServerMigrationStats = async (server_id) => {
 
 //domain related
 
-export const lockDomain = async (domain_name, is_locked, servers) => {
+// addLog defaults to true for the single manual lock/unlock action. The bulk
+// "Import Domain Locks" flow passes false and writes one aggregate log itself
+// (see handleImportCompleteWithRefresh in server/domainMigration/index.jsx),
+// so it doesn't spam one log entry per row - same pattern as the other imports.
+export const lockDomain = async (
+  domain_name,
+  is_locked,
+  servers,
+  addLog = true,
+) => {
   const method = "POST";
   const url = `${API_URL}/server/lock/domain/${domain_name}?is_locked=${is_locked}`;
 
@@ -542,30 +551,34 @@ export const lockDomain = async (domain_name, is_locked, servers) => {
       data: servers,
     });
 
-    const lockStatus = is_locked ? "locked" : "unlocked";
-    await addLogs({
-      values: res,
-      type: "success",
-      method,
-      action_type: "update_domain_lock",
-      payload: { domain_name, is_locked, servers },
-      message: `Domain ${lockStatus} successfully - "${domain_name}"`,
-    });
+    if (addLog) {
+      const lockStatus = is_locked ? "locked" : "unlocked";
+      await addLogs({
+        values: res,
+        type: "success",
+        method,
+        action_type: "update_domain_lock",
+        payload: { domain_name, is_locked, servers },
+        message: `Domain ${lockStatus} successfully - "${domain_name}"`,
+      });
+    }
 
     return res.data;
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    const lockStatus = is_locked ? "lock" : "unlock";
-    await addLogs({
-      values: response,
-      type: "error",
-      method,
-      action_type: "update_domain_lock",
-      payload: { domain_name, is_locked, servers },
-      message: `Failed to ${lockStatus} domain - "${domain_name}"`,
-    });
+    if (addLog) {
+      const lockStatus = is_locked ? "lock" : "unlock";
+      await addLogs({
+        values: response,
+        type: "error",
+        method,
+        action_type: "update_domain_lock",
+        payload: { domain_name, is_locked, servers },
+        message: `Failed to ${lockStatus} domain - "${domain_name}"`,
+      });
+    }
 
     throw new Error(
       error?.response?.data?.message || "Failed to update domain lock status.",
