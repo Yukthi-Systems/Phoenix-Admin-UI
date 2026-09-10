@@ -189,6 +189,7 @@ const AddRestrictionPolicy = () => {
                 { name: "Add Restrictions Policy" },
             ]}
             steps={STEPS}
+            docId="policy/restriction-create"
             currentStep={currentStep}
             completedSteps={completedSteps}
             onNext={() =>

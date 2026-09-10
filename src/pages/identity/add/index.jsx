@@ -408,6 +408,7 @@ const AddIdentity = () => {
         { name: "Add E-Mail Identity" },
       ]}
       steps={STEPS}
+      docId="identity/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

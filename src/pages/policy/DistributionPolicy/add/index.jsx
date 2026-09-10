@@ -207,6 +207,7 @@ function AddDistributionPolicy() {
                 { name: "Add Distribution Policy" },
             ]}
             steps={STEPS}
+            docId="policy/distribution-create"
             currentStep={currentStep}
             completedSteps={completedSteps}
             onNext={() =>

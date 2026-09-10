@@ -277,6 +277,7 @@ const AddCaution = () => {
         { name: "Add Caution" },
       ]}
       steps={STEPS}
+      docId="caution/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

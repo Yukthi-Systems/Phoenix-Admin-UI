@@ -1,0 +1,59 @@
+---
+title: Permissions
+feature: user
+flow: create
+step: 2
+summary: The permission matrix — what this admin user can view, create, edit and delete.
+updated: 2026-09-10
+---
+
+## Permissions
+
+This is the biggest step: it decides exactly what this admin user can see and
+do. Permissions are grouped into categories, and each item within a category
+has up to four actions.
+
+### View, create, edit, delete
+
+- **View** — can see this item.
+- **Create** — can add a new one.
+- **Edit** — can change an existing one.
+- **Delete** — can remove one.
+
+Tick the boxes you want to grant. A dash (`—`) means the action does not apply
+to that item — a log, for example, can be viewed but never edited or deleted.
+Each category shows a running count (e.g. `0/18`) of how many boxes are ticked
+out of the total available, and has its own **Select all** button to grant every
+action in that category at once.
+
+### The categories
+
+- **Admin Management** — organisations, the organisation dashboard, support
+  tickets, support admin, admin API keys and the IMAP sync tool.
+- **User Management** — domains, departments, user identity, e-mail service
+  (mailboxes), chat service, file service and admin panel users.
+- **Customer Relationship Management (CRM)** — services, purchase orders and
+  invoices (view only).
+- **Server Management** — servers, mailbox migration, domain migration, e-mail
+  identity admin lookup, and admin maintenance / system alerts.
+- **Logs** — admin audits, e-mail service mail flow and e-mail service login
+  attempts (view only).
+- **All Policies &amp; Restrictions** — geo/IP restriction policy and every policy
+  type: general, filters, attachment, forwarding, distribution, disclaimer and
+  caution.
+- **Session Management** — the mailbox, Mail 25 app and SSO session screens.
+- **Admin User Security Management** — 2FA (email, SMS, TOTP), backup security
+  codes, admin password management, permissions configuration and permission
+  templates.
+
+<Callout type="danger" title="Sensitive permissions">
+  **Admin User Security Management** is marked **(Sensitive)** and highlighted in
+  amber. These permissions control other admin users' logins and security —
+  grant them only to people who genuinely administer the panel itself.
+</Callout>
+
+<Callout type="tip" title="Start from a template">
+  Use **Load Permission Template** at the top of the step to apply a predefined
+  set of permissions for a common role, instead of ticking everything by hand.
+  You can still adjust individual boxes afterwards.
+</Callout>

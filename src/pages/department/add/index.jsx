@@ -203,6 +203,7 @@ const AddDepartment = () => {
         { name: "Add Department" },
       ]}
       steps={STEPS}
+      docId="department/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

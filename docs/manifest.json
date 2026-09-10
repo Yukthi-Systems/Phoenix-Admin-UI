@@ -7,67 +7,92 @@
   {
     "match": "/organization",
     "step": null,
-    "file": "organization/list.md"
+    "file": "organization/list/list.md"
   },
   {
     "match": "/organization/:org_id",
     "step": null,
-    "file": "organization/list.md"
+    "file": "organization/list/list.md"
   },
   {
     "match": "/organization/add",
     "step": 1,
-    "file": "organization/add/step-1.md"
+    "file": "organization/create/step-1.md"
   },
   {
     "match": "/organization/add",
     "step": 2,
-    "file": "organization/add/step-2.md"
+    "file": "organization/create/step-2.md"
   },
   {
     "match": "/organization/add",
     "step": 3,
-    "file": "organization/add/step-3.md"
+    "file": "organization/create/step-3.md"
   },
   {
     "match": "/organization/add",
     "step": 4,
-    "file": "organization/add/step-4.md"
+    "file": "organization/create/step-4.md"
+  },
+  {
+    "match": "/organization/edit/:org_id",
+    "step": 1,
+    "file": "organization/edit/step-1.md"
+  },
+  {
+    "match": "/organization/edit/:org_id",
+    "step": 2,
+    "file": "organization/edit/step-2.md"
+  },
+  {
+    "match": "/organization/edit/:org_id",
+    "step": 3,
+    "file": "organization/edit/step-3.md"
   },
   {
     "match": "/department",
     "step": null,
-    "file": "department/list.md"
+    "file": "department/list/list.md"
   },
   {
     "match": "/department/:department_id",
     "step": null,
-    "file": "department/list.md"
+    "file": "department/list/list.md"
   },
   {
     "match": "/department/add/",
     "step": 1,
-    "file": "department/add/step-1.md"
+    "file": "department/create/step-1.md"
   },
   {
     "match": "/department/add/",
     "step": 2,
-    "file": "department/add/step-2.md"
+    "file": "department/create/step-2.md"
   },
   {
     "match": "/department/add/",
     "step": 3,
-    "file": "department/add/step-3.md"
+    "file": "department/create/step-3.md"
+  },
+  {
+    "match": "/department/edit/:department_id",
+    "step": 1,
+    "file": "department/edit/step-1.md"
+  },
+  {
+    "match": "/department/edit/:department_id",
+    "step": 2,
+    "file": "department/edit/step-2.md"
   },
   {
     "match": "/domain",
     "step": null,
-    "file": "domain/list.md"
+    "file": "domain/list/list.md"
   },
   {
     "match": "/domain/:domain_name",
     "step": null,
-    "file": "domain/list.md"
+    "file": "domain/list/list.md"
   },
   {
     "match": "/domain/edit/:domain_name",
@@ -92,82 +117,102 @@
   {
     "match": "/domain/add/",
     "step": 1,
-    "file": "domain/add/step-1.md"
+    "file": "domain/create/step-1.md"
   },
   {
     "match": "/domain/add/",
     "step": 2,
-    "file": "domain/add/step-2.md"
+    "file": "domain/create/step-2.md"
   },
   {
     "match": "/domain/add/",
     "step": 3,
-    "file": "domain/add/step-3.md"
+    "file": "domain/create/step-3.md"
   },
   {
     "match": "/domain/add/",
     "step": 4,
-    "file": "domain/add/step-4.md"
+    "file": "domain/create/step-4.md"
   },
   {
     "match": "/domain/add/",
     "step": 5,
-    "file": "domain/add/step-5.md"
+    "file": "domain/create/step-5.md"
   },
   {
     "match": "/identities",
     "step": null,
-    "file": "identities/list.md"
+    "file": "identities/list/list.md"
   },
   {
     "match": "/identities/:email",
     "step": null,
-    "file": "identities/list.md"
+    "file": "identities/list/list.md"
   },
   {
     "match": "/identities/add/:domain_name",
     "step": 1,
-    "file": "identities/add/step-1.md"
+    "file": "identities/create/step-1.md"
   },
   {
     "match": "/identities/add/:domain_name",
     "step": 2,
-    "file": "identities/add/step-2.md"
+    "file": "identities/create/step-2.md"
   },
   {
     "match": "/identities/add/:domain_name",
     "step": 3,
-    "file": "identities/add/step-3.md"
+    "file": "identities/create/step-3.md"
   },
   {
     "match": "/identities/add/:domain_name",
     "step": 4,
-    "file": "identities/add/step-4.md"
+    "file": "identities/create/step-4.md"
+  },
+  {
+    "match": "/identities/edit/:email",
+    "step": 1,
+    "file": "identities/edit/step-1.md"
+  },
+  {
+    "match": "/identities/edit/:email",
+    "step": 2,
+    "file": "identities/edit/step-2.md"
+  },
+  {
+    "match": "/identities/edit/:email",
+    "step": 3,
+    "file": "identities/edit/step-3.md"
   },
   {
     "match": "/mailbox",
     "step": null,
-    "file": "mailbox/list.md"
+    "file": "mailbox/list/list.md"
   },
   {
     "match": "/mailbox/:email",
     "step": null,
-    "file": "mailbox/list.md"
+    "file": "mailbox/list/list.md"
   },
   {
     "match": "/mailbox/add/:domain_name",
     "step": 1,
-    "file": "mailbox/add/step-1.md"
+    "file": "mailbox/create/step-1.md"
   },
   {
     "match": "/mailbox/add/:domain_name",
     "step": 2,
-    "file": "mailbox/add/step-2.md"
+    "file": "mailbox/create/step-2.md"
   },
   {
     "match": "/mailbox/add/:domain_name",
     "step": 3,
-    "file": "mailbox/add/step-3.md"
+    "file": "mailbox/create/step-3.md"
+  },
+  {
+    "match": "/mailbox/edit/:email",
+    "step": 1,
+    "file": "mailbox/edit/step-1.md"
   },
   {
     "match": "/chat/user",
@@ -187,7 +232,7 @@
   {
     "match": "/files/users",
     "step": null,
-    "file": "files/users.md"
+    "file": "files/list/list.md"
   },
   {
     "match": "/files/preferences",
@@ -227,32 +272,42 @@
   {
     "match": "/user/",
     "step": null,
-    "file": "admin/users/list.md"
+    "file": "admin/users/list/list.md"
   },
   {
     "match": "/user/:user_id",
     "step": null,
-    "file": "admin/users/list.md"
+    "file": "admin/users/list/list.md"
   },
   {
     "match": "/user/add/",
     "step": 1,
-    "file": "admin/users/add/step-1.md"
+    "file": "admin/users/create/step-1.md"
   },
   {
     "match": "/user/add/",
     "step": 2,
-    "file": "admin/users/add/step-2.md"
+    "file": "admin/users/create/step-2.md"
   },
   {
     "match": "/user/add/",
     "step": 3,
-    "file": "admin/users/add/step-3.md"
+    "file": "admin/users/create/step-3.md"
   },
   {
     "match": "/user/add/",
     "step": 4,
-    "file": "admin/users/add/step-4.md"
+    "file": "admin/users/create/step-4.md"
+  },
+  {
+    "match": "/user/edit/:user_id",
+    "step": 1,
+    "file": "admin/users/edit/step-1.md"
+  },
+  {
+    "match": "/user/edit/:user_id",
+    "step": 2,
+    "file": "admin/users/edit/step-2.md"
   },
   {
     "match": "/permissions-template/",
@@ -272,151 +327,226 @@
   {
     "match": "/policies/general",
     "step": null,
-    "file": "policy/general/list.md"
+    "file": "policy/general/list/list.md"
   },
   {
     "match": "/policies/general/add/:domain_name",
     "step": 1,
-    "file": "policy/general/add/step-1.md"
+    "file": "policy/general/create/step-1.md"
   },
   {
     "match": "/policies/general/add/:domain_name",
     "step": 2,
-    "file": "policy/general/add/step-2.md"
+    "file": "policy/general/create/step-2.md"
   },
   {
     "match": "/policies/general/add/:domain_name",
     "step": 3,
-    "file": "policy/general/add/step-3.md"
+    "file": "policy/general/create/step-3.md"
+  },
+  {
+    "match": "/policies/general/edit/:general_policy_id",
+    "step": 1,
+    "file": "policy/general/edit/step-1.md"
+  },
+  {
+    "match": "/policies/general/edit/:general_policy_id",
+    "step": 2,
+    "file": "policy/general/edit/step-2.md"
   },
   {
     "match": "/policies/filters",
     "step": null,
-    "file": "policy/filters/list.md"
+    "file": "policy/filters/list/list.md"
   },
   {
     "match": "/policies/filters/add/:domain_name",
     "step": null,
-    "file": "policy/filters/add.md"
+    "file": "policy/filters/create.md"
+  },
+  {
+    "match": "/policies/filters/edit/:filters_policy_id",
+    "step": null,
+    "file": "policy/filters/edit/edit.md"
   },
   {
     "match": "/policies/attachment",
     "step": null,
-    "file": "policy/attachment/list.md"
+    "file": "policy/attachment/list/list.md"
   },
   {
     "match": "/policies/attachments/add/:domain_name",
     "step": 1,
-    "file": "policy/attachment/add/step-1.md"
+    "file": "policy/attachment/create/step-1.md"
   },
   {
     "match": "/policies/attachments/add/:domain_name",
     "step": 2,
-    "file": "policy/attachment/add/step-2.md"
+    "file": "policy/attachment/create/step-2.md"
   },
   {
     "match": "/policies/attachments/add/:domain_name",
     "step": 3,
-    "file": "policy/attachment/add/step-3.md"
+    "file": "policy/attachment/create/step-3.md"
+  },
+  {
+    "match": "/policies/attachments/edit/:policy_id/:domain_name",
+    "step": 1,
+    "file": "policy/attachment/edit/step-1.md"
+  },
+  {
+    "match": "/policies/attachments/edit/:policy_id/:domain_name",
+    "step": 2,
+    "file": "policy/attachment/edit/step-2.md"
   },
   {
     "match": "/policies/forwarding",
     "step": null,
-    "file": "policy/forwarding/list.md"
+    "file": "policy/forwarding/list/list.md"
   },
   {
     "match": "/policies/forwarding/add/:domain_name",
     "step": 1,
-    "file": "policy/forwarding/add/step-1.md"
+    "file": "policy/forwarding/create/step-1.md"
   },
   {
     "match": "/policies/forwarding/add/:domain_name",
     "step": 2,
-    "file": "policy/forwarding/add/step-2.md"
+    "file": "policy/forwarding/create/step-2.md"
   },
   {
     "match": "/policies/forwarding/add/:domain_name",
     "step": 3,
-    "file": "policy/forwarding/add/step-3.md"
+    "file": "policy/forwarding/create/step-3.md"
+  },
+  {
+    "match": "/policies/forwarding/edit/:policy_forwarding_id",
+    "step": 1,
+    "file": "policy/forwarding/edit/step-1.md"
+  },
+  {
+    "match": "/policies/forwarding/edit/:policy_forwarding_id",
+    "step": 2,
+    "file": "policy/forwarding/edit/step-2.md"
   },
   {
     "match": "/policies/distribution",
     "step": null,
-    "file": "policy/distribution/list.md"
+    "file": "policy/distribution/list/list.md"
   },
   {
     "match": "/policies/distribution/add/:domain_name",
     "step": 1,
-    "file": "policy/distribution/add/step-1.md"
+    "file": "policy/distribution/create/step-1.md"
   },
   {
     "match": "/policies/distribution/add/:domain_name",
     "step": 2,
-    "file": "policy/distribution/add/step-2.md"
+    "file": "policy/distribution/create/step-2.md"
   },
   {
     "match": "/policies/distribution/add/:domain_name",
     "step": 3,
-    "file": "policy/distribution/add/step-3.md"
+    "file": "policy/distribution/create/step-3.md"
+  },
+  {
+    "match": "/policies/distribution/edit/:policy_distribution_id",
+    "step": 1,
+    "file": "policy/distribution/edit/step-1.md"
+  },
+  {
+    "match": "/policies/distribution/edit/:policy_distribution_id",
+    "step": 2,
+    "file": "policy/distribution/edit/step-2.md"
   },
   {
     "match": "/policies/restrictions",
     "step": null,
-    "file": "policy/restrictions/list.md"
+    "file": "policy/restrictions/list/list.md"
   },
   {
     "match": "/policies/restrictions/add",
     "step": 1,
-    "file": "policy/restrictions/add/step-1.md"
+    "file": "policy/restrictions/create/step-1.md"
   },
   {
     "match": "/policies/restrictions/add",
     "step": 2,
-    "file": "policy/restrictions/add/step-2.md"
+    "file": "policy/restrictions/create/step-2.md"
   },
   {
     "match": "/policies/restrictions/add",
     "step": 3,
-    "file": "policy/restrictions/add/step-3.md"
+    "file": "policy/restrictions/create/step-3.md"
+  },
+  {
+    "match": "/policies/restrictions/edit/:policy_restrictions_id",
+    "step": 1,
+    "file": "policy/restrictions/edit/step-1.md"
+  },
+  {
+    "match": "/policies/restrictions/edit/:policy_restrictions_id",
+    "step": 2,
+    "file": "policy/restrictions/edit/step-2.md"
   },
   {
     "match": "/caution",
     "step": null,
-    "file": "caution/list.md"
+    "file": "caution/list/list.md"
   },
   {
     "match": "/caution/add/",
     "step": 1,
-    "file": "caution/add/step-1.md"
+    "file": "caution/create/step-1.md"
   },
   {
     "match": "/caution/add/",
     "step": 2,
-    "file": "caution/add/step-2.md"
+    "file": "caution/create/step-2.md"
   },
   {
     "match": "/caution/add/",
     "step": 3,
-    "file": "caution/add/step-3.md"
+    "file": "caution/create/step-3.md"
+  },
+  {
+    "match": "/caution/edit/:caution_id",
+    "step": 1,
+    "file": "caution/edit/step-1.md"
+  },
+  {
+    "match": "/caution/edit/:caution_id",
+    "step": 2,
+    "file": "caution/edit/step-2.md"
   },
   {
     "match": "/disclaimer",
     "step": null,
-    "file": "disclaimer/list.md"
+    "file": "disclaimer/list/list.md"
   },
   {
     "match": "/disclaimer/add/",
     "step": 1,
-    "file": "disclaimer/add/step-1.md"
+    "file": "disclaimer/create/step-1.md"
   },
   {
     "match": "/disclaimer/add/",
     "step": 2,
-    "file": "disclaimer/add/step-2.md"
+    "file": "disclaimer/create/step-2.md"
   },
   {
     "match": "/disclaimer/add/",
     "step": 3,
-    "file": "disclaimer/add/step-3.md"
+    "file": "disclaimer/create/step-3.md"
+  },
+  {
+    "match": "/disclaimer/edit/:disclaimer_id",
+    "step": 1,
+    "file": "disclaimer/edit/step-1.md"
+  },
+  {
+    "match": "/disclaimer/edit/:disclaimer_id",
+    "step": 2,
+    "file": "disclaimer/edit/step-2.md"
   }
 ]

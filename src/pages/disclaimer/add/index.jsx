@@ -266,6 +266,7 @@ const AddDisclaimer = () => {
         { name: "Add Disclaimer" },
       ]}
       steps={STEPS}
+      docId="disclaimer/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

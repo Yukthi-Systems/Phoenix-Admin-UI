@@ -273,6 +273,7 @@ const AddUser = () => {
         { name: "Add User" },
       ]}
       steps={STEPS}
+      docId="user/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

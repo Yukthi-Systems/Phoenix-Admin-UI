@@ -1,0 +1,41 @@
+---
+title: Blocking and exceptions
+feature: policy
+flow: general-create
+step: 2
+summary: The four blocking toggles, their exception lists, and the outgoing size limit.
+updated: 2026-09-10
+---
+
+## Blocking and exceptions
+
+This step is split into four matching sections — incoming email, outgoing
+email, incoming domain and outgoing domain — plus one size limit.
+
+### Emails blocked (incoming / outgoing)
+
+Turn this on to block **all** incoming (or outgoing) mail under this policy,
+except any addresses you list below it as exceptions.
+
+### Exception emails (incoming / outgoing)
+
+Specific email addresses that are let through even while the matching blocked
+toggle above is on. Type an address and click **Add**.
+
+### Domains blocked (incoming / outgoing)
+
+The same idea, but blocking by whole domain instead of a single address.
+
+### Exception domains (incoming / outgoing)
+
+Specific domains let through even while the matching domains-blocked toggle is
+on. Type a domain and click **Add**.
+
+### Outgoing size limit (MB)
+
+The largest outgoing email this policy allows, in megabytes.
+
+<Callout type="info">
+  The four blocked toggles are independent — you can turn on any combination of
+  them, and each keeps its own exception list.
+</Callout>

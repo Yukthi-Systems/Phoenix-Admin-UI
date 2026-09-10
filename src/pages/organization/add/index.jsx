@@ -394,6 +394,7 @@ const AddOrganization = () => {
         { name: "Add Organization" },
       ]}
       steps={filteredSteps}
+      docId="organization/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

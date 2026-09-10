@@ -8,7 +8,7 @@ Where to find it: click Identity Management in the left menu, then Identities.
 
 This page lists every identity that belongs to the domain currently selected at the top right.
 
-![The Identities list.](../images/identity-list.png)
+![The Identities list.](../../images/identity-list.png)
 
 *The Identities list.*
 
@@ -22,7 +22,7 @@ This page lists every identity that belongs to the domain currently selected at 
 
 Click the domain name box (top right, next to Actions) to switch domains:
 
-![Choosing which domain's identities to view.](../images/identity-choose-domain.png)
+![Choosing which domain's identities to view.](../../images/identity-choose-domain.png)
 
 *Choosing which domain's identities to view.*
 
@@ -32,7 +32,7 @@ Click the domain name box (top right, next to Actions) to switch domains:
 
 Click the ⋮ (three dots) at the end of any identity's row:
 
-![The row actions menu on an identity.](../images/identity-row-menu.png)
+![The row actions menu on an identity.](../../images/identity-row-menu.png)
 
 *The row actions menu on an identity.*
 
@@ -47,7 +47,7 @@ Click the ⋮ (three dots) at the end of any identity's row:
 
 Click the Actions button (top right) for ways to work with identities in bulk:
 
-![The Actions menu.](../images/identity-actions-menu.png)
+![The Actions menu.](../../images/identity-actions-menu.png)
 
 *The Actions menu.*
 
