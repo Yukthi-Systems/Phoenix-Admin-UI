@@ -8,7 +8,7 @@ Where to find it: click Mailbox in the left menu.
 
 This page lists every mailbox that belongs to the domain currently selected at the top right.
 
-![The Mailbox list.](../images/mailbox-list.png)
+![The Mailbox list.](../../images/mailbox-list.png)
 
 *The Mailbox list.*
 
@@ -22,7 +22,7 @@ This page lists every mailbox that belongs to the domain currently selected at t
 
 Click the ⋮ (three dots) at the end of any mailbox's row:
 
-![The row actions menu on a mailbox.](../images/mailbox-row-menu.png)
+![The row actions menu on a mailbox.](../../images/mailbox-row-menu.png)
 
 *The row actions menu on a mailbox.*
 
@@ -39,7 +39,7 @@ Click the ⋮ (three dots) at the end of any mailbox's row:
 
 Click the Actions button (top right) for ways to work with mailboxes in bulk:
 
-![The Actions menu.](../images/mailbox-actions-menu.png)
+![The Actions menu.](../../images/mailbox-actions-menu.png)
 
 *The Actions menu.*
 
