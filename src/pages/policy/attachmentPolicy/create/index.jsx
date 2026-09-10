@@ -211,6 +211,7 @@ const AddAttachmentPolicy = () => {
         { name: "Add Attachment Policy" },
       ]}
       steps={STEPS}
+      docId="policy/attachment-create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

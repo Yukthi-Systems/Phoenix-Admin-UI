@@ -215,6 +215,7 @@ function AddForwardingPolicy() {
                 { name: "Add Forwarding Policy" },
             ]}
             steps={STEPS}
+            docId="policy/forwarding-create"
             currentStep={currentStep}
             completedSteps={completedSteps}
             onNext={() =>

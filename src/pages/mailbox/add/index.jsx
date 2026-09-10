@@ -215,6 +215,7 @@ const AddMailbox = () => {
         { name: "Add Mailbox" },
       ]}
       steps={STEPS}
+      docId="mailbox/create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>

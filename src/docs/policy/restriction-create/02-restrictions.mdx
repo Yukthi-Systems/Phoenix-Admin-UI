@@ -1,0 +1,30 @@
+---
+title: Access restrictions
+feature: policy
+flow: restriction-create
+step: 2
+summary: Restrict access by country/region, by IP range, or both.
+updated: 2026-09-10
+---
+
+## Access restrictions
+
+Both fields are optional and work independently — you can set one, both, or
+neither.
+
+### Geo location
+
+Pick a country or region from the dropdown and click **Add** to restrict access
+based on where the connection comes from. You can add more than one.
+
+### IP address
+
+Type an IP address, choose its subnet size from the dropdown next to it (e.g.
+`24`), and click **Add** to restrict access by IP range. You can add more than
+one.
+
+<Callout type="warning">
+  Restrictions apply to the identities this policy is attached to. Check the
+  ranges carefully before applying it to someone who travels, or you will lock
+  them out of their own mail.
+</Callout>

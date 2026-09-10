@@ -1,0 +1,40 @@
+---
+title: Configuration
+feature: policy
+flow: filters-create
+step: 1
+summary: Name the policy and build its allowed and blocked lists.
+updated: 2026-09-10
+---
+
+## Configuration
+
+### Domain
+
+The domain this policy belongs to. It is set to the domain you currently have
+selected and cannot be changed here.
+
+### Policy name
+
+A name for this policy, so you can recognise it in the list. It accepts letters,
+numbers, spaces, hyphens (`-`) and underscores (`_`) only.
+
+### Active
+
+On by default, so the policy applies as soon as it is created. Turn it off to
+set it up now and switch it on later.
+
+### Allowed list (white entries)
+
+Email addresses or domains that are always let through. Type one and click
+**Add**.
+
+### Blocked list (black entries)
+
+Email addresses or domains that are always denied. Type one and click **Add**.
+
+<Callout type="warning" title="At least one entry is required">
+  You must add at least one entry, in either list. Entries also cannot conflict
+  with each other — you cannot allow a whole domain while blocking a single
+  address on that same domain, or the other way around.
+</Callout>

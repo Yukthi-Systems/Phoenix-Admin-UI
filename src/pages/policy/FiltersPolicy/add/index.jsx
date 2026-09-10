@@ -165,6 +165,7 @@ const AddFiltersPolicy = () => {
         { name: "Add Filters policy" },
       ]}
       steps={STEPS}
+      docId="policy/filters-create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() => handleStepNavigation(1)} // Single step

@@ -1,0 +1,31 @@
+---
+title: File types
+feature: policy
+flow: attachment-create
+step: 2
+summary: The allowed and blocked file extension lists, and how the default block list works.
+updated: 2026-09-10
+---
+
+## File types
+
+### Allowed extensions
+
+File types that are always let through. Type an extension and press
+<kbd>Enter</kbd> or comma to add it, or drag one across from the blocked list.
+
+### Blocked extensions
+
+File types that are always rejected. A long list of commonly dangerous
+extensions — `.exe`, `.bat` and similar — is blocked by default for security.
+
+<Callout type="warning" title="The default blocked types can only be moved, not deleted">
+  You can add your own extensions to the blocked list and remove those again,
+  but the pre-blocked security defaults can only be removed by dragging them
+  into **Allowed**. Do that only when you are certain it is safe.
+</Callout>
+
+<Callout type="tip">
+  Extensions are lower-cased and stripped of their leading dot as you add them,
+  so `PDF` and `.pdf` both become `pdf`.
+</Callout>

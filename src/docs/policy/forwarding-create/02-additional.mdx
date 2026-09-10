@@ -1,0 +1,34 @@
+---
+title: Additional settings
+feature: policy
+flow: forwarding-create
+step: 2
+summary: Where mail is forwarded, and the optional sender and subject filters.
+updated: 2026-09-10
+---
+
+## Additional settings
+
+Everything on this step is optional — leave any field empty and that part of the
+rule simply does not apply.
+
+### Forward to emails
+
+Where matching mail gets forwarded. Pick an existing mailbox from the dropdown
+or type an email address, then click **Add**. You can add more than one.
+
+### From emails
+
+Only forward mail coming from these senders or domains. Leave empty to forward
+mail from any sender.
+
+### Specific email subject
+
+Only forward mail whose subject line matches an entry here. Leave empty to
+forward mail with any subject.
+
+<Callout type="tip">
+  The **from** and **subject** filters combine — leaving both empty forwards
+  everything the mailbox receives, which is rarely what you want on a busy
+  mailbox.
+</Callout>

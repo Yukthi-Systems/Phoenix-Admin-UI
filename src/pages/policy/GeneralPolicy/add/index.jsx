@@ -210,6 +210,7 @@ const AddGeneralPolicy = () => {
         { name: "Add General Policy" },
       ]}
       steps={STEPS}
+      docId="policy/general-create"
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() =>
