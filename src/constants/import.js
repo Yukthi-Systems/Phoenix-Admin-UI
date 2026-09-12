@@ -1935,7 +1935,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue: "example.com",
       sampleValue2: "company.org",
       validate: (value) => {
-        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(value)) {
+        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(value)) {
           throw new Error("Invalid domain name format");
         }
         return value.trim();
@@ -2050,7 +2050,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       validate: (value) => {
         if (Array.isArray(value)) {
           value.forEach((domain) => {
-            if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(domain)) {
+            if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(domain)) {
               throw new Error(`Invalid domain format: ${domain}`);
             }
           });
@@ -2143,7 +2143,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       validate: (value) => {
         if (Array.isArray(value)) {
           value.forEach((domain) => {
-            if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(domain)) {
+            if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(domain)) {
               throw new Error(`Invalid domain format: ${domain}`);
             }
           });
@@ -2220,7 +2220,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue: "example.com",
       sampleValue2: "company.org",
       validate: (value) => {
-        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(value)) {
+        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(value)) {
           throw new Error("Invalid domain name format");
         }
         return value.trim();
@@ -2265,8 +2265,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (Array.isArray(value)) {
           value.forEach((entry) => {
             const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(entry);
-            const isDomain =
-              /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(entry);
+            const isDomain = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(
+              entry,
+            );
             if (!isEmail && !isDomain) {
               throw new Error(
                 `Invalid entry format (must be email or domain): ${entry}`,
@@ -2297,8 +2298,9 @@ export const IMPORT_FIELD_MAPPINGS = {
         if (Array.isArray(value)) {
           value.forEach((entry) => {
             const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(entry);
-            const isDomain =
-              /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(entry);
+            const isDomain = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(
+              entry,
+            );
             if (!isEmail && !isDomain) {
               throw new Error(
                 `Invalid entry format (must be email or domain): ${entry}`,
@@ -2528,7 +2530,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue: "example.com",
       sampleValue2: "company.org",
       validate: (value) => {
-        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(value)) {
+        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(value)) {
           throw new Error("Invalid domain name format");
         }
         return value.trim();
@@ -2744,7 +2746,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue: "example.com",
       sampleValue2: "company.org",
       validate: (value) => {
-        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(value)) {
+        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(value)) {
           throw new Error("Invalid domain name format");
         }
         return value.trim();
@@ -2875,7 +2877,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       sampleValue: "example.com",
       sampleValue2: "company.org",
       validate: (value) => {
-        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/.test(value)) {
+        if (!/^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/.test(value)) {
           throw new Error("Invalid domain name format");
         }
         return value.trim();

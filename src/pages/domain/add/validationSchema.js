@@ -71,7 +71,7 @@ export const domainFormSchema = yup.object().shape({
     .required("Domain name is required")
     .max(254, "Domain name must not exceed 254 characters")
     .matches(
-      /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,6}?$/,
+      /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/,
       "Invalid domain name",
     ),
 
