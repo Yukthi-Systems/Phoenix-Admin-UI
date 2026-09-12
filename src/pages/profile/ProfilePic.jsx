@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { Camera, Loader2, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -70,6 +70,23 @@ const ProfilePicture = ({
 
   const { data: profilePictureData, isLoading: isPictureLoading } =
     useGetProfilePictureUrl(targetOrgId, targetUserId);
+
+  // getProfilePictureUrl() creates a fresh blob: URL on every fetch - revoke
+  // the previous one once a new one replaces it (e.g. after a re-upload) so
+  // they don't pile up. Only fires on an actual URL change, not on unmount,
+  // since the query result now stays cached (see useGetProfilePictureUrl)
+  // and may still be in use by another mounted instance of this component.
+  const previousBlobUrlRef = useRef(null);
+  useEffect(() => {
+    const currentUrl = profilePictureData?.url;
+    const previousUrl = previousBlobUrlRef.current;
+    if (previousUrl && previousUrl !== currentUrl) {
+      URL.revokeObjectURL(previousUrl);
+    }
+    previousBlobUrlRef.current = currentUrl?.startsWith("blob:")
+      ? currentUrl
+      : null;
+  }, [profilePictureData?.url]);
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
   const ALLOWED_TYPES = ["image/png"];

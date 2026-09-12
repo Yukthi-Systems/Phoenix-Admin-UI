@@ -18,6 +18,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAtomValue } from "jotai";
+import { useQueryClient } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { userProfileAtom } from "@/store/userProfile";
@@ -101,6 +102,7 @@ const AddUser = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useAddUser();
   const toast = useToastify();
+  const queryClient = useQueryClient();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -124,16 +126,14 @@ const AddUser = () => {
     mode: "onChange",
   });
 
-
   useEffect(() => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if(timezone == 'Asia/Calcutta') {
-      setValue("user_details.timezone", 'Asia/Kolkata');
-    }else{
+    if (timezone == "Asia/Calcutta") {
+      setValue("user_details.timezone", "Asia/Kolkata");
+    } else {
       setValue("user_details.timezone", timezone);
     }
   }, []);
-
 
   const validateStep = async (stepNumber) => {
     const fieldsToValidate = getRequiredFieldsForStep(stepNumber);
@@ -220,22 +220,26 @@ const AddUser = () => {
     delete data.password;
     delete data.confirm_password;
 
-    mutate(data, {
-      onSuccess: () => {
-        toast("success", "Successfully added user");
-        navigate(`/user`);
+    mutate(
+      { data },
+      {
+        onSuccess: () => {
+          toast("success", "Successfully added user");
+          queryClient.invalidateQueries({ queryKey: ["users"] });
+          navigate(`/user`);
+        },
+        onError: (error) => {
+          const message =
+            error.response?.data?.message || error.message || "Unknown error";
+          const tracebackId = error.response?.data?.traceback_id;
+          toast(
+            "error",
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+          );
+          console.error(error);
+        },
       },
-      onError: (error) => {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
-        const tracebackId = error.response?.data?.traceback_id;
-        toast(
-          "error",
-          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-        );
-        console.error(error);
-      },
-    });
+    );
   };
 
   if (!permissions.includes("user:create")) {

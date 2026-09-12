@@ -59,7 +59,7 @@ export const getUsers = async (org_id, page, pageSize) => {
   }
 };
 
-export const addUser = async (data) => {
+export const addUser = async (data, addLog = true) => {
   const method = "POST";
   const url = `${API_URL}/user/create`;
   const cleanData = trimInput(data);
@@ -76,6 +76,7 @@ export const addUser = async (data) => {
     if (res.status !== 201)
       throw new Error(res?.data?.message || "Failed to create user.");
 
+    if (!addLog) return res.data;
     const userName =
       data?.username || data?.user_name || data?.email || "New User";
     await addLogs({
@@ -91,6 +92,9 @@ export const addUser = async (data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
+
+    if (!addLog)
+      throw new Error(response?.data?.message || "Failed to create user.");
 
     const userName =
       data?.username || data?.user_name || data?.email || "Unknown User";
@@ -614,4 +618,3 @@ export const updateSSOSessionStatus = async (domain, sessionId, isActive) => {
     throw new Error("Failed to update SSO session status");
   }
 };
-

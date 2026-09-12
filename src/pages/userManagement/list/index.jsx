@@ -26,7 +26,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDeleteUser, useGetUsers } from "@/hooks/useUser";
+import { useAddUser, useDeleteUser, useGetUsers } from "@/hooks/useUser";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import {
   IconButton,
@@ -39,7 +39,10 @@ import DataFechError from "@/components/common/DataFechError";
 import { ActiveStatus, InactiveStatus } from "@/components/common/Status";
 import DeleteModelBox from "@/components/common/DeleteModelBox";
 import BulkDeleteModal from "@/components/common/BulkDeleteModal";
+import BulkImportModal from "@/components/common/BulkImport";
 import DropdownButton from "@/components/common/DropdownButton";
+import useBulkImport from "@/hooks/useImport";
+import { ImportActionLog } from "@/utils/importActionLog";
 import { useToastify } from "@/hooks/useToastify";
 import Table from "@/components/shared/Table";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
@@ -64,7 +67,11 @@ import { useTablePagination } from "@/hooks/useTablePagination";
 
 const ListUsers = () => {
   const { t } = useTranslation();
-  const { permissions, user_id: userID } = useAtomValue(userProfileAtom);
+  const {
+    permissions,
+    user_id: userID,
+    permissions_template: UserTemplate = {},
+  } = useAtomValue(userProfileAtom);
   const { organization_id } = useAtomValue(userInfoAtom);
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -80,6 +87,7 @@ const ListUsers = () => {
   const { pagination, onPaginationChange: setPagination } =
     useTablePagination();
   const { mutate, isPending } = useDeleteUser();
+  const { mutate: createUser } = useAddUser();
   const toast = useToastify();
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useGetUsers(
@@ -94,6 +102,67 @@ const ListUsers = () => {
 
   const totalPages = data?.total_pages ?? 1;
   const totalCount = data?.total_records_count ?? 0;
+
+  const {
+    isImportModalOpen,
+    importConfig,
+    handleImport,
+    handleImportModalClose,
+    handleImportComplete,
+    isImportAvailable,
+  } = useBulkImport("users", async (userData) => {
+    // Matches the exact payload built by the single Add User flow
+    // (userManagement/add/index.jsx onSubmit). "Permission Template" is an
+    // optional column naming one of this org's configured templates
+    // (userProfileAtom.permissions_template, the same dict the "Load
+    // Permission Template" dropdown on the manual Add User/Change
+    // Permissions forms reads from) - matched case-insensitively since it's
+    // hand-typed in a spreadsheet. Left blank, the row gets no permissions,
+    // same as skipping the Permissions step manually; access can be granted
+    // afterwards via the per-row "Change Permissions" action.
+    const templateName = String(userData.permission_template || "").trim();
+    let resolvedPermissions = [];
+    let resolvedPermissionsTemplate = {};
+
+    if (templateName) {
+      const matchedKey = Object.keys(UserTemplate || {}).find(
+        (key) => key.toLowerCase() === templateName.toLowerCase(),
+      );
+      if (!matchedKey) {
+        const available = Object.keys(UserTemplate || {}).join(", ") || "none";
+        throw new Error(
+          `Permission Template "${templateName}" not found. Available templates: ${available}`,
+        );
+      }
+      resolvedPermissions = [...(UserTemplate[matchedKey] || [])];
+      resolvedPermissionsTemplate = { [matchedKey]: UserTemplate[matchedKey] };
+    }
+
+    const payload = {
+      user_name: userData.user_name,
+      display_name: userData.display_name,
+      user_email: userData.user_email,
+      primary_phone_number_with_country_code:
+        userData.primary_phone_number_with_country_code,
+      activate: userData.activate,
+      user_details: userData.user_details,
+      base64_password: btoa(userData.password),
+      permissions: resolvedPermissions,
+      permissions_template: resolvedPermissionsTemplate,
+      organization_id,
+      ui_info: {},
+    };
+
+    return new Promise((resolve, reject) => {
+      createUser(
+        { data: payload, addLog: false },
+        {
+          onSuccess: (result) => resolve(result),
+          onError: (error) => reject(error),
+        },
+      );
+    });
+  });
 
   const {
     selectedCount,
@@ -313,6 +382,25 @@ const ListUsers = () => {
     navigate("/user/add/");
   };
 
+  const handleImportCompleteWithRefresh = (results) => {
+    handleImportComplete(results);
+    const ActionLog = {
+      action_type: "import_users",
+      message: `Imported users via bulk import`,
+      payload: {
+        ...results,
+        total_imported: results.successful.length || 0,
+        total_failed: results.failed.length || 0,
+      },
+      organization_id: organization_id,
+      details: {
+        organization_id: organization_id,
+      },
+    };
+    ImportActionLog({ values: ActionLog });
+    queryClient.invalidateQueries(["users", organization_id]);
+  };
+
   const OnDelete = () => {
     const queryParams = {
       user_id: deleteId,
@@ -447,8 +535,17 @@ const ListUsers = () => {
       });
     }
 
+    if (permissions.includes("user:create") && isImportAvailable) {
+      options.push({
+        label: "Import",
+        description: "Import multiple users from file",
+        icon: <Upload className="h-4 w-4" />,
+        onClick: handleImport,
+      });
+    }
+
     return options;
-  }, [permissions, handleAddUser]);
+  }, [permissions, handleAddUser, isImportAvailable, handleImport]);
 
   if (!permissions.includes("user:view"))
     return <AccessDenied content="Don't have access to list user details." />;
@@ -536,6 +633,15 @@ const ListUsers = () => {
         title="Bulk Delete Users"
         description="Are you sure you want to delete the selected users?"
         itemName="user"
+      />
+
+      <BulkImportModal
+        isOpen={isImportModalOpen}
+        onClose={handleImportModalClose}
+        importConfig={importConfig}
+        title="Bulk Import Users"
+        description="Upload a CSV or Excel file to create multiple users at once."
+        onComplete={handleImportCompleteWithRefresh}
       />
 
       {changePasswordId && changePassword && (

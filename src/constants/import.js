@@ -102,7 +102,9 @@ export const IMPORT_FIELD_MAPPINGS = {
       // see src/pages/cautions/add/validationSchema.js
       validate: (value) => {
         if (value.length > 100) {
-          throw new Error("Caution message name must not exceed 100 characters");
+          throw new Error(
+            "Caution message name must not exceed 100 characters",
+          );
         }
         if (!NAME_CHARS_REGEX.test(value)) {
           throw new Error(`Caution message name ${NAME_CHARS_MESSAGE}`);
@@ -1622,8 +1624,21 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 20,
-      sampleValue: "john.doe",
-      sampleValue2: "jane.smith",
+      sampleValue: "rahul.sharma",
+      sampleValue2: "priya.patel",
+      // Mirrors the "Add User" form's yup schema -
+      // see src/pages/userManagement/add/validationSchema.js
+      validate: (value) => {
+        if (value.length > 30) {
+          throw new Error("User name must not exceed 30 characters");
+        }
+        if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
+          throw new Error(
+            "Only letters, numbers, underscores, dots, and hyphens are allowed",
+          );
+        }
+        return value;
+      },
     },
     {
       key: "display_name",
@@ -1632,9 +1647,12 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 25,
-      sampleValue: "John Doe",
-      sampleValue2: "Jane Smith",
+      sampleValue: "Rahul Sharma",
+      sampleValue2: "Priya Patel",
       validate: (value) => {
+        if (value.length > 50) {
+          throw new Error("Display name must not exceed 50 characters");
+        }
         if (!/^[a-zA-Z. ]+$/.test(value)) {
           throw new Error("Only letters are allowed");
         }
@@ -1648,9 +1666,12 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 30,
-      sampleValue: "john.doe@company.com",
-      sampleValue2: "jane.smith@company.com",
+      sampleValue: "rahul.sharma@company.com",
+      sampleValue2: "priya.patel@company.com",
       validate: (value) => {
+        if (value.length > 254) {
+          throw new Error("Email must not exceed 254 characters");
+        }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
           throw new Error("Invalid email format");
@@ -1665,8 +1686,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 20,
-      sampleValue: "+911234567890",
-      sampleValue2: "+910987654321",
+      sampleValue: "+919876543210",
+      sampleValue2: "+918765432109",
       validate: (value) => {
         if (!/^\+\d{12,15}$/.test(value)) {
           throw new Error("Enter a valid phone number with country code");
@@ -1719,14 +1740,32 @@ export const IMPORT_FIELD_MAPPINGS = {
       },
     },
     {
+      key: "permission_template",
+      header: "Permission Template",
+      csvHeader: "Permission Template",
+      type: "string",
+      required: false,
+      width: 25,
+      sampleValue: "basic",
+      sampleValue2: "admin",
+      // Not validated here - permission templates are configured per
+      // organization (userProfileAtom.permissions_template) and aren't known
+      // to this static mapping. The bulk-import create callback
+      // (userManagement/list/index.jsx) resolves the name against the
+      // current org's templates at import time and fails the row with a
+      // clear error (listing what's actually available) if it doesn't
+      // match. Leave blank to create the user with no permissions, same as
+      // skipping the Permissions step on the manual "Add User" form.
+    },
+    {
       key: "user_details.first_name",
       header: "First Name",
       csvHeader: "First Name",
       type: "string",
       required: true,
       width: 20,
-      sampleValue: "John",
-      sampleValue2: "Jane",
+      sampleValue: "Rahul",
+      sampleValue2: "Priya",
     },
     {
       key: "user_details.last_name",
@@ -1735,8 +1774,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 20,
-      sampleValue: "Doe",
-      sampleValue2: "Smith",
+      sampleValue: "Sharma",
+      sampleValue2: "Patel",
     },
     {
       key: "user_details.other_email",
@@ -1745,8 +1784,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 30,
-      sampleValue: "john.personal@gmail.com",
-      sampleValue2: "jane.personal@gmail.com",
+      sampleValue: "rahul.personal@gmail.com",
+      sampleValue2: "priya.personal@gmail.com",
       validate: (value) => {
         if (value && value.trim()) {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1764,8 +1803,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 30,
-      sampleValue: "123 Main Street, City, State",
-      sampleValue2: "456 Oak Avenue, Town, State",
+      sampleValue: "12, MG Road",
+      sampleValue2: "45, Brigade Road",
     },
     {
       key: "user_details.city",
@@ -1774,8 +1813,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 20,
-      sampleValue: "New York",
-      sampleValue2: "Los Angeles",
+      sampleValue: "Bengaluru",
+      sampleValue2: "Mumbai",
     },
     {
       key: "user_details.state",
@@ -1784,8 +1823,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 20,
-      sampleValue: "NY",
-      sampleValue2: "CA",
+      sampleValue: "Karnataka",
+      sampleValue2: "Maharashtra",
     },
     {
       key: "user_details.country",
@@ -1794,8 +1833,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 20,
-      sampleValue: "United States",
-      sampleValue2: "United States",
+      sampleValue: "India",
+      sampleValue2: "India",
     },
     {
       key: "user_details.zip_code",
@@ -1804,8 +1843,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 15,
-      sampleValue: "10001",
-      sampleValue2: "90001",
+      sampleValue: "560001",
+      sampleValue2: "400001",
     },
     {
       key: "user_details.timezone",
@@ -1814,8 +1853,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 25,
-      sampleValue: "America/New_York",
-      sampleValue2: "America/Los_Angeles",
+      sampleValue: "Asia/Kolkata",
+      sampleValue2: "Asia/Kolkata",
     },
     {
       key: "user_details.locale",
@@ -1824,8 +1863,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: false,
       width: 15,
-      sampleValue: "en_US",
-      sampleValue2: "en_GB",
+      sampleValue: "en_IN",
+      sampleValue2: "en_IN",
     },
   ],
 

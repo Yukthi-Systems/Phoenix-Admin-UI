@@ -64,11 +64,16 @@ export function useGetUser(organization_id, user_id) {
 }
 
 export function useAddUser() {
-  const queryClient = useQueryClient();
+  // No onSuccess auto-invalidate here (unlike some other create mutations) -
+  // this hook is reused by bulk import (userManagement/list/index.jsx) to
+  // create potentially hundreds of rows in a loop, and invalidating ["users"]
+  // on every single row would refetch the whole list mid-import for each row.
+  // Callers invalidate explicitly once, when they're actually done: the
+  // single Add User form on success, bulk import once after the whole batch
+  // completes (handleImportCompleteWithRefresh).
   return useMutation({
     mutationKey: ["add_user"],
-    mutationFn: async (data) => addUser(data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users"] }),
+    mutationFn: async ({ data, addLog = true }) => addUser(data, addLog),
   });
 }
 
@@ -133,25 +138,23 @@ export function useUploadProfilePicture() {
 }
 
 export function useGetProfilePictureUrl(organization_id, user_id) {
+  // staleTime: 0 + cacheTime: 0 here used to force a network refetch on every
+  // single mount of every ProfilePicture instance (e.g. every row's avatar
+  // on the user list) - "cacheTime" is also a v4 name; this hook runs on
+  // @tanstack/react-query v5, which renamed it to gcTime and dropped the
+  // onSuccess callback entirely, so both were silently no-ops here anyway.
+  // The upload flow (ProfilePic.jsx) already invalidates this exact query
+  // key on a successful upload, so a real staleTime is safe - it won't miss
+  // a freshly-uploaded photo, it just stops refetching an unchanged one on
+  // every re-render/remount.
   return useQuery({
     queryKey: ["profile_picture_url", organization_id, user_id],
     queryFn: () => getProfilePictureUrl(organization_id, user_id),
     enabled: !!organization_id && !!user_id,
-    staleTime: 0, // Always consider data stale
-    cacheTime: 0, // Don't cache the data
+    staleTime: 5 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
     retry: false,
-    refetchOnWindowFocus: false, // Don't refetch on window focus
-    refetchOnMount: true, //
-    // Clean up blob URLs when data changes or component unmounts
-    onSuccess: (oldData, newData) => {
-      if (
-        oldData?.url &&
-        oldData.url.startsWith("blob:") &&
-        oldData.url !== newData?.url
-      ) {
-        URL.revokeObjectURL(oldData.url);
-      }
-    },
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -214,8 +217,7 @@ export function useGetSSOSessions(domain, page, perPage) {
 
 export function useDeleteSSOSession() {
   return useMutation({
-    mutationFn: ({ domain, sessionId }) =>
-      deleteSSOSession(domain, sessionId),
+    mutationFn: ({ domain, sessionId }) => deleteSSOSession(domain, sessionId),
   });
 }
 
@@ -229,4 +231,3 @@ export function useUpdateSSOSessionStatus() {
     },
   });
 }
-
