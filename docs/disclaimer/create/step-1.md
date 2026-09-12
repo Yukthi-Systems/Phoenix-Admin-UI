@@ -6,9 +6,9 @@ Click Add Single Disclaimer. You'll fill in 3 steps, and can click Previous at a
 
 ![Step 1: Basic Information.](../../images/disclaimer-step1-info.png)
 
-*Step 1: Basic Information.*
+_Step 1: Basic Information._
 
-| Field | What it means |
-| --- | --- |
+| Field           | What it means                                                    |
+| --------------- | ---------------------------------------------------------------- |
 | Disclaimer Name | A name for this disclaimer, so you can recognize it in the list. |
-| Description | A short explanation of what this disclaimer is for. |
+| Description     | A short explanation of what this disclaimer is for.              |

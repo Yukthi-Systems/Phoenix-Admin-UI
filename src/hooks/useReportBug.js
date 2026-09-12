@@ -57,15 +57,14 @@ export const useUploadBugFile = () =>
   useMutation({
     mutationFn: (formData) =>
       uploadBugFile(formData, {
-        timeout: 10 * 60 * 1000, 
-        maxBodyLength: Infinity, 
+        timeout: 10 * 60 * 1000,
+        maxBodyLength: Infinity,
         maxContentLength: Infinity,
         signal: null,
       }),
-    retry: 2, 
-    networkMode: "always", 
+    retry: 2,
+    networkMode: "always",
   });
-
 
 // ----- Fetch File Hook -----
 export const useGetBugFile = (file_id, enabled = true) =>

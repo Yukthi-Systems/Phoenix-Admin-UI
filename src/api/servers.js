@@ -28,7 +28,6 @@ const getHeaders = () => ({
 });
 
 export const getServers = async (page, pageSize, searchParams = null) => {
-
   const method = "GET";
   let url = `${API_URL}/server/list/${page}/${pageSize}`;
 
@@ -470,7 +469,7 @@ export const getMailboxMigrationLogs = async (
     AuthAPI({ status: response?.status });
     throw new Error(
       response?.data?.message ||
-      "Failed to get migration logs for this mailbox.",
+        "Failed to get migration logs for this mailbox.",
     );
   }
 };
@@ -498,7 +497,7 @@ export const getMigrationsFromSourceServer = async (
     AuthAPI({ status: response?.status });
     throw new Error(
       error?.response?.data?.message ||
-      "Failed to get migrations from source server.",
+        "Failed to get migrations from source server.",
     );
   }
 };
@@ -773,14 +772,13 @@ export const getPflogsumReport = async (server_host_id, from_when) => {
   }
 };
 
-
 /**
  * Fetches the list of server processes for a specific host.
  * @param {string} server_host_id - The ID of the mailbox server host.
  * @returns {Promise<Object>} The process list data.
  */
 export const getServerProcs = async (server_host_id) => {
-  const method = 'GET';
+  const method = "GET";
   const url = `${API_URL}/server/procs/list/${server_host_id}`;
 
   try {
@@ -799,13 +797,15 @@ export const getServerProcs = async (server_host_id) => {
 
     await addLogs({
       values: response,
-      type: 'error',
+      type: "error",
       method,
-      action_type: 'get_server_procs_list',
+      action_type: "get_server_procs_list",
       payload: { server_host_id },
-      message: 'Failed to fetch server process list',
+      message: "Failed to fetch server process list",
     });
 
-    throw new Error(response?.data?.message || 'Failed to get server process list.');
+    throw new Error(
+      response?.data?.message || "Failed to get server process list.",
+    );
   }
 };

@@ -42,8 +42,8 @@ const DeleteBlockedModal = ({
         <div className="flex items-start gap-3 mb-4">
           <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
           <p className="text-base text-card-foreground">
-            <span className="font-medium text-destructive">"{name}"</span>{" "}
-            still has:
+            <span className="font-medium text-destructive">"{name}"</span> still
+            has:
           </p>
         </div>
 
@@ -57,8 +57,8 @@ const DeleteBlockedModal = ({
         </ul>
 
         <p className="text-sm text-muted-foreground mb-6">
-          Remove or reassign these first, then try deleting this{" "}
-          {entityLabel} again.
+          Remove or reassign these first, then try deleting this {entityLabel}{" "}
+          again.
         </p>
 
         <div className="flex justify-end items-center gap-3 m-2">

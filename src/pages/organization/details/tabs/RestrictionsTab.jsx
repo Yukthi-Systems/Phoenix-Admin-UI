@@ -16,7 +16,10 @@
  */
 
 import { useState, useMemo } from "react";
-import { useRestrictionPolicy, useDeleteRestrictionPolicy } from "@/hooks/useRestrictionPolicy";
+import {
+  useRestrictionPolicy,
+  useDeleteRestrictionPolicy,
+} from "@/hooks/useRestrictionPolicy";
 import Table from "@/components/shared/Table";
 import DataFechError from "@/components/common/DataFechError";
 import DataLoading from "@/components/common/DataLoading";
@@ -34,7 +37,10 @@ import {
 } from "@tanstack/react-table";
 
 const RestrictionsTab = ({ orgId }) => {
-  const { pagination, onPaginationChange: setPagination } = useTablePagination(5, 10);
+  const { pagination, onPaginationChange: setPagination } = useTablePagination(
+    5,
+    10,
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const { formatUserDateNice } = useUserTimezone();
   const toast = useToastify();
@@ -52,7 +58,8 @@ const RestrictionsTab = ({ orgId }) => {
     query: searchQuery,
   });
 
-  const { mutate: deleteMutate, isPending: isDeletePending } = useDeleteRestrictionPolicy();
+  const { mutate: deleteMutate, isPending: isDeletePending } =
+    useDeleteRestrictionPolicy();
 
   const policies = data?.entries ?? [];
   const totalPages = data?.total_pages ?? 1;
@@ -82,10 +89,11 @@ const RestrictionsTab = ({ orgId }) => {
             setDeletePolicyName("");
           },
           onError: (error) => {
-            const message = error.response?.data?.message || error.message || "Unknown error";
+            const message =
+              error.response?.data?.message || error.message || "Unknown error";
             toast("error", `Failed to delete: ${message}`);
           },
-        }
+        },
       );
     }
   };
@@ -120,7 +128,7 @@ const RestrictionsTab = ({ orgId }) => {
         ),
       },
     ],
-    [formatUserDateNice]
+    [formatUserDateNice],
   );
 
   const table = useReactTable({
@@ -136,12 +144,16 @@ const RestrictionsTab = ({ orgId }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
-  if (isLoading) return <DataLoading content="Loading restriction policies..." />;
-  if (isError) return <DataFechError content="Failed to load restriction policies." />;
+  if (isLoading)
+    return <DataLoading content="Loading restriction policies..." />;
+  if (isError)
+    return <DataFechError content="Failed to load restriction policies." />;
   if (policies.length === 0) {
     return (
       <div className="text-center py-8 border border-dashed rounded-lg border-border bg-card/30">
-        <span className="text-muted-foreground text-sm">No restriction policies found</span>
+        <span className="text-muted-foreground text-sm">
+          No restriction policies found
+        </span>
       </div>
     );
   }

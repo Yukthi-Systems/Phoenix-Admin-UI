@@ -31,7 +31,7 @@ const getHeaders = () => ({
 // 1. Create new initial invoice
 export const createInitialInvoice = async (organization_id, payload) => {
   const url = `${API_URL}/crm/invoice/initial/${organization_id}`;
- 
+
   try {
     const res = await axios.post(url, payload, {
       headers: getHeaders(),
@@ -44,7 +44,8 @@ export const createInitialInvoice = async (organization_id, payload) => {
         res?.data?.message || "Failed to create initial invoice.",
       );
 
-    const invoiceNumber = payload?.invoice_number || payload?.invoice_id || 'New Invoice';
+    const invoiceNumber =
+      payload?.invoice_number || payload?.invoice_id || "New Invoice";
     await addLogs({
       values: res,
       type: "success",
@@ -58,8 +59,9 @@ export const createInitialInvoice = async (organization_id, payload) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const invoiceNumber = payload?.invoice_number || payload?.invoice_id || 'Unknown Invoice';
+
+    const invoiceNumber =
+      payload?.invoice_number || payload?.invoice_id || "Unknown Invoice";
     await addLogs({
       values: response,
       type: "error",
@@ -92,7 +94,8 @@ export const createInvoiceRevision = async (organization_id, payload) => {
         res?.data?.message || "Failed to create revision invoice.",
       );
 
-    const invoiceNumber = payload?.invoice_number || payload?.invoice_id || 'Invoice Revision';
+    const invoiceNumber =
+      payload?.invoice_number || payload?.invoice_id || "Invoice Revision";
     await addLogs({
       values: res,
       type: "success",
@@ -106,8 +109,9 @@ export const createInvoiceRevision = async (organization_id, payload) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const invoiceNumber = payload?.invoice_number || payload?.invoice_id || 'Unknown Invoice';
+
+    const invoiceNumber =
+      payload?.invoice_number || payload?.invoice_id || "Unknown Invoice";
     await addLogs({
       values: response,
       type: "error",
@@ -158,11 +162,7 @@ export const getAllInvoices = async (
   }
 };
 
-export const getAllGlobalInvoices = async (
-  page,
-  page_size,
-  query = "",
-) => {
+export const getAllGlobalInvoices = async (page, page_size, query = "") => {
   const url = `${API_URL}/crm/invoice/list-all?page=${page}&page_size=${page_size}&query=${query}`;
 
   try {
@@ -185,7 +185,9 @@ export const getAllGlobalInvoices = async (
       notify: false,
     });
 
-    throw new Error(response?.data?.message || "Failed to get global invoice list.");
+    throw new Error(
+      response?.data?.message || "Failed to get global invoice list.",
+    );
   }
 };
 
@@ -294,9 +296,7 @@ export const uploadInvoice = async (organization_id, revision_id, formData) => {
     });
 
     if (res.status !== 201)
-      throw new Error(
-        res?.data?.message || "Failed to upload invoice.",
-      );
+      throw new Error(res?.data?.message || "Failed to upload invoice.");
 
     await addLogs({
       values: res,
@@ -339,7 +339,8 @@ export const updateInitialInvoice = async (organization_id, payload) => {
         res?.data?.message || "Failed to update initial invoice.",
       );
 
-    const invoiceNumber = payload?.invoice_number || payload?.invoice_id || 'Invoice Update';
+    const invoiceNumber =
+      payload?.invoice_number || payload?.invoice_id || "Invoice Update";
     await addLogs({
       values: res,
       type: "success",
@@ -353,8 +354,9 @@ export const updateInitialInvoice = async (organization_id, payload) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const invoiceNumber = payload?.invoice_number || payload?.invoice_id || 'Unknown Invoice';
+
+    const invoiceNumber =
+      payload?.invoice_number || payload?.invoice_id || "Unknown Invoice";
     await addLogs({
       values: response,
       type: "error",

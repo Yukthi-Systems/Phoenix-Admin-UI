@@ -40,8 +40,6 @@ const DomainDetailsStep = ({ register, errors, watch }) => {
           isRequired
         />
 
-
-
         <Input
           label="Anti-Phishing Secret Code"
           name="anti_phishing_secret_code"
@@ -52,7 +50,6 @@ const DomainDetailsStep = ({ register, errors, watch }) => {
           maxLength={20}
           info="4-20 characters (spaces count). Letters, numbers, spaces, underscores (_) and hyphens (-) only."
         />
-
 
         <Input
           label="Description"
@@ -73,9 +70,9 @@ const DomainDetailsStep = ({ register, errors, watch }) => {
         <div className="col-span-full flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 p-3 text-primary">
           <Info className="mt-0.5 h-4 w-4 flex-shrink-0" />
           <p className="text-xs text-left">
-            The domain will be created inactive. You'll be shown a TXT record
-            to add to its DNS after creation — the domain only becomes active
-            once that record is verified.
+            The domain will be created inactive. You'll be shown a TXT record to
+            add to its DNS after creation — the domain only becomes active once
+            that record is verified.
           </p>
         </div>
       </div>

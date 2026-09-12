@@ -16,55 +16,57 @@
  */
 
 // formValues/validationSchema.js
-import * as yup from 'yup';
+import * as yup from "yup";
 
 export const maintenanceSchema = yup.object({
   title: yup
     .string()
-    .required('Title is required')
-    .min(2, 'Title must be at least 2 characters')
-    .max(100, 'Title must not exceed 100 characters'),
-  
+    .required("Title is required")
+    .min(2, "Title must be at least 2 characters")
+    .max(100, "Title must not exceed 100 characters"),
+
   description: yup
     .string()
-    .required('Description is required')
-    .min(8, 'Description must be at least 8 characters')
-    .max(500, 'Description must not exceed 500 characters'),
-  
+    .required("Description is required")
+    .min(8, "Description must be at least 8 characters")
+    .max(500, "Description must not exceed 500 characters"),
+
   affected: yup
     .array()
-    .of(yup.string().min(1, 'Service name cannot be empty'))
+    .of(yup.string().min(1, "Service name cannot be empty"))
     .optional(),
-  
+
   severity: yup
     .string()
-    .required('Severity is required')
-    .oneOf(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'], 'Invalid severity level'),
-  
+    .required("Severity is required")
+    .oneOf(["LOW", "MEDIUM", "HIGH", "CRITICAL"], "Invalid severity level"),
+
   type: yup
     .string()
-    .required('Type is required')
-    .min(2, 'Type must be at least 2 characters')
-    .max(50, 'Type must not exceed 50 characters'),
-  
-  is_active: yup
-    .boolean()
-    .required('Active status is required'),
-  
+    .required("Type is required")
+    .min(2, "Type must be at least 2 characters")
+    .max(50, "Type must not exceed 50 characters"),
+
+  is_active: yup.boolean().required("Active status is required"),
+
   start_time: yup
     .string()
-    .required('Start time is required')
-    .test('is-future', 'Start time must be in the future', function(value) {
+    .required("Start time is required")
+    .test("is-future", "Start time must be in the future", function (value) {
       if (!value) return false;
       return new Date(value) > new Date();
     }),
-  
+
   end_time: yup
     .string()
-    .required('End time is required')
-    .test('is-after-start', 'End time must be after start time', function(value) {
-      const { start_time } = this.parent;
-      if (!value || !start_time) return false;
-      return new Date(value) > new Date(start_time);
-    })
+    .required("End time is required")
+    .test(
+      "is-after-start",
+      "End time must be after start time",
+      function (value) {
+        const { start_time } = this.parent;
+        if (!value || !start_time) return false;
+        return new Date(value) > new Date(start_time);
+      },
+    ),
 });

@@ -162,10 +162,12 @@ export function UserNameInfiniteSelectionFields({
                 ? returnId
                   ? selected.map((s) => s.id)
                   : selected.map((s) => s.value)
-                : []
+                : [],
             );
           } else {
-            onChange(selected ? (returnId ? selected.id : selected.value) : null);
+            onChange(
+              selected ? (returnId ? selected.id : selected.value) : null,
+            );
           }
         }}
         onMenuScrollToBottom={handleMenuScrollToBottom}

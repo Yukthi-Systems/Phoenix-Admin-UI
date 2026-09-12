@@ -169,7 +169,7 @@ const BulkImportModalDomain = ({
             setProgress(progressData);
           },
           (error) => setError(error.message),
-          processAbortController.current.signal
+          processAbortController.current.signal,
         );
       } else {
         data = await processImportFile(
@@ -182,7 +182,7 @@ const BulkImportModalDomain = ({
             setProgress(progressData);
           },
           (error) => setError(error.message),
-          processAbortController.current.signal
+          processAbortController.current.signal,
         );
       }
 
@@ -228,7 +228,7 @@ const BulkImportModalDomain = ({
           setProgress(progressData);
         },
         (itemResult) => {},
-        createAbortController.current.signal
+        createAbortController.current.signal,
       );
 
       if (createAbortController.current?.signal.aborted) {
@@ -263,7 +263,7 @@ const BulkImportModalDomain = ({
     generateSampleFile(
       importConfig.fieldMapping,
       "excel",
-      importConfig.sampleFilename || "sample_import"
+      importConfig.sampleFilename || "sample_import",
     );
   }, [importConfig]);
 
@@ -357,7 +357,7 @@ const BulkImportModalDomain = ({
 
     // Get all unique keys from data for headers
     const headers = Array.from(
-      new Set(processedData.flatMap((item) => Object.keys(item)))
+      new Set(processedData.flatMap((item) => Object.keys(item))),
     );
 
     return (

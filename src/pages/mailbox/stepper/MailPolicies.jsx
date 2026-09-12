@@ -15,11 +15,11 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { DistributionPolicyInfiniteSelectionField } from '@/components/common/infiniteSelectors/DistributionPolicyInfiniteSelectionField'
-import { ForwardingPolicyInfiniteSelectionField } from '@/components/common/infiniteSelectors/ForwardingPolicyInfiniteSelectionField'
-import { GeneralPolicyInfiniteSelectionField } from '@/components/common/infiniteSelectors/GeneralPolicyInfiniteSelectionField'
-import InfoBox from '@/components/common/InfoBox'
-import React, { useEffect, useRef } from 'react'
+import { DistributionPolicyInfiniteSelectionField } from "@/components/common/infiniteSelectors/DistributionPolicyInfiniteSelectionField";
+import { ForwardingPolicyInfiniteSelectionField } from "@/components/common/infiniteSelectors/ForwardingPolicyInfiniteSelectionField";
+import { GeneralPolicyInfiniteSelectionField } from "@/components/common/infiniteSelectors/GeneralPolicyInfiniteSelectionField";
+import InfoBox from "@/components/common/InfoBox";
+import React, { useEffect, useRef } from "react";
 
 function MailPolicies({
   register,
@@ -28,7 +28,7 @@ function MailPolicies({
   control,
   setValue,
   organization_id = "",
-  domain_name = ""
+  domain_name = "",
 }) {
   const forwarding_policy_id = watch("forwarding_policy_id");
   const distribution_policy_id = watch("distribution_policy_id");
@@ -39,13 +39,25 @@ function MailPolicies({
   // General Policy is always selectable. Forwarding and Distribution are
   // mutually exclusive with each other only - picking one clears the other.
   useEffect(() => {
-    const distributionChanged = distribution_policy_id !== prevDistributionRef.current;
-    const forwardingChanged = forwarding_policy_id !== prevForwardingRef.current;
+    const distributionChanged =
+      distribution_policy_id !== prevDistributionRef.current;
+    const forwardingChanged =
+      forwarding_policy_id !== prevForwardingRef.current;
 
     if (distributionChanged && distribution_policy_id && forwarding_policy_id) {
-      setValue("forwarding_policy_id", null, { shouldValidate: true, shouldDirty: true });
-    } else if (forwardingChanged && forwarding_policy_id && distribution_policy_id) {
-      setValue("distribution_policy_id", null, { shouldValidate: true, shouldDirty: true });
+      setValue("forwarding_policy_id", null, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    } else if (
+      forwardingChanged &&
+      forwarding_policy_id &&
+      distribution_policy_id
+    ) {
+      setValue("distribution_policy_id", null, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
 
     prevDistributionRef.current = distribution_policy_id;
@@ -55,19 +67,20 @@ function MailPolicies({
   const isForwardingDisabled = !!distribution_policy_id;
   const isDistributionDisabled = !!forwarding_policy_id;
 
-  let policyHint = "A Forwarding Policy and a Distribution Policy cannot be combined - selecting one disables the other. General Policy can always be selected alongside either.";
+  let policyHint =
+    "A Forwarding Policy and a Distribution Policy cannot be combined - selecting one disables the other. General Policy can always be selected alongside either.";
   if (distribution_policy_id) {
-    policyHint = "Distribution Policy is selected, so Forwarding Policy is disabled. Clear the Distribution Policy to choose Forwarding instead.";
+    policyHint =
+      "Distribution Policy is selected, so Forwarding Policy is disabled. Clear the Distribution Policy to choose Forwarding instead.";
   } else if (forwarding_policy_id) {
-    policyHint = "Forwarding Policy is selected, so Distribution Policy is disabled. Clear the Forwarding Policy to choose Distribution instead.";
+    policyHint =
+      "Forwarding Policy is selected, so Distribution Policy is disabled. Clear the Forwarding Policy to choose Distribution instead.";
   }
 
   return (
     <div className="space-y-6">
       <div className="text-left">
-        <h3 className="text-foreground text-lg font-semibold">
-          Mail Policies
-        </h3>
+        <h3 className="text-foreground text-lg font-semibold">Mail Policies</h3>
         <p className="text-muted-foreground mt-1 text-sm">
           Enter the basic mail policies for the user
         </p>
@@ -109,7 +122,7 @@ function MailPolicies({
         />
       </div>
     </div>
-  )
+  );
 }
 
-export default MailPolicies
+export default MailPolicies;

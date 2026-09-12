@@ -20,10 +20,9 @@ export const normalizePflogsumTotals = (totals) => {
 
   const { messages = {}, traffic = {}, counts = {} } = totals;
 
-
   // Extract deferred safely
   const deferredEntry = Object.entries(counts).find(([key]) =>
-    key.startsWith("deferred__")
+    key.startsWith("deferred__"),
   );
 
   const deferred = deferredEntry ? deferredEntry[1] : 0;

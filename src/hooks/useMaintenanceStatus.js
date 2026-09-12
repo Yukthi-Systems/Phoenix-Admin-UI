@@ -16,7 +16,12 @@
  */
 
 // hooks/maintenance.js
-import { getMaintenanceStatus, createMaintenanceStatus, updateMaintenanceStatus, deleteMaintenanceStatus } from "@/api/maintenance";
+import {
+  getMaintenanceStatus,
+  createMaintenanceStatus,
+  updateMaintenanceStatus,
+  deleteMaintenanceStatus,
+} from "@/api/maintenance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useGetMaintenanceStatus(is_active = true) {
@@ -47,17 +52,17 @@ export function useCreateMaintenanceStatus() {
 }
 
 export function useUpdateMaintenanceStatus() {
-
   return useMutation({
     mutationKey: ["update_maintenance_status"],
-    mutationFn:({ data, maintenance_id }) => updateMaintenanceStatus({ data, maintenance_id }),
+    mutationFn: ({ data, maintenance_id }) =>
+      updateMaintenanceStatus({ data, maintenance_id }),
   });
 }
 
 export function useDeleteMaintenanceStatus() {
   return useMutation({
-    mutationFn: ({id, maintenance_title = "Unknown Maintenance" }) => deleteMaintenanceStatus({maintenance_id: id, maintenance_title}),
+    mutationFn: ({ id, maintenance_title = "Unknown Maintenance" }) =>
+      deleteMaintenanceStatus({ maintenance_id: id, maintenance_title }),
     mutationKey: ["delete_maintenance_status"],
   });
 }
-

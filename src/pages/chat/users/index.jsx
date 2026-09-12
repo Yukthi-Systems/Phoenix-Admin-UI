@@ -54,7 +54,11 @@ const ChatUsers = () => {
   const { pagination, onPaginationChange: setPagination } =
     useTablePagination();
   const [showAddModal, setShowAddModal] = useState(false);
-  const { control: addUserControl, watch: watchAddUser, reset: resetAddUser } = useForm({
+  const {
+    control: addUserControl,
+    watch: watchAddUser,
+    reset: resetAddUser,
+  } = useForm({
     defaultValues: { email_identity: "" },
   });
   const selectedIdentity = watchAddUser("email_identity");
@@ -125,7 +129,10 @@ const ChatUsers = () => {
         { domain: domainName, email: selectedIdentity },
         {
           onSuccess: () => {
-            toast("success", `Successfully enabled chat for ${selectedIdentity}`);
+            toast(
+              "success",
+              `Successfully enabled chat for ${selectedIdentity}`,
+            );
             queryClient.invalidateQueries({ queryKey: ["chat_users"] });
             setShowAddModal(false);
             resetAddUser({ email_identity: "" });
@@ -295,7 +302,11 @@ const ChatUsers = () => {
         cell: ({ row }) => {
           const lastActive = row.original.last_active_at;
           if (!lastActive)
-            return <span className="text-muted-foreground text-sm font-medium">N/A</span>;
+            return (
+              <span className="text-muted-foreground text-sm font-medium">
+                N/A
+              </span>
+            );
 
           return (
             <div className="flex items-center justify-start">
@@ -360,9 +371,7 @@ const ChatUsers = () => {
   });
 
   if (!permissions.includes("chat:view")) {
-    return (
-      <AccessDenied content="You don't have access to view Chat Users." />
-    );
+    return <AccessDenied content="You don't have access to view Chat Users." />;
   }
 
   if (isError) {
@@ -377,9 +386,7 @@ const ChatUsers = () => {
       <div className="mb-2.5 w-full">
         <div className="mb-2.5 flex w-full justify-between gap-4 flex-nowrap items-center">
           <div className="flex min-w-0 items-center gap-4">
-            <Breadcrumbs
-              items={[{ name: "Chat" }, { name: "Chat Users" }]}
-            />
+            <Breadcrumbs items={[{ name: "Chat" }, { name: "Chat Users" }]} />
           </div>
 
           <div className="flex items-center gap-3">
@@ -424,7 +431,8 @@ const ChatUsers = () => {
           ) : (
             <NoDataFound
               content={
-                error?.response?.data?.message || "No chat users found for this domain"
+                error?.response?.data?.message ||
+                "No chat users found for this domain"
               }
             />
           )}
@@ -444,7 +452,10 @@ const ChatUsers = () => {
         outsideClick={false}
       >
         <div className="w-[40vw] max-h-[65vh] text-left">
-          <form onSubmit={handleAddUser} className="mx-auto rounded-xl px-6 py-4 space-y-6">
+          <form
+            onSubmit={handleAddUser}
+            className="mx-auto rounded-xl px-6 py-4 space-y-6"
+          >
             <div className="space-y-4">
               <EmailIdentityInfiniteSelectionField
                 control={addUserControl}

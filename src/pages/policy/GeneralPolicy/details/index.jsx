@@ -83,7 +83,7 @@ function ViewGeneralPolicy() {
           org_id: organization_id,
           policy_id: general_policy_id,
           domain_name: data?.domain_name,
-          policy_name: data?.policy_name ,
+          policy_name: data?.policy_name,
         },
         {
           onSuccess: () => {

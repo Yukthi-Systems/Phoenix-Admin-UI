@@ -25,13 +25,7 @@ const subToneStyles = {
   neutral: "bg-muted text-muted-foreground border-border",
 };
 
-const MetricsCard = ({
-  label,
-  value,
-  icon,
-  sub,
-  variant = "default",
-}) => {
+const MetricsCard = ({ label, value, icon, sub, variant = "default" }) => {
   const variantStyles = {
     default: "border-border",
     success: "border-success/20 bg-success/5",

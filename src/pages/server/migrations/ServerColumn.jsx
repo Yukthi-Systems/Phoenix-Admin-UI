@@ -105,11 +105,7 @@ const ServerColumn = ({
     );
 
     migratableMailboxes.forEach((mailbox) => {
-      onMailboxSelection(
-        mailbox.email,
-        mailbox.quota_allocated,
-        !allSelected,
-      );
+      onMailboxSelection(mailbox.email, mailbox.quota_allocated, !allSelected);
     });
   }, [mailboxes, selectedMailboxes, onMailboxSelection]);
 

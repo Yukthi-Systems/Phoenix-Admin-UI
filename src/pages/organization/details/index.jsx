@@ -110,7 +110,8 @@ const OrganizationDetails = () => {
     organization_details?.parent_organization_id,
   );
   const parentIsActive =
-    !organization_details?.parent_organization_id || !!parentOrgDetails?.is_active;
+    !organization_details?.parent_organization_id ||
+    !!parentOrgDetails?.is_active;
   const rootParentAvailableSpace =
     defaultOrgDetails?.quota_allocated - defaultOrgDetails?.quota_utilized;
   const rootParentAvailableIdentities =
@@ -153,11 +154,13 @@ const OrganizationDetails = () => {
       checks: [
         {
           label: "sub-organization",
-          fn: async (orgId) => (await getOrganizations(1, 1, orgId))?.total_count ?? 0,
+          fn: async (orgId) =>
+            (await getOrganizations(1, 1, orgId))?.total_count ?? 0,
         },
         {
           label: "domain",
-          fn: async (orgId) => (await getDomains(orgId, 1, 1))?.domains?.total_count ?? 0,
+          fn: async (orgId) =>
+            (await getDomains(orgId, 1, 1))?.domains?.total_count ?? 0,
         },
       ],
       onClear: () => setShowDeleteModal(true),
@@ -229,7 +232,10 @@ const OrganizationDetails = () => {
   const OnIdentityChange = (allocationData) => {
     identityUpdate(allocationData, {
       onSuccess: () => {
-        toast("success", "Successfully updated organization identity allocation");
+        toast(
+          "success",
+          "Successfully updated organization identity allocation",
+        );
         refetch();
         setShowIdentityModal(false);
       },
@@ -319,7 +325,13 @@ const OrganizationDetails = () => {
     }
 
     return options;
-  }, [permissions, isLoading, organization_details, checkingDeleteId, parentIsActive]);
+  }, [
+    permissions,
+    isLoading,
+    organization_details,
+    checkingDeleteId,
+    parentIsActive,
+  ]);
 
   // Access Control & Error Handling
   if (!permissions.includes("organization:view"))
@@ -333,10 +345,11 @@ const OrganizationDetails = () => {
   // Components
   const StatusBadge = ({ active }) => (
     <div
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${active
-        ? "bg-success/10 text-success border-success/20 border"
-        : "bg-destructive/10 text-destructive border-destructive/20 border"
-        }`}
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        active
+          ? "bg-success/10 text-success border-success/20 border"
+          : "bg-destructive/10 text-destructive border-destructive/20 border"
+      }`}
     >
       {active ? (
         <Check className="h-3.5 w-3.5" />
@@ -470,7 +483,8 @@ const OrganizationDetails = () => {
           </div>
 
           <div className="flex flex-row items-center justify-center gap-2">
-            {permissions.includes("organization:edit") && organization_id !== organization_details?.organization_id &&
+            {permissions.includes("organization:edit") &&
+              organization_id !== organization_details?.organization_id &&
               !isLoading &&
               !isError && (
                 <Link
@@ -482,13 +496,14 @@ const OrganizationDetails = () => {
                 </Link>
               )}
 
-            {actionOptions.length > 0 && organization_id !== organization_details?.organization_id && (
-              <DropdownButton
-                label="More Actions"
-                variant="outline"
-                options={actionOptions}
-              />
-            )}
+            {actionOptions.length > 0 &&
+              organization_id !== organization_details?.organization_id && (
+                <DropdownButton
+                  label="More Actions"
+                  variant="outline"
+                  options={actionOptions}
+                />
+              )}
           </div>
         </div>
 
@@ -554,10 +569,10 @@ const OrganizationDetails = () => {
                       <span className="text-right">
                         {organization_details?.quota_allocated > 0
                           ? Math.round(
-                            (organization_details?.quota_utilized /
-                              organization_details.quota_allocated) *
-                            100,
-                          )
+                              (organization_details?.quota_utilized /
+                                organization_details.quota_allocated) *
+                                100,
+                            )
                           : 0}
                         %
                       </span>
@@ -566,15 +581,16 @@ const OrganizationDetails = () => {
                       <div
                         className="bg-primary h-1.5 rounded-full transition-all duration-300"
                         style={{
-                          width: `${organization_details?.quota_allocated > 0
-                            ? Math.min(
-                              (organization_details?.quota_utilized /
-                                organization_details.quota_allocated) *
-                              100,
-                              100,
-                            )
-                            : 0
-                            }%`,
+                          width: `${
+                            organization_details?.quota_allocated > 0
+                              ? Math.min(
+                                  (organization_details?.quota_utilized /
+                                    organization_details.quota_allocated) *
+                                    100,
+                                  100,
+                                )
+                              : 0
+                          }%`,
                         }}
                       ></div>
                     </div>
@@ -588,12 +604,17 @@ const OrganizationDetails = () => {
                     value={
                       organization_details?.allocated_email_identities === -1
                         ? "Unlimited"
-                        : (organization_details?.allocated_email_identities ?? 0).toLocaleString()
+                        : (
+                            organization_details?.allocated_email_identities ??
+                            0
+                          ).toLocaleString()
                     }
                   />
                   <InfoItem
                     label="Utilized"
-                    value={(organization_details?.utilized_email_identities || 0).toLocaleString()}
+                    value={(
+                      organization_details?.utilized_email_identities || 0
+                    ).toLocaleString()}
                   />
                   {organization_details?.allocated_email_identities !== -1 && (
                     <div className="border-border mt-3 border-t pt-3">
@@ -602,10 +623,10 @@ const OrganizationDetails = () => {
                         <span className="text-right">
                           {organization_details?.allocated_email_identities > 0
                             ? Math.round(
-                              (organization_details?.utilized_email_identities /
-                                organization_details.allocated_email_identities) *
-                              100,
-                            )
+                                (organization_details?.utilized_email_identities /
+                                  organization_details.allocated_email_identities) *
+                                  100,
+                              )
                             : 0}
                           %
                         </span>
@@ -614,15 +635,17 @@ const OrganizationDetails = () => {
                         <div
                           className="bg-primary h-1.5 rounded-full transition-all duration-300"
                           style={{
-                            width: `${organization_details?.allocated_email_identities > 0
-                              ? Math.min(
-                                (organization_details?.utilized_email_identities /
-                                  organization_details.allocated_email_identities) *
-                                100,
-                                100,
-                              )
-                              : 0
-                              }%`,
+                            width: `${
+                              organization_details?.allocated_email_identities >
+                              0
+                                ? Math.min(
+                                    (organization_details?.utilized_email_identities /
+                                      organization_details.allocated_email_identities) *
+                                      100,
+                                    100,
+                                  )
+                                : 0
+                            }%`,
                           }}
                         ></div>
                       </div>
@@ -699,7 +722,9 @@ const OrganizationDetails = () => {
                         <div className="bg-primary/10 text-primary rounded-md p-1.5">
                           <Mail className="h-3.5 w-3.5" />
                         </div>
-                        <span className="text-sm font-medium">Email Service</span>
+                        <span className="text-sm font-medium">
+                          Email Service
+                        </span>
                       </div>
                       {organization_details?.email_service_enabled ? (
                         <div className="bg-success/10 text-success flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
@@ -717,7 +742,9 @@ const OrganizationDetails = () => {
                         <div className="bg-primary/10 text-primary rounded-md p-1.5">
                           <MessageSquare className="h-3.5 w-3.5" />
                         </div>
-                        <span className="text-sm font-medium">Chat Service</span>
+                        <span className="text-sm font-medium">
+                          Chat Service
+                        </span>
                       </div>
                       {organization_details?.chat_service_enabled ? (
                         <div className="bg-success/10 text-success flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
@@ -735,7 +762,9 @@ const OrganizationDetails = () => {
                         <div className="bg-primary/10 text-primary rounded-md p-1.5">
                           <FileText className="h-3.5 w-3.5" />
                         </div>
-                        <span className="text-sm font-medium">File Service</span>
+                        <span className="text-sm font-medium">
+                          File Service
+                        </span>
                       </div>
                       {organization_details?.file_service_enabled ? (
                         <div className="bg-success/10 text-success flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">

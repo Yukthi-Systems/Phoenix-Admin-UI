@@ -52,7 +52,10 @@ export function EmailIdentityInfiniteSelectionField({
     // Only block additional pages while a request is running. A page-1 /
     // search request must always go through, otherwise the very first
     // keystroke (which races the initial load) gets silently dropped.
-    if (pageNum > 1 && (inFlightRef.current || (totalPages && pageNum > totalPages))) {
+    if (
+      pageNum > 1 &&
+      (inFlightRef.current || (totalPages && pageNum > totalPages))
+    ) {
       return;
     }
 
@@ -79,7 +82,7 @@ export function EmailIdentityInfiniteSelectionField({
       const calculatedTotalPages = Math.ceil(total_count / 100) || 1;
 
       const filteredIdentities = identities.filter(
-        (item) => !existingMailboxEmails.includes(item.email)
+        (item) => !existingMailboxEmails.includes(item.email),
       );
 
       const newOptions = filteredIdentities.map((item) => ({
@@ -108,7 +111,10 @@ export function EmailIdentityInfiniteSelectionField({
   };
 
   const handleInputChange = (inputValue, actionMeta) => {
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -173,7 +179,7 @@ export function EmailIdentityInfiniteSelectionField({
 
           const displayOptions =
             selectedOption &&
-              !options.find((opt) => opt.value === selectedOption.value)
+            !options.find((opt) => opt.value === selectedOption.value)
               ? [selectedOption, ...options]
               : options;
 
@@ -183,7 +189,9 @@ export function EmailIdentityInfiniteSelectionField({
               value={selectedOption}
               options={displayOptions}
               placeholder={placeholder}
-              onChange={(selected) => field.onChange(selected ? selected.value : null)}
+              onChange={(selected) =>
+                field.onChange(selected ? selected.value : null)
+              }
               onMenuScrollToBottom={handleMenuScrollToBottom}
               onInputChange={handleInputChange}
               isClearable

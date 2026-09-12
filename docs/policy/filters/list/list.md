@@ -8,19 +8,19 @@ This page lists every filters policy you've created, for the domain selected at 
 
 ![The Filters Policies list.](../images/policy-filters-list.png)
 
-*The Filters Policies list.*
+_The Filters Policies list._
 
-| Field | What it means |
-| --- | --- |
-| Policy Name | Click it to open the policy's details. |
-| Status | Active or turned off. |
+| Field                       | What it means                                                    |
+| --------------------------- | ---------------------------------------------------------------- |
+| Policy Name                 | Click it to open the policy's details.                           |
+| Status                      | Active or turned off.                                            |
 | Created Date / Updated Date | When the policy was first created, and when it was last changed. |
 
 Click the ⋮ (three dots) at the end of any policy's row:
 
 ![The row actions menu on a filters policy.](../images/policy-filters-row-menu.png)
 
-*The row actions menu on a filters policy.*
+_The row actions menu on a filters policy._
 
 Edit Policy, Copy Policy and Delete Policy work exactly the same way here as they do for General Policies — see section 8.1 above.
 

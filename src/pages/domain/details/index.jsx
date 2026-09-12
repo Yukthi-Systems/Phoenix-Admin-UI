@@ -172,9 +172,7 @@ const DomainDetails = () => {
             );
           } else {
             const message =
-              error.response?.data?.message ||
-              error.message ||
-              "Unknown error";
+              error.response?.data?.message || error.message || "Unknown error";
             const tracebackId = error.response?.data?.traceback_id;
             toast(
               "error",
@@ -326,7 +324,8 @@ const DomainDetails = () => {
     const options = [];
 
     if (permissions.includes("domain:edit") && !isLoading) {
-      const canToggleActivation = domain?.is_active || domain?.is_dns_txt_verified;
+      const canToggleActivation =
+        domain?.is_active || domain?.is_dns_txt_verified;
 
       options.push({
         label: domain?.is_active ? "Deactivate Domain" : "Activate Domain",
@@ -377,10 +376,11 @@ const DomainDetails = () => {
 
   const StatusBadge = ({ active }) => (
     <div
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${active
-        ? "bg-success/10 text-success border-success/20 border"
-        : "bg-destructive/10 text-destructive border-destructive/20 border"
-        }`}
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        active
+          ? "bg-success/10 text-success border-success/20 border"
+          : "bg-destructive/10 text-destructive border-destructive/20 border"
+      }`}
     >
       {active ? (
         <Check className="h-3.5 w-3.5" />
@@ -393,8 +393,9 @@ const DomainDetails = () => {
 
   const BooleanIndicator = ({ value }) => (
     <div
-      className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium ${value ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"
-        }`}
+      className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium ${
+        value ? "bg-success/10 text-success" : "bg-muted text-muted-foreground"
+      }`}
     >
       {value ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
       {value ? "Yes" : "No"}
@@ -449,8 +450,9 @@ const DomainDetails = () => {
           </div>
 
           <div className="flex flex-row gap-2 justify-center items-center">
-            {permissions.includes("domain:edit") && !isLoading && (
-              domain?.is_dns_txt_verified ? (
+            {permissions.includes("domain:edit") &&
+              !isLoading &&
+              (domain?.is_dns_txt_verified ? (
                 <Link to={`/domain/edit/${domain_name}`}>
                   <Button variant="primary" icon={SquarePen}>
                     Edit Domain
@@ -465,8 +467,7 @@ const DomainDetails = () => {
                 >
                   Edit Domain
                 </Button>
-              )
-            )}
+              ))}
 
             {actionOptions.length > 0 && (
               <DropdownButton
@@ -516,9 +517,9 @@ const DomainDetails = () => {
                           Domain not verified
                         </h3>
                         <p className="text-muted-foreground text-left text-sm">
-                          Add the TXT record below to this domain's DNS
-                          settings at your registrar, then click Validate to
-                          verify ownership and activate the domain.
+                          Add the TXT record below to this domain's DNS settings
+                          at your registrar, then click Validate to verify
+                          ownership and activate the domain.
                         </p>
                       </div>
 
@@ -565,9 +566,7 @@ const DomainDetails = () => {
                 <InfoCard icon={Building2} title="Domain Information">
                   <InfoItem
                     label="Managed By"
-                    value={
-                      managingOrg?.organization_name || domain?.managed_by
-                    }
+                    value={managingOrg?.organization_name || domain?.managed_by}
                     link={
                       domain?.managed_by
                         ? `/organization/${domain.managed_by}`
@@ -678,7 +677,13 @@ const DomainDetails = () => {
                   />
                   <InfoItem
                     label="Folder"
-                    value={domain.spam_destination_properties.folder_name ? decodeURIComponent(domain.spam_destination_properties.folder_name) : ""}
+                    value={
+                      domain.spam_destination_properties.folder_name
+                        ? decodeURIComponent(
+                            domain.spam_destination_properties.folder_name,
+                          )
+                        : ""
+                    }
                   />
                 </InfoCard>
 

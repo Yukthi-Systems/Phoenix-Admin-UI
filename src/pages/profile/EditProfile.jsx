@@ -35,7 +35,7 @@ import { getReactSelectStyles } from "@/utils/selectTheme";
 import { COUNTRIES } from "@/constants/countries";
 import PhoneInput from "@/components/common/PhoneInput";
 
-function EditProfile({ editProfile = false, setEditProfile = () => { } }) {
+function EditProfile({ editProfile = false, setEditProfile = () => {} }) {
   const userDetails = useAtomValue(userProfileAtom);
   // organization_id comes off the user's own profile, matching the key
   // FullLayout.jsx fetches the "profile" query under - not

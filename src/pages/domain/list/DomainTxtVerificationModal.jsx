@@ -42,7 +42,11 @@ const getDomainHostInfo = (domain) => {
 
   const parsed = parseDomain(trimmed);
   if (!parsed.domain || !parsed.subdomain) {
-    return { host: "@", isSubdomain: false, parentZone: parsed.domain || trimmed };
+    return {
+      host: "@",
+      isSubdomain: false,
+      parentZone: parsed.domain || trimmed,
+    };
   }
 
   return {
@@ -131,9 +135,7 @@ const DomainTxtVerificationModal = ({
             );
           } else {
             const message =
-              error.response?.data?.message ||
-              error.message ||
-              "Unknown error";
+              error.response?.data?.message || error.message || "Unknown error";
             const tracebackId = error.response?.data?.traceback_id;
             toast(
               "error",
@@ -179,8 +181,8 @@ const DomainTxtVerificationModal = ({
                   Domain inactive until verified
                 </p>
                 <p>
-                  Add the TXT record below to this domain's DNS settings at
-                  your registrar, then click Validate to verify ownership and
+                  Add the TXT record below to this domain's DNS settings at your
+                  registrar, then click Validate to verify ownership and
                   activate the domain.
                 </p>
               </div>
@@ -225,8 +227,8 @@ const DomainTxtVerificationModal = ({
                 {isSubdomain ? (
                   <>
                     <strong>{domain_name}</strong> is a subdomain, so add this
-                    record in your <strong>{parentZone}</strong> DNS zone
-                    using host <strong>"{host}"</strong> — not "@".
+                    record in your <strong>{parentZone}</strong> DNS zone using
+                    host <strong>"{host}"</strong> — not "@".
                   </>
                 ) : (
                   <>

@@ -46,7 +46,8 @@ export const updatePermissionTemplate = async (org_id, user_id, data) => {
         res?.data?.message || "Failed to update permissions template.",
       );
 
-    const templateName = data?.template_name || data?.name || 'Permissions Template';
+    const templateName =
+      data?.template_name || data?.name || "Permissions Template";
     await addLogs({
       values: res,
       type: "success",
@@ -60,8 +61,9 @@ export const updatePermissionTemplate = async (org_id, user_id, data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const templateName = data?.template_name || data?.name || 'Permissions Template';
+
+    const templateName =
+      data?.template_name || data?.name || "Permissions Template";
     await addLogs({
       values: response,
       type: "error",

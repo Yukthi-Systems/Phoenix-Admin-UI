@@ -77,7 +77,6 @@ export const getDomainsMetrics = async (organization_id) => {
   return res.data;
 };
 
-
 // Get Mailboxes Space Metrics
 export const getMailboxesSpaceMetrics = async (organization_id) => {
   let config = {

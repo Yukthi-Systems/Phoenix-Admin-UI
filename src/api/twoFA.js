@@ -142,7 +142,11 @@ export const enabledisbaleTFA = async (
   }
 };
 
-export const generateBackupCode = async (org_id = "", user_id = "", userName = "") => {
+export const generateBackupCode = async (
+  org_id = "",
+  user_id = "",
+  userName = "",
+) => {
   let config = {
     method: "POST",
     url: `${API_URL}/2fa/backup/${org_id}/${user_id}`,
@@ -288,7 +292,9 @@ export const backupcodeLogin = async (queryParams = {}) => {
       payload: data,
       message: "Failed to validate backup code",
     });
-    throw new Error(response?.data?.message || "Failed to validate backup code.");
+    throw new Error(
+      response?.data?.message || "Failed to validate backup code.",
+    );
   }
 };
 
@@ -337,7 +343,9 @@ export const getUserTFA = async (org_id = "", user_id = "", userName = "") => {
       payload: data,
       message: `Failed to get TOTP configuration for "${userNameValue}"`,
     });
-    throw new Error(response?.data?.message || "Failed to get TOTP configuration.");
+    throw new Error(
+      response?.data?.message || "Failed to get TOTP configuration.",
+    );
   }
 };
 
@@ -396,7 +404,9 @@ export const editUserTFA = async (
       payload: data,
       message: `Failed to update TOTP configuration for "${userNameValue}"`,
     });
-    throw new Error(response?.data?.message || "Failed to edit TOTP configuration.");
+    throw new Error(
+      response?.data?.message || "Failed to edit TOTP configuration.",
+    );
   }
 };
 
@@ -452,7 +462,9 @@ export const deleteUserTFA = async (
       payload: data,
       message: `Failed to delete TOTP configuration for "${userNameValue}"`,
     });
-    throw new Error(response?.data?.message || "Failed to delete TOTP configuration.");
+    throw new Error(
+      response?.data?.message || "Failed to delete TOTP configuration.",
+    );
   }
 };
 
@@ -729,7 +741,12 @@ export const validateEmailAuthOTP = async (queryParams = {}) => {
   }
 };
 
-export const generatePhoneOTP = async (org_id, user_id, queryParams = {}, userName = "") => {
+export const generatePhoneOTP = async (
+  org_id,
+  user_id,
+  queryParams = {},
+  userName = "",
+) => {
   const queryString = new URLSearchParams(queryParams).toString();
   let config = {
     method: "POST",
@@ -781,7 +798,12 @@ export const generatePhoneOTP = async (org_id, user_id, queryParams = {}, userNa
   }
 };
 
-export const validatePhoneOTP = async (org_id, user_id, queryParams = {}, userName = "") => {
+export const validatePhoneOTP = async (
+  org_id,
+  user_id,
+  queryParams = {},
+  userName = "",
+) => {
   const queryString = new URLSearchParams(queryParams).toString();
   let config = {
     method: "POST",
@@ -1020,6 +1042,8 @@ export const getBackupCheck = async (org_id, user_id, userName = "") => {
       payload: { org_id: org_id },
       message: `Failed to get backup codes status for "${userNameValue}"`,
     });
-    throw new Error(response?.data?.message || "Failed to get backup codes status.");
+    throw new Error(
+      response?.data?.message || "Failed to get backup codes status.",
+    );
   }
 };

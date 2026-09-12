@@ -19,17 +19,18 @@ import { useAtomValue } from "jotai";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { userProfileAtom } from "@/store/userProfile";
 import { userInfoAtom } from "@/store/userInfo";
-import { useGetIdentity, useDeleteIdentity, useUpdateIdentityPassword } from "@/hooks/useIdentities";
+import {
+  useGetIdentity,
+  useDeleteIdentity,
+  useUpdateIdentityPassword,
+} from "@/hooks/useIdentities";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import EditModelBox from "@/components/common/EditModelBox";
 import { PasswordInput } from "@/components/common/Inputs";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import {
-  BackButton,
-  Button,
-} from "@/components/common/Buttons";
+import { BackButton, Button } from "@/components/common/Buttons";
 import DataLoading from "@/components/common/DataLoading";
 import DataFechError from "@/components/common/DataFechError";
 import AccessDenied from "@/components/common/AccessDenied";
@@ -65,7 +66,8 @@ const IdentityDetails = () => {
   const queryClient = useQueryClient();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const { mutate: updatePassword, isPending: passwordPending } = useUpdateIdentityPassword();
+  const { mutate: updatePassword, isPending: passwordPending } =
+    useUpdateIdentityPassword();
 
   const {
     register: registerPassword,
@@ -87,7 +89,7 @@ const IdentityDetails = () => {
           .string()
           .oneOf([yup.ref("password"), null], "Passwords must match")
           .required("Confirm password is required"),
-      })
+      }),
     ),
     mode: "onChange",
   });
@@ -110,7 +112,7 @@ const IdentityDetails = () => {
             error.response?.data?.message || error.message || "Unknown error";
           toast("error", `Failed to update password: ${message}`);
         },
-      }
+      },
     );
   };
 
@@ -120,7 +122,7 @@ const IdentityDetails = () => {
     domain_name,
     email_prefix,
   );
-  
+
   const identity = data?.data || {};
   const { mutate, isPending } = useDeleteIdentity();
 
@@ -244,15 +246,30 @@ const IdentityDetails = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {/* Personal Info */}
                 <InfoCard icon={User} title="Personal Details">
-                  <InfoItem label="First Name" value={identity.first_name || "--"} />
-                  <InfoItem label="Last Name" value={identity.last_name || "--"} />
-                  <InfoItem label="Status" value={<StatusBadge status={identity.is_enabled ?? true} />} />
+                  <InfoItem
+                    label="First Name"
+                    value={identity.first_name || "--"}
+                  />
+                  <InfoItem
+                    label="Last Name"
+                    value={identity.last_name || "--"}
+                  />
+                  <InfoItem
+                    label="Status"
+                    value={<StatusBadge status={identity.is_enabled ?? true} />}
+                  />
                 </InfoCard>
 
                 {/* Contact Info */}
                 <InfoCard icon={Mail} title="Contact Details">
-                  <InfoItem label="Primary Phone" value={identity.primary_phone || "--"} />
-                  <InfoItem label="Secondary Email" value={identity.secondary_email || "--"} />
+                  <InfoItem
+                    label="Primary Phone"
+                    value={identity.primary_phone || "--"}
+                  />
+                  <InfoItem
+                    label="Secondary Email"
+                    value={identity.secondary_email || "--"}
+                  />
                 </InfoCard>
 
                 {/* Security and 2FA */}
@@ -260,7 +277,9 @@ const IdentityDetails = () => {
                   <InfoItem
                     label="App-Based 2FA"
                     value={
-                      <span className={`text-sm font-semibold ${identity.is_app_2fa_enabled ? "text-success" : "text-muted-foreground"}`}>
+                      <span
+                        className={`text-sm font-semibold ${identity.is_app_2fa_enabled ? "text-success" : "text-muted-foreground"}`}
+                      >
                         {identity.is_app_2fa_enabled ? "Enabled" : "Disabled"}
                       </span>
                     }
@@ -268,7 +287,9 @@ const IdentityDetails = () => {
                   <InfoItem
                     label="SMS-Based 2FA"
                     value={
-                      <span className={`text-sm font-semibold ${identity.is_sms_2fa_enabled ? "text-success" : "text-muted-foreground"}`}>
+                      <span
+                        className={`text-sm font-semibold ${identity.is_sms_2fa_enabled ? "text-success" : "text-muted-foreground"}`}
+                      >
                         {identity.is_sms_2fa_enabled ? "Enabled" : "Disabled"}
                       </span>
                     }
@@ -276,7 +297,9 @@ const IdentityDetails = () => {
                   <InfoItem
                     label="Email-Based 2FA"
                     value={
-                      <span className={`text-sm font-semibold ${identity.is_email_2fa_enabled ? "text-success" : "text-muted-foreground"}`}>
+                      <span
+                        className={`text-sm font-semibold ${identity.is_email_2fa_enabled ? "text-success" : "text-muted-foreground"}`}
+                      >
                         {identity.is_email_2fa_enabled ? "Enabled" : "Disabled"}
                       </span>
                     }
@@ -288,7 +311,11 @@ const IdentityDetails = () => {
                   <InfoItem
                     label="Restriction Policy ID"
                     value={identity.restriction_policy_id || "None"}
-                    link={identity.restriction_policy_id ? `/policies/restrictions/${identity.restriction_policy_id}` : null}
+                    link={
+                      identity.restriction_policy_id
+                        ? `/policies/restrictions/${identity.restriction_policy_id}`
+                        : null
+                    }
                   />
                   <InfoItem
                     label="Password Expired"
@@ -367,7 +394,11 @@ const IdentityDetails = () => {
           className="w-[380px] space-y-4 p-1 text-left"
         >
           <p className="text-sm text-muted-foreground mb-4">
-            Enter a new password for <span className="font-semibold text-foreground">{identity?.email || email}</span>.
+            Enter a new password for{" "}
+            <span className="font-semibold text-foreground">
+              {identity?.email || email}
+            </span>
+            .
           </p>
           <PasswordInput
             label="New Password"
@@ -397,11 +428,7 @@ const IdentityDetails = () => {
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              disabled={passwordPending}
-            >
+            <Button type="submit" variant="primary" disabled={passwordPending}>
               {passwordPending ? "Updating..." : "Update Password"}
             </Button>
           </div>

@@ -42,7 +42,7 @@ const DateTimePicker = ({
   ...props
 }) => {
   const { userTimezone } = useUserTimezone();
-  
+
   const [selected, setSelected] = useState(value ? new Date(value) : undefined);
   const [time, setTime] = useState("09:00");
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +54,7 @@ const DateTimePicker = ({
 
   const getTodayInUserTimezone = () => {
     const nowInUserTz = moment.tz(userTimezone);
-    const dateStr = nowInUserTz.format('YYYY-MM-DD');
+    const dateStr = nowInUserTz.format("YYYY-MM-DD");
     const today = new Date(dateStr);
     today.setHours(23, 59, 59, 999);
     return today;

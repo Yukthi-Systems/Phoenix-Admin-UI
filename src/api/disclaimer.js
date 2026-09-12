@@ -25,7 +25,7 @@ import { trimInput } from "@/utils/textUtils";
 
 // Create Domain Disclaimer
 export const createDisclaimer = async (data, addLog = true) => {
-    const cleanData = trimInput(data);
+  const cleanData = trimInput(data);
   let config = {
     method: "POST",
     url: `${API_URL}/disclaimer/create`,
@@ -46,7 +46,8 @@ export const createDisclaimer = async (data, addLog = true) => {
     }
     if (!addLog) return res.data;
 
-    const disclaimerName = data?.disclaimer_name || data?.name || 'New Disclaimer';
+    const disclaimerName =
+      data?.disclaimer_name || data?.name || "New Disclaimer";
     await addLogs({
       values: res,
       type: "success",
@@ -60,8 +61,12 @@ export const createDisclaimer = async (data, addLog = true) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    if (!addLog) throw new Error(response?.data?.message || "Failed to create disclaimer.");
-    const disclaimerName = data?.disclaimer_name || data?.name || 'Unknown Disclaimer';
+    if (!addLog)
+      throw new Error(
+        response?.data?.message || "Failed to create disclaimer.",
+      );
+    const disclaimerName =
+      data?.disclaimer_name || data?.name || "Unknown Disclaimer";
     await addLogs({
       values: response,
       type: "error",
@@ -137,7 +142,8 @@ export const updateDisclaimer = async (disclaimer_id, data) => {
       throw new Error(res?.data?.message || "Failed to update disclaimer.");
     }
 
-    const disclaimerName = data?.disclaimer_name || data?.name || `Disclaimer ID: ${disclaimer_id}`;
+    const disclaimerName =
+      data?.disclaimer_name || data?.name || `Disclaimer ID: ${disclaimer_id}`;
     await addLogs({
       values: res,
       type: "success",
@@ -151,8 +157,9 @@ export const updateDisclaimer = async (disclaimer_id, data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const disclaimerName = data?.disclaimer_name || data?.name || `Disclaimer ID: ${disclaimer_id}`;
+
+    const disclaimerName =
+      data?.disclaimer_name || data?.name || `Disclaimer ID: ${disclaimer_id}`;
     await addLogs({
       values: response,
       type: "error",
@@ -166,7 +173,11 @@ export const updateDisclaimer = async (disclaimer_id, data) => {
 };
 
 // Delete Disclaimer
-export const deleteDisclaimer = async (organization_id, disclaimer_id, disclaimer_name = "Unknown Disclaimer") => {
+export const deleteDisclaimer = async (
+  organization_id,
+  disclaimer_id,
+  disclaimer_name = "Unknown Disclaimer",
+) => {
   let config = {
     method: "DELETE",
     url: `${API_URL}/disclaimer/delete/${organization_id}/${disclaimer_id}`,

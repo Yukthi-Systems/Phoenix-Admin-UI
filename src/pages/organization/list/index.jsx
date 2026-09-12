@@ -49,13 +49,18 @@ import {
   ChevronsRight,
   Upload,
 } from "lucide-react";
-import { selectedOrganizationAtom, userInfoAtom, parentOrgAtom } from "@/store/userInfo";
+import {
+  selectedOrganizationAtom,
+  userInfoAtom,
+  parentOrgAtom,
+} from "@/store/userInfo";
 import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo";
 import { useTablePagination } from "@/hooks/useTablePagination";
 
 const OrganizationTreeView = () => {
   const { permissions = [], organization_id } = useAtomValue(userProfileAtom);
-  const { email_service_enabled, chat_service_enabled } = useAtomValue(parentOrgAtom);
+  const { email_service_enabled, chat_service_enabled } =
+    useAtomValue(parentOrgAtom);
   const navigate = useNavigate();
   const [selectedOrg, setSelectedOrg] = useAtom(selectedOrganizationAtom);
   const [, setUserInfo] = useAtom(userInfoAtom);
@@ -63,10 +68,17 @@ const OrganizationTreeView = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteValue, setDeleteValue] = useState("");
   const [deleteId, setDeleteId] = useState("");
-  const { runCheck: runDeleteCheck, checkingId: checkingDeleteId, blockInfo: deleteBlockInfo, clearBlock: clearDeleteBlock } = usePreDeleteCheck();
+  const {
+    runCheck: runDeleteCheck,
+    checkingId: checkingDeleteId,
+    blockInfo: deleteBlockInfo,
+    clearBlock: clearDeleteBlock,
+  } = usePreDeleteCheck();
   const [expandedOrgs, setExpandedOrgs] = useState(new Set());
-  const { pagination, onPaginationChange: setPagination } =
-    useTablePagination(10, 50);
+  const { pagination, onPaginationChange: setPagination } = useTablePagination(
+    10,
+    50,
+  );
   const toast = useToastify();
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useGetOrganizations(
@@ -171,11 +183,13 @@ const OrganizationTreeView = () => {
       checks: [
         {
           label: "sub-organization",
-          fn: async (orgId) => (await getOrganizations(1, 1, orgId))?.total_count ?? 0,
+          fn: async (orgId) =>
+            (await getOrganizations(1, 1, orgId))?.total_count ?? 0,
         },
         {
           label: "domain",
-          fn: async (orgId) => (await getDomains(orgId, 1, 1))?.domains?.total_count ?? 0,
+          fn: async (orgId) =>
+            (await getDomains(orgId, 1, 1))?.domains?.total_count ?? 0,
         },
       ],
       onClear: () => {
@@ -209,14 +223,19 @@ const OrganizationTreeView = () => {
               organization_id,
             ]);
 
-            if (deleteId === selectedOrg?.organization_id && defaultOrgDetails) {
+            if (
+              deleteId === selectedOrg?.organization_id &&
+              defaultOrgDetails
+            ) {
               setSelectedOrg(defaultOrgDetails);
               setUserInfo((prev) => ({
                 ...prev,
                 organization_id: defaultOrgDetails.organization_id,
                 organization_name: defaultOrgDetails.organization_name,
-                chat_service_enabled: defaultOrgDetails.chat_service_enabled ?? false,
-                email_service_enabled: defaultOrgDetails.email_service_enabled ?? false,
+                chat_service_enabled:
+                  defaultOrgDetails.chat_service_enabled ?? false,
+                email_service_enabled:
+                  defaultOrgDetails.email_service_enabled ?? false,
               }));
               updateUiInfo({
                 organizationSelector: {
@@ -339,10 +358,11 @@ const OrganizationTreeView = () => {
                 setPagination((prev) => ({ ...prev, pageIndex: pageNum - 1 }))
               }
               disabled={isLoading}
-              className={`px-3 py-1 text-sm font-medium rounded transition-colors ${pageNum === currentPage
-                ? "bg-primary text-primary-foreground"
-                : "hover:bg-accent hover:text-accent-foreground border border-border"
-                }`}
+              className={`px-3 py-1 text-sm font-medium rounded transition-colors ${
+                pageNum === currentPage
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground border border-border"
+              }`}
             >
               {pageNum}
             </button>
@@ -390,23 +410,24 @@ const OrganizationTreeView = () => {
       <div className="px-2 w-full h-full">
         <div className="w-full flex justify-between items-center mb-2.5">
           <Breadcrumbs items={[{ name: "Organization" }]} />
-          {permissions.includes("organization:create") && (email_service_enabled || chat_service_enabled) && (
-            <div className="flex items-center gap-2">
-              {isImportAvailable && (
-                <Button
-                  variant="secondary"
-                  icon={Upload}
-                  onClick={handleImport}
-                >
-                  Import
-                </Button>
-              )}
-              <AddButton
-                label="Add Organization"
-                handleClick={handleAddOrganization}
-              />
-            </div>
-          )}
+          {permissions.includes("organization:create") &&
+            (email_service_enabled || chat_service_enabled) && (
+              <div className="flex items-center gap-2">
+                {isImportAvailable && (
+                  <Button
+                    variant="secondary"
+                    icon={Upload}
+                    onClick={handleImport}
+                  >
+                    Import
+                  </Button>
+                )}
+                <AddButton
+                  label="Add Organization"
+                  handleClick={handleAddOrganization}
+                />
+              </div>
+            )}
         </div>
 
         <div className="w-full h-[calc(100vh-150px)] shadow-lg overflow-hidden rounded-lg bg-card border border-border">

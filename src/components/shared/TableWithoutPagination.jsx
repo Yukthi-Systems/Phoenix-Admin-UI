@@ -17,10 +17,10 @@
 
 import { flexRender } from "@tanstack/react-table";
 
-const TableWithoutPagination = ({ 
-  table, 
+const TableWithoutPagination = ({
+  table,
   isLoading = false,
-  cellPadding = "py-0.5" 
+  cellPadding = "py-0.5",
 }) => {
   const skeletonRows = Array(5).fill(null);
   const visibleColumns = table.getHeaderGroups()[0]?.headers || [];

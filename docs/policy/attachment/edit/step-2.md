@@ -2,7 +2,7 @@
 
 ![Step 2: File Type Configuration.](../../images/policy-attachment-step2-filetypes.png)
 
-*Step 2: File Type Configuration (shown here is Add — Edit looks identical, pre-filled with the policy's current allowed and blocked extensions).*
+_Step 2: File Type Configuration (shown here is Add — Edit looks identical, pre-filled with the policy's current allowed and blocked extensions)._
 
 The same fields as Step 2 of Adding a New Attachment Policy — Allowed Extensions and Blocked Extensions.
 

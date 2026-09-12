@@ -313,7 +313,9 @@ function ViewRestrictionPolicy() {
               </div>
 
               {/* Overview Stats Grid */}
-              <div className={`grid grid-cols-1 md:grid-cols-2 ${data?.policy_description ? "xl:grid-cols-3" : "xl:grid-cols-2"} gap-4`}>
+              <div
+                className={`grid grid-cols-1 md:grid-cols-2 ${data?.policy_description ? "xl:grid-cols-3" : "xl:grid-cols-2"} gap-4`}
+              >
                 <InfoCard icon={Globe} title="Domain & Status">
                   <InfoItem
                     label="Domain"
@@ -343,14 +345,14 @@ function ViewRestrictionPolicy() {
                 </InfoCard>
 
                 {data?.policy_description && (
-                <InfoCard icon={Info} title="Policy Description">
-                  <div className="p-3 bg-muted/20 rounded">
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                      {data.policy_description}
-                    </p>
-                  </div>
-                </InfoCard>
-              )}
+                  <InfoCard icon={Info} title="Policy Description">
+                    <div className="p-3 bg-muted/20 rounded">
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                        {data.policy_description}
+                      </p>
+                    </div>
+                  </InfoCard>
+                )}
               </div>
 
               {/* Detailed Restrictions Grid */}
@@ -371,7 +373,6 @@ function ViewRestrictionPolicy() {
               </div>
 
               {/* Additional Information Card */}
-             
 
               {/* Empty State Guidance */}
               {!policyStats.hasIPs && !policyStats.hasGeo && (

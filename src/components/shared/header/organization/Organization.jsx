@@ -62,7 +62,8 @@ const Organization = () => {
   // real, unconfirmed org change - nothing is written to any atom or
   // storage until the user actually confirms via the modal below.
   const handleBeforeSelect = (organization) => {
-    const isOrgChange = organization.organization_id !== userInfo?.organization_id;
+    const isOrgChange =
+      organization.organization_id !== userInfo?.organization_id;
     if (!isOrgChange || uiInfo?.dontShowOrgSwitchWarning) return true;
 
     setPendingOrg(organization);
@@ -75,7 +76,8 @@ const Organization = () => {
   // that point, so this just syncs selectedOrganizationAtom and resets
   // app state for an actual switch.
   const handleSelect = (organization) => {
-    const isOrgChange = organization.organization_id !== userInfo?.organization_id;
+    const isOrgChange =
+      organization.organization_id !== userInfo?.organization_id;
     updateSelection(organization);
     if (isOrgChange) resetAppState();
   };

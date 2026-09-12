@@ -6,6 +6,6 @@ Click Edit Department to update an existing department. It's a 2-step form that 
 
 ![Step 1: Department Information.](../../images/dept-step1-info.png)
 
-*Step 1: Department Information — the Edit screen looks the same as the Add wizard's step.*
+_Step 1: Department Information — the Edit screen looks the same as the Add wizard's step._
 
 Same field as Department Information in section 3.4 — Department Name.

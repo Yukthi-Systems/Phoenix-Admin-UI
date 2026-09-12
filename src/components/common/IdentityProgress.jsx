@@ -36,7 +36,8 @@ const IdentityProgress = ({ utilized, allocated, className = "" }) => {
   }
 
   const allocatedCount = parseInt(allocated, 10) || 0;
-  const percentage = allocatedCount > 0 ? (utilizedCount / allocatedCount) * 100 : 0;
+  const percentage =
+    allocatedCount > 0 ? (utilizedCount / allocatedCount) * 100 : 0;
   const remaining = allocatedCount - utilizedCount;
 
   let textColor = "text-foreground";

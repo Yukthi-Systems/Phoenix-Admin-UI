@@ -93,7 +93,7 @@ export const getApiKeyDetails = async (organization_id, api_key_id) => {
     });
 
     throw new Error(
-      response?.data?.message || "Failed to get API key details."
+      response?.data?.message || "Failed to get API key details.",
     );
   }
 };
@@ -122,7 +122,7 @@ export const createApiKey = async (organization_id, data) => {
       method,
       action_type: "create_api_key",
       payload: { organization_id, ...data },
-      message: `New API Key created successfully - Name: "${data.name || 'Untitled'}"`,
+      message: `New API Key created successfully - Name: "${data.name || "Untitled"}"`,
       org_Id: organization_id,
     });
 
@@ -131,7 +131,7 @@ export const createApiKey = async (organization_id, data) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    const keyName = data?.name || 'Unknown name';
+    const keyName = data?.name || "Unknown name";
     await addLogs({
       values: response,
       type: "error",
@@ -147,7 +147,12 @@ export const createApiKey = async (organization_id, data) => {
 };
 
 // Edit API Key (Activate/Update)
-export const editApiKey = async (organization_id, api_key_id, activate, data) => {
+export const editApiKey = async (
+  organization_id,
+  api_key_id,
+  activate,
+  data,
+) => {
   const method = "PATCH";
   const url = `${API_URL}/organization/api-key/${organization_id}/${api_key_id}/${activate}`;
 

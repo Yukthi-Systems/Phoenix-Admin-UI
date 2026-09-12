@@ -132,9 +132,7 @@ export const createIdentity = async (data, addLog = true) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
     if (!addLog)
-      throw new Error(
-        response?.data?.message || "Failed to create identity.",
-      );
+      throw new Error(response?.data?.message || "Failed to create identity.");
     const identityName = `${data.email_prefix}@${data.email_domain}`;
     await addLogs({
       values: response,
@@ -280,14 +278,18 @@ export const exportIdentities = async (domain_name, page, pageSize) => {
   }
 };
 
-export const updateIdentityPassword = async (domain_name, email_prefix, new_base64_password) => {
+export const updateIdentityPassword = async (
+  domain_name,
+  email_prefix,
+  new_base64_password,
+) => {
   const method = "PATCH";
   const url = `${API_URL}/identities/update/password`;
   const payload = {
     email: `${email_prefix}@${domain_name}`.toLowerCase(),
     new_base64_password,
     email_domain: domain_name,
-    domain_name: domain_name
+    domain_name: domain_name,
   };
 
   try {
@@ -301,7 +303,9 @@ export const updateIdentityPassword = async (domain_name, email_prefix, new_base
     });
 
     if (res.status !== 200)
-      throw new Error(res?.data?.message || "Failed to update identity password.");
+      throw new Error(
+        res?.data?.message || "Failed to update identity password.",
+      );
 
     await addLogs({
       values: res,

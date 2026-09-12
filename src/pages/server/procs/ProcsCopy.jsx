@@ -88,7 +88,8 @@ const ProcessSearchBar = ({ searchQuery, setSearchQuery, resultCount }) => {
       </div>
       {searchQuery && (
         <div className="mt-2 text-xs text-muted-foreground">
-          Found {resultCount} {resultCount === 1 ? "process" : "processes"} matching "{searchQuery}"
+          Found {resultCount} {resultCount === 1 ? "process" : "processes"}{" "}
+          matching "{searchQuery}"
         </div>
       )}
     </div>
@@ -211,7 +212,7 @@ const ServerProcs = () => {
     return processList.filter(
       (proc) =>
         proc.name?.toLowerCase().includes(query) ||
-        proc.pid?.toString().includes(query)
+        proc.pid?.toString().includes(query),
     );
   }, [processList, searchQuery]);
 

@@ -36,10 +36,13 @@ const ContactManager = ({
 }) => {
   const toast = useToastify();
 
-  const handleContactChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setNewContact((prev) => ({ ...prev, [name]: value }));
-  }, [setNewContact]);
+  const handleContactChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setNewContact((prev) => ({ ...prev, [name]: value }));
+    },
+    [setNewContact],
+  );
 
   const addContact = () => {
     if (!newContact.name.trim()) {

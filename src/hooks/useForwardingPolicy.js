@@ -21,7 +21,7 @@ import {
   getForwardingPolicyEntry,
   addForwardingPolicy,
   editForwardingPolicy,
-  deleteForwardingPolicy
+  deleteForwardingPolicy,
 } from "../api/forwardingPolicy";
 
 export function useForwardingPolicy({
@@ -41,7 +41,13 @@ export function useForwardingPolicy({
       query,
     ],
     queryFn: () =>
-      getForwardingPolicy({ organization_id, domain_name, page, pageSize, query }),
+      getForwardingPolicy({
+        organization_id,
+        domain_name,
+        page,
+        pageSize,
+        query,
+      }),
     enabled: !!domain_name && !!organization_id,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
@@ -66,7 +72,8 @@ export function useAddForwardingPolicy() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add_forwarding_policy"],
-    mutationFn: async ({ org_id, data, addLog = true }) => addForwardingPolicy(org_id, data, addLog),
+    mutationFn: async ({ org_id, data, addLog = true }) =>
+      addForwardingPolicy(org_id, data, addLog),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["forwarding_policy"] }),
   });
@@ -75,14 +82,19 @@ export function useAddForwardingPolicy() {
 export function useEditForwardingPolicy() {
   return useMutation({
     mutationKey: ["edit_forwarding_policy"],
-    mutationFn: async ({ org_id, policy_id, data }) => editForwardingPolicy(org_id, policy_id, data),
+    mutationFn: async ({ org_id, policy_id, data }) =>
+      editForwardingPolicy(org_id, policy_id, data),
   });
 }
 
 export function useDeleteForwardingPolicy() {
   return useMutation({
     mutationKey: ["delete_forwarding_policy"],
-    mutationFn: async ({ org_id, policy_id, domain_name, policy_name = "Unknown Policy" }) =>
-      deleteForwardingPolicy(org_id, policy_id, domain_name, policy_name),
+    mutationFn: async ({
+      org_id,
+      policy_id,
+      domain_name,
+      policy_name = "Unknown Policy",
+    }) => deleteForwardingPolicy(org_id, policy_id, domain_name, policy_name),
   });
 }

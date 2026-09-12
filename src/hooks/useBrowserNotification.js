@@ -19,7 +19,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 
 export const useBrowserNotification = () => {
   const [permission, setPermission] = useState(
-    "Notification" in window ? Notification.permission : "unsupported"
+    "Notification" in window ? Notification.permission : "unsupported",
   );
   const [isRequesting, setIsRequesting] = useState(false);
   const activeNotifications = useRef(new Set());
@@ -42,15 +42,18 @@ export const useBrowserNotification = () => {
     if ("Notification" in window) {
       // Check immediately
       setPermission(Notification.permission);
-      
+
       // Poll for permission changes (since there isn't a native event for this)
       const interval = setInterval(() => {
         if (Notification.permission !== permission) {
-          log("info", `Permission changed polling: ${permission} → ${Notification.permission}`);
+          log(
+            "info",
+            `Permission changed polling: ${permission} → ${Notification.permission}`,
+          );
           setPermission(Notification.permission);
         }
       }, 2000);
-      
+
       return () => clearInterval(interval);
     }
   }, [permission]);
@@ -95,85 +98,82 @@ export const useBrowserNotification = () => {
     }
   }, []);
 
-  const showNotification = useCallback(
-    (title, options = {}) => {
-      return new Promise((resolve) => {
-        if (!("Notification" in window)) {
-          resolve(null);
-          return;
+  const showNotification = useCallback((title, options = {}) => {
+    return new Promise((resolve) => {
+      if (!("Notification" in window)) {
+        resolve(null);
+        return;
+      }
+
+      // Check permission directly from API to avoid state staleness
+      if (Notification.permission !== "granted") {
+        log("warn", `Cannot show: Permission is ${Notification.permission}`);
+        resolve(null);
+        return;
+      }
+
+      const isPageVisible = document.visibilityState === "visible";
+      const isPageFocused = document.hasFocus();
+
+      // LOGIC: Show if Force OR Page Hidden OR (Page Visible but NOT Focused)
+      // This covers side-by-side windows or second monitors where app is visible but user is typing elsewhere
+      const forceShow = options.forceShow === true;
+      const shouldShow = !isPageVisible || !isPageFocused || forceShow;
+
+      if (!shouldShow) {
+        log("info", "Skipping: Page is visible and focused");
+        resolve(null);
+        return;
+      }
+
+      try {
+        // Use a valid icon path or fallback to prevent errors
+        const iconPath = options.icon || "/favicon.ico";
+
+        const notification = new Notification(title, {
+          icon: iconPath,
+          tag: options.tag || `notification-${Date.now()}`,
+          requireInteraction: false,
+          silent: false,
+          renotify: true,
+          ...options,
+        });
+
+        activeNotifications.current.add(notification);
+
+        // Auto-close logic
+        const autoCloseTime =
+          options.autoClose !== false ? options.duration || 5000 : null;
+
+        if (autoCloseTime) {
+          const timeoutId = setTimeout(() => {
+            if (activeNotifications.current.has(notification)) {
+              notification.close();
+            }
+          }, autoCloseTime);
+
+          notificationTimeouts.current.set(notification, timeoutId);
         }
 
-        // Check permission directly from API to avoid state staleness
-        if (Notification.permission !== "granted") {
-          log("warn", `Cannot show: Permission is ${Notification.permission}`);
-          resolve(null);
-          return;
-        }
+        notification.onclick = () => {
+          if (options.onClick) options.onClick();
+          window.focus();
+          notification.close();
+        };
 
-        const isPageVisible = document.visibilityState === "visible";
-        const isPageFocused = document.hasFocus();
+        notification.onclose = () => {
+          activeNotifications.current.delete(notification);
+          const timeoutId = notificationTimeouts.current.get(notification);
+          if (timeoutId) clearTimeout(timeoutId);
+        };
 
-        // LOGIC: Show if Force OR Page Hidden OR (Page Visible but NOT Focused)
-        // This covers side-by-side windows or second monitors where app is visible but user is typing elsewhere
-        const forceShow = options.forceShow === true;
-        const shouldShow = !isPageVisible || !isPageFocused || forceShow;
-
-        if (!shouldShow) {
-          log("info", "Skipping: Page is visible and focused");
-          resolve(null);
-          return;
-        }
-
-        try {
-          // Use a valid icon path or fallback to prevent errors
-          const iconPath = options.icon || "/favicon.ico"; 
-
-          const notification = new Notification(title, {
-            icon: iconPath,
-            tag: options.tag || `notification-${Date.now()}`,
-            requireInteraction: false,
-            silent: false,
-            renotify: true,
-            ...options,
-          });
-
-          activeNotifications.current.add(notification);
-
-          // Auto-close logic
-          const autoCloseTime =
-            options.autoClose !== false ? options.duration || 5000 : null;
-          
-          if (autoCloseTime) {
-            const timeoutId = setTimeout(() => {
-              if (activeNotifications.current.has(notification)) {
-                notification.close();
-              }
-            }, autoCloseTime);
-
-            notificationTimeouts.current.set(notification, timeoutId);
-          }
-
-          notification.onclick = () => {
-            if (options.onClick) options.onClick();
-            window.focus();
-            notification.close();
-          };
-
-          notification.onclose = () => {
-            activeNotifications.current.delete(notification);
-            const timeoutId = notificationTimeouts.current.get(notification);
-            if (timeoutId) clearTimeout(timeoutId);
-          };
-
-          resolve(notification);
-        } catch (error) {
-          log("error", "Failed to create notification", error);
-          resolve(null);
-        }
-      });
-    },
-    []
-  );
+        resolve(notification);
+      } catch (error) {
+        log("error", "Failed to create notification", error);
+        resolve(null);
+      }
+    });
+  }, []);
 
   const showUserNotification = useCallback(
     (message, userName, timestamp, onClick = null) => {
@@ -183,10 +183,10 @@ export const useBrowserNotification = () => {
         tag: `user-${Date.now()}`, // Unique tag to prevent overwriting
         onClick,
         // Optional: Force show if needed for testing, defaults to false
-        forceShow: false, 
+        forceShow: false,
       });
     },
-    [showNotification]
+    [showNotification],
   );
 
   const closeAllNotifications = useCallback(() => {
@@ -209,7 +209,8 @@ export const useBrowserNotification = () => {
     canShowNotifications: "Notification" in window && permission === "granted",
     getDebugInfo: () => ({
       permission,
-      realPermission: "Notification" in window ? Notification.permission : "N/A",
+      realPermission:
+        "Notification" in window ? Notification.permission : "N/A",
       isSupported: "Notification" in window,
     }),
   };

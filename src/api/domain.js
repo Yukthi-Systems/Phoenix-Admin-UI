@@ -112,7 +112,7 @@ export const addDomain = async (data, addLog = true) => {
       throw new Error(res?.data?.message || "Failed to create domain.");
 
     if (addLog) {
-      const domainName = data?.domain_name || data?.name || 'New Domain';
+      const domainName = data?.domain_name || data?.name || "New Domain";
       await addLogs({
         values: res,
         type: "success",
@@ -127,7 +127,7 @@ export const addDomain = async (data, addLog = true) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
     if (addLog) {
-      const domainName = data?.domain_name || data?.name || 'Unknown Domain';
+      const domainName = data?.domain_name || data?.name || "Unknown Domain";
       await addLogs({
         values: response,
         type: "error",
@@ -209,7 +209,7 @@ export const updateDomainStatus = async (
     if (![200, 204].includes(res.status))
       throw new Error(res?.data?.message || "Failed to update domain status.");
 
-    const statusText = status ? 'activated' : 'deactivated';
+    const statusText = status ? "activated" : "deactivated";
     await addLogs({
       values: res,
       type: "success",
@@ -224,7 +224,7 @@ export const updateDomainStatus = async (
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    const statusText = status ? 'activate' : 'deactivate';
+    const statusText = status ? "activate" : "deactivate";
     await addLogs({
       values: response,
       type: "error",

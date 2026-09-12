@@ -27,6 +27,6 @@ export const generalPolicyDefaultValues = {
   outgoing_size_limit_mb: 0,
   policy_description: "",
   policy_name: "",
-  block_all_incoming_domains : false,
-  block_all_outgoing_domains : false,
+  block_all_incoming_domains: false,
+  block_all_outgoing_domains: false,
 };

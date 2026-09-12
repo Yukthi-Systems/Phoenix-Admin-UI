@@ -64,8 +64,8 @@ function PolicyRulesListing() {
   const [deleteValue, setDeleteValue] = useState("");
   const [deleteId, setDeleteId] = useState("");
   const navigate = useNavigate();
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
   const { formatUserDateNice } = useUserTimezone();
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { organization_id } = useAtomValue(userInfoAtom);

@@ -30,9 +30,7 @@
 export const normalizeDomainDetailsForForm = (domain) => {
   if (!domain) return null;
 
-  const notifyAt = domain?.max_password_age_properties?.notify_at || [
-    2, 5, 9,
-  ];
+  const notifyAt = domain?.max_password_age_properties?.notify_at || [2, 5, 9];
   const hasMaxPasswordAge = domain?.max_password_age > 0;
 
   return {
@@ -63,9 +61,10 @@ export const normalizeDomainDetailsForForm = (domain) => {
       // The backend uses -1 (not just missing/0) as a "not configured"
       // sentinel for domains without hybrid mode — `|| 25` doesn't catch
       // that since -1 is truthy, so check explicitly for a positive port.
-      port: domain?.connector_properties?.port > 0
-        ? domain.connector_properties.port
-        : 25,
+      port:
+        domain?.connector_properties?.port > 0
+          ? domain.connector_properties.port
+          : 25,
     },
     spam_destination: domain?.spam_destination || "Folder",
     spam_destination_properties: {

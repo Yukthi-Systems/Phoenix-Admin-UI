@@ -42,20 +42,25 @@ export function MailboxInfiniteSelectField({
   const debounceRef = useRef(null);
 
   const fetchOptions = async (pageNum = 1, query = "") => {
-    if ((loading && pageNum > 1) || (totalPages && pageNum > totalPages) || !domainName) return;
+    if (
+      (loading && pageNum > 1) ||
+      (totalPages && pageNum > totalPages) ||
+      !domainName
+    )
+      return;
 
     setLoading(true);
     try {
       // Using the existing getMailboxes API: (domain_name, page, pageSize, query)
       const data = await getMailboxes(domainName, pageNum, 50, query);
-      
+
       const mailboxList = data?.mailboxes || [];
       const total = data?.total_pages || 1;
 
       const newOptions = mailboxList.map((item) => ({
         label: item.email,
         value: item.email, // We use full email as value
-        original: item
+        original: item,
       }));
 
       if (pageNum === 1) {
@@ -76,7 +81,10 @@ export function MailboxInfiniteSelectField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -119,11 +127,11 @@ export function MailboxInfiniteSelectField({
         control={control}
         render={({ field }) => {
           let selectedOption = null;
-          
+
           // Only try to find/create selected option if field has a value
           if (field.value) {
             selectedOption = options.find((opt) => opt.value === field.value);
-          
+
             // Fallback if initial value isn't in loaded options
             if (!selectedOption) {
               selectedOption = {

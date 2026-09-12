@@ -73,78 +73,78 @@ const PasswordPropertiesStep = ({ register, errors, control, watch }) => {
       {/* </fieldset> */}
 
       <fieldset className="border-border rounded-md border p-6">
-      <legend className="text-foreground  text-left text-base font-medium">
-        Password Age Restrictions
-      </legend>
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <Switch
-            control={control}
-            name="enable_max_password_age"
-            register={register}
-            watch={watch}
-            errors={errors}
-            falseLabel="Max Password Age Disabled"
-            falseSublabel="No password age restrictions will be applied"
-            trueLabel="Max Password Age Enabled"
-            trueSublabel="Password age restrictions will be enforced"
-          />
-        </div>
-
-        {enableMaxPasswordAge && (
-          <div className="bg-accent/30 border-accent rounded-lg border p-4">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <Input
-                type="number"
-                label="Max Password Age (days)"
-                name="max_password_age"
-                placeholder="90"
-                register={register}
-                errors={errors}
-                isRequired={true}
-                min={3}
-                max={365}
-              />
-
-              <Input
-                type="number"
-                label="Notify 1 (days before expiry)"
-                name="notify_1"
-                placeholder="2"
-                register={register}
-                errors={errors}
-                isRequired={true}
-                min={2}
-                max={maxPasswordAge ? maxPasswordAge - 1 : 364}
-              />
-
-              <Input
-                type="number"
-                label="Notify 2 (days before expiry)"
-                name="notify_2"
-                placeholder="5"
-                register={register}
-                errors={errors}
-                isRequired={true}
-                min={2}
-                max={maxPasswordAge ? maxPasswordAge - 1 : 364}
-              />
-
-              <Input
-                type="number"
-                label="Notify 3 (days before expiry)"
-                name="notify_3"
-                placeholder="9"
-                register={register}
-                errors={errors}
-                isRequired={true}
-                min={2}
-                max={maxPasswordAge ? maxPasswordAge - 1 : 364}
-              />
-            </div>
+        <legend className="text-foreground  text-left text-base font-medium">
+          Password Age Restrictions
+        </legend>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Switch
+              control={control}
+              name="enable_max_password_age"
+              register={register}
+              watch={watch}
+              errors={errors}
+              falseLabel="Max Password Age Disabled"
+              falseSublabel="No password age restrictions will be applied"
+              trueLabel="Max Password Age Enabled"
+              trueSublabel="Password age restrictions will be enforced"
+            />
           </div>
-        )}
-      </div>
+
+          {enableMaxPasswordAge && (
+            <div className="bg-accent/30 border-accent rounded-lg border p-4">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <Input
+                  type="number"
+                  label="Max Password Age (days)"
+                  name="max_password_age"
+                  placeholder="90"
+                  register={register}
+                  errors={errors}
+                  isRequired={true}
+                  min={3}
+                  max={365}
+                />
+
+                <Input
+                  type="number"
+                  label="Notify 1 (days before expiry)"
+                  name="notify_1"
+                  placeholder="2"
+                  register={register}
+                  errors={errors}
+                  isRequired={true}
+                  min={2}
+                  max={maxPasswordAge ? maxPasswordAge - 1 : 364}
+                />
+
+                <Input
+                  type="number"
+                  label="Notify 2 (days before expiry)"
+                  name="notify_2"
+                  placeholder="5"
+                  register={register}
+                  errors={errors}
+                  isRequired={true}
+                  min={2}
+                  max={maxPasswordAge ? maxPasswordAge - 1 : 364}
+                />
+
+                <Input
+                  type="number"
+                  label="Notify 3 (days before expiry)"
+                  name="notify_3"
+                  placeholder="9"
+                  register={register}
+                  errors={errors}
+                  isRequired={true}
+                  min={2}
+                  max={maxPasswordAge ? maxPasswordAge - 1 : 364}
+                />
+              </div>
+            </div>
+          )}
+        </div>
       </fieldset>
     </div>
   );

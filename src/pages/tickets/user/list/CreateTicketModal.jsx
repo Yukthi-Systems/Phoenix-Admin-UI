@@ -144,7 +144,7 @@ const CreateTicketModal = ({ isOpen, onClose, onSuccess }) => {
   const handleDragLeave = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Only set isDragging to false if we're leaving the drop zone entirely
     if (e.currentTarget === e.target) {
       setIsDragging(false);
@@ -203,8 +203,7 @@ const CreateTicketModal = ({ isOpen, onClose, onSuccess }) => {
           } catch (err) {
             console.error(`Failed to upload ${fileItem.name}`, err);
             toast.error(
-              err?.message ||
-                `${t("Failed to upload")}: ${fileItem.name}`,
+              err?.message || `${t("Failed to upload")}: ${fileItem.name}`,
             );
           }
 
@@ -374,8 +373,8 @@ const CreateTicketModal = ({ isOpen, onClose, onSuccess }) => {
                     isSubmitting
                       ? "opacity-50 cursor-not-allowed border-border"
                       : isDragging
-                      ? "border-primary bg-primary/10 cursor-pointer"
-                      : "border-border hover:bg-accent/30 cursor-pointer"
+                        ? "border-primary bg-primary/10 cursor-pointer"
+                        : "border-border hover:bg-accent/30 cursor-pointer"
                   }`}
                   onClick={() => !isSubmitting && fileInputRef.current?.click()}
                   onDragEnter={handleDragEnter}
@@ -392,19 +391,22 @@ const CreateTicketModal = ({ isOpen, onClose, onSuccess }) => {
                     disabled={isSubmitting}
                   />
                   <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <UploadCloud 
-                      size={32} 
+                    <UploadCloud
+                      size={32}
                       className={isDragging ? "text-primary" : ""}
                     />
-                    <p className={`text-sm ${isDragging ? "text-primary font-medium" : ""}`}>
-                      {isDragging 
-                        ? t("Drop files here") 
-                        : t("Drag and drop files here or click to upload")
-                      }
+                    <p
+                      className={`text-sm ${isDragging ? "text-primary font-medium" : ""}`}
+                    >
+                      {isDragging
+                        ? t("Drop files here")
+                        : t("Drag and drop files here or click to upload")}
                     </p>
                     {!isDragging && (
                       <p className="text-xs text-muted-foreground/70">
-                        {t("Files will be uploaded when you create the ticket.")}
+                        {t(
+                          "Files will be uploaded when you create the ticket.",
+                        )}
                       </p>
                     )}
                   </div>
@@ -433,7 +435,8 @@ const CreateTicketModal = ({ isOpen, onClose, onSuccess }) => {
                               {file.name}
                             </span>
                             <span className="text-xs text-muted-foreground">
-                            {formatFileSize(file.size)} • {file.fileObject.type || 'Unknown'}
+                              {formatFileSize(file.size)} •{" "}
+                              {file.fileObject.type || "Unknown"}
                             </span>
                           </div>
                         </div>

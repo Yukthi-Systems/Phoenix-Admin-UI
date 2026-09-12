@@ -32,13 +32,13 @@ const PreviewItem = ({ label, value, isPassword = false }) => (
 const PreviewStep = ({ formData }) => {
   // Construct the full destination email for display
   const destinationEmail = `${formData.to_email_prefix}@${formData.to_email_domain}`;
-  
+
   // Format dates for display
-  const startDate = formData.date_range?.startDate 
-    ? moment(formData.date_range.startDate).format("YYYY-MM-DD") 
+  const startDate = formData.date_range?.startDate
+    ? moment(formData.date_range.startDate).format("YYYY-MM-DD")
     : "-";
-  const endDate = formData.date_range?.endDate 
-    ? moment(formData.date_range.endDate).format("YYYY-MM-DD") 
+  const endDate = formData.date_range?.endDate
+    ? moment(formData.date_range.endDate).format("YYYY-MM-DD")
     : "-";
 
   return (
@@ -57,7 +57,11 @@ const PreviewStep = ({ formData }) => {
           <PreviewItem label="IMAP Server" value={formData.imap_server} />
           <PreviewItem label="Port" value={formData.imap_port} />
           <PreviewItem label="Username" value={formData.imap_username} />
-          <PreviewItem label="Password" value={formData.imap_password} isPassword />
+          <PreviewItem
+            label="Password"
+            value={formData.imap_password}
+            isPassword
+          />
         </div>
 
         {/* Destination & Scope */}
@@ -75,8 +79,8 @@ const PreviewStep = ({ formData }) => {
             </h3>
             <PreviewItem label="Folder" value={formData.sync_specific_folder} />
             <div className="grid grid-cols-2 gap-4">
-                <PreviewItem label="From Date" value={startDate} />
-                <PreviewItem label="To Date" value={endDate} />
+              <PreviewItem label="From Date" value={startDate} />
+              <PreviewItem label="To Date" value={endDate} />
             </div>
           </div>
         </div>

@@ -18,11 +18,7 @@
 import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 
 function GetOrganizationName({ id }) {
-  const {
-    data,
-    isPending: isLoading,
-    isError,
-  } = useGetOrganizationDetail(id);
+  const { data, isPending: isLoading, isError } = useGetOrganizationDetail(id);
 
   if (!id) {
     return <p>Not assigned</p>;

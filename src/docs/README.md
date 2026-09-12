@@ -33,7 +33,7 @@ src/docs/
 title: Domain details
 feature: domain
 flow: create
-step: 1            # 1-based wizard step; omit for _meta
+step: 1 # 1-based wizard step; omit for _meta
 summary: One line shown in nav and on the /docs landing cards.
 updated: 2026-09-03
 ---
@@ -44,12 +44,12 @@ filename prefix (`01-`) is used as a fallback.
 
 ## Components available in every `.mdx` (no import needed)
 
-| Component | Use |
-| --- | --- |
-| `<Callout type="info\|tip\|warning\|danger" title="...">` | Coloured note box |
-| `<Figure src alt caption />` | Image — local path **or** remote URL; lazy + click-to-zoom |
-| `<YouTube id="..." start={30} />` or `<YouTube url="https://youtu.be/..." />` | Click-to-load YouTube embed |
-| `<Video src poster caption />` | Self/externally hosted mp4/webm |
+| Component                                                                     | Use                                                        |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `<Callout type="info\|tip\|warning\|danger" title="...">`                     | Coloured note box                                          |
+| `<Figure src alt caption />`                                                  | Image — local path **or** remote URL; lazy + click-to-zoom |
+| `<YouTube id="..." start={30} />` or `<YouTube url="https://youtu.be/..." />` | Click-to-load YouTube embed                                |
+| `<Video src poster caption />`                                                | Self/externally hosted mp4/webm                            |
 
 Plain markdown works too: `![alt](url)` gets the same lazy/zoom treatment as
 `<Figure>`, and external links open in a new tab automatically.
@@ -64,7 +64,10 @@ render time:
 ```mdx
 <Figure src="../assets/domain-details.png" alt="Domain details" />
 ![Domain details](../assets/domain-details.png)
-<Video src="../assets/walkthrough.mp4" poster="../assets/walkthrough-poster.jpg" />
+<Video
+  src="../assets/walkthrough.mp4"
+  poster="../assets/walkthrough-poster.jpg"
+/>
 ```
 
 Supported extensions: `png jpg jpeg gif svg webp avif` and `mp4 webm mov m4v ogg`.

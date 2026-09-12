@@ -17,7 +17,15 @@
 
 import React, { useState } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { AlertTriangle, Download, CheckCircle, Eye, EyeOff, Copy, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Download,
+  CheckCircle,
+  Eye,
+  EyeOff,
+  Copy,
+  X,
+} from "lucide-react";
 import ApiKeyPDF from "./ApiKeypdf";
 
 const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
@@ -47,7 +55,7 @@ const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop - doesn't close on click */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-      
+
       {/* Modal */}
       <div className="relative text-left bg-background border border-border rounded-2xl shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
@@ -69,7 +77,8 @@ const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
               <div className="text-sm text-amber-800 dark:text-amber-200">
                 <p className="font-semibold mb-1">Save your API key now</p>
                 <p>
-                  This key will only be displayed once. After closing this window, you won't be able to view it again.
+                  This key will only be displayed once. After closing this
+                  window, you won't be able to view it again.
                 </p>
               </div>
             </div>
@@ -103,11 +112,7 @@ const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
                   className="p-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors"
                   title="Copy to clipboard"
                 >
-                  {copySuccess ? (
-                    <CheckCircle size={18} />
-                  ) : (
-                    <Copy size={18} />
-                  )}
+                  {copySuccess ? <CheckCircle size={18} /> : <Copy size={18} />}
                 </button>
               </div>
             </div>
@@ -155,8 +160,7 @@ const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
               onClick={onClose}
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors font-medium"
             >
-              <CheckCircle size={16} />
-              I have saved my key
+              <CheckCircle size={16} />I have saved my key
             </button>
           </div>
         </div>

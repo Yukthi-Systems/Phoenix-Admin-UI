@@ -446,32 +446,31 @@ export const ListEditorEmail = ({
       </label>
       <div className="flex gap-3 mb-4">
         <div className="flex-1">
-          {
-            hasDropdown ? (
-              <>
-                <MailboxInfiniteSelect
-                  name="department_id"
-                  label="Mailbox"
-                  url={`/mailbox/search/${domainName}`}
-                  placeholder="Select mailbox..."
-                  value={newItem}
-                  onChange={(val) => setNewItem(val)}
-                />
-              </>
-            ) :
-              <>
-                <input
-                  type={type}
-                  value={newItem}
-                  onChange={(e) => setNewItem(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={placeholder}
-                  className="w-full rounded-md border border-border bg-card text-card-foreground p-2 
+          {hasDropdown ? (
+            <>
+              <MailboxInfiniteSelect
+                name="department_id"
+                label="Mailbox"
+                url={`/mailbox/search/${domainName}`}
+                placeholder="Select mailbox..."
+                value={newItem}
+                onChange={(val) => setNewItem(val)}
+              />
+            </>
+          ) : (
+            <>
+              <input
+                type={type}
+                value={newItem}
+                onChange={(e) => setNewItem(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={placeholder}
+                className="w-full rounded-md border border-border bg-card text-card-foreground p-2 
                      focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none
                      placeholder:text-muted-foreground transition-colors duration-200"
-                />
-              </>
-          }
+              />
+            </>
+          )}
         </div>
         <button
           type="button"
@@ -558,8 +557,8 @@ export const ListEditorEmail = ({
                         </span>
 
                         <div className="flex gap-0.5 ml-1  transition-opacity duration-200">
-                          {
-                            !hasDropdown && <button
+                          {!hasDropdown && (
+                            <button
                               type="button"
                               onClick={() => {
                                 setEditIndex(idx);
@@ -570,7 +569,7 @@ export const ListEditorEmail = ({
                             >
                               <Edit2 size={12} />
                             </button>
-                          }
+                          )}
                           <button
                             type="button"
                             onClick={() => deleteItem(idx)}

@@ -78,7 +78,8 @@ export function useCreateOrganization() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add_organization"],
-    mutationFn: async ({ data, addLog = true }) => createOrganization(data, addLog),
+    mutationFn: async ({ data, addLog = true }) =>
+      createOrganization(data, addLog),
     onSuccess: () => invalidateOrganizationQueries(queryClient),
   });
 }
@@ -108,8 +109,10 @@ export function useDeleteOrganization() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_rrganization"],
-    mutationFn: async ({ organization_id, organization_name = "Unknown Organization" }) =>
-      deleteOrganization(organization_id, organization_name),
+    mutationFn: async ({
+      organization_id,
+      organization_name = "Unknown Organization",
+    }) => deleteOrganization(organization_id, organization_name),
     onSuccess: () => invalidateOrganizationQueries(queryClient),
   });
 }

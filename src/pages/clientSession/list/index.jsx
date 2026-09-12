@@ -51,7 +51,7 @@ import { useTablePagination } from "@/hooks/useTablePagination";
 const ListEmailClientSessions = () => {
   const [domainName, setDomainName] = useState(null);
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showActiveModal, setShowActiveModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -321,9 +321,7 @@ const ListEmailClientSessions = () => {
   if (isError) {
     const statusCode = error?.response?.status;
     if (!statusCode || statusCode >= 500) {
-      return (
-        <DataFechError content="Error loading mailbox sessions...!" />
-      );
+      return <DataFechError content="Error loading mailbox sessions...!" />;
     }
   }
 
@@ -334,10 +332,7 @@ const ListEmailClientSessions = () => {
           <div className="mb-2.5 flex w-full  items-start justify-between gap-4 xl:flex-nowrap xl:items-center">
             <div className="flex min-w-0 items-center gap-4">
               <Breadcrumbs
-                items={[
-                  { name: "Settings" },
-                  { name: "Mailbox Sessions" },
-                ]}
+                items={[{ name: "Settings" }, { name: "Mailbox Sessions" }]}
               />
             </div>
 
@@ -384,8 +379,7 @@ const ListEmailClientSessions = () => {
             ) : (
               <NoDataFound
                 content={
-                  error?.response?.data?.message ||
-                  "No mailbox sessions found"
+                  error?.response?.data?.message || "No mailbox sessions found"
                 }
               />
             )}

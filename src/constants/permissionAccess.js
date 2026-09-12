@@ -89,8 +89,14 @@ export const PERMISSION_ROUTE_PREFIXES = [
   { prefix: "/policies/filters/copy", permission: "policy:filters:view" },
 
   { prefix: "/policies/attachments/add", permission: "policy:attachment:view" },
-  { prefix: "/policies/attachments/edit", permission: "policy:attachment:view" },
-  { prefix: "/policies/attachments/copy", permission: "policy:attachment:view" },
+  {
+    prefix: "/policies/attachments/edit",
+    permission: "policy:attachment:view",
+  },
+  {
+    prefix: "/policies/attachments/copy",
+    permission: "policy:attachment:view",
+  },
 
   // RestrictionPolicy/DistributionPolicy/ForwardingPolicy list pages check
   // "policy:general:view" instead of their own resource's view permission -

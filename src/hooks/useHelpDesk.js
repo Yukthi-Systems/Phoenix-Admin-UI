@@ -19,7 +19,6 @@ import { getHelpForRoute } from "@/components/shared/header/helpdesk/pages";
 import { atom, useAtom } from "jotai";
 import { useLocation } from "react-router-dom";
 
-
 const helpDeskOpenAtom = atom(false);
 
 export const useHelpDesk = () => {

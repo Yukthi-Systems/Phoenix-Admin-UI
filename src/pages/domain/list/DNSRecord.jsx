@@ -277,7 +277,9 @@ const DNSRecordsModal = ({ isOpen, onClose, domainName = "nekonik.com" }) => {
       // or the API value should end with the validated value (CNAME target)
       const matches =
         apiVal && valVal
-          ? apiVal === valVal || apiVal.endsWith(valVal) || valVal.endsWith(apiVal)
+          ? apiVal === valVal ||
+            apiVal.endsWith(valVal) ||
+            valVal.endsWith(apiVal)
           : false;
 
       comparisons.push({

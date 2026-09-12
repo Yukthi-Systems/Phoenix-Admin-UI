@@ -97,8 +97,6 @@ export const login = async (username, password, recaptcha_token) => {
   }
 };
 
-
-
 export const logout = async () => {
   const url = `${API_URL}/user/logout`;
   const method = "DELETE";

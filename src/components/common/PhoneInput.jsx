@@ -76,8 +76,8 @@ const PhoneInput = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   // New state for smart positioning
-  const [dropdownPosition, setDropdownPosition] = useState("bottom"); 
-  
+  const [dropdownPosition, setDropdownPosition] = useState("bottom");
+
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -116,7 +116,7 @@ const PhoneInput = ({
       const fullNumber = phoneNumber
         ? `${selectedCountry.value}${phoneNumber}`
         : "";
-      
+
       // Only set value if it's different from current value to avoid loops
       if (fullNumber !== fullPhoneValue) {
         setValue(name, fullNumber, { shouldValidate: !!phoneNumber });
@@ -200,9 +200,11 @@ const PhoneInput = ({
 
             {/* Dropdown with Smart Positioning */}
             {isOpen && (
-              <div 
+              <div
                 className={`bg-card border-border absolute left-0 z-[999] w-64 rounded-md border shadow-lg ${
-                    dropdownPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"
+                  dropdownPosition === "top"
+                    ? "bottom-full mb-1"
+                    : "top-full mt-1"
                 }`}
               >
                 <div className="border-border border-b p-2">
@@ -331,7 +333,7 @@ export const PhoneInputOnly = ({
     const fullNumber = phoneNumber
       ? `${selectedCountry.value}${phoneNumber}`
       : "";
-    
+
     // Only call onChange if the value actually changed and it's different from the prop value
     // This prevents the infinite loop when the prop value updates the internal state
     if (fullNumber !== value) {
@@ -398,9 +400,11 @@ export const PhoneInputOnly = ({
               <ChevronDown className="h-4 w-4" />
             </button>
             {isOpen && (
-              <div 
+              <div
                 className={`bg-card border-border absolute left-0 z-[999] w-64 rounded-md border shadow-lg ${
-                    dropdownPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"
+                  dropdownPosition === "top"
+                    ? "bottom-full mb-1"
+                    : "top-full mt-1"
                 }`}
               >
                 <div className="border-border border-b p-2">

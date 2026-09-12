@@ -58,7 +58,9 @@ const IdentityAllocationModal = ({
     if (isOpen && organization) {
       setIsUnlimited(isCurrentlyUnlimited);
       setIdentityValue(
-        isCurrentlyUnlimited ? currentUtilized.toString() : currentAllocated.toString(),
+        isCurrentlyUnlimited
+          ? currentUtilized.toString()
+          : currentAllocated.toString(),
       );
       setError("");
     }
@@ -80,7 +82,10 @@ const IdentityAllocationModal = ({
       return `Minimum is ${currentUtilized} (currently in use)`;
     }
 
-    if (Number.isFinite(maxAvailableIdentities) && numValue > maxAvailableIdentities) {
+    if (
+      Number.isFinite(maxAvailableIdentities) &&
+      numValue > maxAvailableIdentities
+    ) {
       return `Maximum is ${maxAvailableIdentities} (parent limit)`;
     }
 
@@ -159,7 +164,9 @@ const IdentityAllocationModal = ({
   if (!isOpen || !organization) return null;
 
   const currentValue = parseInt(identityValue, 10) || 0;
-  const allocationChange = isCurrentlyUnlimited ? 0 : currentValue - currentAllocated;
+  const allocationChange = isCurrentlyUnlimited
+    ? 0
+    : currentValue - currentAllocated;
 
   return (
     <EditModelBox
@@ -307,7 +314,9 @@ const IdentityAllocationModal = ({
                   min={0}
                   max={LOG_SLIDER_RESOLUTION}
                   step={1}
-                  value={identitiesToLogPosition(parseInt(identityValue, 10) || minValue)}
+                  value={identitiesToLogPosition(
+                    parseInt(identityValue, 10) || minValue,
+                  )}
                   onChange={handleLogSliderChange}
                   disabled={isLoading}
                 />
@@ -375,7 +384,9 @@ const IdentityAllocationModal = ({
             variant="primary"
             loading={isLoading}
             onClick={handleSubmit}
-            disabled={(!isUnlimited && (!!error || !identityValue)) || isLoading}
+            disabled={
+              (!isUnlimited && (!!error || !identityValue)) || isLoading
+            }
           >
             Update Allocation
           </Button>

@@ -157,7 +157,6 @@ const ListDistributionPolicy = () => {
     handleImportComplete,
     isImportAvailable,
   } = useBulkImport("distribution_policies", async (policyData) => {
-  
     return new Promise((resolve, reject) => {
       addDistributionPolicy(
         {

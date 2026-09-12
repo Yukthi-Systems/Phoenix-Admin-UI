@@ -35,7 +35,8 @@ const ServerMigrationKanban = ({ selectedServers, isManualMode }) => {
 
   // Hooks for both Automatic and Manual migration
   const { mutateAsync: startAutoMigration } = useStartMailboxMigration();
-  const { mutateAsync: startManualMigration } = useStartManualMailboxMigration();
+  const { mutateAsync: startManualMigration } =
+    useStartManualMailboxMigration();
 
   const toast = useToastify();
   const queryClient = useQueryClient();
@@ -82,7 +83,10 @@ const ServerMigrationKanban = ({ selectedServers, isManualMode }) => {
     const migrationQuotas = emails.map((email) =>
       Number(mailboxQuotas[email] ?? selectedMailboxQuotas[email]),
     );
-    const requiredQuota = migrationQuotas.reduce((total, quota) => total + quota, 0);
+    const requiredQuota = migrationQuotas.reduce(
+      (total, quota) => total + quota,
+      0,
+    );
     const availableQuota =
       Number(targetServer?.quota_allocated) -
       Number(targetServer?.quota_utilized);
@@ -211,9 +215,9 @@ const ServerMigrationKanban = ({ selectedServers, isManualMode }) => {
   };
 
   const clearServerSelection = (serverId) => {
-    const selectedEmails = Object.keys(selectedMailboxes[serverId] || {}).filter(
-      (email) => selectedMailboxes[serverId][email],
-    );
+    const selectedEmails = Object.keys(
+      selectedMailboxes[serverId] || {},
+    ).filter((email) => selectedMailboxes[serverId][email]);
     setSelectedMailboxes((prev) => ({
       ...prev,
       [serverId]: {},

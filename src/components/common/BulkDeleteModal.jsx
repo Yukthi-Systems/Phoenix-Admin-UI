@@ -562,7 +562,9 @@ function BulkDeleteModal({
                         {totalItemsCount}
                       </span>
                     </p>
-                    {(errorCount > 0 || blockedCount > 0 || cancelledCount > 0) && (
+                    {(errorCount > 0 ||
+                      blockedCount > 0 ||
+                      cancelledCount > 0) && (
                       <p className="text-[10px] text-muted-foreground mt-0.5">
                         {errorCount > 0 &&
                           "Check the list above for specific error details"}

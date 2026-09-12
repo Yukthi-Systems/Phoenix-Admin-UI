@@ -115,15 +115,11 @@ const OrganizationDetails = lazyRetry(
 const AddOrganization = lazyRetry(() => import("@/pages/organization/add"));
 const EditOrganization = lazyRetry(() => import("@/pages/organization/edit"));
 
-
-
-
 // Identity Management
 const ListIdentities = lazyRetry(() => import("@/pages/identity/list"));
 const AddIdentity = lazyRetry(() => import("@/pages/identity/add"));
 const EditIdentity = lazyRetry(() => import("@/pages/identity/edit"));
 const IdentityDetails = lazyRetry(() => import("@/pages/identity/details"));
-
 
 // Department Management
 const ListDepartments = lazyRetry(() => import("@/pages/department/list"));
@@ -300,9 +296,7 @@ const MailQSearch = lazyRetry(
 
 const MailMapping = lazyRetry(() => import("@/pages/server/mapmapping"));
 
-const IdentityLookup = lazyRetry(
-  () => import("@/pages/server/identityLookup"),
-);
+const IdentityLookup = lazyRetry(() => import("@/pages/server/identityLookup"));
 
 // Chat
 const ChatDashboard = lazyRetry(() => import("@/pages/chat/dashboard"));
@@ -385,7 +379,6 @@ const Router = [
               </LazyWrapper>
             ),
           },
-
 
           // Domain routes
           {
@@ -973,7 +966,7 @@ const Router = [
           },
           {
             path: "/policies/restrictions/add",
-          
+
             element: (
               <LazyWrapper>
                 <AddRestrictionPolicy />

@@ -6,6 +6,6 @@ Click Edit Caution to update an existing caution message. It's a 2-step form tha
 
 ![Step 1: Basic Information.](../../images/caution-step1-info.png)
 
-*Step 1: Basic Information — looks the same as Step 1 of Adding a New Caution, just pre-filled with this caution's current details.*
+_Step 1: Basic Information — looks the same as Step 1 of Adding a New Caution, just pre-filled with this caution's current details._
 
 The same fields as Step 1 of Adding a New Caution — Caution Message Name, Severity, Description and Notes.

@@ -70,10 +70,11 @@ const EditDisclaimer = () => {
   const { organization_id } = useAtomValue(userInfoAtom);
   const navigate = useNavigate();
   const { mutate, isPending } = useUpdateDisclaimer();
-  
+
   // Use AI Hook
-  const { mutateAsync: generateStyle, isPending: isGeneratingAi } = useAIStyleGenerate();
-  
+  const { mutateAsync: generateStyle, isPending: isGeneratingAi } =
+    useAIStyleGenerate();
+
   const toast = useToastify();
 
   const { data, isLoading, isError, error } = useGetDisclaimerDetails(

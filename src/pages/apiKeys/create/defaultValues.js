@@ -18,7 +18,7 @@
 export const apiKeyDefaultValues = {
   key_name: "",
   description: "",
-  created_by: "", 
+  created_by: "",
   custom_details: [], // Array for handling dynamic key-value pairs
-  permissions: [],    // Default to empty array
+  permissions: [], // Default to empty array
 };

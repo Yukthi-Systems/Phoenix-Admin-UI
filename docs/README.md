@@ -40,7 +40,11 @@ by route instead of read front-to-back.
 `manifest.json` is a flat list of entries:
 
 ```json
-{ "match": "/domain/edit/:domain_name", "step": 2, "file": "domain/edit/step-2.md" }
+{
+  "match": "/domain/edit/:domain_name",
+  "step": 2,
+  "file": "domain/edit/step-2.md"
+}
 ```
 
 - `match` is a route pattern in the same shape as the app's own React

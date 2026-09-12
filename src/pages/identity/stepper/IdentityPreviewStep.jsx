@@ -44,7 +44,8 @@ function IdentityPreviewStep({ formData, organization_id }) {
           Review Identity Details
         </h3>
         <p className="text-muted-foreground mt-1 text-sm">
-          Please verify the information below before finalizing the creation of the E-Mail Identity
+          Please verify the information below before finalizing the creation of
+          the E-Mail Identity
         </p>
       </div>
 
@@ -56,11 +57,20 @@ function IdentityPreviewStep({ formData, organization_id }) {
             <span>Profile & Account Details</span>
           </div>
           <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <InfoItem label="Email Address" value={`${email_prefix}@${email_domain}`} />
-            <InfoItem label="Full Name" value={`${first_name} ${last_name}`.trim()} />
+            <InfoItem
+              label="Email Address"
+              value={`${email_prefix}@${email_domain}`}
+            />
+            <InfoItem
+              label="Full Name"
+              value={`${first_name} ${last_name}`.trim()}
+            />
             <InfoItem label="Primary Phone" value={primary_phone_number} />
             <InfoItem label="Secondary Email" value={secondary_email || "--"} />
-            <InfoItem label="Account Status" value={<StatusBadge status={is_enabled} />} />
+            <InfoItem
+              label="Account Status"
+              value={<StatusBadge status={is_enabled} />}
+            />
           </div>
         </div>
 
@@ -83,7 +93,9 @@ function IdentityPreviewStep({ formData, organization_id }) {
                       />
                     </span>
                   ) : (
-                    <span className="text-muted-foreground italic">None (No IP/Geo restrictions applied)</span>
+                    <span className="text-muted-foreground italic">
+                      None (No IP/Geo restrictions applied)
+                    </span>
                   )
                 }
               />
@@ -101,7 +113,9 @@ function IdentityPreviewStep({ formData, organization_id }) {
                       />
                     </span>
                   ) : (
-                    <span className="text-muted-foreground italic">Not assigned</span>
+                    <span className="text-muted-foreground italic">
+                      Not assigned
+                    </span>
                   )
                 }
               />
@@ -113,16 +127,29 @@ function IdentityPreviewStep({ formData, organization_id }) {
               </span>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
-                  <span className={`h-2.5 w-2.5 rounded-full ${is_app_2fa_enabled ? 'bg-green-500' : 'bg-muted-foreground/30'}`} />
-                  <span className="text-sm font-medium text-foreground">App-Based 2FA: {is_app_2fa_enabled ? 'Enabled' : 'Disabled'}</span>
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${is_app_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                  />
+                  <span className="text-sm font-medium text-foreground">
+                    App-Based 2FA: {is_app_2fa_enabled ? "Enabled" : "Disabled"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
-                  <span className={`h-2.5 w-2.5 rounded-full ${is_sms_2fa_enabled ? 'bg-green-500' : 'bg-muted-foreground/30'}`} />
-                  <span className="text-sm font-medium text-foreground">SMS-Based 2FA: {is_sms_2fa_enabled ? 'Enabled' : 'Disabled'}</span>
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${is_sms_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                  />
+                  <span className="text-sm font-medium text-foreground">
+                    SMS-Based 2FA: {is_sms_2fa_enabled ? "Enabled" : "Disabled"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
-                  <span className={`h-2.5 w-2.5 rounded-full ${is_email_2fa_enabled ? 'bg-green-500' : 'bg-muted-foreground/30'}`} />
-                  <span className="text-sm font-medium text-foreground">Email-Based 2FA: {is_email_2fa_enabled ? 'Enabled' : 'Disabled'}</span>
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${is_email_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                  />
+                  <span className="text-sm font-medium text-foreground">
+                    Email-Based 2FA:{" "}
+                    {is_email_2fa_enabled ? "Enabled" : "Disabled"}
+                  </span>
                 </div>
               </div>
             </div>

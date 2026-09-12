@@ -24,7 +24,11 @@ import * as yup from "yup";
 import { userProfileAtom } from "@/store/userProfile";
 import { userInfoAtom } from "@/store/userInfo";
 import { useToastify } from "@/hooks/useToastify";
-import { useGetIdentity, useUpdateIdentity, useUpdateIdentityPassword } from "@/hooks/useIdentities";
+import {
+  useGetIdentity,
+  useUpdateIdentity,
+  useUpdateIdentityPassword,
+} from "@/hooks/useIdentities";
 import { useRestrictionPolicy } from "@/hooks/useRestrictionPolicy";
 import AccessDenied from "@/components/common/AccessDenied";
 import StepperFormLayout from "@/components/layouts/FormLayout";
@@ -39,42 +43,48 @@ const identityFormSchema = yup.object().shape({
   email_prefix: yup
     .string()
     .required("Email prefix is required")
-    .matches(/^[a-zA-Z0-9._-]+$/, "Only letters, numbers, dot, underscore, and hyphen are allowed")
+    .matches(
+      /^[a-zA-Z0-9._-]+$/,
+      "Only letters, numbers, dot, underscore, and hyphen are allowed",
+    )
     .matches(
       /^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*$/,
-      "Symbols (. _ -) can't be at the start/end or appear consecutively"
+      "Symbols (. _ -) can't be at the start/end or appear consecutively",
     ),
   email_domain: yup.string().required("Email domain is required"),
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().nullable(),
-  primary_phone_number: yup.string().required("Primary phone number is required"),
+  primary_phone_number: yup
+    .string()
+    .required("Primary phone number is required"),
   secondary_email: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr)
+    .transform((curr, orig) => (orig === "" ? null : curr))
     .email("Invalid email address")
     .when("is_email_2fa_enabled", {
       is: true,
-      then: (schema) => schema.required("Secondary email is required to enable Email 2FA"),
+      then: (schema) =>
+        schema.required("Secondary email is required to enable Email 2FA"),
     }),
   password: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr)
+    .transform((curr, orig) => (orig === "" ? null : curr))
     .min(8, "Password must be at least 8 characters"),
   conform_password: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr)
+    .transform((curr, orig) => (orig === "" ? null : curr))
     .oneOf([yup.ref("password"), null], "Passwords must match"),
   restriction_policy_id: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr),
+    .transform((curr, orig) => (orig === "" ? null : curr)),
   department_id: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr),
+    .transform((curr, orig) => (orig === "" ? null : curr)),
   is_enabled: yup.boolean().default(true),
   is_app_2fa_enabled: yup.boolean().default(false),
   is_sms_2fa_enabled: yup.boolean().default(false),
@@ -98,7 +108,13 @@ const STEPS = [
     id: "password",
     label: "Password Setup",
     description: "Update credentials and 2FA",
-    fields: ["password", "conform_password", "is_app_2fa_enabled", "is_sms_2fa_enabled", "is_email_2fa_enabled"],
+    fields: [
+      "password",
+      "conform_password",
+      "is_app_2fa_enabled",
+      "is_sms_2fa_enabled",
+      "is_email_2fa_enabled",
+    ],
   },
   {
     id: "policies",
@@ -126,13 +142,16 @@ const EditIdentity = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
 
-  const { data: identityData, isLoading: detailsLoading, isError } = useGetIdentity(
-    domain_name,
-    email_prefix
-  );
+  const {
+    data: identityData,
+    isLoading: detailsLoading,
+    isError,
+  } = useGetIdentity(domain_name, email_prefix);
 
-  const { mutate: updateDetails, isPending: detailsPending } = useUpdateIdentity();
-  const { mutate: updatePassword, isPending: passwordPending } = useUpdateIdentityPassword();
+  const { mutate: updateDetails, isPending: detailsPending } =
+    useUpdateIdentity();
+  const { mutate: updatePassword, isPending: passwordPending } =
+    useUpdateIdentityPassword();
 
   // Fetch restriction policies for dropdown
   const { data: policiesData } = useRestrictionPolicy({
@@ -141,13 +160,16 @@ const EditIdentity = () => {
     pageSize: 100,
   });
   const policiesList = policiesData?.data?.policies || [];
-  const policyOptions = useMemo(() => [
-    { label: "None", value: "" },
-    ...policiesList.map((p) => ({
-      label: p.policy_name,
-      value: p.policy_id,
-    })),
-  ], [policiesList]);
+  const policyOptions = useMemo(
+    () => [
+      { label: "None", value: "" },
+      ...policiesList.map((p) => ({
+        label: p.policy_name,
+        value: p.policy_id,
+      })),
+    ],
+    [policiesList],
+  );
 
   const {
     register,
@@ -255,15 +277,24 @@ const EditIdentity = () => {
               },
               {
                 onSuccess: () => {
-                  toast("success", "Successfully updated identity details and password");
+                  toast(
+                    "success",
+                    "Successfully updated identity details and password",
+                  );
                   navigate("/identities");
                 },
                 onError: (error) => {
-                  const message = error.response?.data?.message || error.message || "Unknown error";
-                  toast("error", `Details updated, but password failed: ${message}`);
+                  const message =
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Unknown error";
+                  toast(
+                    "error",
+                    `Details updated, but password failed: ${message}`,
+                  );
                   navigate("/identities");
-                }
-              }
+                },
+              },
             );
           } else {
             toast("success", "Successfully updated identity details");
@@ -280,19 +311,27 @@ const EditIdentity = () => {
           );
           console.error(error);
         },
-      }
+      },
     );
   };
 
   const onInvalid = (formErrors) =>
-    jumpToErroredStep(formErrors, STEPS, setCurrentStep, toast, "before updating the identity");
+    jumpToErroredStep(
+      formErrors,
+      STEPS,
+      setCurrentStep,
+      toast,
+      "before updating the identity",
+    );
 
   if (!permissions.includes("identity:edit")) {
     return <AccessDenied content="Don't have access to edit identities." />;
   }
 
-  if (detailsLoading) return <DataLoading content="Loading identity details..." />;
-  if (isError) return <DataFechError content="Error loading identity details." />;
+  if (detailsLoading)
+    return <DataLoading content="Loading identity details..." />;
+  if (isError)
+    return <DataFechError content="Error loading identity details." />;
 
   const renderStep = () => {
     switch (currentStep) {

@@ -39,7 +39,7 @@ export const getApiVersion = async () => {
 
     if (res.status !== 200) {
       throw new Error(
-        res?.data?.message || "Failed to fetch API version information."
+        res?.data?.message || "Failed to fetch API version information.",
       );
     }
 
@@ -47,7 +47,7 @@ export const getApiVersion = async () => {
   } catch (error) {
     const response = error?.response || {};
     throw new Error(
-      response?.data?.message || "Failed to fetch API version information."
+      response?.data?.message || "Failed to fetch API version information.",
     );
   }
 };
@@ -66,7 +66,7 @@ export const getApiHealth = async () => {
 
     if (res.status !== 200) {
       throw new Error(
-        res?.data?.message || "Failed to fetch API health status."
+        res?.data?.message || "Failed to fetch API health status.",
       );
     }
 
@@ -74,7 +74,7 @@ export const getApiHealth = async () => {
   } catch (error) {
     const response = error?.response || {};
     throw new Error(
-      response?.data?.message || "Failed to fetch API health status."
+      response?.data?.message || "Failed to fetch API health status.",
     );
   }
 };
@@ -92,16 +92,12 @@ export const getServerTime = async () => {
     });
 
     if (res.status !== 200) {
-      throw new Error(
-        res?.data?.message || "Failed to fetch server time."
-      );
+      throw new Error(res?.data?.message || "Failed to fetch server time.");
     }
 
     return res.data;
   } catch (error) {
     const response = error?.response || {};
-    throw new Error(
-      response?.data?.message || "Failed to fetch server time."
-    );
+    throw new Error(response?.data?.message || "Failed to fetch server time.");
   }
 };

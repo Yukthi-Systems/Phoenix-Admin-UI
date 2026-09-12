@@ -155,7 +155,7 @@ const PermissionsStep = () => {
   // Toggle individual permission - no dependencies
   const togglePermission = (permission) => {
     let newPermissions = [...currentPermissions];
-    
+
     if (newPermissions.includes(permission)) {
       newPermissions = newPermissions.filter((p) => p !== permission);
     } else {
@@ -328,7 +328,9 @@ const PermissionsStep = () => {
                                   <input
                                     type="checkbox"
                                     checked={isChecked}
-                                    onChange={() => togglePermission(permString)}
+                                    onChange={() =>
+                                      togglePermission(permString)
+                                    }
                                     className="h-4 w-4 rounded border-border text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
                                   />
                                 </div>

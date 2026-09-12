@@ -6,6 +6,6 @@ Click Edit Restriction Policy to update an existing policy. It's a 2-step form t
 
 ![Step 1: Policy Information.](../../images/policy-restriction-step1-info.png)
 
-*Step 1: Policy Information — the Edit screen looks the same as the Add wizard's step.*
+_Step 1: Policy Information — the Edit screen looks the same as the Add wizard's step._
 
 Same fields as Policy Information in section 8.6 — Policy Name, Description and Policy Active.

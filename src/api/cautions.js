@@ -40,7 +40,7 @@ export const createCaution = async (data, addLog = true) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (res.status !== 201)
@@ -53,16 +53,19 @@ export const createCaution = async (data, addLog = true) => {
       method,
       action_type: "create_caution",
       payload: data,
-      message: `New caution message created successfully - Name: "${data.caution_message_name || 'Untitled'}"`,
+      message: `New caution message created successfully - Name: "${data.caution_message_name || "Untitled"}"`,
     });
 
     return res.data;
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    if (!addLog) throw new Error(response?.data?.message || "Failed to create caution message.");
-    const cautionTitle = data?.caution_message_name || 'Unknown title';
+
+    if (!addLog)
+      throw new Error(
+        response?.data?.message || "Failed to create caution message.",
+      );
+    const cautionTitle = data?.caution_message_name || "Unknown title";
     await addLogs({
       values: response,
       type: "error",
@@ -72,7 +75,9 @@ export const createCaution = async (data, addLog = true) => {
       message: `Failed to create caution message "${cautionTitle}"`,
     });
 
-    throw new Error(response?.data?.message || "Failed to create caution message.");
+    throw new Error(
+      response?.data?.message || "Failed to create caution message.",
+    );
   }
 };
 
@@ -94,7 +99,7 @@ export const getCautionDetails = async (organization_id, caution_id) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
+
     await addLogs({
       values: response,
       type: "error",
@@ -124,7 +129,7 @@ export const updateCaution = async (organization_id, caution_id, data) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (![200, 204].includes(res.status))
@@ -136,7 +141,7 @@ export const updateCaution = async (organization_id, caution_id, data) => {
       method,
       action_type: "update_caution",
       payload: { organization_id, caution_id, ...data },
-      message: `Caution message updated successfully - Title: "${data.caution_message_name || 'Untitled'}"`,
+      message: `Caution message updated successfully - Title: "${data.caution_message_name || "Untitled"}"`,
       org_Id: organization_id,
     });
 
@@ -144,8 +149,8 @@ export const updateCaution = async (organization_id, caution_id, data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const cautionTitle = data?.caution_message_name || 'Unknown title';
+
+    const cautionTitle = data?.caution_message_name || "Unknown title";
     await addLogs({
       values: response,
       type: "error",
@@ -156,12 +161,18 @@ export const updateCaution = async (organization_id, caution_id, data) => {
       org_Id: organization_id,
     });
 
-    throw new Error(response?.data?.message || "Failed to update caution message.");
+    throw new Error(
+      response?.data?.message || "Failed to update caution message.",
+    );
   }
 };
 
 // Delete Caution Message
-export const deleteCaution = async (organization_id, caution_id, caution_name) => {
+export const deleteCaution = async (
+  organization_id,
+  caution_id,
+  caution_name,
+) => {
   const method = "DELETE";
   const url = `${API_URL}/caution/delete/${organization_id}/${caution_id}`;
 
@@ -191,7 +202,7 @@ export const deleteCaution = async (organization_id, caution_id, caution_name) =
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
+
     await addLogs({
       values: response,
       type: "error",
@@ -202,7 +213,9 @@ export const deleteCaution = async (organization_id, caution_id, caution_name) =
       org_Id: organization_id,
     });
 
-    throw new Error(response?.data?.message || "Failed to delete caution message.");
+    throw new Error(
+      response?.data?.message || "Failed to delete caution message.",
+    );
   }
 };
 
@@ -229,7 +242,7 @@ export const getCautionsList = async (
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
+
     await addLogs({
       values: response,
       type: "error",
@@ -271,7 +284,7 @@ export const exportCautionsList = async (organization_id, page, page_size) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
+
     await addLogs({
       values: response,
       type: "error",

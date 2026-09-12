@@ -38,10 +38,7 @@ import {
 const ViewApiKeyModal = ({ isOpen, onClose, key_id, organizationId }) => {
   const { t } = useTranslation();
   const { formatUserDateNice } = useUserTimezone();
-  const { data: apiKey, isLoading } = useApiKeyDetails(
-    organizationId,
-    key_id,
-  );
+  const { data: apiKey, isLoading } = useApiKeyDetails(organizationId, key_id);
   const [showKey, setShowKey] = React.useState(true);
   const [copied, setCopied] = React.useState(false);
 
@@ -230,7 +227,6 @@ const ViewApiKeyModal = ({ isOpen, onClose, key_id, organizationId }) => {
                 )}
               </div>
             </div>
-
           </div>
 
           {/* Footer: Additional Metadata (Compact) - Excluding description */}

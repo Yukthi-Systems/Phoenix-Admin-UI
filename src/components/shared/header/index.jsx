@@ -87,7 +87,10 @@ const Header = () => {
 
   // Process notification queue
   const processNotificationQueue = async () => {
-    if (isProcessingQueueRef.current || notificationQueueRef.current.length === 0) {
+    if (
+      isProcessingQueueRef.current ||
+      notificationQueueRef.current.length === 0
+    ) {
       return;
     }
 
@@ -96,7 +99,7 @@ const Header = () => {
     while (notificationQueueRef.current.length > 0) {
       // Wait if we've hit the max active toasts
       if (activeToastsRef.current >= MAX_ACTIVE_TOASTS) {
-        await new Promise(resolve => setTimeout(resolve, TOAST_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, TOAST_DELAY));
         continue;
       }
 
@@ -115,12 +118,12 @@ const Header = () => {
         transition: Bounce,
         onClose: () => {
           activeToastsRef.current = Math.max(0, activeToastsRef.current - 1);
-        }
+        },
       });
 
       // Add delay between toasts
       if (notificationQueueRef.current.length > 0) {
-        await new Promise(resolve => setTimeout(resolve, TOAST_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, TOAST_DELAY));
       }
     }
 
@@ -152,7 +155,7 @@ const Header = () => {
         draggable: true,
         theme: theme,
         transition: Bounce,
-      }
+      },
     );
   };
 
@@ -167,7 +170,7 @@ const Header = () => {
     // If queue is getting too large, show summary instead
     if (notificationQueueRef.current.length >= MAX_QUEUE_SIZE) {
       headerLog("warn", "Queue full, showing summary notification", {
-        queueSize: notificationQueueRef.current.length
+        queueSize: notificationQueueRef.current.length,
       });
 
       // Clear queue and show summary
@@ -202,9 +205,12 @@ const Header = () => {
             message?.user_name || "System",
             message?.details?.action_timestamp,
             () => {
-              headerLog("info", "Browser notification clicked - focusing window");
+              headerLog(
+                "info",
+                "Browser notification clicked - focusing window",
+              );
               window.focus();
-            }
+            },
           );
         } catch (error) {
           headerLog("error", "❌ Failed to show browser notification", {
@@ -245,7 +251,7 @@ const Header = () => {
     if (!enabled && centrifugeRef.current) {
       headerLog(
         "info",
-        "Disconnecting WebSocket due to notifications being disabled"
+        "Disconnecting WebSocket due to notifications being disabled",
       );
       centrifugeRef.current.disconnect();
       sessionStorage.setItem("centrifugeConnected", "false");
@@ -272,7 +278,7 @@ const Header = () => {
     if (!notificationsEnabled) {
       headerLog(
         "warn",
-        "Notifications disabled, skipping WebSocket connection"
+        "Notifications disabled, skipping WebSocket connection",
       );
       return;
     }
@@ -362,12 +368,13 @@ const Header = () => {
     };
   }, []);
 
-
   useEffect(() => {
     const fetchParentOrg = async () => {
       if (userDetails?.organization_id) {
         try {
-          const data = await getOrganizationDetail(userDetails?.organization_id);
+          const data = await getOrganizationDetail(
+            userDetails?.organization_id,
+          );
           setParentOrg({
             id: data?.organization_id,
             name: data?.organization_name,

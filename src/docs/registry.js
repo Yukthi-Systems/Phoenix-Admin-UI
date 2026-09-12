@@ -45,7 +45,10 @@ const metas = import.meta.glob("./**/*.mdx", {
 
 const parseKey = (key) => {
   // "./domain/create/01-domain-details.mdx"
-  const parts = key.replace(/^\.\//, "").replace(/\.mdx$/, "").split("/");
+  const parts = key
+    .replace(/^\.\//, "")
+    .replace(/\.mdx$/, "")
+    .split("/");
   const [feature, flow, file] = parts;
   const isMeta = file === "_meta";
   const prefixMatch = file?.match(/^(\d+)[-_]/);
@@ -118,7 +121,8 @@ export const getDocsTree = () => {
   for (const entry of ENTRIES) {
     if (!features.has(entry.feature)) features.set(entry.feature, new Map());
     const flows = features.get(entry.feature);
-    if (!flows.has(entry.flow)) flows.set(entry.flow, { meta: null, steps: [] });
+    if (!flows.has(entry.flow))
+      flows.set(entry.flow, { meta: null, steps: [] });
     const bucket = flows.get(entry.flow);
     if (entry.isMeta) bucket.meta = entry;
     else bucket.steps.push(entry);

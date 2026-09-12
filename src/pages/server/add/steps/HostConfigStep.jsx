@@ -19,7 +19,13 @@ import { useEffect } from "react";
 import { Input } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 
-const HostConfigurationStep = ({ register, errors, control, watch, setValue }) => {
+const HostConfigurationStep = ({
+  register,
+  errors,
+  control,
+  watch,
+  setValue,
+}) => {
   const isMonitoring = watch("is_monitoring");
   const isMailboxServer = watch("is_mailbox_server");
   const isAcceptingNewMailboxes = watch("is_accepting_new_mailboxes");
@@ -29,13 +35,19 @@ const HostConfigurationStep = ({ register, errors, control, watch, setValue }) =
   // whenever its prerequisite is turned off.
   useEffect(() => {
     if (!isMonitoring && isMailboxServer) {
-      setValue("is_mailbox_server", false, { shouldValidate: true, shouldDirty: true });
+      setValue("is_mailbox_server", false, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
   }, [isMonitoring, isMailboxServer, setValue]);
 
   useEffect(() => {
     if (!isMailboxServer && isAcceptingNewMailboxes) {
-      setValue("is_accepting_new_mailboxes", false, { shouldValidate: true, shouldDirty: true });
+      setValue("is_accepting_new_mailboxes", false, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
   }, [isMailboxServer, isAcceptingNewMailboxes, setValue]);
 

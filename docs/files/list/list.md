@@ -10,14 +10,14 @@ This page lists every identity that currently has file storage enabled, for the 
 
 ![The File Users list.](../../images/file-users-list.png)
 
-*The File Users list.*
+_The File Users list._
 
-| Field | What it means |
-| --- | --- |
-| Email | The identity's email address. |
-| Status | Active or turned off. |
-| Storage | How much space this identity has used out of its file storage quota, shown as a bar, a percentage, and the exact amounts (e.g. "0.00 GB / 1.00 GB"). |
-| Last Active At | When this identity last used file storage. |
+| Field          | What it means                                                                                                                                        |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Email          | The identity's email address.                                                                                                                        |
+| Status         | Active or turned off.                                                                                                                                |
+| Storage        | How much space this identity has used out of its file storage quota, shown as a bar, a percentage, and the exact amounts (e.g. "0.00 GB / 1.00 GB"). |
+| Last Active At | When this identity last used file storage.                                                                                                           |
 
 Use + Add File User (top right) to give a new identity file storage — see [Add File User](../create/create.md).
 
@@ -27,10 +27,10 @@ Click the ⋮ (three dots) at the end of any file user's row:
 
 ![The row actions menu on a file user.](../../images/file-users-row-menu.png)
 
-*The row actions menu on a file user.*
+_The row actions menu on a file user._
 
-| Field | What it means |
-| --- | --- |
-| Manage Quota | Increase or decrease the file storage space (GB) allocated to this identity — see [Edit File User](../edit/edit.md). |
-| Deactivate | Turns file storage off for this identity. It's kept, but they can't access their files until you activate it again. |
-| Delete File User | Removes this identity from File Users entirely. This cannot be undone, so use it carefully. |
+| Field            | What it means                                                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Manage Quota     | Increase or decrease the file storage space (GB) allocated to this identity — see [Edit File User](../edit/edit.md). |
+| Deactivate       | Turns file storage off for this identity. It's kept, but they can't access their files until you activate it again.  |
+| Delete File User | Removes this identity from File Users entirely. This cannot be undone, so use it carefully.                          |

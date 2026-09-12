@@ -20,7 +20,7 @@ import { Check } from "lucide-react";
 /**
  * Enhanced Stepper Component
  * * Architectural Fix:
- * The padding (px-8) has been moved to a parent wrapper. The inner relative div 
+ * The padding (px-8) has been moved to a parent wrapper. The inner relative div
  * now corresponds exactly to the flex content width. This ensures that percentage-based
  * calculations for the lines perfectly align with the flex-1 distributed steps.
  */
@@ -59,10 +59,8 @@ const Stepper = ({
     <div className="w-full py-4">
       {/* 1. Structural Fix: Wrapper handles the padding and max-width */}
       <div className="mx-auto max-w-3xl px-8">
-        
         {/* 2. Positioning Context: Matches the flex content width exactly */}
         <div className="relative flex items-center justify-between">
-          
           {/* Progress Bar Background */}
           <div
             className="bg-border absolute top-4 h-[2px]"

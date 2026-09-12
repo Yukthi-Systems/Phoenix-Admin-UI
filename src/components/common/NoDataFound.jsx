@@ -32,12 +32,12 @@ function NoDataFound({ content = "No data found", variant = "default" }) {
         <div className="relative">
           {/* Compact ring */}
           {/* <div className="absolute inset-0 -m-4 rounded-full border border-primary/15"></div> */}
-          
+
           {/* Icon background */}
           <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10 p-6 rounded-full  border border-primary/20">
             <div className="bg-gradient-to-br from-background to-card p-5 rounded-full shadow-inner">
-              <FileX2 
-                size={56} 
+              <FileX2
+                size={56}
                 className="text-primary drop-shadow-sm"
                 strokeWidth={1.5}
               />
@@ -53,7 +53,7 @@ function NoDataFound({ content = "No data found", variant = "default" }) {
           <p className="text-base text-muted-foreground font-medium leading-relaxed">
             {content}
           </p>
-          
+
           {/* Subtle decorative line */}
           <div className="flex items-center gap-2 mt-2">
             <div className="h-px w-12 bg-gradient-to-r from-transparent via-border to-transparent"></div>

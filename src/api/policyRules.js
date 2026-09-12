@@ -77,7 +77,7 @@ export const addPolicyRule = async (organization_id, data) => {
     if (res.status !== 201)
       throw new Error(res?.data?.message || "Failed to create policy rule.");
 
-    const ruleName = data?.rule_name || data?.name || 'New Policy Rule';
+    const ruleName = data?.rule_name || data?.name || "New Policy Rule";
     await addLogs({
       values: res,
       type: "success",
@@ -91,8 +91,8 @@ export const addPolicyRule = async (organization_id, data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const ruleName = data?.rule_name || data?.name || 'Unknown Policy Rule';
+
+    const ruleName = data?.rule_name || data?.name || "Unknown Policy Rule";
     await addLogs({
       values: response,
       type: "error",
@@ -102,9 +102,7 @@ export const addPolicyRule = async (organization_id, data) => {
       message: `Failed to create policy rule - "${ruleName}"`,
     });
 
-    throw new Error(
-      response?.data?.message || "Failed to create policy rule.",
-    );
+    throw new Error(response?.data?.message || "Failed to create policy rule.");
   }
 };
 
@@ -172,7 +170,7 @@ export const editPolicyRule = async (org_id, rule_id, data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
+
     const ruleName = data?.rule_name || data?.name || `Rule ID: ${rule_id}`;
     await addLogs({
       values: response,

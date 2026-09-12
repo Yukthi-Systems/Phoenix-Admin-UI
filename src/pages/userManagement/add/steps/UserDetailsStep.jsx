@@ -32,49 +32,49 @@ const UserDetailsStep = ({ register, errors, control, watch, setValue }) => {
 
       {/* Account Information */}
       <fieldset className="border-border rounded-md border p-6">
-      <legend className="text-foreground text-left text-base font-medium">
-        Account Information
-      </legend>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        <UsernameInput
-          label="User Name"
-          name="user_name"
-          placeholder="Enter a unique username"
-          register={register}
-          errors={errors}
-          watch={watch}
-          isRequired={true}
-        />
+        <legend className="text-foreground text-left text-base font-medium">
+          Account Information
+        </legend>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <UsernameInput
+            label="User Name"
+            name="user_name"
+            placeholder="Enter a unique username"
+            register={register}
+            errors={errors}
+            watch={watch}
+            isRequired={true}
+          />
 
-        <Input
-          label="Display Name"
-          name="display_name"
-          placeholder="Enter display name"
-          register={register}
-          errors={errors}
-          isRequired={true}
-        />
+          <Input
+            label="Display Name"
+            name="display_name"
+            placeholder="Enter display name"
+            register={register}
+            errors={errors}
+            isRequired={true}
+          />
 
-        <Input
-          type="email"
-          label="Email Address"
-          name="user_email"
-          placeholder="Enter email address"
-          register={register}
-          errors={errors}
-          isRequired={true}
-        />
-        <PhoneInput
-          label="Phone Number"
-          name="primary_phone_number_with_country_code"
-          placeholder="1234567890"
-          register={register}
-          errors={errors}
-          watch={watch}
-          setValue={setValue}
-          isRequired={true}
-        />
-        {/* <Input
+          <Input
+            type="email"
+            label="Email Address"
+            name="user_email"
+            placeholder="Enter email address"
+            register={register}
+            errors={errors}
+            isRequired={true}
+          />
+          <PhoneInput
+            label="Phone Number"
+            name="primary_phone_number_with_country_code"
+            placeholder="1234567890"
+            register={register}
+            errors={errors}
+            watch={watch}
+            setValue={setValue}
+            isRequired={true}
+          />
+          {/* <Input
             label="Phone Number"
             name="primary_phone_number_with_country_code"
             placeholder="+91XXXXXXXXXX"
@@ -82,36 +82,35 @@ const UserDetailsStep = ({ register, errors, control, watch, setValue }) => {
             errors={errors}
             isRequired={true}
           /> */}
-      </div>
+        </div>
       </fieldset>
 
       {/* Security */}
       <fieldset className="border-border rounded-md border p-6">
-      <legend className="text-foreground  text-left text-base font-medium">
-        Security
-      </legend>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <PasswordInput
-          name="password"
-          register={register}
-          errors={errors}
-          placeholder="Enter password"
-          isRequired={true}
-        />
+        <legend className="text-foreground  text-left text-base font-medium">
+          Security
+        </legend>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <PasswordInput
+            name="password"
+            register={register}
+            errors={errors}
+            placeholder="Enter password"
+            isRequired={true}
+          />
 
-        <Input
-          type="password"
-          label="Confirm Password"
-          name="confirm_password"
-          placeholder="Re-enter password"
-          register={register}
-          errors={errors}
-          isRequired={true}
-        />
-      </div>
+          <Input
+            type="password"
+            label="Confirm Password"
+            name="confirm_password"
+            placeholder="Re-enter password"
+            register={register}
+            errors={errors}
+            isRequired={true}
+          />
+        </div>
       </fieldset>
 
-      
       <div className="">
         <Switch
           control={control}
@@ -125,7 +124,6 @@ const UserDetailsStep = ({ register, errors, control, watch, setValue }) => {
           trueSublabel="User will be enabled immediately after creation"
         />
       </div>
-   
 
       <div className="bg-primary/5 border-primary/20 rounded-lg border p-4">
         <div className="flex items-start gap-2">

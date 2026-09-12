@@ -98,17 +98,15 @@ const SpamDestinationStep = ({
             />
           )}
 
-          {
-            spamDestination === "DELETE" && (
-              <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md text-sm font-medium flex items-center gap-2 animate-in fade-in slide-in-from-top-1 mt-2">
-                <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                <span>
-                  Enabling this option will permanently delete emails matching the blocked list. This action cannot be undone.
-                </span>
-              </div>
-            )
-          }
-
+          {spamDestination === "DELETE" && (
+            <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-md text-sm font-medium flex items-center gap-2 animate-in fade-in slide-in-from-top-1 mt-2">
+              <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              <span>
+                Enabling this option will permanently delete emails matching the
+                blocked list. This action cannot be undone.
+              </span>
+            </div>
+          )}
         </div>
       </fieldset>
 

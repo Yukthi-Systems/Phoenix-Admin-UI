@@ -57,7 +57,7 @@ const ListInvoice = () => {
   const navigate = useNavigate();
 
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   // false = Organization View, true = Global View
   const [isGlobal, setIsGlobal] = useState(false);
 

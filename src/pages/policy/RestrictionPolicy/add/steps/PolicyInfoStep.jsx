@@ -18,12 +18,7 @@
 import { Input, TextArea } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 
-const PolicyInformationStep = ({
-  register,
-  errors,
-  control,
-  watch,
-}) => {
+const PolicyInformationStep = ({ register, errors, control, watch }) => {
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -38,7 +33,6 @@ const PolicyInformationStep = ({
 
       {/* Basic Details */}
       <div className="space-y-4">
-
         {/* Policy Name Input */}
         <Input
           label="Policy Name"

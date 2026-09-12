@@ -33,7 +33,7 @@ const DraggableTag = ({ type, onDelete, isAllowed }) => {
         isDragging: monitor.isDragging(),
       }),
     }),
-    [type, isAllowed] // FIXED: Added dependencies so the item is always fresh
+    [type, isAllowed], // FIXED: Added dependencies so the item is always fresh
   );
 
   return (
@@ -92,7 +92,7 @@ const DropZone = ({
         canDrop: monitor.canDrop(),
       }),
     }),
-    [onDrop, targetList] // FIXED: Added dependencies ensures onDrop is current
+    [onDrop, targetList], // FIXED: Added dependencies ensures onDrop is current
   );
 
   const borderClass =

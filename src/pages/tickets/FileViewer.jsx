@@ -79,14 +79,10 @@ const FileViewer = ({ isOpen, onClose, files, initialIndex = 0 }) => {
         fileUrls={fileUrls}
         isLoading={loadingFiles[currentFile.file_id] || false}
         onPrevious={() =>
-          setCurrentIndex((prev) =>
-            prev > 0 ? prev - 1 : files.length - 1
-          )
+          setCurrentIndex((prev) => (prev > 0 ? prev - 1 : files.length - 1))
         }
         onNext={() =>
-          setCurrentIndex((prev) =>
-            prev < files.length - 1 ? prev + 1 : 0
-          )
+          setCurrentIndex((prev) => (prev < files.length - 1 ? prev + 1 : 0))
         }
         onClose={onClose}
       />
@@ -94,13 +90,7 @@ const FileViewer = ({ isOpen, onClose, files, initialIndex = 0 }) => {
   );
 };
 
-const FileLoader = ({
-  file,
-  isActive,
-  onLoad,
-  onLoadStart,
-  getMimeType,
-}) => {
+const FileLoader = ({ file, isActive, onLoad, onLoadStart, getMimeType }) => {
   const { refetch } = useGetTicketFile(file.file_id, false);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -158,7 +148,7 @@ const FileViewerUI = ({
   };
 
   const isImage = ["png", "jpg", "jpeg", "gif", "webp", "svg"].some((ext) =>
-    currentFile?.file_type?.toLowerCase().includes(ext)
+    currentFile?.file_type?.toLowerCase().includes(ext),
   );
   const isPdf = currentFile?.file_type?.toLowerCase().includes("pdf");
 
@@ -173,7 +163,8 @@ const FileViewerUI = ({
           <div className="text-white">
             <h3 className="font-medium text-lg">{currentFile.file_name}</h3>
             <p className="text-sm text-white/70">
-              {currentFile.file_size_mb} MB • {currentIndex + 1} of {files.length}
+              {currentFile.file_size_mb} MB • {currentIndex + 1} of{" "}
+              {files.length}
             </p>
           </div>
           <div className="flex items-center gap-2">

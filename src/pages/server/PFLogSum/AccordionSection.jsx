@@ -18,24 +18,32 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
-export const AccordionNestedSection = ({ 
-  title, 
-  icon: Icon, 
-  data, 
-  emptyMessage, 
-  sectionKey, 
-  expandedSections, 
-  toggleSection 
+export const AccordionNestedSection = ({
+  title,
+  icon: Icon,
+  data,
+  emptyMessage,
+  sectionKey,
+  expandedSections,
+  toggleSection,
 }) => {
   const [expandedInner, setExpandedInner] = useState({});
   const isExpanded = expandedSections[sectionKey];
-  
-  const totalCount = data ? Object.values(data).reduce((sum, reasons) => {
-    return sum + Object.values(reasons).reduce((s, detail) => s + (detail?.total || 0), 0);
-  }, 0) : 0;
+
+  const totalCount = data
+    ? Object.values(data).reduce((sum, reasons) => {
+        return (
+          sum +
+          Object.values(reasons).reduce(
+            (s, detail) => s + (detail?.total || 0),
+            0,
+          )
+        );
+      }, 0)
+    : 0;
 
   const toggleInner = (key) => {
-    setExpandedInner(prev => ({ ...prev, [key]: !prev[key] }));
+    setExpandedInner((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   if (!data || Object.keys(data).length === 0) {
@@ -81,31 +89,50 @@ export const AccordionNestedSection = ({
           <div className="p-4 max-h-[500px] overflow-y-auto custom-scrollbar">
             <div className="space-y-3">
               {Object.entries(data).map(([stage, reasons]) => {
-                const stageTotal = Object.values(reasons).reduce((s, detail) => s + (detail?.total || 0), 0);
+                const stageTotal = Object.values(reasons).reduce(
+                  (s, detail) => s + (detail?.total || 0),
+                  0,
+                );
                 const stageKey = `${sectionKey}-${stage}`;
                 const isInnerExpanded = expandedInner[stageKey];
 
                 return (
-                  <div key={stage} className="border border-border rounded-lg overflow-hidden">
+                  <div
+                    key={stage}
+                    className="border border-border rounded-lg overflow-hidden"
+                  >
                     <button
                       onClick={() => toggleInner(stageKey)}
                       className="w-full flex items-center justify-between p-3 bg-muted/30 hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-foreground">{stage}</span>
-                        <span className="text-xs text-muted-foreground">({stageTotal} entries)</span>
+                        <span className="text-sm font-semibold text-foreground">
+                          {stage}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          ({stageTotal} entries)
+                        </span>
                       </div>
                       <div className="shrink-0">
-                        {isInnerExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        {isInnerExpanded ? (
+                          <ChevronDown size={16} />
+                        ) : (
+                          <ChevronRight size={16} />
+                        )}
                       </div>
                     </button>
 
                     {isInnerExpanded && (
                       <div className="p-3 bg-background space-y-3">
                         {Object.entries(reasons).map(([reason, details]) => (
-                          <div key={reason} className="bg-muted/50 rounded-lg p-3 space-y-3">
+                          <div
+                            key={reason}
+                            className="bg-muted/50 rounded-lg p-3 space-y-3"
+                          >
                             <div className="flex items-start justify-between gap-3">
-                              <span className="text-sm font-medium text-foreground flex-1">{reason}</span>
+                              <span className="text-sm font-medium text-foreground flex-1">
+                                {reason}
+                              </span>
                               <span className="text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded shrink-0">
                                 {details?.total || 0}
                               </span>
@@ -148,21 +175,23 @@ export const AccordionNestedSection = ({
   );
 };
 
-export const AccordionCategorySection = ({ 
-  title, 
-  icon: Icon, 
-  data, 
-  emptyMessage, 
-  sectionKey, 
-  expandedSections, 
-  toggleSection 
+export const AccordionCategorySection = ({
+  title,
+  icon: Icon,
+  data,
+  emptyMessage,
+  sectionKey,
+  expandedSections,
+  toggleSection,
 }) => {
   const [expandedInner, setExpandedInner] = useState({});
   const isExpanded = expandedSections[sectionKey];
-  const totalCount = data ? Object.values(data).reduce((sum, detail) => sum + (detail?.total || 0), 0) : 0;
+  const totalCount = data
+    ? Object.values(data).reduce((sum, detail) => sum + (detail?.total || 0), 0)
+    : 0;
 
   const toggleInner = (key) => {
-    setExpandedInner(prev => ({ ...prev, [key]: !prev[key] }));
+    setExpandedInner((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   if (!data || Object.keys(data).length === 0) {
@@ -216,17 +245,28 @@ export const AccordionCategorySection = ({
                 const isInnerExpanded = expandedInner[categoryKey];
 
                 return (
-                  <div key={category} className="border border-border rounded-lg overflow-hidden">
+                  <div
+                    key={category}
+                    className="border border-border rounded-lg overflow-hidden"
+                  >
                     <button
                       onClick={() => toggleInner(categoryKey)}
                       className="w-full flex items-center justify-between p-3 bg-muted/30 hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-foreground">{category}</span>
-                        <span className="text-xs text-muted-foreground">({total} entries)</span>
+                        <span className="text-sm font-semibold text-foreground">
+                          {category}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          ({total} entries)
+                        </span>
                       </div>
                       <div className="shrink-0">
-                        {isInnerExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                        {isInnerExpanded ? (
+                          <ChevronDown size={16} />
+                        ) : (
+                          <ChevronRight size={16} />
+                        )}
                       </div>
                     </button>
 

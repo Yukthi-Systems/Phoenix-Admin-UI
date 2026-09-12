@@ -63,7 +63,7 @@ function CRMService() {
     return services.filter((service) => {
       const serviceName = (service.service_name || "").toLowerCase();
       const serviceCode = (service.service_code || "").toLowerCase();
-      
+
       return serviceName.includes(query) || serviceCode.includes(query);
     });
   }, [services, searchQuery]);
@@ -246,7 +246,9 @@ function CRMService() {
         {filteredServices.length !== 0 || isLoading ? (
           <TableWithoutPagination table={table} isLoading={isLoading} />
         ) : searchQuery ? (
-          <NoDataFound content={`No services found matching "${searchQuery}"`} />
+          <NoDataFound
+            content={`No services found matching "${searchQuery}"`}
+          />
         ) : (
           <NoDataFound content="No CRM Service" />
         )}

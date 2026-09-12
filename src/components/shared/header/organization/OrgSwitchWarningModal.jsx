@@ -52,8 +52,8 @@ const OrgSwitchWarningModal = ({
             <span className="font-semibold">
               {organizationName || "this organization"}
             </span>{" "}
-            will take you away from the current page and reset any unsaved
-            work or selections.
+            will take you away from the current page and reset any unsaved work
+            or selections.
           </p>
         </div>
 

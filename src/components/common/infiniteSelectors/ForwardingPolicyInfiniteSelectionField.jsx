@@ -43,7 +43,11 @@ function ForwardingPolicyDetailsModal({ organizationId, policyId, onClose }) {
   });
 
   return (
-    <PolicyDetailsModal isLoading={isLoading} isError={isError} onClose={onClose}>
+    <PolicyDetailsModal
+      isLoading={isLoading}
+      isError={isError}
+      onClose={onClose}
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           <h4 className="text-lg font-semibold text-card-foreground">
@@ -59,10 +63,7 @@ function ForwardingPolicyDetailsModal({ organizationId, policyId, onClose }) {
       </div>
 
       <InfoCard icon={Info} title="Overview">
-        <InfoItem
-          label="Domain"
-          value={data?.domain_name || "Not specified"}
-        />
+        <InfoItem label="Domain" value={data?.domain_name || "Not specified"} />
         <InfoItem
           label="Forward To"
           value={`${data?.forward_to_emails?.length || 0} addresses`}
@@ -98,7 +99,9 @@ function ForwardingPolicyDetailsModal({ organizationId, policyId, onClose }) {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">No addresses configured</p>
+          <p className="text-xs text-muted-foreground">
+            No addresses configured
+          </p>
         )}
       </InfoCard>
 
@@ -115,7 +118,9 @@ function ForwardingPolicyDetailsModal({ organizationId, policyId, onClose }) {
             ))}
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">No addresses configured</p>
+          <p className="text-xs text-muted-foreground">
+            No addresses configured
+          </p>
         )}
       </InfoCard>
     </PolicyDetailsModal>
@@ -186,7 +191,10 @@ export function ForwardingPolicyInfiniteSelectionField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -247,7 +255,7 @@ export function ForwardingPolicyInfiniteSelectionField({
           // Add the selected option to display options if it's not already there
           const displayOptions =
             selectedOption &&
-              !options.find((opt) => opt.value === selectedOption.value)
+            !options.find((opt) => opt.value === selectedOption.value)
               ? [selectedOption, ...options]
               : options;
 
@@ -263,7 +271,9 @@ export function ForwardingPolicyInfiniteSelectionField({
                 value={selectedOption}
                 options={displayOptions}
                 placeholder={placeholder}
-                onChange={(selected) => field.onChange(selected ? selected.value : null)}
+                onChange={(selected) =>
+                  field.onChange(selected ? selected.value : null)
+                }
                 onMenuScrollToBottom={handleMenuScrollToBottom}
                 onInputChange={handleInputChange}
                 isClearable

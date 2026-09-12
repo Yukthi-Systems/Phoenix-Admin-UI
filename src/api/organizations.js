@@ -131,7 +131,10 @@ export const createOrganization = async (data, addLog = true) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    if (!addLog) throw new Error(response?.data?.message || "Failed to create organization.");
+    if (!addLog)
+      throw new Error(
+        response?.data?.message || "Failed to create organization.",
+      );
     const orgName =
       data?.organization_name || data?.name || "Unknown Organization";
     await addLogs({
@@ -223,7 +226,12 @@ export const getOrganizationLogoUrl = async (organization_id) => {
 
 export const editOrganization = async (organization_id, data) => {
   const method = "PATCH";
-  const { email_service_enabled, chat_service_enabled, file_service_enabled, ...rest } = data;
+  const {
+    email_service_enabled,
+    chat_service_enabled,
+    file_service_enabled,
+    ...rest
+  } = data;
   const url = `${API_URL}/organization/edit/${organization_id}?email_service_enabled=${email_service_enabled}&chat_service_enabled=${chat_service_enabled}&file_service_enabled=${file_service_enabled}`;
   const cleanData = trimInput(rest);
   try {
@@ -416,7 +424,10 @@ export const updateOrganizationSpace = async (organization_id, space) => {
   }
 };
 
-export const updateOrganizationIdentityQuota = async (organization_id, quota) => {
+export const updateOrganizationIdentityQuota = async (
+  organization_id,
+  quota,
+) => {
   const method = "PUT";
   const url = `${API_URL}/organization/quota/identity/${organization_id}?new_allocated_quota=${quota}`;
 
@@ -455,7 +466,8 @@ export const updateOrganizationIdentityQuota = async (organization_id, quota) =>
     });
 
     throw new Error(
-      response?.data?.message || "Failed to update organization identity quota.",
+      response?.data?.message ||
+        "Failed to update organization identity quota.",
     );
   }
 };

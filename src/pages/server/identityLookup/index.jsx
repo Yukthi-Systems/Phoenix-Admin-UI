@@ -72,15 +72,25 @@ const BooleanIndicator = ({ value }) => (
 // guard of their own, so they fire even with a null id/organization_id -
 // only mount the resolver when both are actually present, same as every
 // other page in this app already does for these components.
-const renderResolvedName = (Component, organization_id, id, extraProps = {}) => {
+const renderResolvedName = (
+  Component,
+  organization_id,
+  id,
+  extraProps = {},
+) => {
   if (!id || !organization_id) {
-    return <span className="text-muted-foreground italic text-sm">Not assigned</span>;
+    return (
+      <span className="text-muted-foreground italic text-sm">Not assigned</span>
+    );
   }
-  return <Component organization_id={organization_id} id={id} {...extraProps} />;
+  return (
+    <Component organization_id={organization_id} id={id} {...extraProps} />
+  );
 };
 
 const OrganizationInfo = ({ organization_id }) => {
-  const { data, isLoading, isError } = useGetOrganizationDetail(organization_id);
+  const { data, isLoading, isError } =
+    useGetOrganizationDetail(organization_id);
 
   if (!organization_id) {
     return (
@@ -91,8 +101,18 @@ const OrganizationInfo = ({ organization_id }) => {
       </div>
     );
   }
-  if (isLoading) return <p className="text-sm text-muted-foreground">Loading organization info...</p>;
-  if (isError) return <p className="text-sm text-destructive">Failed to load organization info</p>;
+  if (isLoading)
+    return (
+      <p className="text-sm text-muted-foreground">
+        Loading organization info...
+      </p>
+    );
+  if (isError)
+    return (
+      <p className="text-sm text-destructive">
+        Failed to load organization info
+      </p>
+    );
 
   return (
     <>
@@ -101,9 +121,18 @@ const OrganizationInfo = ({ organization_id }) => {
         value={data?.organization_name || "Unknown Organization"}
         link={`/organization/${organization_id}`}
       />
-      <InfoItem label="Status" value={<StatusBadge status={data?.is_active} />} />
-      <InfoItem label="Storage Allocated" value={`${data?.quota_allocated ?? 0} GB`} />
-      <InfoItem label="Storage Utilized" value={`${data?.quota_utilized ?? 0} GB`} />
+      <InfoItem
+        label="Status"
+        value={<StatusBadge status={data?.is_active} />}
+      />
+      <InfoItem
+        label="Storage Allocated"
+        value={`${data?.quota_allocated ?? 0} GB`}
+      />
+      <InfoItem
+        label="Storage Utilized"
+        value={`${data?.quota_utilized ?? 0} GB`}
+      />
       <InfoItem
         label="Identities Allocated"
         value={
@@ -116,7 +145,10 @@ const OrganizationInfo = ({ organization_id }) => {
         label="Identities Utilized"
         value={(data?.utilized_email_identities ?? 0).toLocaleString()}
       />
-      <InfoItem label="File Service" value={<BooleanIndicator value={data?.file_service_enabled} />} />
+      <InfoItem
+        label="File Service"
+        value={<BooleanIndicator value={data?.file_service_enabled} />}
+      />
     </>
   );
 };
@@ -133,15 +165,31 @@ const ServerInfo = ({ server_id }) => {
       </div>
     );
   }
-  if (isLoading) return <p className="text-sm text-muted-foreground">Loading server info...</p>;
-  if (isError) return <p className="text-sm text-destructive">Failed to load server info</p>;
+  if (isLoading)
+    return (
+      <p className="text-sm text-muted-foreground">Loading server info...</p>
+    );
+  if (isError)
+    return (
+      <p className="text-sm text-destructive">Failed to load server info</p>
+    );
 
   return (
     <>
-      <InfoItem label="Host Name" value={server?.host_name || "--"} link={`/server/${server_id}`} />
-      <InfoItem label="Status" value={<StatusBadge status={server?.is_active} />} />
+      <InfoItem
+        label="Host Name"
+        value={server?.host_name || "--"}
+        link={`/server/${server_id}`}
+      />
+      <InfoItem
+        label="Status"
+        value={<StatusBadge status={server?.is_active} />}
+      />
       <InfoItem label="IPv4" value={server?.server_info?.ipv4 || "--"} />
-      <InfoItem label="Location" value={server?.server_info?.location || "--"} />
+      <InfoItem
+        label="Location"
+        value={server?.server_info?.location || "--"}
+      />
     </>
   );
 };
@@ -222,8 +270,8 @@ const IdentityLookup = () => {
             Look up an E-Mail Identity
           </h3>
           <p className="text-muted-foreground mt-2 max-w-sm mx-auto">
-            Enter an email address above to see its full domain, mailbox,
-            chat, policy, organization, and server details in one place.
+            Enter an email address above to see its full domain, mailbox, chat,
+            policy, organization, and server details in one place.
           </p>
         </div>
       ) : isLoading ? (
@@ -257,37 +305,109 @@ const IdentityLookup = () => {
         info && (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <InfoCard icon={User} title="Identity">
-              <InfoItem label="Email" value={info.email} link={`/identities/${info.email}`} />
-              <InfoItem label="Name" value={`${info.first_name || ""} ${info.last_name || ""}`.trim() || "--"} />
-              <InfoItem label="Primary Phone" value={info.primary_phone || "--"} />
-              <InfoItem label="Secondary Email" value={info.secondary_email || "--"} />
-              <InfoItem label="Status" value={<StatusBadge status={info.is_identity_enabled} />} />
-              <InfoItem label="Password Expired" value={<BooleanIndicator value={info.is_password_expired} />} />
-              <InfoItem label="App 2FA" value={<BooleanIndicator value={info.is_app_2fa_enabled} />} />
-              <InfoItem label="SMS 2FA" value={<BooleanIndicator value={info.is_sms_2fa_enabled} />} />
-              <InfoItem label="Email 2FA" value={<BooleanIndicator value={info.is_email_2fa_enabled} />} />
+              <InfoItem
+                label="Email"
+                value={info.email}
+                link={`/identities/${info.email}`}
+              />
+              <InfoItem
+                label="Name"
+                value={
+                  `${info.first_name || ""} ${info.last_name || ""}`.trim() ||
+                  "--"
+                }
+              />
+              <InfoItem
+                label="Primary Phone"
+                value={info.primary_phone || "--"}
+              />
+              <InfoItem
+                label="Secondary Email"
+                value={info.secondary_email || "--"}
+              />
+              <InfoItem
+                label="Status"
+                value={<StatusBadge status={info.is_identity_enabled} />}
+              />
+              <InfoItem
+                label="Password Expired"
+                value={<BooleanIndicator value={info.is_password_expired} />}
+              />
+              <InfoItem
+                label="App 2FA"
+                value={<BooleanIndicator value={info.is_app_2fa_enabled} />}
+              />
+              <InfoItem
+                label="SMS 2FA"
+                value={<BooleanIndicator value={info.is_sms_2fa_enabled} />}
+              />
+              <InfoItem
+                label="Email 2FA"
+                value={<BooleanIndicator value={info.is_email_2fa_enabled} />}
+              />
               <InfoItem
                 label="Department"
-                value={renderResolvedName(GetDepartmentName, info.organization_id, info.department_id)}
+                value={renderResolvedName(
+                  GetDepartmentName,
+                  info.organization_id,
+                  info.department_id,
+                )}
               />
             </InfoCard>
 
             <InfoCard icon={Globe} title="Domain">
-              <InfoItem label="Domain" value={info.domain_name} link={`/domain/${info.domain_name}`} />
-              <InfoItem label="Status" value={<StatusBadge status={info.is_domain_active} />} />
-              <InfoItem label="DNS TXT Verified" value={<BooleanIndicator value={info.is_dns_txt_verified} />} />
-              <InfoItem label="Catch All" value={<BooleanIndicator value={info.is_catch_all_enabled} />} />
-              <InfoItem label="Hybrid" value={<BooleanIndicator value={info.is_hybrid} />} />
-              <InfoItem label="Locked" value={<BooleanIndicator value={info.is_domain_locked} />} />
-              <InfoItem label="Session Timeout" value={`${info.session_timeout} minutes`} />
+              <InfoItem
+                label="Domain"
+                value={info.domain_name}
+                link={`/domain/${info.domain_name}`}
+              />
+              <InfoItem
+                label="Status"
+                value={<StatusBadge status={info.is_domain_active} />}
+              />
+              <InfoItem
+                label="DNS TXT Verified"
+                value={<BooleanIndicator value={info.is_dns_txt_verified} />}
+              />
+              <InfoItem
+                label="Catch All"
+                value={<BooleanIndicator value={info.is_catch_all_enabled} />}
+              />
+              <InfoItem
+                label="Hybrid"
+                value={<BooleanIndicator value={info.is_hybrid} />}
+              />
+              <InfoItem
+                label="Locked"
+                value={<BooleanIndicator value={info.is_domain_locked} />}
+              />
+              <InfoItem
+                label="Session Timeout"
+                value={`${info.session_timeout} minutes`}
+              />
             </InfoCard>
 
             <InfoCard icon={Inbox} title="Mailbox">
-              <InfoItem label="Status" value={<StatusBadge status={info.is_mailbox_enabled} />} />
-              <InfoItem label="Locked" value={<BooleanIndicator value={info.is_mailbox_locked} />} />
-              <InfoItem label="Quota Allocated" value={`${info.mailbox_quota_allocated ?? 0} GB`} />
-              <InfoItem label="Quota Utilized" value={`${bytesToGB(info.mailbox_quota_utilized_bytes).toFixed(2)} GB`} />
-              <InfoItem label="Total Messages" value={info.mailbox_total_messages_count ?? 0} />
+              <InfoItem
+                label="Status"
+                value={<StatusBadge status={info.is_mailbox_enabled} />}
+              />
+              <InfoItem
+                label="Locked"
+                value={<BooleanIndicator value={info.is_mailbox_locked} />}
+              />
+              <InfoItem
+                label="Quota Allocated"
+                value={`${info.mailbox_quota_allocated ?? 0} GB`}
+              />
+              <InfoItem
+                label="Quota Utilized"
+                value={`${bytesToGB(info.mailbox_quota_utilized_bytes).toFixed(2)} GB`}
+              />
+              <InfoItem
+                label="Total Messages"
+                value={info.mailbox_total_messages_count ?? 0}
+              />
             </InfoCard>
 
             {info.is_chat_user_enabled !== undefined && (
@@ -302,37 +422,70 @@ const IdentityLookup = () => {
             <InfoCard icon={Shield} title="Policies">
               <InfoItem
                 label="Restriction Policy"
-                value={renderResolvedName(GetRestrictionPolicyName, info.organization_id, info.restriction_policy_id)}
+                value={renderResolvedName(
+                  GetRestrictionPolicyName,
+                  info.organization_id,
+                  info.restriction_policy_id,
+                )}
               />
               <InfoItem
                 label="General Policy"
-                value={renderResolvedName(GetGeneralPolicyName, info.organization_id, info.general_policy_id)}
+                value={renderResolvedName(
+                  GetGeneralPolicyName,
+                  info.organization_id,
+                  info.general_policy_id,
+                )}
               />
               <InfoItem
                 label="Forwarding Policy"
-                value={renderResolvedName(GetForwardingPolicyName, info.organization_id, info.forwarding_policy_id)}
+                value={renderResolvedName(
+                  GetForwardingPolicyName,
+                  info.organization_id,
+                  info.forwarding_policy_id,
+                )}
               />
               <InfoItem
                 label="Distribution Policy"
-                value={renderResolvedName(GetDistributionPolicyName, info.organization_id, info.distribution_policy_id)}
+                value={renderResolvedName(
+                  GetDistributionPolicyName,
+                  info.organization_id,
+                  info.distribution_policy_id,
+                )}
               />
               <InfoItem
                 label="Filter Policy"
-                value={renderResolvedName(GetFiltersPolicyName, info.organization_id, info.filter_policy_id)}
+                value={renderResolvedName(
+                  GetFiltersPolicyName,
+                  info.organization_id,
+                  info.filter_policy_id,
+                )}
               />
               <InfoItem
                 label="Attachment Policy"
-                value={renderResolvedName(GetAttachmentPolicyName, info.organization_id, info.attachment_policy_id, {
-                  domain_name: info.domain_name,
-                })}
+                value={renderResolvedName(
+                  GetAttachmentPolicyName,
+                  info.organization_id,
+                  info.attachment_policy_id,
+                  {
+                    domain_name: info.domain_name,
+                  },
+                )}
               />
               <InfoItem
                 label="Disclaimer"
-                value={renderResolvedName(GetDisclaimerName, info.organization_id, info.disclaimer_id)}
+                value={renderResolvedName(
+                  GetDisclaimerName,
+                  info.organization_id,
+                  info.disclaimer_id,
+                )}
               />
               <InfoItem
                 label="Caution"
-                value={renderResolvedName(GetCautionName, info.organization_id, info.caution_id)}
+                value={renderResolvedName(
+                  GetCautionName,
+                  info.organization_id,
+                  info.caution_id,
+                )}
               />
             </InfoCard>
 

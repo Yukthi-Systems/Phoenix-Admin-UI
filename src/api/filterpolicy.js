@@ -70,7 +70,7 @@ export const getFiltersPolicy = async (
 export const getFiltersPolicyEntry = async (org_id, policy_id) => {
   const method = "GET";
   const url = `${API_URL}/policy/filters/entry/${org_id}/${policy_id}`;
- 
+
   try {
     const res = await axios({
       method,
@@ -111,13 +111,14 @@ export const addFiltersPolicy = async (org_id, data, addLog = true) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (res.status !== 201)
       throw new Error(res?.data?.message || "Failed to create filters policy.");
     if (addLog) {
-      const policyName = data?.policy_name || data?.name || 'New Filters Policy';
+      const policyName =
+        data?.policy_name || data?.name || "New Filters Policy";
       await addLogs({
         values: res,
         type: "success",
@@ -132,7 +133,7 @@ export const addFiltersPolicy = async (org_id, data, addLog = true) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
     if (addLog) {
-      const policyName = data?.policy_name || data?.name || 'Unknown Policy';
+      const policyName = data?.policy_name || data?.name || "Unknown Policy";
       await addLogs({
         values: response,
         type: "error",
@@ -159,13 +160,14 @@ export const editFiltersPolicy = async (org_id, policy_id, data) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (![200, 204].includes(res.status))
       throw new Error(res?.data?.message || "Failed to update filters policy.");
 
-    const policyName = data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
+    const policyName =
+      data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
     await addLogs({
       values: res,
       type: "success",
@@ -180,7 +182,8 @@ export const editFiltersPolicy = async (org_id, policy_id, data) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    const policyName = data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
+    const policyName =
+      data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
     await addLogs({
       values: response,
       type: "error",
@@ -196,7 +199,11 @@ export const editFiltersPolicy = async (org_id, policy_id, data) => {
   }
 };
 
-export const deleteFiltersPolicy = async (org_id, policy_id, policy_name = "Unknown Policy") => {
+export const deleteFiltersPolicy = async (
+  org_id,
+  policy_id,
+  policy_name = "Unknown Policy",
+) => {
   const method = "DELETE";
   const url = `${API_URL}/policy/filters/delete/${org_id}/${policy_id}`;
 

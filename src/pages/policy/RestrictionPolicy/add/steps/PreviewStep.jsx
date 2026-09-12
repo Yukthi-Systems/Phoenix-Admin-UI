@@ -17,12 +17,7 @@
 
 import { Check, X, Info, AlertCircle, Shield } from "lucide-react";
 
-const PreviewStep = ({
-  formData,
-  domain_name,
-  geoList = [],
-  ipList = [],
-}) => {
+const PreviewStep = ({ formData, domain_name, geoList = [], ipList = [] }) => {
   // Helper components
   const PreviewSection = ({ title, children, icon: Icon }) => (
     <div className="border-border bg-card/50 rounded-lg border p-5">
@@ -40,10 +35,11 @@ const PreviewStep = ({
         {label}:
       </span>
       <span
-        className={`text-right text-sm ${highlight
+        className={`text-right text-sm ${
+          highlight
             ? "text-primary font-semibold"
             : "text-foreground font-medium"
-          }`}
+        }`}
       >
         {value || "-"}
       </span>
@@ -80,10 +76,11 @@ const PreviewStep = ({
     disabledText = "Disabled",
   }) => (
     <span
-      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${enabled
+      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
+        enabled
           ? "bg-success/10 text-success"
           : "bg-muted text-muted-foreground"
-        }`}
+      }`}
     >
       {enabled ? (
         <>
@@ -105,7 +102,6 @@ const PreviewStep = ({
       <p className="text-xs">{children}</p>
     </div>
   );
-
 
   return (
     <div className="space-y-6">

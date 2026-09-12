@@ -46,7 +46,11 @@ function patternToRegex(pattern) {
   const normalized = pattern.replace(/\/+$/, "") || "/";
   const escaped = normalized
     .split("/")
-    .map((segment) => (segment.startsWith(":") ? "[^/]+" : segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")))
+    .map((segment) =>
+      segment.startsWith(":")
+        ? "[^/]+"
+        : segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    )
     .join("/");
   return new RegExp(`^${escaped}/?$`);
 }
@@ -63,7 +67,9 @@ function patternToRegex(pattern) {
  * @returns {string|null} the doc file path (relative to docs/), or null
  */
 function findHelpDocFile(pathname, step, manifest) {
-  const candidates = manifest.filter((entry) => patternToRegex(entry.match).test(pathname));
+  const candidates = manifest.filter((entry) =>
+    patternToRegex(entry.match).test(pathname),
+  );
   if (candidates.length === 0) return null;
 
   if (step != null) {

@@ -35,7 +35,11 @@ import { useUserTimezone } from "@/hooks/useTimezone";
 function DisclaimerDetailsModal({ organizationId, disclaimerId, onClose }) {
   const { formatUserDateNice } = useUserTimezone();
 
-  const { data: response, isLoading, isError } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["disclaimer_details", organizationId, disclaimerId],
     queryFn: () => getDisclaimerDetails(organizationId, disclaimerId),
     enabled: !!organizationId && !!disclaimerId,
@@ -45,7 +49,11 @@ function DisclaimerDetailsModal({ organizationId, disclaimerId, onClose }) {
   const data = response?.data;
 
   return (
-    <PolicyDetailsModal isLoading={isLoading} isError={isError} onClose={onClose}>
+    <PolicyDetailsModal
+      isLoading={isLoading}
+      isError={isError}
+      onClose={onClose}
+    >
       <h4 className="text-lg font-semibold text-card-foreground">
         {data?.disclaimer_name || "Unknown Disclaimer"}
       </h4>
@@ -157,7 +165,10 @@ export function DisclaimerInfiniteSelectField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -208,14 +219,19 @@ export function DisclaimerInfiniteSelectField({
 
             // If value exists but not in options, create a temporary option
             if (!selectedOption) {
-              selectedOption = { label: `Disclaimer ID: ${field.value}`, value: field.value };
+              selectedOption = {
+                label: `Disclaimer ID: ${field.value}`,
+                value: field.value,
+              };
             }
           }
 
           // Add the selected option to display options if it's not already there
-          const displayOptions = selectedOption && !options.find(opt => opt.value === selectedOption.value)
-            ? [selectedOption, ...options]
-            : options;
+          const displayOptions =
+            selectedOption &&
+            !options.find((opt) => opt.value === selectedOption.value)
+              ? [selectedOption, ...options]
+              : options;
 
           return (
             <>
@@ -229,7 +245,9 @@ export function DisclaimerInfiniteSelectField({
                 value={selectedOption}
                 options={displayOptions}
                 placeholder={placeholder}
-                onChange={(selected) => field.onChange(selected ? selected.value : null)}
+                onChange={(selected) =>
+                  field.onChange(selected ? selected.value : null)
+                }
                 onMenuScrollToBottom={handleMenuScrollToBottom}
                 onInputChange={handleInputChange}
                 isClearable

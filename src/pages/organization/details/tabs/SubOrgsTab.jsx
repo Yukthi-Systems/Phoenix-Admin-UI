@@ -30,11 +30,14 @@ import {
 } from "@tanstack/react-table";
 
 const SubOrgsTab = ({ orgId }) => {
-  const { pagination, onPaginationChange: setPagination } = useTablePagination(5, 10);
+  const { pagination, onPaginationChange: setPagination } = useTablePagination(
+    5,
+    10,
+  );
   const { data, isLoading, isError, refetch } = useGetOrganizations(
     pagination.pageIndex + 1,
     pagination.pageSize,
-    orgId
+    orgId,
   );
 
   const subOrgs = data?.organizations ?? [];
@@ -72,15 +75,24 @@ const SubOrgsTab = ({ orgId }) => {
         cell: ({ row }) => (
           <div className="flex flex-col gap-1 w-full max-w-[150px]">
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{row.original.quota_utilized || 0} / {row.original.quota_allocated || 0} GB</span>
+              <span>
+                {row.original.quota_utilized || 0} /{" "}
+                {row.original.quota_allocated || 0} GB
+              </span>
             </div>
             <div className="bg-muted h-1.5 w-full rounded-full overflow-hidden">
               <div
                 className="bg-primary h-1.5 rounded-full transition-all"
                 style={{
-                  width: `${row.original.quota_allocated > 0
-                    ? Math.min((row.original.quota_utilized / row.original.quota_allocated) * 100, 100)
-                    : 0
+                  width: `${
+                    row.original.quota_allocated > 0
+                      ? Math.min(
+                          (row.original.quota_utilized /
+                            row.original.quota_allocated) *
+                            100,
+                          100,
+                        )
+                      : 0
                   }%`,
                 }}
               />
@@ -89,7 +101,7 @@ const SubOrgsTab = ({ orgId }) => {
         ),
       },
     ],
-    []
+    [],
   );
 
   const table = useReactTable({
@@ -106,11 +118,14 @@ const SubOrgsTab = ({ orgId }) => {
   });
 
   if (isLoading) return <DataLoading content="Loading sub-organizations..." />;
-  if (isError) return <DataFechError content="Failed to load sub-organizations." />;
+  if (isError)
+    return <DataFechError content="Failed to load sub-organizations." />;
   if (subOrgs.length === 0) {
     return (
       <div className="text-center py-8 border border-dashed rounded-lg border-border bg-card/30">
-        <span className="text-muted-foreground text-sm">No sub-organizations found</span>
+        <span className="text-muted-foreground text-sm">
+          No sub-organizations found
+        </span>
       </div>
     );
   }

@@ -39,9 +39,15 @@ const OrganizationDetailsStep = ({
   handleParentOrgSelect,
 }) => {
   const loggedInParentOrg = useAtomValue(parentOrgAtom) || {};
-  const activeEmailService = parentOrg.id ? (parentOrg.email_service_enabled ?? false) : (loggedInParentOrg.email_service_enabled ?? false);
-  const activeChatService = parentOrg.id ? (parentOrg.chat_service_enabled ?? false) : (loggedInParentOrg.chat_service_enabled ?? false);
-  const activeFileService = parentOrg.id ? (parentOrg.file_service_enabled ?? false) : (loggedInParentOrg.file_service_enabled ?? false);
+  const activeEmailService = parentOrg.id
+    ? (parentOrg.email_service_enabled ?? false)
+    : (loggedInParentOrg.email_service_enabled ?? false);
+  const activeChatService = parentOrg.id
+    ? (parentOrg.chat_service_enabled ?? false)
+    : (loggedInParentOrg.chat_service_enabled ?? false);
+  const activeFileService = parentOrg.id
+    ? (parentOrg.file_service_enabled ?? false)
+    : (loggedInParentOrg.file_service_enabled ?? false);
 
   return (
     <div className="space-y-6">
@@ -149,7 +155,11 @@ const OrganizationDetailsStep = ({
           Services Configuration
         </legend>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <div className={activeEmailService ? "" : "opacity-50 cursor-not-allowed"}>
+          <div
+            className={
+              activeEmailService ? "" : "opacity-50 cursor-not-allowed"
+            }
+          >
             <Switch
               control={control}
               name="email_service_enabled"
@@ -163,7 +173,9 @@ const OrganizationDetailsStep = ({
               trueSublabel="Organization will have access to email services"
             />
           </div>
-          <div className={activeChatService ? "" : "opacity-50 cursor-not-allowed"}>
+          <div
+            className={activeChatService ? "" : "opacity-50 cursor-not-allowed"}
+          >
             <Switch
               control={control}
               name="chat_service_enabled"
@@ -177,7 +189,9 @@ const OrganizationDetailsStep = ({
               trueSublabel="Organization will have access to chat services"
             />
           </div>
-          <div className={activeFileService ? "" : "opacity-50 cursor-not-allowed"}>
+          <div
+            className={activeFileService ? "" : "opacity-50 cursor-not-allowed"}
+          >
             <Switch
               control={control}
               name="file_service_enabled"

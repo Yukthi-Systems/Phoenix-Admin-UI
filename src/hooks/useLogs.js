@@ -25,7 +25,6 @@ import {
 } from "@/api/logs";
 import { useMutation } from "@tanstack/react-query";
 
-
 export function useGetAuditLogs() {
   return useMutation({
     mutationKey: ["get_audit_logs"],

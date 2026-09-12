@@ -27,12 +27,7 @@ import {
 } from "lucide-react";
 import { formatMarkdownContent, detectLinks } from "./utils";
 
-const ArchiveView = ({
-  archivedChats,
-  onClose,
-  onRestore,
-  onDelete,
-}) => {
+const ArchiveView = ({ archivedChats, onClose, onRestore, onDelete }) => {
   const [selectedArchive, setSelectedArchive] = useState(null);
 
   return (

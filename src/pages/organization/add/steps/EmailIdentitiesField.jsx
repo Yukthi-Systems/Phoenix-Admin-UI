@@ -167,7 +167,7 @@ const EmailIdentitiesField = ({ watch, setValue, errors, parentOrg }) => {
               min={1}
               step={1}
               placeholder="0"
-              value={rawValue === -1 ? "" : rawValue ?? ""}
+              value={rawValue === -1 ? "" : (rawValue ?? "")}
               onChange={handleNumberChange}
               className={`w-32 rounded-md border bg-card p-2 text-right text-sm text-card-foreground transition-colors focus:border-primary focus:outline-none focus:ring-0 ${
                 error ? "border-destructive" : "border-border"
@@ -219,7 +219,10 @@ const EmailIdentitiesField = ({ watch, setValue, errors, parentOrg }) => {
                     type="button"
                     onClick={() =>
                       handlePresetClick(
-                        Math.max(1, Math.floor(parentAvailable * (percentage / 100))),
+                        Math.max(
+                          1,
+                          Math.floor(parentAvailable * (percentage / 100)),
+                        ),
                       )
                     }
                     className="rounded-full border border-border px-3 py-1 text-xs font-medium transition-colors hover:border-primary hover:bg-accent"

@@ -35,7 +35,8 @@ function UserDetails({
           Mailbox Information
         </h3>
         <p className="text-muted-foreground mt-1 text-sm">
-          Select an existing E-Mail Identity and configure details for this mailbox
+          Select an existing E-Mail Identity and configure details for this
+          mailbox
         </p>
       </div>
 

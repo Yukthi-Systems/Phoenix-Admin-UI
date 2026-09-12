@@ -24,8 +24,12 @@ import { useTranslation } from "react-i18next";
 
 const DynamicDetailsStep = () => {
   const { t } = useTranslation();
-  const { control, register, formState: { errors } } = useFormContext();
-  
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext();
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "custom_details",
@@ -38,7 +42,9 @@ const DynamicDetailsStep = () => {
           {t("Additional Details")}
         </h3>
         <p className="text-sm text-muted-foreground">
-          {t("Add any extra metadata for this key (e.g. Environment, Department).")}
+          {t(
+            "Add any extra metadata for this key (e.g. Environment, Department).",
+          )}
         </p>
       </div>
 
@@ -73,10 +79,10 @@ const DynamicDetailsStep = () => {
       </div>
 
       <div className="flex justify-start">
-        <AddButton 
-            label="Add Detail" 
-            handleClick={() => append({ key: "", value: "" })}
-            icon={true}
+        <AddButton
+          label="Add Detail"
+          handleClick={() => append({ key: "", value: "" })}
+          icon={true}
         />
       </div>
     </div>

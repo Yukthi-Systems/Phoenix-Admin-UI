@@ -167,7 +167,9 @@ const AppSessionDetailsModal = ({ isOpen, handleClose, session }) => {
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-muted-foreground text-xs">Last Active At</p>
+                  <p className="text-muted-foreground text-xs">
+                    Last Active At
+                  </p>
                   <p className="text-foreground text-sm font-semibold">
                     {formatUserDateNice(session.last_active_at)}
                   </p>

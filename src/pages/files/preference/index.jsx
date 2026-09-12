@@ -16,13 +16,7 @@
  */
 
 import { useState, useCallback, useEffect } from "react";
-import {
-  FolderOpen,
-  Share2,
-  History,
-  Save,
-  Info,
-} from "lucide-react";
+import { FolderOpen, Share2, History, Save, Info } from "lucide-react";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { useToastify } from "@/hooks/useToastify";
 import { useAtomValue } from "jotai";
@@ -67,8 +61,9 @@ function PreferenceToggleRow({
 }) {
   return (
     <div
-      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
-        }`}
+      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${
+        disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
+      }`}
     >
       <div className="flex items-start gap-4">
         <div
@@ -110,10 +105,11 @@ function PreferenceToggleRow({
 function StatusPill({ label, active }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${active
-        ? "bg-success/15 text-success"
-        : "bg-destructive/15 text-destructive"
-        }`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
+        active
+          ? "bg-success/15 text-success"
+          : "bg-destructive/15 text-destructive"
+      }`}
     >
       <span
         className={`h-1.5 w-1.5 rounded-full ${active ? "bg-success" : "bg-destructive"}`}
@@ -133,8 +129,14 @@ export default function FileServicePreferencePage() {
   const organization_id = selectedOrg?.organization_id;
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
 
-  const { data: config, isLoading, isError, refetch } = useGetFileServiceConfig(organization_id);
-  const { mutateAsync: updateConfig, isPending: isSaving } = useUpdateFileServiceConfig();
+  const {
+    data: config,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetFileServiceConfig(organization_id);
+  const { mutateAsync: updateConfig, isPending: isSaving } =
+    useUpdateFileServiceConfig();
 
   // Working copy — what the user is currently editing
   const [prefs, setPrefs] = useState(DEFAULT_PREFS);
@@ -190,7 +192,11 @@ export default function FileServicePreferencePage() {
     }
   };
 
-  if (!permissions.includes("file:view") && !parentOrg?.file_service_enabled && !selectedOrg?.file_service_enabled) {
+  if (
+    !permissions.includes("file:view") &&
+    !parentOrg?.file_service_enabled &&
+    !selectedOrg?.file_service_enabled
+  ) {
     return (
       <AccessDenied content="Don't have the access to view the File Service Preference." />
     );
@@ -232,8 +238,10 @@ export default function FileServicePreferencePage() {
       {isNewConfig && !isDirty && !isLoading && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm text-primary">
           <Info size={15} className="shrink-0" />
-          File service hasn't been configured for this organization yet. Review the settings below and click{" "}
-          <span className="mx-1 font-semibold">Save Preferences</span> to create the initial configuration.
+          File service hasn't been configured for this organization yet. Review
+          the settings below and click{" "}
+          <span className="mx-1 font-semibold">Save Preferences</span> to create
+          the initial configuration.
         </div>
       )}
 
@@ -241,7 +249,9 @@ export default function FileServicePreferencePage() {
       {isDirty && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-sm text-warning">
           <Info size={15} className="shrink-0" />
-          You have unsaved changes. Click <span className="mx-1 font-semibold">Save Preferences</span> to apply them.
+          You have unsaved changes. Click{" "}
+          <span className="mx-1 font-semibold">Save Preferences</span> to apply
+          them.
         </div>
       )}
 
@@ -250,8 +260,9 @@ export default function FileServicePreferencePage() {
         <Info size={15} className="mt-0.5 shrink-0 text-primary" />
         <p className="text-xs leading-relaxed text-muted-foreground">
           These settings control the file storage functionality available to all
-          users in your organization. Changes take effect immediately after saving.
-          Per-user storage quotas are managed individually on the File Users page.
+          users in your organization. Changes take effect immediately after
+          saving. Per-user storage quotas are managed individually on the File
+          Users page.
         </p>
       </div>
 

@@ -63,7 +63,12 @@ const ResetPassword = () => {
   // right (moving to a "later" tab), -1 = from the left, 0 = no tab change
   const [slideDir, setSlideDir] = useState(0);
   const swipeTrackRef = useRef(null);
-  const touchState = useRef({ startX: 0, startY: 0, dragging: false, dragX: 0 });
+  const touchState = useRef({
+    startX: 0,
+    startY: 0,
+    dragging: false,
+    dragX: 0,
+  });
 
   // Keep the URL in sync so the mode survives a refresh / can be deep-linked
   useEffect(() => {
@@ -114,7 +119,12 @@ const ResetPassword = () => {
   const handleTouchStart = (e) => {
     if (step !== 1) return;
     const t = e.touches[0];
-    touchState.current = { startX: t.clientX, startY: t.clientY, dragging: false, dragX: 0 };
+    touchState.current = {
+      startX: t.clientX,
+      startY: t.clientY,
+      dragging: false,
+      dragX: 0,
+    };
   };
 
   const handleTouchMove = (e) => {
@@ -153,7 +163,10 @@ const ResetPassword = () => {
     state.dragging = false;
 
     const currentIndex = MODE_KEYS.indexOf(mode);
-    if (state.dragX <= -SWIPE_THRESHOLD && currentIndex < MODE_KEYS.length - 1) {
+    if (
+      state.dragX <= -SWIPE_THRESHOLD &&
+      currentIndex < MODE_KEYS.length - 1
+    ) {
       switchMode(MODE_KEYS[currentIndex + 1]);
     } else if (state.dragX >= SWIPE_THRESHOLD && currentIndex > 0) {
       switchMode(MODE_KEYS[currentIndex - 1]);
@@ -212,7 +225,9 @@ const ResetPassword = () => {
                   Reset Password
                 </h1>
                 <p className="text-muted-foreground text-xl">
-                  {step === 1 ? activeMode.subtitle : "Verify OTP & Set Password"}
+                  {step === 1
+                    ? activeMode.subtitle
+                    : "Verify OTP & Set Password"}
                 </p>
               </div>
             </div>

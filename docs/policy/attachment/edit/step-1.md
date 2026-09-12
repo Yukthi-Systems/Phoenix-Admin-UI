@@ -6,6 +6,6 @@ Click Edit on a policy to update it. It's a 2-step form that covers the same gro
 
 ![Step 1: Policy Details.](../../images/policy-attachment-step1-details.png)
 
-*Step 1: Policy Details (shown here is Add — Edit looks identical, pre-filled with the policy's current values).*
+_Step 1: Policy Details (shown here is Add — Edit looks identical, pre-filled with the policy's current values)._
 
 The same fields as Step 1 of Adding a New Attachment Policy — Domain (read-only), Policy Name, Policy Description, Set Size Limit, Maximum Attachment Size (MB) and Policy Active.

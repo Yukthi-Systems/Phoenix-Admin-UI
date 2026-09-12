@@ -275,25 +275,28 @@ const CopyEditDomain = () => {
       watchedValues.enable_max_password_age,
     );
 
-    mutate({ data, addLog: false }, {
-      onSuccess: (res) => {
-        toast(
-          "success",
-          `Successfully copied domain to ${copyData.targetOrgName}`,
-        );
-        resetCopyData();
-        navigate("/domain");
+    mutate(
+      { data, addLog: false },
+      {
+        onSuccess: (res) => {
+          toast(
+            "success",
+            `Successfully copied domain to ${copyData.targetOrgName}`,
+          );
+          resetCopyData();
+          navigate("/domain");
+        },
+        onError: (error) => {
+          const message =
+            error.response?.data?.message || error.message || "Unknown error";
+          const tracebackId = error.response?.data?.traceback_id;
+          toast(
+            "error",
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+          );
+        },
       },
-      onError: (error) => {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
-        const tracebackId = error.response?.data?.traceback_id;
-        toast(
-          "error",
-          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-        );
-      },
-    });
+    );
   };
 
   const handleCancel = () => {

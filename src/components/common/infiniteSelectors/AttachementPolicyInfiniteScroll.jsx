@@ -32,18 +32,28 @@ import { InfoCard, InfoItem } from "@/components/common/InfoCard";
 import StatusBadge from "@/components/common/StatusBadge";
 import { useUserTimezone } from "@/hooks/useTimezone";
 
-function AttachmentPolicyDetailsModal({ organizationId, domainName, policyId, onClose }) {
+function AttachmentPolicyDetailsModal({
+  organizationId,
+  domainName,
+  policyId,
+  onClose,
+}) {
   const { formatUserDateNice } = useUserTimezone();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["attachment_policy_entry", organizationId, domainName, policyId],
-    queryFn: () => getAttachmentPolicyById(organizationId, domainName, policyId),
+    queryFn: () =>
+      getAttachmentPolicyById(organizationId, domainName, policyId),
     enabled: !!organizationId && !!domainName && !!policyId,
     staleTime: 1000 * 60,
   });
 
   return (
-    <PolicyDetailsModal isLoading={isLoading} isError={isError} onClose={onClose}>
+    <PolicyDetailsModal
+      isLoading={isLoading}
+      isError={isError}
+      onClose={onClose}
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           <h4 className="text-lg font-semibold text-card-foreground">
@@ -59,10 +69,7 @@ function AttachmentPolicyDetailsModal({ organizationId, domainName, policyId, on
       </div>
 
       <InfoCard icon={Info} title="Overview">
-        <InfoItem
-          label="Domain"
-          value={data?.domain_name || "Not specified"}
-        />
+        <InfoItem label="Domain" value={data?.domain_name || "Not specified"} />
         <InfoItem
           label="Max Attachment Size"
           value={
@@ -166,12 +173,11 @@ export function AttachmentPolicyInfiniteSelectField({
 
       const { attachment_policies = [], total_pages = 1 } = response.data || {};
 
-      const newOptions = attachment_policies
-        .map((item) => ({
-          label: item.policy_name,
-          value: item.policy_id,
-          isDisabled: !item.is_active,
-        }));
+      const newOptions = attachment_policies.map((item) => ({
+        label: item.policy_name,
+        value: item.policy_id,
+        isDisabled: !item.is_active,
+      }));
 
       if (pageNum === 1 || query !== searchQuery) {
         setOptions(newOptions);
@@ -191,7 +197,10 @@ export function AttachmentPolicyInfiniteSelectField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -242,14 +251,19 @@ export function AttachmentPolicyInfiniteSelectField({
 
             // If value exists but not in options, create a temporary option
             if (!selectedOption) {
-              selectedOption = { label: `Policy ID: ${field.value}`, value: field.value };
+              selectedOption = {
+                label: `Policy ID: ${field.value}`,
+                value: field.value,
+              };
             }
           }
 
           // Add the selected option to display options if it's not already there
-          const displayOptions = selectedOption && !options.find(opt => opt.value === selectedOption.value)
-            ? [selectedOption, ...options]
-            : options;
+          const displayOptions =
+            selectedOption &&
+            !options.find((opt) => opt.value === selectedOption.value)
+              ? [selectedOption, ...options]
+              : options;
 
           return (
             <>
@@ -263,7 +277,9 @@ export function AttachmentPolicyInfiniteSelectField({
                 value={selectedOption}
                 options={displayOptions}
                 placeholder={placeholder}
-                onChange={(selected) => field.onChange(selected ? selected.value : null)}
+                onChange={(selected) =>
+                  field.onChange(selected ? selected.value : null)
+                }
                 onMenuScrollToBottom={handleMenuScrollToBottom}
                 onInputChange={handleInputChange}
                 isClearable

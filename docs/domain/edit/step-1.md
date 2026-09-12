@@ -6,7 +6,7 @@ Click Edit Domain to update an existing domain. It's a 4-step form that covers m
 
 ![Step 1: Domain Configuration.](../../images/domain-edit-step1-config.png)
 
-*Step 1: Domain Configuration.*
+_Step 1: Domain Configuration._
 
 The same fields as Domain Details in section 4.4 — Domain Name, Anti-Phishing Secret Code, Description and Address.
 

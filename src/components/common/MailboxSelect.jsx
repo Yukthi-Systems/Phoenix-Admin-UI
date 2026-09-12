@@ -57,7 +57,7 @@ export function MailboxInfiniteSelect({
         },
       );
 
-      const { data:mailboxes = [], total_pages = 1 } = response.data || {};
+      const { data: mailboxes = [], total_pages = 1 } = response.data || {};
 
       const newOptions = mailboxes.map((item) => ({
         label: item,

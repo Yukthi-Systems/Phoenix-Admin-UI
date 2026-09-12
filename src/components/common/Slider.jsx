@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import React from 'react';
+import React from "react";
 
 /**
  * A theme-aware range slider component.
@@ -35,19 +35,19 @@ export function Slider({
   value = 0,
   onChange,
   disabled = false,
-  className = '',
+  className = "",
 }) {
   // Calculate percentage for track fill and thumb position
   // Clamp percentage between 0 and 100 to prevent visual glitches
   const percentage = Math.min(
     100,
-    Math.max(0, ((value - min) / (max - min)) * 100)
+    Math.max(0, ((value - min) / (max - min)) * 100),
   );
 
   return (
     <div
       className={`relative flex w-full touch-none select-none items-center h-5 ${
-        disabled ? 'opacity-50 cursor-not-allowed' : ''
+        disabled ? "opacity-50 cursor-not-allowed" : ""
       } ${className}`}
     >
       {/* Visual Track Background */}

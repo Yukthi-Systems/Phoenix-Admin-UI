@@ -61,8 +61,8 @@ function EmailFlowLog() {
   const [selected, setSelected] = useState(null);
   const { formatUserDateNice, convertToUTC, userTimezone } = useUserTimezone();
   const [show, setShow] = useState(false);
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
   const [hasInitialLoad, setHasInitialLoad] = useState(false);
   const [dateValidationError, setDateValidationError] = useState("");
 

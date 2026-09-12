@@ -20,4 +20,3 @@ export const mailboxDefaultValues = {
   forwarding_policy_id: null,
   distribution_policy_id: null,
 };
-

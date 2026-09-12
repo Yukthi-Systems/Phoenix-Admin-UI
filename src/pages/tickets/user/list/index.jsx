@@ -49,7 +49,7 @@ const ListUserTickets = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   const [searchParams, setSearchParams] = useSearchParams();
   // Hooks
   const userProfile = useAtomValue(userProfileAtom);

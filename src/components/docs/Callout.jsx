@@ -56,7 +56,9 @@ const Callout = ({ type = "info", title, children }) => {
     >
       <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${variant.icon}`} />
       <div className="text-foreground/90 min-w-0 space-y-2 leading-relaxed">
-        {title ? <p className="text-foreground font-semibold">{title}</p> : null}
+        {title ? (
+          <p className="text-foreground font-semibold">{title}</p>
+        ) : null}
         {children}
       </div>
     </div>

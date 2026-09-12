@@ -21,22 +21,22 @@ import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo"; // Assumed location f
 
 const DraggableChat = () => {
   const { uiInfo, updateUiInfo, isSynced } = useSyncedUiInfo();
-  
+
   // Derive position from the synced UI info object
   const position = uiInfo?.chatPosition || null;
 
   const [isDragging, setIsDragging] = useState(false);
-  
+
   // Temporary coordinates during drag (always relative to top-left for simplicity)
   const [dragPos, setDragPos] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [hasMoved, setHasMoved] = useState(false);
 
   const ref = useRef(null);
-  
+
   // Constants for dimensions
-  const BUTTON_SIZE = 56; 
-  const MARGIN = 16; 
+  const BUTTON_SIZE = 56;
+  const MARGIN = 16;
 
   // 1. Initialize Default Position (Only if synced and missing)
   useEffect(() => {
@@ -47,7 +47,7 @@ const DraggableChat = () => {
           y: 92,
           anchorX: "right",
           anchorY: "bottom",
-        }
+        },
       });
     }
   }, [isSynced, position, updateUiInfo]);
@@ -56,15 +56,15 @@ const DraggableChat = () => {
   const handleMouseDown = (e) => {
     // Prevent dragging if not initialized or if right-click
     if (e.button !== 0 || !position) return;
-    
+
     // Calculate current absolute pixel position for smooth dragging
     const rect = ref.current.getBoundingClientRect();
     setDragPos({ x: rect.left, y: rect.top });
-    
+
     setIsDragging(true);
     setHasMoved(false);
     setDragStart({ x: e.clientX, y: e.clientY });
-    
+
     e.preventDefault();
   };
 
@@ -122,8 +122,8 @@ const DraggableChat = () => {
             x: Math.max(MARGIN, finalX),
             y: Math.max(MARGIN, finalY),
             anchorX,
-            anchorY
-          }
+            anchorY,
+          },
         });
       }
     };
@@ -152,8 +152,8 @@ const DraggableChat = () => {
     // If idle, use the anchored position from API data
     if (position) {
       const { x, y, anchorX, anchorY } = position;
-      const isLegacy = !anchorX || !anchorY; 
-      
+      const isLegacy = !anchorX || !anchorY;
+
       if (isLegacy) {
         return { left: `${x}px`, top: `${y}px` };
       }
@@ -185,10 +185,7 @@ const DraggableChat = () => {
       onMouseDown={handleMouseDown}
       className="transition-opacity duration-100"
     >
-      <AIChatInterface 
-        customPositionClass="relative" 
-        preventClick={hasMoved}
-      />
+      <AIChatInterface customPositionClass="relative" preventClick={hasMoved} />
     </div>
   );
 };

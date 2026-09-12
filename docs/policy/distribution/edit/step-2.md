@@ -2,7 +2,7 @@
 
 ![Step 2: Group Members.](../../images/policy-distribution-step2-additional.png)
 
-*Step 2: Group Members — the Edit screen looks the same as the Add wizard's step.*
+_Step 2: Group Members — the Edit screen looks the same as the Add wizard's step._
 
 Same fields as Additional in section 8.5 — Rule Type, Internal Members and External Members.
 

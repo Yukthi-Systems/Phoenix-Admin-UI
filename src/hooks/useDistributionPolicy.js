@@ -21,7 +21,7 @@ import {
   getDistributionPolicyEntry,
   addDistributionPolicy,
   editDistributionPolicy,
-  deleteDistributionPolicy
+  deleteDistributionPolicy,
 } from "../api/distributionPolicy";
 
 export function useDistributionPolicy({
@@ -41,7 +41,13 @@ export function useDistributionPolicy({
       query,
     ],
     queryFn: () =>
-      getDistributionPolicy({ organization_id, domain_name, page, pageSize, query }),
+      getDistributionPolicy({
+        organization_id,
+        domain_name,
+        page,
+        pageSize,
+        query,
+      }),
     enabled: !!domain_name && !!organization_id,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
@@ -66,7 +72,8 @@ export function useAddDistributionPolicy() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add_distribution_policy"],
-    mutationFn: async ({ org_id, data, addLogs = true }) => addDistributionPolicy(org_id, data, addLogs),
+    mutationFn: async ({ org_id, data, addLogs = true }) =>
+      addDistributionPolicy(org_id, data, addLogs),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["distribution_policy"] }),
   });
@@ -75,14 +82,19 @@ export function useAddDistributionPolicy() {
 export function useEditDistributionPolicy() {
   return useMutation({
     mutationKey: ["edit_distribution_policy"],
-    mutationFn: async ({ org_id, policy_id, data }) => editDistributionPolicy(org_id, policy_id, data),
+    mutationFn: async ({ org_id, policy_id, data }) =>
+      editDistributionPolicy(org_id, policy_id, data),
   });
 }
 
 export function useDeleteDistributionPolicy() {
   return useMutation({
     mutationKey: ["delete_distribution_policy"],
-    mutationFn: async ({ org_id, policy_id, domain_name, policy_name = "Unknown Policy" }) =>
-      deleteDistributionPolicy(org_id, policy_id, domain_name, policy_name),
+    mutationFn: async ({
+      org_id,
+      policy_id,
+      domain_name,
+      policy_name = "Unknown Policy",
+    }) => deleteDistributionPolicy(org_id, policy_id, domain_name, policy_name),
   });
 }

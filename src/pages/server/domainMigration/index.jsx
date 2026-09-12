@@ -264,7 +264,9 @@ const DomainMigration = () => {
         {/* Header */}
         <div className="flex flex-col gap-4 text-left sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-foreground">Domain Status</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              Domain Status
+            </h1>
             <p className="text-sm text-muted-foreground">
               Check domain status and manage domain locking across servers
             </p>

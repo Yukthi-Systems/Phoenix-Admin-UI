@@ -65,7 +65,8 @@ export function useAddGeneralPolicy() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add_general_policy"],
-    mutationFn: async ({ org_id, data, addLogs = true }) => addGeneralPolicy(org_id, data, addLogs),
+    mutationFn: async ({ org_id, data, addLogs = true }) =>
+      addGeneralPolicy(org_id, data, addLogs),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["general_policy"] }),
   });
@@ -82,7 +83,11 @@ export function useEditGeneralPolicy() {
 export function useDeleteGeneralPolicy() {
   return useMutation({
     mutationKey: ["delete_general_policy"],
-    mutationFn: async ({ org_id, policy_id, domain_name, policy_name = "Unknown Policy" }) =>
-      deleteGeneralPolicy(org_id, policy_id, domain_name, policy_name),
+    mutationFn: async ({
+      org_id,
+      policy_id,
+      domain_name,
+      policy_name = "Unknown Policy",
+    }) => deleteGeneralPolicy(org_id, policy_id, domain_name, policy_name),
   });
 }

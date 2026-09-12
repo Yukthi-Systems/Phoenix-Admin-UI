@@ -253,42 +253,42 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                         {section.modules.map((module, idx) => {
                           if (!showAll && !moduleHasGrant(module)) return null;
                           return (
-                          <tr
-                            key={module.name}
-                            className={`border-border hover:bg-muted/10 border-b last:border-b-0 ${
-                              idx % 2 ? "bg-muted/5" : ""
-                            }`}
-                          >
-                            <td className="p-1.5 text-[11px] font-medium text-left">
-                              {module.label}
-                            </td>
-                            {["view", "create", "edit", "delete"].map(
-                              (action) => {
-                                const perm = module.permissions[action];
-                                const hasPermission =
-                                  perm && isPermissionGranted(perm);
+                            <tr
+                              key={module.name}
+                              className={`border-border hover:bg-muted/10 border-b last:border-b-0 ${
+                                idx % 2 ? "bg-muted/5" : ""
+                              }`}
+                            >
+                              <td className="p-1.5 text-[11px] font-medium text-left">
+                                {module.label}
+                              </td>
+                              {["view", "create", "edit", "delete"].map(
+                                (action) => {
+                                  const perm = module.permissions[action];
+                                  const hasPermission =
+                                    perm && isPermissionGranted(perm);
 
-                                return (
-                                  <td
-                                    key={action}
-                                    className="border-border border-l p-1 text-center"
-                                  >
-                                    {perm ? (
-                                      hasPermission ? (
-                                        <SquareCheck className="text-success w-3.5 h-3.5 mx-auto" />
+                                  return (
+                                    <td
+                                      key={action}
+                                      className="border-border border-l p-1 text-center"
+                                    >
+                                      {perm ? (
+                                        hasPermission ? (
+                                          <SquareCheck className="text-success w-3.5 h-3.5 mx-auto" />
+                                        ) : (
+                                          <Square className="text-muted-foreground w-3.5 h-3.5 mx-auto" />
+                                        )
                                       ) : (
-                                        <Square className="text-muted-foreground w-3.5 h-3.5 mx-auto" />
-                                      )
-                                    ) : (
-                                      <span className="text-muted-foreground text-[10px]">
-                                        —
-                                      </span>
-                                    )}
-                                  </td>
-                                );
-                              },
-                            )}
-                          </tr>
+                                        <span className="text-muted-foreground text-[10px]">
+                                          —
+                                        </span>
+                                      )}
+                                    </td>
+                                  );
+                                },
+                              )}
+                            </tr>
                           );
                         })}
                       </tbody>
@@ -389,42 +389,42 @@ const UserPermissionModal = ({ isOpen, onClose, permissions = [] }) => {
                         {section.modules.map((module, idx) => {
                           if (!showAll && !moduleHasGrant(module)) return null;
                           return (
-                          <tr
-                            key={module.name}
-                            className={`border-warning/20 hover:bg-warning/10 border-b last:border-b-0 ${
-                              idx % 2 ? "bg-warning/5" : ""
-                            }`}
-                          >
-                            <td className="p-1.5 text-[11px] font-medium text-left">
-                              {module.label}
-                            </td>
-                            {["view", "create", "edit", "delete"].map(
-                              (action) => {
-                                const perm = module.permissions[action];
-                                const hasPermission =
-                                  perm && isPermissionGranted(perm);
+                            <tr
+                              key={module.name}
+                              className={`border-warning/20 hover:bg-warning/10 border-b last:border-b-0 ${
+                                idx % 2 ? "bg-warning/5" : ""
+                              }`}
+                            >
+                              <td className="p-1.5 text-[11px] font-medium text-left">
+                                {module.label}
+                              </td>
+                              {["view", "create", "edit", "delete"].map(
+                                (action) => {
+                                  const perm = module.permissions[action];
+                                  const hasPermission =
+                                    perm && isPermissionGranted(perm);
 
-                                return (
-                                  <td
-                                    key={action}
-                                    className="border-warning/20 border-l p-1 text-center"
-                                  >
-                                    {perm ? (
-                                      hasPermission ? (
-                                        <SquareCheck className="text-success w-3.5 h-3.5 mx-auto" />
+                                  return (
+                                    <td
+                                      key={action}
+                                      className="border-warning/20 border-l p-1 text-center"
+                                    >
+                                      {perm ? (
+                                        hasPermission ? (
+                                          <SquareCheck className="text-success w-3.5 h-3.5 mx-auto" />
+                                        ) : (
+                                          <Square className="text-muted-foreground w-3.5 h-3.5 mx-auto" />
+                                        )
                                       ) : (
-                                        <Square className="text-muted-foreground w-3.5 h-3.5 mx-auto" />
-                                      )
-                                    ) : (
-                                      <span className="text-muted-foreground text-[10px]">
-                                        —
-                                      </span>
-                                    )}
-                                  </td>
-                                );
-                              },
-                            )}
-                          </tr>
+                                        <span className="text-muted-foreground text-[10px]">
+                                          —
+                                        </span>
+                                      )}
+                                    </td>
+                                  );
+                                },
+                              )}
+                            </tr>
                           );
                         })}
                       </tbody>

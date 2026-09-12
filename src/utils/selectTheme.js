@@ -22,7 +22,9 @@
 export const getReactSelectStyles = () => ({
   control: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isDisabled ? "hsl(var(--muted))" : "hsl(var(--background))",
+    backgroundColor: state.isDisabled
+      ? "hsl(var(--muted))"
+      : "hsl(var(--background))",
     borderColor: state.isFocused ? "hsl(var(--primary))" : "hsl(var(--border))",
     color: "hsl(var(--foreground))",
     textAlign: "left",
@@ -30,7 +32,9 @@ export const getReactSelectStyles = () => ({
     opacity: state.isDisabled ? 0.6 : 1,
     cursor: state.isDisabled ? "not-allowed" : "default",
     "&:hover": {
-      borderColor: state.isDisabled ? "hsl(var(--border))" : "hsl(var(--primary))",
+      borderColor: state.isDisabled
+        ? "hsl(var(--border))"
+        : "hsl(var(--primary))",
     },
   }),
   menu: (provided) => ({
@@ -57,9 +61,9 @@ export const getReactSelectStyles = () => ({
     opacity: state.isDisabled ? 0.5 : 1,
     "&:hover": !state.isDisabled
       ? {
-        backgroundColor: "hsl(var(--accent))",
-        color: "hsl(var(--accent-foreground))",
-      }
+          backgroundColor: "hsl(var(--accent))",
+          color: "hsl(var(--accent-foreground))",
+        }
       : undefined,
     textAlign: "left",
   }),

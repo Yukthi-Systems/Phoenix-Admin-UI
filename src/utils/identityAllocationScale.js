@@ -35,13 +35,17 @@ export const identitiesToLogPosition = (value) => {
     Math.max(LOG_SLIDER_MIN, value || LOG_SLIDER_MIN),
   );
   return Math.round(
-    ((Math.log10(clamped) - LOG_LOW) / (LOG_HIGH - LOG_LOW)) * LOG_SLIDER_RESOLUTION,
+    ((Math.log10(clamped) - LOG_LOW) / (LOG_HIGH - LOG_LOW)) *
+      LOG_SLIDER_RESOLUTION,
   );
 };
 
 export const logPositionToIdentities = (position) => {
-  const logValue = LOG_LOW + (position / LOG_SLIDER_RESOLUTION) * (LOG_HIGH - LOG_LOW);
+  const logValue =
+    LOG_LOW + (position / LOG_SLIDER_RESOLUTION) * (LOG_HIGH - LOG_LOW);
   return Math.max(1, Math.round(Math.pow(10, logValue)));
 };
 
-export const ABSOLUTE_IDENTITY_PRESETS = [100, 500, 1000, 5000, 10000, 50000, 100000];
+export const ABSOLUTE_IDENTITY_PRESETS = [
+  100, 500, 1000, 5000, 10000, 50000, 100000,
+];

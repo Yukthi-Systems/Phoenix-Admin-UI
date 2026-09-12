@@ -42,7 +42,7 @@ const SpaceAllocationModal = ({
   const currentAllocated = organization?.quota_allocated || 0;
   const freeSpaceInCurrent = Math.max(0, currentAllocated - currentUtilized);
   const maxAvailableSpace = parseFloat(
-    (parentAvailableSpace + currentAllocated).toFixed(2)
+    (parentAvailableSpace + currentAllocated).toFixed(2),
   );
   const recommendedMax = Math.max(0, maxAvailableSpace - BUFFER_GB);
 
@@ -83,7 +83,7 @@ const SpaceAllocationModal = ({
   const handleSliderChange = (e) => {
     const value = parseFloat(e.target.value).toFixed(2);
     setSpaceValue(value);
-    
+
     const validationError = validateInput(value);
     setError(validationError);
 
@@ -132,7 +132,7 @@ const SpaceAllocationModal = ({
     // Show confirmation for allocations that exceed recommended limit
     if (showWarning) {
       const confirmed = window.confirm(
-        `This allocation (${newAllocation} GB) exceeds the recommended limit (${recommendedMax} GB) and leaves less than ${BUFFER_GB} GB buffer space. Continue?`
+        `This allocation (${newAllocation} GB) exceeds the recommended limit (${recommendedMax} GB) and leaves less than ${BUFFER_GB} GB buffer space. Continue?`,
       );
       if (!confirmed) return;
     }
@@ -228,7 +228,9 @@ const SpaceAllocationModal = ({
               <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
               <p className="text-xs text-muted-foreground">
                 Recommended to keep{" "}
-                <span className="font-medium text-foreground">{BUFFER_GB} GB</span>{" "}
+                <span className="font-medium text-foreground">
+                  {BUFFER_GB} GB
+                </span>{" "}
                 buffer space
               </p>
             </div>
@@ -268,7 +270,9 @@ const SpaceAllocationModal = ({
                     : "border-border focus:ring-primary/20"
                 }`}
               />
-              <span className="text-sm font-medium text-muted-foreground">GB</span>
+              <span className="text-sm font-medium text-muted-foreground">
+                GB
+              </span>
             </div>
           </div>
 
@@ -311,7 +315,10 @@ const SpaceAllocationModal = ({
 
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>
-              Min: <span className="font-medium text-destructive">{minValue} GB</span>
+              Min:{" "}
+              <span className="font-medium text-destructive">
+                {minValue} GB
+              </span>
             </span>
             <span>
               Recommended:{" "}
@@ -320,7 +327,10 @@ const SpaceAllocationModal = ({
               </span>
             </span>
             <span>
-              Max: <span className="font-medium text-success">{maxValue.toFixed(2)} GB</span>
+              Max:{" "}
+              <span className="font-medium text-success">
+                {maxValue.toFixed(2)} GB
+              </span>
             </span>
           </div>
 
@@ -335,14 +345,12 @@ const SpaceAllocationModal = ({
             <div className="flex items-center gap-2 p-2 bg-warning/10 border border-warning/20 rounded text-xs text-warning">
               <AlertTriangle className="w-4 h-4 flex-shrink-0" />
               <span>
-                This allocation leaves less than {BUFFER_GB} GB buffer. Recommended:{" "}
-                {recommendedMax.toFixed(2)} GB or less.
+                This allocation leaves less than {BUFFER_GB} GB buffer.
+                Recommended: {recommendedMax.toFixed(2)} GB or less.
               </span>
             </div>
           )}
         </div>
-
-       
 
         {/* Action Buttons */}
         <div className="flex justify-end items-center gap-3 pt-2 border-t m-1">

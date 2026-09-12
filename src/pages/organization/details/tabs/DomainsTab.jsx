@@ -31,7 +31,10 @@ import {
 } from "@tanstack/react-table";
 
 const DomainsTab = ({ orgId }) => {
-  const { pagination, onPaginationChange: setPagination } = useTablePagination(5, 10);
+  const { pagination, onPaginationChange: setPagination } = useTablePagination(
+    5,
+    10,
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const { formatUserDateNice } = useUserTimezone();
 
@@ -39,7 +42,7 @@ const DomainsTab = ({ orgId }) => {
     orgId,
     pagination.pageIndex + 1,
     pagination.pageSize,
-    searchQuery
+    searchQuery,
   );
 
   const domains = data?.domains?.domains ?? [];
@@ -73,15 +76,21 @@ const DomainsTab = ({ orgId }) => {
           return (
             <div className="flex flex-col gap-1 w-full max-w-[150px]">
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{quota_utilized} / {quota_allocated} GB</span>
+                <span>
+                  {quota_utilized} / {quota_allocated} GB
+                </span>
               </div>
               <div className="bg-muted h-1.5 w-full rounded-full overflow-hidden">
                 <div
                   className="bg-primary h-1.5 rounded-full transition-all"
                   style={{
-                    width: `${quota_allocated > 0
-                      ? Math.min((quota_utilized / quota_allocated) * 100, 100)
-                      : 0
+                    width: `${
+                      quota_allocated > 0
+                        ? Math.min(
+                            (quota_utilized / quota_allocated) * 100,
+                            100,
+                          )
+                        : 0
                     }%`,
                   }}
                 />
@@ -96,7 +105,7 @@ const DomainsTab = ({ orgId }) => {
         cell: ({ getValue }) => formatUserDateNice(getValue()),
       },
     ],
-    [formatUserDateNice]
+    [formatUserDateNice],
   );
 
   const table = useReactTable({

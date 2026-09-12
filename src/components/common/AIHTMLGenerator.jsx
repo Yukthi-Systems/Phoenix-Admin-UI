@@ -72,9 +72,9 @@ const AIHtmlGenerator = ({
   // Detect if HTML content was updated externally (e.g. by auto-generation in parent)
   useEffect(() => {
     if (htmlContent && !hasGeneratedInSession && htmlContent.length > 0) {
-        // If content appears and user didn't click generate here, assume parent or load did it
-        // We don't strictly set hasGeneratedInSession to true here to avoid the green success message 
-        // popping up unexpectedly, but we ensure the textarea shows it.
+      // If content appears and user didn't click generate here, assume parent or load did it
+      // We don't strictly set hasGeneratedInSession to true here to avoid the green success message
+      // popping up unexpectedly, but we ensure the textarea shows it.
     }
   }, [htmlContent, hasGeneratedInSession]);
 
@@ -147,7 +147,10 @@ const AIHtmlGenerator = ({
             const sanitized = response.data.answer
               .replace(/```html\s*/gi, "")
               .replace(/```\s*/g, "")
-              .replace(/<\/?(?:html|head|body|title|meta|script|style|link)\b[^>]*>/gi, "")
+              .replace(
+                /<\/?(?:html|head|body|title|meta|script|style|link)\b[^>]*>/gi,
+                "",
+              )
               .trim();
             if (onHtmlGenerated) {
               onHtmlGenerated(sanitized);

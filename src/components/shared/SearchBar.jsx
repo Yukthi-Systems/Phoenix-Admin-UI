@@ -148,7 +148,9 @@ const SearchBar = forwardRef(
             title="Refresh list"
             aria-label="Refresh"
           >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+            />
           </button>
         )}
 

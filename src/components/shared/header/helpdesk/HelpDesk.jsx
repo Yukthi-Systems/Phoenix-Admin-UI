@@ -145,7 +145,7 @@ const HelpDesk = () => {
 
   // Get current step from URL query parameter
   const currentStep = useMemo(() => {
-    const stepParam = searchParams.get('step');
+    const stepParam = searchParams.get("step");
     const step = stepParam ? parseInt(stepParam, 10) : null;
     return step;
   }, [searchParams]);
@@ -162,11 +162,13 @@ const HelpDesk = () => {
   let currentStepData = null;
 
   if (hasSteps && currentStep !== null && currentStep > 0) {
-    currentStepData = pageData.steps.find(step => step.stepNumber === currentStep);
+    currentStepData = pageData.steps.find(
+      (step) => step.stepNumber === currentStep,
+    );
     displayFields = currentStepData?.fields || [];
   } else if (hasSteps) {
     // Show all steps if no currentStep in URL
-    displayFields = pageData.steps.flatMap(step => step.fields);
+    displayFields = pageData.steps.flatMap((step) => step.fields);
   } else {
     displayFields = pageData?.fields || [];
   }
@@ -255,7 +257,8 @@ const HelpDesk = () => {
               <div className="text-center py-8">
                 <HelpCircle className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
                 <p className="text-muted-foreground">
-                  No help content available for this {currentStep ? 'step' : 'page'} yet.
+                  No help content available for this{" "}
+                  {currentStep ? "step" : "page"} yet.
                 </p>
               </div>
             </div>

@@ -40,4 +40,3 @@ export const mailboxFormSchema = Yup.object().shape({
     .required("Email identity is required")
     .email("Invalid email format"),
 });
-

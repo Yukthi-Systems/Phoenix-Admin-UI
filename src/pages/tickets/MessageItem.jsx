@@ -35,7 +35,8 @@ export const MessageItem = ({
   const [selectedFileIndex, setSelectedFileIndex] = useState(0);
   const MESSAGE_PREVIEW_LENGTH = 800;
 
-  const shouldTruncate = item.message && item.message.length > MESSAGE_PREVIEW_LENGTH;
+  const shouldTruncate =
+    item.message && item.message.length > MESSAGE_PREVIEW_LENGTH;
   const displayMessage =
     shouldTruncate && !isExpanded
       ? item.message.substring(0, MESSAGE_PREVIEW_LENGTH) + "..."
@@ -91,7 +92,7 @@ export const MessageItem = ({
     >
       <div
         className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-sm ${getAvatarColor(
-          creatorName
+          creatorName,
         )}`}
         title={creatorName}
       >

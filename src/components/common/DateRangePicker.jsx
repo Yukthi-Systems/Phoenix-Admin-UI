@@ -44,7 +44,7 @@ const DateTimeRangePicker = ({
   ...props
 }) => {
   const { userTimezone } = useUserTimezone();
-  
+
   const [selected, setSelected] = useState(
     value?.startDate && value?.endDate
       ? { from: new Date(value.startDate), to: new Date(value.endDate) }
@@ -63,7 +63,7 @@ const DateTimeRangePicker = ({
   // Get current date/time in user's timezone
   const getTodayInUserTimezone = () => {
     const nowInUserTz = moment.tz(userTimezone);
-    const dateStr = nowInUserTz.format('YYYY-MM-DD');
+    const dateStr = nowInUserTz.format("YYYY-MM-DD");
     const today = new Date(dateStr);
     today.setHours(23, 59, 59, 999);
     return today;

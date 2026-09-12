@@ -105,7 +105,7 @@ const ListAdminTickets = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
 
   const [payload, setPayload] = useState({
     assigned_to: "",

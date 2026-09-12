@@ -6,7 +6,7 @@ Click Edit Mailbox to update an existing mailbox. Unlike Adding a New Mailbox (s
 
 ![Step 2: Mail Policies.](../../images/mailbox-step2-policies.png)
 
-*Mail Policies — the Edit screen looks the same as Step 2 of Adding a New Mailbox.*
+_Mail Policies — the Edit screen looks the same as Step 2 of Adding a New Mailbox._
 
 The same fields as Mail Policies in section 5.4's Step 2 — General Policy, Forwarding Policy and Distribution Policy. Everything on this step is optional.
 

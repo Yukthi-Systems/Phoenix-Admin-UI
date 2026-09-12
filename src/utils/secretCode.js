@@ -22,22 +22,23 @@ import { generate } from "random-words";
 const DISALLOWED_CHARS_REGEX = /[^A-Za-z0-9_ -]/g;
 
 const randomFallback = (length) => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let out = "";
-    for (let i = 0; i < length; i++) {
-        out += chars[Math.floor(Math.random() * chars.length)];
-    }
-    return out;
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let out = "";
+  for (let i = 0; i < length; i++) {
+    out += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return out;
 };
 
 export function generateSecretCode(maxLength = 20, minLength = 4) {
-    for (let attempt = 0; attempt < 10; attempt++) {
-        const words = generate({ exactly: 2, maxLength: 8, join: " " });
-        const code = words.replace(DISALLOWED_CHARS_REGEX, "");
-        if (code.length >= minLength && code.length <= maxLength) {
-            return code;
-        }
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const words = generate({ exactly: 2, maxLength: 8, join: " " });
+    const code = words.replace(DISALLOWED_CHARS_REGEX, "");
+    if (code.length >= minLength && code.length <= maxLength) {
+      return code;
     }
+  }
 
-    return randomFallback(Math.min(Math.max(minLength, 8), maxLength));
+  return randomFallback(Math.min(Math.max(minLength, 8), maxLength));
 }

@@ -107,19 +107,19 @@ const UserDetailsStep = ({
           /> */}
       </div>
       {/* </fieldset> */}
-            <div className="">
-              <Switch
-                control={control}
-                name="activate"
-                register={register}
-                watch={watch}
-                errors={errors}
-                falseLabel="User Inactive"
-                falseSublabel="User will be created but remain disabled"
-                trueLabel="User Active"
-                trueSublabel="User will be enabled immediately after creation"
-              />
-            </div>
+      <div className="">
+        <Switch
+          control={control}
+          name="activate"
+          register={register}
+          watch={watch}
+          errors={errors}
+          falseLabel="User Inactive"
+          falseSublabel="User will be created but remain disabled"
+          trueLabel="User Active"
+          trueSublabel="User will be enabled immediately after creation"
+        />
+      </div>
     </div>
   );
 };

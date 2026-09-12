@@ -23,5 +23,5 @@ export const distributionPolicyDefaultValues = {
   policy_description: "",
   policy_name: "",
   rule_type: "ANYONE",
-  specific_emails: []
-}
+  specific_emails: [],
+};

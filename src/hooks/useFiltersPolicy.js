@@ -65,7 +65,8 @@ export function useAddFiltersPolicy() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add_filters_policy"],
-    mutationFn: async ({ org_id, data, addLogs = true }) => addFiltersPolicy(org_id, data, addLogs),
+    mutationFn: async ({ org_id, data, addLogs = true }) =>
+      addFiltersPolicy(org_id, data, addLogs),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["filters_policy"] }),
   });

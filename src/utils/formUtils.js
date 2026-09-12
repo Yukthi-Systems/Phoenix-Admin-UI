@@ -19,40 +19,49 @@
  * Checks if a specific field path (e.g., "details.first_name") exists in the errors object.
  */
 const hasError = (errors, path) => {
-    return path.split('.').reduce((obj, key) => obj?.[key], errors);
-  };
-  
-  /**
-   * Finds the index of the first step that contains a validation error.
-   */
-  export const findFirstErrorStep = (errors, steps) => {
-    for (let i = 0; i < steps.length; i++) {
-      const step = steps[i];
-      // Check if any field defined in this step exists in the errors object
-      const stepHasError = step.fields.some((field) => hasError(errors, field));
+  return path.split(".").reduce((obj, key) => obj?.[key], errors);
+};
 
-      if (stepHasError) {
-        return i + 1; // Return 1-based index to match your currentStep state
-      }
+/**
+ * Finds the index of the first step that contains a validation error.
+ */
+export const findFirstErrorStep = (errors, steps) => {
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+    // Check if any field defined in this step exists in the errors object
+    const stepHasError = step.fields.some((field) => hasError(errors, field));
+
+    if (stepHasError) {
+      return i + 1; // Return 1-based index to match your currentStep state
     }
-    return null;
-  };
+  }
+  return null;
+};
 
-  /**
-   * react-hook-form `onInvalid` handler for multi-step forms: jumps the wizard to the
-   * first step containing a validation error and shows a toast, instead of silently
-   * doing nothing when the user submits from a later step with an earlier step's field
-   * still invalid.
-   */
-  export const jumpToErroredStep = (formErrors, steps, setCurrentStep, toast, actionLabel = "") => {
-    const errorStep = findFirstErrorStep(formErrors, steps);
+/**
+ * react-hook-form `onInvalid` handler for multi-step forms: jumps the wizard to the
+ * first step containing a validation error and shows a toast, instead of silently
+ * doing nothing when the user submits from a later step with an earlier step's field
+ * still invalid.
+ */
+export const jumpToErroredStep = (
+  formErrors,
+  steps,
+  setCurrentStep,
+  toast,
+  actionLabel = "",
+) => {
+  const errorStep = findFirstErrorStep(formErrors, steps);
 
-    if (errorStep) {
-      setCurrentStep(errorStep);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      const stepLabel = steps[errorStep - 1].label;
-      toast("error", `Please fix the errors in the "${stepLabel}" step${actionLabel ? ` ${actionLabel}` : ""}`);
-    } else {
-      toast("error", "Please fix the errors in the form before proceeding");
-    }
-  };
+  if (errorStep) {
+    setCurrentStep(errorStep);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    const stepLabel = steps[errorStep - 1].label;
+    toast(
+      "error",
+      `Please fix the errors in the "${stepLabel}" step${actionLabel ? ` ${actionLabel}` : ""}`,
+    );
+  } else {
+    toast("error", "Please fix the errors in the form before proceeding");
+  }
+};

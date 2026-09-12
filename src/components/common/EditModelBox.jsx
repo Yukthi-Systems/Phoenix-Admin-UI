@@ -52,7 +52,9 @@ function EditModelBox({
           onMouseDown={handleBackdropClick}
         >
           {/* Added 'flex flex-col' to handle layout and scrolling properly */}
-          <div className={`bg-card ${sizeClasses} flex flex-col overflow-hidden shadow-lg p-4 border border-border`}>
+          <div
+            className={`bg-card ${sizeClasses} flex flex-col overflow-hidden shadow-lg p-4 border border-border`}
+          >
             {/* Added 'flex-shrink-0' to prevent header from shrinking */}
             <div className="w-auto flex justify-between items-center mb-2 flex-shrink-0">
               <p className="text-xl font-medium text-card-foreground">

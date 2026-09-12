@@ -435,7 +435,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   @apply grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3;
 }
 
-
 /* Reset Password: crossfade/slide when switching between Admin/Identity mode or steps */
 @keyframes resetContentFadeIn {
   from {

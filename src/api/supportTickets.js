@@ -277,7 +277,10 @@ export const getAdminSupportTickets = async (page, size, payload) => {
     return res.data;
   } catch (error) {
     throw new Error(
-      getErrorMessage(error, "Failed to fetch admin tickets. Please try again."),
+      getErrorMessage(
+        error,
+        "Failed to fetch admin tickets. Please try again.",
+      ),
     );
   }
 };

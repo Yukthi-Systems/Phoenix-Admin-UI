@@ -60,7 +60,13 @@ const STEPS = [
     id: "user-details",
     label: "User Details",
     description: "Account info",
-    fields: ["user_name", "display_name", "user_email", "primary_phone", "activate"],
+    fields: [
+      "user_name",
+      "display_name",
+      "user_email",
+      "primary_phone",
+      "activate",
+    ],
   },
   {
     id: "personal-details",

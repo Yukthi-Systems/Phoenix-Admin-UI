@@ -54,8 +54,7 @@ export function useAddIdentity() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["create_identity"],
-    mutationFn: async ({ data, addLog = true }) =>
-      createIdentity(data, addLog),
+    mutationFn: async ({ data, addLog = true }) => createIdentity(data, addLog),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["identities"] }),
   });
@@ -64,8 +63,7 @@ export function useAddIdentity() {
 export function useUpdateIdentity() {
   return useMutation({
     mutationKey: ["update_identity"],
-    mutationFn: async ({ data }) =>
-      updateIdentity(data),
+    mutationFn: async ({ data }) => updateIdentity(data),
   });
 }
 

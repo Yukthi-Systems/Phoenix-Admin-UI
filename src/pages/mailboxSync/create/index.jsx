@@ -28,7 +28,10 @@ import { useCreateImapSyncJob } from "@/hooks/useImapSync";
 import AccessDenied from "@/components/common/AccessDenied";
 import StepperFormLayout from "@/components/layouts/FormLayout";
 
-import { imapSyncDefaultValues, getDefaultDateRange } from "../list/imapSyncDefaultValues";
+import {
+  imapSyncDefaultValues,
+  getDefaultDateRange,
+} from "../list/imapSyncDefaultValues";
 import { imapSyncValidationSchema } from "../list/validationSchema";
 import JobConfigurationStep from "./steps/ConfigurationStep";
 import PreviewStep from "./steps/PreviewStep";
@@ -86,7 +89,7 @@ const CreateMailBoxSync = () => {
     defaultValues: {
       ...imapSyncDefaultValues,
       to_email_domain: domain_name,
-      date_range: imapSyncDefaultValues.date_range || getDefaultDateRange()
+      date_range: imapSyncDefaultValues.date_range || getDefaultDateRange(),
     },
     resolver: yupResolver(imapSyncValidationSchema),
     mode: "onChange",
@@ -176,7 +179,7 @@ const CreateMailBoxSync = () => {
         const tracebackId = error.response?.data?.traceback_id;
         toast(
           "error",
-          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`
+          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
         );
         console.error(error);
       },

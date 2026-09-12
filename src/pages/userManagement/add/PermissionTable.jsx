@@ -282,9 +282,7 @@ const PermissionTables = ({
                           />
                         </label>
                       ) : (
-                        <span className="text-muted-foreground text-sm">
-                          —
-                        </span>
+                        <span className="text-muted-foreground text-sm">—</span>
                       )}
                     </td>
                   );

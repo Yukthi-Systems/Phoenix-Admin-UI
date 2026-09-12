@@ -73,9 +73,15 @@ export const organizationFormSchema = yup.object().shape({
       },
     ),
 
-  email_service_enabled: yup.boolean().required("Email service status is required"),
-  chat_service_enabled: yup.boolean().required("Chat service status is required"),
-  file_service_enabled: yup.boolean().required("File service status is required"),
+  email_service_enabled: yup
+    .boolean()
+    .required("Email service status is required"),
+  chat_service_enabled: yup
+    .boolean()
+    .required("Chat service status is required"),
+  file_service_enabled: yup
+    .boolean()
+    .required("File service status is required"),
 
   name: yup
     .string()
@@ -159,8 +165,5 @@ export const organizationFormSchema = yup.object().shape({
       ),
   }),
 
-  parent_organization_id: yup
-    .string()
-    .required("Please select organization")
-   
+  parent_organization_id: yup.string().required("Please select organization"),
 });

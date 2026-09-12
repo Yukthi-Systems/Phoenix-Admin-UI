@@ -189,7 +189,11 @@ const StepBackupCode = ({ onNext, backupCode = [], orgName = "" }) => {
 
       {/* Hidden Print Component */}
       <div className="hidden">
-        <BackupCodePrint ref={componentRef} codes={backupCode} orgName={orgName} />
+        <BackupCodePrint
+          ref={componentRef}
+          codes={backupCode}
+          orgName={orgName}
+        />
       </div>
     </div>
   );

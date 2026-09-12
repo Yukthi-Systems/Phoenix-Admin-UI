@@ -36,7 +36,7 @@ export const imapSyncValidationSchema = yup.object().shape({
   imap_port: yup
     .number()
     .transform((value, originalValue) =>
-      String(originalValue).trim() === "" ? null : value
+      String(originalValue).trim() === "" ? null : value,
     )
     .nullable()
     .notRequired()

@@ -37,9 +37,10 @@ export const cautionFormSchema = yup.object({
       (value) => {
         if (!value) return true;
         // Match root/main document structure tags, scripts, style blocks, and link tags
-        const rootTagsRegex = /<\/?(html|head|body|title|meta|script|style|link)\b/i;
+        const rootTagsRegex =
+          /<\/?(html|head|body|title|meta|script|style|link)\b/i;
         return !rootTagsRegex.test(value);
-      }
+      },
     ),
 
   text_content: yup

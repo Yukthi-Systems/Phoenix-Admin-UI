@@ -22,7 +22,7 @@ import {
   getRestrictionPolicyEntry,
   addRestrictionPolicy,
   editRestrictionPolicy,
-  deleteRestrictionPolicy
+  deleteRestrictionPolicy,
 } from "../api/restrictionpolicy"; // Adjust the import path as needed
 
 // Hook for fetching restriction policy list
@@ -33,13 +33,7 @@ export function useRestrictionPolicy({
   query = "",
 }) {
   return useQuery({
-    queryKey: [
-      "restriction_policy",
-      organization_id,
-      page,
-      pageSize,
-      query,
-    ],
+    queryKey: ["restriction_policy", organization_id, page, pageSize, query],
     queryFn: () =>
       getRestrictionPolicy({ organization_id, page, pageSize, query }),
     enabled: !!organization_id,
@@ -66,7 +60,8 @@ export function useAddRestrictionPolicy() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["add_restriction_policy"],
-    mutationFn: async ({ org_id, data, addLogs = true }) => addRestrictionPolicy(org_id, data, addLogs),
+    mutationFn: async ({ org_id, data, addLogs = true }) =>
+      addRestrictionPolicy(org_id, data, addLogs),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["restriction_policy"] }),
   });
@@ -74,20 +69,18 @@ export function useAddRestrictionPolicy() {
 
 // Hook for editing a restriction policy
 export function useEditRestrictionPolicy() {
-
   return useMutation({
     mutationKey: ["edit_restriction_policy"],
-    mutationFn: async ({ org_id, policy_id, data }) => editRestrictionPolicy(org_id, policy_id, data),
+    mutationFn: async ({ org_id, policy_id, data }) =>
+      editRestrictionPolicy(org_id, policy_id, data),
   });
 }
 
 // Hook for deleting a restriction policy
 export function useDeleteRestrictionPolicy() {
-
   return useMutation({
     mutationKey: ["delete_restriction_policy"],
     mutationFn: async ({ org_id, policy_id, policy_name = "Unknown Policy" }) =>
       deleteRestrictionPolicy(org_id, policy_id, policy_name),
   });
 }
-

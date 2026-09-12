@@ -44,7 +44,9 @@ const ServerMigrations = () => {
   };
 
   if (!permissions.includes("mailbox:migration:view")) {
-    return <AccessDenied content="Don't have the access to view mail migrations" />;
+    return (
+      <AccessDenied content="Don't have the access to view mail migrations" />
+    );
   }
 
   return (
@@ -76,7 +78,7 @@ const ServerMigrations = () => {
               </div>
             )}
           </div>
-          
+
           <div
             className={`absolute top-5 right-5 flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-full border transition-all duration-300 ${
               isManualMode

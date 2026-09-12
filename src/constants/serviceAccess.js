@@ -15,8 +15,6 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-
-
 export const SERVICE_KEYS = {
   EMAIL: "email_service_enabled",
   CHAT: "chat_service_enabled",
@@ -29,9 +27,7 @@ export const SERVICE_LABELS = {
   [SERVICE_KEYS.FILE]: "File service",
 };
 
-
 export const SERVICE_ROUTE_PREFIXES = [
-
   { prefix: "/mailbox", service: SERVICE_KEYS.EMAIL },
   { prefix: "/caution", service: SERVICE_KEYS.EMAIL },
   { prefix: "/disclaimer", service: SERVICE_KEYS.EMAIL },

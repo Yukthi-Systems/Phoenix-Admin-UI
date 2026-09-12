@@ -88,8 +88,12 @@ export function useCreateAttachmentPolicy() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["create_attachment_policy"],
-    mutationFn: async ({ organization_id, domain_name, data, addLogs = true }) =>
-      createAttachmentPolicy(organization_id, domain_name, data, addLogs),
+    mutationFn: async ({
+      organization_id,
+      domain_name,
+      data,
+      addLogs = true,
+    }) => createAttachmentPolicy(organization_id, domain_name, data, addLogs),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["attachment_policy_list"] }),
   });

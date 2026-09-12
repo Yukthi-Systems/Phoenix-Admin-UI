@@ -31,7 +31,7 @@ function ChangePermission({
   user_id,
   changePermission = false,
   closePermission = () => {},
-  user_name
+  user_name,
 }) {
   const { permissions_template: UserTemplate = [] } =
     useAtomValue(userProfileAtom) || {};
@@ -78,7 +78,12 @@ function ChangePermission({
 
   const onSubmit = (formData) => {
     mutate(
-      { orgId: organization_id, user_id: user_id, data: formData?.permissions , userName: user_name},
+      {
+        orgId: organization_id,
+        user_id: user_id,
+        data: formData?.permissions,
+        userName: user_name,
+      },
       {
         onSuccess: () => {
           toast("success", "Successfully user Permission is updated");

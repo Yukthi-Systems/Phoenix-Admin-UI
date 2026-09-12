@@ -81,46 +81,44 @@ export function MarkdownEditor({
 
     // Find the start of the first line (go back to last newline or start of text)
     let lineStart = start;
-    while (lineStart > 0 && text[lineStart - 1] !== '\n') {
+    while (lineStart > 0 && text[lineStart - 1] !== "\n") {
       lineStart--;
     }
 
     // Find the end of the last line (go forward to next newline or end of text)
     let lineEnd = end;
-    while (lineEnd < text.length && text[lineEnd] !== '\n') {
+    while (lineEnd < text.length && text[lineEnd] !== "\n") {
       lineEnd++;
     }
 
     // Extract the entire line(s) content
     const selectedLines = text.substring(lineStart, lineEnd);
-    const lines = selectedLines.split('\n');
+    const lines = selectedLines.split("\n");
 
     // Check if all lines are already quoted
-    const allQuoted = lines.every(line => line.trim().startsWith('>'));
+    const allQuoted = lines.every((line) => line.trim().startsWith(">"));
 
     let newLines;
     if (allQuoted) {
       // Remove quotes from all lines
-      newLines = lines.map(line => line.replace(/^>\s?/, ''));
+      newLines = lines.map((line) => line.replace(/^>\s?/, ""));
     } else {
       // Add quotes to all lines
-      newLines = lines.map(line => {
+      newLines = lines.map((line) => {
         // If line is already quoted, don't add another quote
-        if (line.trim().startsWith('>')) {
+        if (line.trim().startsWith(">")) {
           return line;
         }
         // Add quote, preserving leading whitespace for empty lines
-        return line.trim() ? `> ${line}` : '>';
+        return line.trim() ? `> ${line}` : ">";
       });
     }
 
-    const quotedText = newLines.join('\n');
+    const quotedText = newLines.join("\n");
 
     // Build the new text
     const newText =
-      text.substring(0, lineStart) +
-      quotedText +
-      text.substring(lineEnd);
+      text.substring(0, lineStart) + quotedText + text.substring(lineEnd);
 
     onChange({ target: { value: newText, name: textarea.name } });
 
@@ -135,7 +133,7 @@ export function MarkdownEditor({
 
   const handleKeyDown = (e) => {
     // Handle Tab key
-    if (e.key === 'Tab') {
+    if (e.key === "Tab") {
       e.preventDefault();
       const textarea = e.target;
       const start = textarea.selectionStart;
@@ -143,10 +141,7 @@ export function MarkdownEditor({
       const text = textarea.value;
 
       // Insert tab (2 spaces)
-      const newText =
-        text.substring(0, start) +
-        "  " +
-        text.substring(end);
+      const newText = text.substring(0, start) + "  " + text.substring(end);
 
       onChange({ target: { value: newText, name: textarea.name } });
 

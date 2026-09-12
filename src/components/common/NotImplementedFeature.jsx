@@ -26,7 +26,7 @@ export default function NotImplementedFeature({
   fullPage = false,
   showBack = false,
   showHome = false,
-  className = ""
+  className = "",
 }) {
   const navigate = useNavigate();
 
@@ -45,7 +45,6 @@ export default function NotImplementedFeature({
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-accent/10 rounded-full blur-[100px] transition-transform duration-1000 group-hover:scale-110" />
 
         <div className="relative z-10 p-8 md:p-16 flex flex-col items-center text-center space-y-8">
-
           {/* Animated Icon Container */}
           <div className="relative flex justify-center items-center">
             {/* Outer animated ring */}
@@ -57,11 +56,20 @@ export default function NotImplementedFeature({
 
             {/* Icon Box */}
             <div className="relative bg-background/80 backdrop-blur-md border border-border/50 w-24 h-24 md:w-28 md:h-28 rounded-3xl flex items-center justify-center shadow-lg shadow-primary/5 -rotate-3 hover:rotate-3 transition-transform duration-500 ease-out">
-              <Icon className="w-10 h-10 md:w-12 md:h-12 text-primary" strokeWidth={1.5} />
+              <Icon
+                className="w-10 h-10 md:w-12 md:h-12 text-primary"
+                strokeWidth={1.5}
+              />
 
               {/* Floating Sparkles */}
-              <Sparkles className="absolute -top-4 -right-4 w-7 h-7 text-yellow-500 animate-bounce delay-75" strokeWidth={1.5} />
-              <Sparkles className="absolute -bottom-2 -left-3 w-5 h-5 text-accent animate-bounce delay-300" strokeWidth={1.5} />
+              <Sparkles
+                className="absolute -top-4 -right-4 w-7 h-7 text-yellow-500 animate-bounce delay-75"
+                strokeWidth={1.5}
+              />
+              <Sparkles
+                className="absolute -bottom-2 -left-3 w-5 h-5 text-accent animate-bounce delay-300"
+                strokeWidth={1.5}
+              />
             </div>
           </div>
 

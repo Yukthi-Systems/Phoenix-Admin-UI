@@ -18,13 +18,10 @@
 import React from "react";
 import { CheckCircle, Clock, Circle, HelpCircle } from "lucide-react";
 
-const StatusBadge = ({ 
-  status, 
-  variant = "default", 
-  className = "" 
-}) => {
+const StatusBadge = ({ status, variant = "default", className = "" }) => {
   // Normalize status for case-insensitive matching
-  const normalizedStatus = status?.toString().toLowerCase().replace(" ", "_") || "unknown";
+  const normalizedStatus =
+    status?.toString().toLowerCase().replace(" ", "_") || "unknown";
 
   const statusConfig = {
     // 1. OPEN -> Primary Theme Color (Blue/Indigo defined in CSS)
@@ -32,31 +29,34 @@ const StatusBadge = ({
       label: "Open",
       icon: Circle,
       // Uses --primary variable with opacity for background, solid for text
-      colors: "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
+      colors:
+        "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20",
     },
-    
+
     // 2. IN PROGRESS -> Warning Theme Color (Orange/Yellow defined in CSS)
     in_progress: {
       label: "In Progress",
       icon: Clock,
       // Uses --warning variable
-      colors: "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20"
+      colors:
+        "bg-warning/10 text-warning border-warning/20 hover:bg-warning/20",
     },
-    
+
     // 3. RESOLVED -> Success Theme Color (Green defined in CSS)
     resolved: {
       label: "Resolved",
       icon: CheckCircle,
       // Uses --success variable
-      colors: "bg-success/10 text-success border-success/20 hover:bg-success/20"
+      colors:
+        "bg-success/10 text-success border-success/20 hover:bg-success/20",
     },
 
     // Fallback for unknown statuses
     unknown: {
       label: status || "Unknown",
       icon: HelpCircle,
-      colors: "bg-muted text-muted-foreground border-border hover:bg-muted/80"
-    }
+      colors: "bg-muted text-muted-foreground border-border hover:bg-muted/80",
+    },
   };
 
   const config = statusConfig[normalizedStatus] || statusConfig.unknown;
@@ -66,7 +66,7 @@ const StatusBadge = ({
   const variants = {
     default: "border",
     pill: "border rounded-full",
-    flat: "border-transparent bg-opacity-50"
+    flat: "border-transparent bg-opacity-50",
   };
 
   return (

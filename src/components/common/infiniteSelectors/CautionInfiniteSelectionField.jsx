@@ -43,7 +43,11 @@ function CautionDetailsModal({ organizationId, cautionId, onClose }) {
   });
 
   return (
-    <PolicyDetailsModal isLoading={isLoading} isError={isError} onClose={onClose}>
+    <PolicyDetailsModal
+      isLoading={isLoading}
+      isError={isError}
+      onClose={onClose}
+    >
       <h4 className="text-lg font-semibold text-card-foreground">
         {data?.caution_name || "Unknown Caution"}
       </h4>
@@ -164,7 +168,10 @@ export function CautionInfiniteSelectField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -241,7 +248,9 @@ export function CautionInfiniteSelectField({
                 value={selectedOption}
                 options={displayOptions}
                 placeholder={placeholder}
-                onChange={(selected) => field.onChange(selected ? selected.value : null)}
+                onChange={(selected) =>
+                  field.onChange(selected ? selected.value : null)
+                }
                 onMenuScrollToBottom={handleMenuScrollToBottom}
                 onInputChange={handleInputChange}
                 isClearable

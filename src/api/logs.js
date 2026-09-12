@@ -42,7 +42,8 @@ const isDuplicateErrorLog = (action_type, payload) => {
   // Opportunistically prune stale entries so the map doesn't grow unbounded.
   if (recentErrorLogs.size > 200) {
     for (const [key, seenAt] of recentErrorLogs) {
-      if (now - seenAt > RECENT_ERROR_LOG_WINDOW_MS) recentErrorLogs.delete(key);
+      if (now - seenAt > RECENT_ERROR_LOG_WINDOW_MS)
+        recentErrorLogs.delete(key);
     }
   }
 

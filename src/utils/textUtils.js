@@ -21,24 +21,24 @@
  * @returns {any} - The sanitized data with whitespace removed from start/end of strings
  */
 export const trimInput = (input) => {
-    // Handle Strings
-    if (typeof input === "string") {
-      return input.trim();
-    }
-  
-    // Handle Arrays (recursive)
-    if (Array.isArray(input)) {
-      return input.map((item) => trimInput(item));
-    }
-  
-    // Handle Objects (recursive)
-    if (input !== null && typeof input === "object") {
-      return Object.keys(input).reduce((acc, key) => {
-        acc[key] = trimInput(input[key]);
-        return acc;
-      }, {});
-    }
-  
-    // Return primitives (numbers, booleans, null, undefined) as is
-    return input;
-  };
+  // Handle Strings
+  if (typeof input === "string") {
+    return input.trim();
+  }
+
+  // Handle Arrays (recursive)
+  if (Array.isArray(input)) {
+    return input.map((item) => trimInput(item));
+  }
+
+  // Handle Objects (recursive)
+  if (input !== null && typeof input === "object") {
+    return Object.keys(input).reduce((acc, key) => {
+      acc[key] = trimInput(input[key]);
+      return acc;
+    }, {});
+  }
+
+  // Return primitives (numbers, booleans, null, undefined) as is
+  return input;
+};

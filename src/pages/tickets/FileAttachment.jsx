@@ -25,12 +25,13 @@ const FileAttachment = ({ file, onPreview }) => {
 
   const extension = file.file_type?.toLowerCase() || "";
   const isImage = ["png", "jpg", "jpeg", "gif", "webp", "svg"].some((ext) =>
-    extension.includes(ext)
+    extension.includes(ext),
   );
 
   const getMimeType = () => {
     if (extension.includes("png")) return "image/png";
-    if (extension.includes("jpg") || extension.includes("jpeg")) return "image/jpeg";
+    if (extension.includes("jpg") || extension.includes("jpeg"))
+      return "image/jpeg";
     if (extension.includes("gif")) return "image/gif";
     if (extension.includes("webp")) return "image/webp";
     if (extension.includes("svg")) return "image/svg+xml";
@@ -72,7 +73,10 @@ const FileAttachment = ({ file, onPreview }) => {
       </div>
 
       <div className="flex flex-col min-w-0 flex-1">
-        <span className="text-sm font-medium truncate text-foreground" title={file.file_name}>
+        <span
+          className="text-sm font-medium truncate text-foreground"
+          title={file.file_name}
+        >
           {file.file_name}
         </span>
         <span className="text-[10px] text-muted-foreground">
@@ -86,7 +90,11 @@ const FileAttachment = ({ file, onPreview }) => {
         className="p-2 rounded-full hover:bg-background text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 z-10"
         title="Download"
       >
-        {isDownloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+        {isDownloading ? (
+          <Loader2 size={16} className="animate-spin" />
+        ) : (
+          <Download size={16} />
+        )}
       </button>
     </div>
   );

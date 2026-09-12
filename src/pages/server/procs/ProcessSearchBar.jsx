@@ -20,7 +20,7 @@ import { Search, X } from "lucide-react";
 
 /**
  * ProcessSearchBar - Reusable search component for filtering processes
- * 
+ *
  * @param {string} searchQuery - Current search query value
  * @param {function} setSearchQuery - Function to update search query
  * @param {number} resultCount - Number of filtered results
@@ -74,7 +74,8 @@ const ProcessSearchBar = ({
       {/* Result Count */}
       {showResultCount && searchQuery && (
         <div className="mt-2 text-xs text-muted-foreground">
-          Found <span className="font-medium text-foreground">{resultCount}</span>{" "}
+          Found{" "}
+          <span className="font-medium text-foreground">{resultCount}</span>{" "}
           {resultCount === 1 ? "process" : "processes"} matching{" "}
           <span className="font-medium text-foreground">"{searchQuery}"</span>
         </div>
@@ -87,15 +88,15 @@ export default ProcessSearchBar;
 
 /**
  * Usage Example:
- * 
+ *
  * import ProcessSearchBar from './ProcessSearchBar';
- * 
+ *
  * const MyComponent = () => {
  *   const [searchQuery, setSearchQuery] = useState("");
- *   const filteredData = data.filter(item => 
+ *   const filteredData = data.filter(item =>
  *     item.name.toLowerCase().includes(searchQuery.toLowerCase())
  *   );
- * 
+ *
  *   return (
  *     <ProcessSearchBar
  *       searchQuery={searchQuery}

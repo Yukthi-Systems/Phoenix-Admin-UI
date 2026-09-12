@@ -141,7 +141,9 @@ const StatusPage = () => {
     const sortByStartTimeDesc = (items) => {
       return [...items].sort((a, b) => {
         try {
-          return parseISO(b.start_time).getTime() - parseISO(a.start_time).getTime();
+          return (
+            parseISO(b.start_time).getTime() - parseISO(a.start_time).getTime()
+          );
         } catch {
           return 0;
         }
@@ -320,9 +322,7 @@ const StatusPage = () => {
               {statusType === "completed" && (
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                  <span className="text-success font-semibold">
-                    Completed
-                  </span>
+                  <span className="text-success font-semibold">Completed</span>
                 </div>
               )}
             </div>
@@ -488,13 +488,14 @@ const StatusPage = () => {
           )}
 
           {/* Empty State */}
-          {activeItems.length === 0 &&
-            upcomingItems.length === 0 && (
-              <div className="text-muted-foreground py-8 text-center bg-card border border-border rounded-lg">
-                <CheckCircle2 className="mx-auto mb-2 h-8 w-8 opacity-50 text-success" />
-                <p className="text-sm">No active or upcoming status updates at this time</p>
-              </div>
-            )}
+          {activeItems.length === 0 && upcomingItems.length === 0 && (
+            <div className="text-muted-foreground py-8 text-center bg-card border border-border rounded-lg">
+              <CheckCircle2 className="mx-auto mb-2 h-8 w-8 opacity-50 text-success" />
+              <p className="text-sm">
+                No active or upcoming status updates at this time
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-4">

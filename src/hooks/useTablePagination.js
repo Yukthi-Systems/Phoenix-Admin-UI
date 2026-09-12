@@ -25,7 +25,10 @@ import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo";
  * @param {number} defaultPageSize - Default items per page (default: PER_PAGE constant)
  * @returns {object} { pagination, onPaginationChange } - Pass these directly to useReactTable
  */
-export const useTablePagination = (defaultPageSize = PER_PAGE, maxPageSize = null) => {
+export const useTablePagination = (
+  defaultPageSize = PER_PAGE,
+  maxPageSize = null,
+) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { uiInfo, updateUiInfo } = useSyncedUiInfo();
 
@@ -37,47 +40,57 @@ export const useTablePagination = (defaultPageSize = PER_PAGE, maxPageSize = nul
 
   // 1. Read directly from URL, fallback to preferredPageSize
   const pageIndex = parseInt(searchParams.get("page") || "1", 10) - 1;
-  let pageSize = parseInt(searchParams.get("perPage") || String(preferredPageSize), 10);
+  let pageSize = parseInt(
+    searchParams.get("perPage") || String(preferredPageSize),
+    10,
+  );
   if (maxPageSize && pageSize > maxPageSize) {
     pageSize = maxPageSize;
   }
 
   // 2. Memoize the state object required by TanStack Table
-  const pagination = useMemo(() => ({
-    pageIndex: pageIndex >= 0 ? pageIndex : 0,
-    pageSize: pageSize > 0 ? pageSize : preferredPageSize,
-  }), [pageIndex, pageSize, preferredPageSize]);
+  const pagination = useMemo(
+    () => ({
+      pageIndex: pageIndex >= 0 ? pageIndex : 0,
+      pageSize: pageSize > 0 ? pageSize : preferredPageSize,
+    }),
+    [pageIndex, pageSize, preferredPageSize],
+  );
 
   // 3. Create the change handler required by TanStack Table
-  const onPaginationChange = useCallback((updaterOrValue) => {
-    const current = { pageIndex, pageSize };
-    let next = typeof updaterOrValue === "function"
-      ? updaterOrValue(current)
-      : updaterOrValue;
+  const onPaginationChange = useCallback(
+    (updaterOrValue) => {
+      const current = { pageIndex, pageSize };
+      let next =
+        typeof updaterOrValue === "function"
+          ? updaterOrValue(current)
+          : updaterOrValue;
 
-    if (maxPageSize && next.pageSize > maxPageSize) {
-      next = { ...next, pageSize: maxPageSize };
-    }
+      if (maxPageSize && next.pageSize > maxPageSize) {
+        next = { ...next, pageSize: maxPageSize };
+      }
 
-    // Check if pageSize has changed and update uiInfo
-    if (next.pageSize !== current.pageSize) {
-      updateUiInfo({ pageSize: next.pageSize });
-    }
+      // Check if pageSize has changed and update uiInfo
+      if (next.pageSize !== current.pageSize) {
+        updateUiInfo({ pageSize: next.pageSize });
+      }
 
-    setSearchParams(() => {
-      // Read from window.location directly instead of the `prev` passed by
-      // react-router: that value is captured from this hook's last render
-      // and goes stale the moment another setSearchParams call (e.g. the
-      // search box writing its own param) fires in the same tick, silently
-      // clobbering that other update - which is how a stale page number
-      // could survive a search and be combined with the new query.
-      const newParams = new URLSearchParams(window.location.search);
-      newParams.set("page", String(next.pageIndex + 1)); // Convert back to 1-based
-      newParams.set("perPage", String(next.pageSize));
+      setSearchParams(() => {
+        // Read from window.location directly instead of the `prev` passed by
+        // react-router: that value is captured from this hook's last render
+        // and goes stale the moment another setSearchParams call (e.g. the
+        // search box writing its own param) fires in the same tick, silently
+        // clobbering that other update - which is how a stale page number
+        // could survive a search and be combined with the new query.
+        const newParams = new URLSearchParams(window.location.search);
+        newParams.set("page", String(next.pageIndex + 1)); // Convert back to 1-based
+        newParams.set("perPage", String(next.pageSize));
 
-      return newParams;
-    });
-  }, [pageIndex, pageSize, setSearchParams, updateUiInfo, maxPageSize]);
+        return newParams;
+      });
+    },
+    [pageIndex, pageSize, setSearchParams, updateUiInfo, maxPageSize],
+  );
 
   return {
     pagination,

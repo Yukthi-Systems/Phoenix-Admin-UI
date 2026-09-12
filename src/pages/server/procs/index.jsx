@@ -197,7 +197,7 @@ const ServerProcs = () => {
 
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
 
-  const { data, isLoading, isError, refetch, isFetching ,error} =
+  const { data, isLoading, isError, refetch, isFetching, error } =
     useGetServerProcs(selectedServer);
   const processList = data?.data ?? [];
 

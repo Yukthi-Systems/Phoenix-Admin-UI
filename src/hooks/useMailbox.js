@@ -29,20 +29,9 @@ import {
   updateMailboxStatus,
 } from "../api/mailbox";
 
-export function useGetMailboxes(
-  domain_name,
-  page,
-  pageSize,
-  query = "",
-) {
+export function useGetMailboxes(domain_name, page, pageSize, query = "") {
   return useQuery({
-    queryKey: [
-      "mailboxes",
-      domain_name,
-      page,
-      pageSize,
-      query,
-    ],
+    queryKey: ["mailboxes", domain_name, page, pageSize, query],
     queryFn: () => getMailboxes(domain_name, page, pageSize, query),
     enabled: !!domain_name,
     staleTime: 1000 * 60,

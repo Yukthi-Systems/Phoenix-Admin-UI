@@ -97,7 +97,7 @@ const MailboxQuotaAllocationModal = ({
   const allocationChange = currentValue - currentMailboxAllocation;
   const availableAfterAllocation = Math.max(
     currentValue - currentUtilizedSpace - buffer,
-    0
+    0,
   );
   const utilizationPercent = (currentUtilizedSpace / (currentValue || 1)) * 100;
   const bufferPercent = (buffer / (currentValue || 1)) * 100;
@@ -129,7 +129,8 @@ const MailboxQuotaAllocationModal = ({
                   Mailbox: {safeMailData.email || "N/A"}
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Set storage allocation between {formatStorage(Math.max(0, minValue))}{" "}
+                  Set storage allocation between{" "}
+                  {formatStorage(Math.max(0, minValue))}{" "}
                   {buffer > 0 && "(with buffer)"} and{" "}
                   {Math.max(0, maxValue).toFixed(2)} GB (available)
                 </p>
@@ -183,7 +184,9 @@ const MailboxQuotaAllocationModal = ({
                 <div className="flex justify-between text-xs pt-1 border-t">
                   <span className="text-muted-foreground">Free</span>
                   <span className="font-semibold">
-                    {(currentMailboxAllocation - currentUtilizedSpace).toFixed(3)}{" "}
+                    {(currentMailboxAllocation - currentUtilizedSpace).toFixed(
+                      3,
+                    )}{" "}
                     GB
                   </span>
                 </div>
@@ -191,16 +194,15 @@ const MailboxQuotaAllocationModal = ({
             </div>
           </div>
 
-         
-
           {/* Buffer Notice */}
           {buffer > 0 && (
             <div className="bg-warning/10 p-2.5 rounded-lg border border-warning/20">
               <div className="flex items-center gap-2">
                 <Info className="w-4 h-4 text-warning flex-shrink-0" />
                 <p className="text-xs text-muted-foreground">
-                  A buffer of <span className="font-medium text-warning">{buffer} GB</span> is
-                  maintained for optimal performance
+                  A buffer of{" "}
+                  <span className="font-medium text-warning">{buffer} GB</span>{" "}
+                  is maintained for optimal performance
                 </p>
               </div>
             </div>
@@ -238,7 +240,9 @@ const MailboxQuotaAllocationModal = ({
                       : "border-border focus:ring-primary/20"
                   }`}
                 />
-                <span className="text-sm font-medium text-muted-foreground">GB</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  GB
+                </span>
               </div>
             </div>
 
@@ -273,8 +277,6 @@ const MailboxQuotaAllocationModal = ({
               </div>
             )}
           </div>
-
-        
 
           {/* Action Buttons */}
           <div className="flex justify-end items-center gap-3 pt-2 border-t m-1">

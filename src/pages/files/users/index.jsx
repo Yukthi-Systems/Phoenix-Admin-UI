@@ -68,7 +68,11 @@ const FileUsers = () => {
     reset: resetAddUser,
     formState: { errors: addUserErrors },
   } = useForm({
-    defaultValues: { email_identity: "", quota_allocated: 1, enable_user: true },
+    defaultValues: {
+      email_identity: "",
+      quota_allocated: 1,
+      enable_user: true,
+    },
   });
   const selectedIdentity = watchAddUser("email_identity");
   const selectedQuota = watchAddUser("quota_allocated");
@@ -95,7 +99,8 @@ const FileUsers = () => {
   const { mutate: createFileUser, isPending: isCreating } = useCreateFileUser();
   const { mutate: toggleStatus } = useToggleFileUserStatus();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteFileUser();
-  const { mutate: updateQuota, isPending: isUpdatingQuota } = useUpdateFileUserQuota();
+  const { mutate: updateQuota, isPending: isUpdatingQuota } =
+    useUpdateFileUserQuota();
 
   useEffect(() => {
     if (pagination.pageIndex > 0) {
@@ -135,7 +140,10 @@ const FileUsers = () => {
         { domain: domainName, email: statusUser.email },
         {
           onSuccess: () => {
-            toast("success", `Successfully toggled status for ${statusUser.email}`);
+            toast(
+              "success",
+              `Successfully toggled status for ${statusUser.email}`,
+            );
             handleStatusClose();
           },
           onError: (error) => {
@@ -160,9 +168,16 @@ const FileUsers = () => {
         },
         {
           onSuccess: () => {
-            toast("success", `Successfully created file user ${selectedIdentity}`);
+            toast(
+              "success",
+              `Successfully created file user ${selectedIdentity}`,
+            );
             setShowAddModal(false);
-            resetAddUser({ email_identity: "", quota_allocated: 1, enable_user: true });
+            resetAddUser({
+              email_identity: "",
+              quota_allocated: 1,
+              enable_user: true,
+            });
           },
           onError: (error) => {
             const message =
@@ -252,10 +267,17 @@ const FileUsers = () => {
   const OnQuotaUpdate = () => {
     if (quotaModalUser && domainName) {
       updateQuota(
-        { domain: domainName, email: quotaModalUser.email, new_quota: Number(quotaValue) },
+        {
+          domain: domainName,
+          email: quotaModalUser.email,
+          new_quota: Number(quotaValue),
+        },
         {
           onSuccess: () => {
-            toast("success", `Successfully updated quota for ${quotaModalUser.email}`);
+            toast(
+              "success",
+              `Successfully updated quota for ${quotaModalUser.email}`,
+            );
             OnQuotaClose();
           },
           onError: (error) => {
@@ -344,7 +366,11 @@ const FileUsers = () => {
         cell: ({ row }) => {
           const lastActive = row.original.last_active_at;
           if (!lastActive)
-            return <span className="text-muted-foreground text-sm font-medium">N/A</span>;
+            return (
+              <span className="text-muted-foreground text-sm font-medium">
+                N/A
+              </span>
+            );
 
           return (
             <div className="flex items-center justify-start">
@@ -442,9 +468,7 @@ const FileUsers = () => {
   });
 
   if (!permissions.includes("file:view")) {
-    return (
-      <AccessDenied content="You don't have access to view File Users." />
-    );
+    return <AccessDenied content="You don't have access to view File Users." />;
   }
 
   if (isError) {
@@ -461,9 +485,7 @@ const FileUsers = () => {
       <div className="mb-2.5 w-full">
         <div className="mb-2.5 flex w-full justify-between gap-4 flex-nowrap items-center">
           <div className="flex min-w-0 items-center gap-4">
-            <Breadcrumbs
-              items={[{ name: "Files" }, { name: "File Users" }]}
-            />
+            <Breadcrumbs items={[{ name: "Files" }, { name: "File Users" }]} />
           </div>
 
           <div className="flex items-center gap-3">
@@ -508,7 +530,8 @@ const FileUsers = () => {
           ) : (
             <NoDataFound
               content={
-                error?.response?.data?.message || "No file users found for this domain"
+                error?.response?.data?.message ||
+                "No file users found for this domain"
               }
             />
           )}
@@ -522,13 +545,20 @@ const FileUsers = () => {
         isOpen={showAddModal}
         handleCancel={() => {
           setShowAddModal(false);
-          resetAddUser({ email_identity: "", quota_allocated: 1, enable_user: true });
+          resetAddUser({
+            email_identity: "",
+            quota_allocated: 1,
+            enable_user: true,
+          });
         }}
         label="Add File User"
         outsideClick={false}
       >
         <div className="w-[40vw] max-h-[65vh] text-left">
-          <form onSubmit={handleAddUser} className="mx-auto rounded-xl px-6 py-4 space-y-6">
+          <form
+            onSubmit={handleAddUser}
+            className="mx-auto rounded-xl px-6 py-4 space-y-6"
+          >
             <div className="space-y-4">
               <EmailIdentityInfiniteSelectionField
                 control={addUserControl}
@@ -557,7 +587,10 @@ const FileUsers = () => {
                   className="border-border text-primary focus:ring-primary bg-background h-5 w-5 rounded-sm border transition-colors duration-200 focus:ring-2 focus:ring-offset-0"
                   {...registerAddUser("enable_user")}
                 />
-                <label htmlFor="enable_user" className="text-foreground text-sm font-medium">
+                <label
+                  htmlFor="enable_user"
+                  className="text-foreground text-sm font-medium"
+                >
                   Enable user immediately
                 </label>
               </div>
@@ -598,19 +631,11 @@ const FileUsers = () => {
               {statusUser?.email}.
             </p>
             <div className="mx-4 my-2 mt-12 flex items-center justify-end gap-3">
-              <Button
-                onClick={handleStatusClose}
-                variant="outline"
-                size="md"
-              >
+              <Button onClick={handleStatusClose} variant="outline" size="md">
                 Cancel
               </Button>
 
-              <Button
-                onClick={OnStatusChange}
-                variant="primary"
-                size="md"
-              >
+              <Button onClick={OnStatusChange} variant="primary" size="md">
                 Confirm
               </Button>
             </div>

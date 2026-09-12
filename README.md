@@ -8,8 +8,8 @@ A modern, responsive admin panel built with React + Vite for managing mail servi
 
 ## 🔗 Related Projects
 
-| Project | Description |
-| --- | --- |
+| Project                                                                  | Description |
+| ------------------------------------------------------------------------ | ----------- |
 | [Phoenix-Admin-API](https://github.com/Yukthi-Systems/Phoenix-Admin-API) | Backend API |
 
 ## 🚀 Features

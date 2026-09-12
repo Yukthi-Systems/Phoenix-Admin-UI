@@ -41,12 +41,7 @@ const STEPS = [
     id: "domain-details",
     label: "Domain Details",
     description: "Basic information",
-    fields: [
-      "domain_name",
-      "anti_phishing_secret_code",
-      "details.address",
-
-    ],
+    fields: ["domain_name", "anti_phishing_secret_code", "details.address"],
   },
   {
     id: "domain-properties",
@@ -97,11 +92,8 @@ const getRequiredFieldsForStep = (stepIndex, watchValues) => {
   if (!step) return [];
 
   let requiredFields = [...step.fields];
-  const {
-    enable_hybrid_mode,
-    enable_max_password_age,
-    spam_destination,
-  } = watchValues;
+  const { enable_hybrid_mode, enable_max_password_age, spam_destination } =
+    watchValues;
 
   // Conditionally remove fields based on toggles
   if (stepIndex === 2) {
@@ -308,22 +300,40 @@ const AddDomain = () => {
   useEffect(() => {
     switch (watchedValues.spam_destination) {
       case "SPAM":
-        setValue("spam_destination_properties.description", "Mails will move to spam folder if its spam and folder is present");
+        setValue(
+          "spam_destination_properties.description",
+          "Mails will move to spam folder if its spam and folder is present",
+        );
         break;
       case "FOLDER":
-        setValue("spam_destination_properties.description", "Mails will be moved to a user-created folder if it exists");
+        setValue(
+          "spam_destination_properties.description",
+          "Mails will be moved to a user-created folder if it exists",
+        );
         break;
       case "TRASH":
-        setValue("spam_destination_properties.description", "Mails will be moved to the Trash folder");
+        setValue(
+          "spam_destination_properties.description",
+          "Mails will be moved to the Trash folder",
+        );
         break;
       case "DELETE":
-        setValue("spam_destination_properties.description", "Mails will be permanently deleted and cannot be recovered");
+        setValue(
+          "spam_destination_properties.description",
+          "Mails will be permanently deleted and cannot be recovered",
+        );
         break;
       case "SEND_DIGEST":
-        setValue("spam_destination_properties.description", "Mails will be grouped and sent as a summary (digest) at scheduled intervals");
+        setValue(
+          "spam_destination_properties.description",
+          "Mails will be grouped and sent as a summary (digest) at scheduled intervals",
+        );
         break;
       case "INBOX":
-        setValue("spam_destination_properties.description", "Mails will be delivered to the main inbox folder");
+        setValue(
+          "spam_destination_properties.description",
+          "Mails will be delivered to the main inbox folder",
+        );
         break;
       default:
         break;

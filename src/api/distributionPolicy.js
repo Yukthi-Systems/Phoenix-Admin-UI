@@ -111,13 +111,16 @@ export const addDistributionPolicy = async (org_id, data, addLog = true) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (res.status !== 201)
-      throw new Error(res?.data?.message || "Failed to create distribution policy.");
+      throw new Error(
+        res?.data?.message || "Failed to create distribution policy.",
+      );
     if (addLog) {
-      const policyName = data?.policy_name || data?.name || 'New Distribution Policy';
+      const policyName =
+        data?.policy_name || data?.name || "New Distribution Policy";
       await addLogs({
         values: res,
         type: "success",
@@ -132,7 +135,7 @@ export const addDistributionPolicy = async (org_id, data, addLog = true) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
     if (addLog) {
-      const policyName = data?.policy_name || data?.name || 'Unknown Policy';
+      const policyName = data?.policy_name || data?.name || "Unknown Policy";
       await addLogs({
         values: response,
         type: "error",
@@ -159,13 +162,16 @@ export const editDistributionPolicy = async (org_id, policy_id, data) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (![200, 204].includes(res.status))
-      throw new Error(res?.data?.message || "Failed to update distribution policy.");
+      throw new Error(
+        res?.data?.message || "Failed to update distribution policy.",
+      );
 
-    const policyName = data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
+    const policyName =
+      data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
     await addLogs({
       values: res,
       type: "success",
@@ -180,7 +186,8 @@ export const editDistributionPolicy = async (org_id, policy_id, data) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    const policyName = data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
+    const policyName =
+      data?.policy_name || data?.name || `Policy ID: ${policy_id}`;
     await addLogs({
       values: response,
       type: "error",
@@ -196,7 +203,12 @@ export const editDistributionPolicy = async (org_id, policy_id, data) => {
   }
 };
 
-export const deleteDistributionPolicy = async (org_id, policy_id, domain_name, policy_name = "Unknown Policy") => {
+export const deleteDistributionPolicy = async (
+  org_id,
+  policy_id,
+  domain_name,
+  policy_name = "Unknown Policy",
+) => {
   const method = "DELETE";
   const url = `${API_URL}/policy/distribution/delete/${org_id}/${policy_id}?domain_name=${domain_name}`;
 
@@ -210,7 +222,9 @@ export const deleteDistributionPolicy = async (org_id, policy_id, domain_name, p
     });
 
     if (![200, 204].includes(res.status))
-      throw new Error(res?.data?.message || "Failed to delete distribution policy.");
+      throw new Error(
+        res?.data?.message || "Failed to delete distribution policy.",
+      );
 
     await addLogs({
       values: res,

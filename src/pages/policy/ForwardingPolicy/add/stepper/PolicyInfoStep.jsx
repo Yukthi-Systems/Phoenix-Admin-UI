@@ -18,7 +18,6 @@
 import { Input, SelectField, TextArea } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 
-
 const PolicyInformationStep = ({
   register,
   errors,

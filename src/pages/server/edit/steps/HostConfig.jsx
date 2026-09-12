@@ -36,13 +36,19 @@ const HostConfigurationStep = ({
   // whenever its prerequisite is turned off.
   useEffect(() => {
     if (!isMonitoring && isMailboxServer) {
-      setValue("is_mailbox_server", false, { shouldValidate: true, shouldDirty: true });
+      setValue("is_mailbox_server", false, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
   }, [isMonitoring, isMailboxServer, setValue]);
 
   useEffect(() => {
     if (!isMailboxServer && isAcceptingNewMailboxes) {
-      setValue("is_accepting_new_mailboxes", false, { shouldValidate: true, shouldDirty: true });
+      setValue("is_accepting_new_mailboxes", false, {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     }
   }, [isMailboxServer, isAcceptingNewMailboxes, setValue]);
 

@@ -2,7 +2,7 @@
 
 ![Step 3: Policies & Access — choosing a Restriction Policy.](../../images/identity-step3-policies-dropdown.png)
 
-*Step 3: Policies & Access.*
+_Step 3: Policies & Access._
 
 The same Restriction Policy and Department fields as section 4.5.4's Step 3.
 

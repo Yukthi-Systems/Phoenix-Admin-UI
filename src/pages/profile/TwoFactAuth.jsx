@@ -151,12 +151,22 @@ function TwoFactAuth({
         validateTFA({ queryParams }, { onSuccess, onError: handleError }),
       email: () =>
         validateEmailOTP(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           { onSuccess, onError: handleError },
         ),
       sms: () =>
         validatePhoneOTP(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           { onSuccess, onError: handleError },
         ),
     };
@@ -200,17 +210,32 @@ function TwoFactAuth({
     const handlerMap = {
       authenticator: () =>
         enableTFA(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           { onSuccess: () => setStep(3), onError: handleError },
         ),
       email: () =>
         enableEmailAuth(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           { onSuccess: successHandler, onError: handleError },
         ),
       sms: () =>
         enablePhoneAuth(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           { onSuccess: successHandler, onError: handleError },
         ),
     };
@@ -224,7 +249,12 @@ function TwoFactAuth({
     const handlerMap = {
       email: () =>
         generateEmailOTP(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           {
             onSuccess: () => {
               toast("success", "Email verification sent");
@@ -235,7 +265,12 @@ function TwoFactAuth({
         ),
       sms: () =>
         generatePhoneOTP(
-          { orgId: organization_id, user_id, queryParams, userName: display_name },
+          {
+            orgId: organization_id,
+            user_id,
+            queryParams,
+            userName: display_name,
+          },
           {
             onSuccess: () => {
               toast("success", "SMS verification sent");

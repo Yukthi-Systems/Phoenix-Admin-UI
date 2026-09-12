@@ -27,9 +27,15 @@ export const organizationFormSchema = yup.object().shape({
       /^[a-zA-Z0-9 _-]+$/,
       "Organization name can only contain letters, numbers, spaces, hyphens, and underscores",
     ),
-  email_service_enabled: yup.boolean().required("Email service status is required"),
-  chat_service_enabled: yup.boolean().required("Chat service status is required"),
-  file_service_enabled: yup.boolean().required("File service status is required"),
+  email_service_enabled: yup
+    .boolean()
+    .required("Email service status is required"),
+  chat_service_enabled: yup
+    .boolean()
+    .required("Chat service status is required"),
+  file_service_enabled: yup
+    .boolean()
+    .required("File service status is required"),
 
   details: yup.object().shape({
     description: yup.string().optional(),

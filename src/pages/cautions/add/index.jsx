@@ -141,7 +141,10 @@ const AddCaution = () => {
           const sanitized = response.data.answer
             .replace(/```html\s*/gi, "")
             .replace(/```\s*/g, "")
-            .replace(/<\/?(?:html|head|body|title|meta|script|style|link)\b[^>]*>/gi, "")
+            .replace(
+              /<\/?(?:html|head|body|title|meta|script|style|link)\b[^>]*>/gi,
+              "",
+            )
             .trim();
           setValue("html_content", sanitized, {
             shouldValidate: true,

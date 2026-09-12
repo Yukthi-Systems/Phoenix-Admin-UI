@@ -63,8 +63,9 @@ export const createMaintenanceStatus = async (data) => {
       timeout: 5000,
       data,
     });
-    
-    const maintenanceTitle = data?.title || data?.maintenance_title || 'New Maintenance Status';
+
+    const maintenanceTitle =
+      data?.title || data?.maintenance_title || "New Maintenance Status";
     await addLogs({
       values: res,
       type: "success",
@@ -78,8 +79,9 @@ export const createMaintenanceStatus = async (data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const maintenanceTitle = data?.title || data?.maintenance_title || 'Unknown Maintenance';
+
+    const maintenanceTitle =
+      data?.title || data?.maintenance_title || "Unknown Maintenance";
     await addLogs({
       values: response,
       type: "error",
@@ -107,8 +109,11 @@ export const updateMaintenanceStatus = async ({ data, maintenance_id }) => {
       timeout: 5000,
       data,
     });
-    
-    const maintenanceTitle = data?.title || data?.maintenance_title || `Maintenance ID: ${maintenance_id}`;
+
+    const maintenanceTitle =
+      data?.title ||
+      data?.maintenance_title ||
+      `Maintenance ID: ${maintenance_id}`;
     await addLogs({
       values: res,
       type: "success",
@@ -122,8 +127,11 @@ export const updateMaintenanceStatus = async ({ data, maintenance_id }) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
-    const maintenanceTitle = data?.title || data?.maintenance_title || `Maintenance ID: ${maintenance_id}`;
+
+    const maintenanceTitle =
+      data?.title ||
+      data?.maintenance_title ||
+      `Maintenance ID: ${maintenance_id}`;
     await addLogs({
       values: response,
       type: "error",
@@ -138,7 +146,10 @@ export const updateMaintenanceStatus = async ({ data, maintenance_id }) => {
   }
 };
 
-export const deleteMaintenanceStatus = async ({ maintenance_id, maintenance_title = "Unknown Maintenance" }) => {
+export const deleteMaintenanceStatus = async ({
+  maintenance_id,
+  maintenance_title = "Unknown Maintenance",
+}) => {
   const method = "DELETE";
   const url = `${API_URL}/maintenance/status/${maintenance_id}`;
 

@@ -162,22 +162,25 @@ const AddDepartment = () => {
       },
     };
 
-    mutate({data :formattedData, addLog: true}, {
-      onSuccess: (responseData) => {
-        toast("success", "Successfully created department");
-        navigate(`/department/${responseData?.department_id || ""}`);
+    mutate(
+      { data: formattedData, addLog: true },
+      {
+        onSuccess: (responseData) => {
+          toast("success", "Successfully created department");
+          navigate(`/department/${responseData?.department_id || ""}`);
+        },
+        onError: (error) => {
+          const message =
+            error.response?.data?.message || error.message || "Unknown error";
+          const tracebackId = error.response?.data?.traceback_id;
+          toast(
+            "error",
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+          );
+          console.error(error);
+        },
       },
-      onError: (error) => {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
-        const tracebackId = error.response?.data?.traceback_id;
-        toast(
-          "error",
-          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-        );
-        console.error(error);
-      },
-    });
+    );
   };
 
   if (!permissions.includes("department:create")) {

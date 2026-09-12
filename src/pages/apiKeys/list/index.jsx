@@ -51,8 +51,10 @@ import { useTablePagination } from "@/hooks/useTablePagination";
 const ListApiKeys = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useUrlParam("search", "");
-  const { pagination, onPaginationChange: setPagination } =
-    useTablePagination(PER_PAGE, 50);
+  const { pagination, onPaginationChange: setPagination } = useTablePagination(
+    PER_PAGE,
+    50,
+  );
 
   // Modal States
   const [showDeleteModal, setShowDeleteModal] = useState(false);

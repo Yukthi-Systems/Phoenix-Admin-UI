@@ -54,7 +54,8 @@ export function useCreateDisclaimer() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["create_disclaimer"],
-    mutationFn: async ({ data, addLog = true }) => createDisclaimer(data, addLog),
+    mutationFn: async ({ data, addLog = true }) =>
+      createDisclaimer(data, addLog),
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["disclaimers"] }),
   });
@@ -71,7 +72,10 @@ export function useUpdateDisclaimer() {
 export function useDeleteDisclaimer() {
   return useMutation({
     mutationKey: ["delete_disclaimer"],
-    mutationFn: async ({ organization_id, disclaimer_id, disclaimer_name = "Unknown Disclaimer" }) =>
-      deleteDisclaimer(organization_id, disclaimer_id, disclaimer_name),
+    mutationFn: async ({
+      organization_id,
+      disclaimer_id,
+      disclaimer_name = "Unknown Disclaimer",
+    }) => deleteDisclaimer(organization_id, disclaimer_id, disclaimer_name),
   });
 }

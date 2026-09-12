@@ -22,5 +22,5 @@ export const forwardingPolicyDefaultValues = {
   is_active: true,
   policy_description: "",
   policy_name: "",
-  subject_contains: []
-}
+  subject_contains: [],
+};

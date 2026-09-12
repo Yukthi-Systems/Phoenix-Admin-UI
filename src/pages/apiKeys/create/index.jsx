@@ -230,7 +230,9 @@ const CreateApiKeys = () => {
           submitLabel={t("Create API Key")}
           allowStepNavigation={true}
         >
-          <div className="min-h-[400px]">{steps[currentStep - 1].component}</div>
+          <div className="min-h-[400px]">
+            {steps[currentStep - 1].component}
+          </div>
         </FormLayout>
       </FormProvider>
 

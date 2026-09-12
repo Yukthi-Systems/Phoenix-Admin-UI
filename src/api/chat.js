@@ -138,9 +138,7 @@ export const updateChatQuota = async (organization_id, new_quota) => {
       message: `Failed to update chat quota`,
     });
 
-    throw new Error(
-      response?.data?.message || "Failed to update chat quota.",
-    );
+    throw new Error(response?.data?.message || "Failed to update chat quota.");
   }
 };
 
@@ -233,7 +231,9 @@ export const toggleChatUserStatus = async (domain, email) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    throw new Error(response?.data?.message || "Failed to toggle chat user status");
+    throw new Error(
+      response?.data?.message || "Failed to toggle chat user status",
+    );
   }
 };
 

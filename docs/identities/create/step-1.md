@@ -6,12 +6,12 @@ Click Add Single. You'll fill in 4 steps, and can click Previous at any point to
 
 ![Step 1: Identity Info.](../../images/identity-step1-info.png)
 
-*Step 1: Identity Info.*
+_Step 1: Identity Info._
 
-| Field | What it means |
-| --- | --- |
-| First Name / Last Name | The person's name. First Name is required. |
-| Email Address | Type the part before the @ — the domain you selected is added automatically. |
-| Primary Phone Number | Pick the correct country code, then type the number. Required. |
-| Recovery / Secondary Email | Optional — but required if you plan to turn on Email 2FA in Step 2. |
-| Identity Status | Turn this on to make the identity active and usable right away. |
+| Field                      | What it means                                                                |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| First Name / Last Name     | The person's name. First Name is required.                                   |
+| Email Address              | Type the part before the @ — the domain you selected is added automatically. |
+| Primary Phone Number       | Pick the correct country code, then type the number. Required.               |
+| Recovery / Secondary Email | Optional — but required if you plan to turn on Email 2FA in Step 2.          |
+| Identity Status            | Turn this on to make the identity active and usable right away.              |

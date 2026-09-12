@@ -29,7 +29,9 @@ export const serverFormSchema = yup.object().shape({
 
   is_active: yup.boolean().required("Status is required"),
   is_monitoring: yup.boolean().required("Monitoring status is required"),
-  is_mailbox_server: yup.boolean().required("Mailbox server status is required"),
+  is_mailbox_server: yup
+    .boolean()
+    .required("Mailbox server status is required"),
   is_accepting_new_mailboxes: yup
     .boolean()
     .required("Accepting new mailboxes status is required"),

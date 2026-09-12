@@ -35,10 +35,12 @@ const PreviewStep = () => {
     <div className="space-y-8 text-left">
       {/* General Info */}
       <div className="rounded-lg border border-border bg-card p-6">
-        <h3 className="mb-4 text-lg font-medium text-foreground">{t("Key Information")}</h3>
+        <h3 className="mb-4 text-lg font-medium text-foreground">
+          {t("Key Information")}
+        </h3>
         <div className="space-y-1">
           <DetailRow label={t("Key Name")} value={values.key_name} />
-       
+
           <DetailRow label={t("Description")} value={values.description} />
         </div>
       </div>
@@ -46,7 +48,9 @@ const PreviewStep = () => {
       {/* Custom Details */}
       {values.custom_details?.length > 0 && (
         <div className="rounded-lg border border-border bg-card p-6">
-          <h3 className="mb-4 text-lg font-medium text-foreground">{t("Additional Details")}</h3>
+          <h3 className="mb-4 text-lg font-medium text-foreground">
+            {t("Additional Details")}
+          </h3>
           <div className="space-y-1">
             {values.custom_details.map((detail, idx) => (
               <DetailRow key={idx} label={detail.key} value={detail.value} />
@@ -57,7 +61,9 @@ const PreviewStep = () => {
 
       {/* Permissions */}
       <div className="rounded-lg border border-border bg-card p-6">
-        <h3 className="mb-4 text-lg font-medium text-foreground">{t("Permissions")}</h3>
+        <h3 className="mb-4 text-lg font-medium text-foreground">
+          {t("Permissions")}
+        </h3>
         {values.permissions?.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {values.permissions.map((perm) => (
@@ -70,7 +76,9 @@ const PreviewStep = () => {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground italic">{t("No permissions selected")}</p>
+          <p className="text-sm text-muted-foreground italic">
+            {t("No permissions selected")}
+          </p>
         )}
       </div>
     </div>

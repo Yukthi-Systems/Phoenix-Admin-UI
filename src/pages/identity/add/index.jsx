@@ -41,23 +41,29 @@ const identityFormSchema = yup.object().shape({
   email_prefix: yup
     .string()
     .required("Email prefix is required")
-    .matches(/^[a-zA-Z0-9._-]+$/, "Only letters, numbers, dot, underscore, and hyphen are allowed")
+    .matches(
+      /^[a-zA-Z0-9._-]+$/,
+      "Only letters, numbers, dot, underscore, and hyphen are allowed",
+    )
     .matches(
       /^[a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*$/,
-      "Symbols (. _ -) can't be at the start/end or appear consecutively"
+      "Symbols (. _ -) can't be at the start/end or appear consecutively",
     ),
   email_domain: yup.string().required("Email domain is required"),
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().nullable(),
-  primary_phone_number: yup.string().required("Primary phone number is required"),
+  primary_phone_number: yup
+    .string()
+    .required("Primary phone number is required"),
   secondary_email: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr)
+    .transform((curr, orig) => (orig === "" ? null : curr))
     .email("Invalid email address")
     .when("is_email_2fa_enabled", {
       is: true,
-      then: (schema) => schema.required("Secondary email is required to enable Email 2FA"),
+      then: (schema) =>
+        schema.required("Secondary email is required to enable Email 2FA"),
     }),
   password: yup
     .string()
@@ -70,11 +76,11 @@ const identityFormSchema = yup.object().shape({
   restriction_policy_id: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr),
+    .transform((curr, orig) => (orig === "" ? null : curr)),
   department_id: yup
     .string()
     .nullable()
-    .transform((curr, orig) => orig === "" ? null : curr),
+    .transform((curr, orig) => (orig === "" ? null : curr)),
   is_enabled: yup.boolean().default(true),
   is_app_2fa_enabled: yup.boolean().default(false),
   is_sms_2fa_enabled: yup.boolean().default(false),
@@ -102,7 +108,13 @@ const STEPS = [
     id: "password",
     label: "Password",
     description: "Security credentials and 2FA",
-    fields: ["password", "conform_password", "is_app_2fa_enabled", "is_sms_2fa_enabled", "is_email_2fa_enabled"],
+    fields: [
+      "password",
+      "conform_password",
+      "is_app_2fa_enabled",
+      "is_sms_2fa_enabled",
+      "is_email_2fa_enabled",
+    ],
   },
   {
     id: "policies",
@@ -130,9 +142,11 @@ const AddIdentity = () => {
   const { organization_id } = useAtomValue(userInfoAtom);
   const navigate = useNavigate();
   const { mutate, isPending } = useAddIdentity();
-  const { mutate: createMailbox, isPending: isMailboxPending } = useAddMailbox();
+  const { mutate: createMailbox, isPending: isMailboxPending } =
+    useAddMailbox();
   const { mutate: createChat, isPending: isChatPending } = useCreateChatUser();
-  const { mutate: createFileUser, isPending: isFileUserPending } = useCreateFileUser();
+  const { mutate: createFileUser, isPending: isFileUserPending } =
+    useCreateFileUser();
   const toast = useToastify();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -145,13 +159,16 @@ const AddIdentity = () => {
     pageSize: 100,
   });
   const policiesList = policiesData?.data?.policies || [];
-  const policyOptions = useMemo(() => [
-    { label: "None", value: "" },
-    ...policiesList.map((p) => ({
-      label: p.policy_name,
-      value: p.policy_id,
-    })),
-  ], [policiesList]);
+  const policyOptions = useMemo(
+    () => [
+      { label: "None", value: "" },
+      ...policiesList.map((p) => ({
+        label: p.policy_name,
+        value: p.policy_id,
+      })),
+    ],
+    [policiesList],
+  );
 
   const {
     register,
@@ -240,16 +257,19 @@ const AddIdentity = () => {
   const creatingChatUser = ({ domain, email }) => {
     const payload = {
       domain: domain,
-      email: email
-    }
+      email: email,
+    };
 
     createChat(payload, {
-      onSuccess: () => { },
+      onSuccess: () => {},
       onError: (err) => {
-        toast("error", err?.response?.data?.message || "Failed to create chat user");
-      }
-    })
-  }
+        toast(
+          "error",
+          err?.response?.data?.message || "Failed to create chat user",
+        );
+      },
+    });
+  };
 
   const creatingFileUser = ({ domain, email, quota_allocated }) => {
     createFileUser(
@@ -261,7 +281,10 @@ const AddIdentity = () => {
       },
       {
         onError: (err) => {
-          toast("error", err?.response?.data?.message || "Failed to create file user");
+          toast(
+            "error",
+            err?.response?.data?.message || "Failed to create file user",
+          );
         },
       },
     );
@@ -274,15 +297,21 @@ const AddIdentity = () => {
       email_identity: `${email_prefix}@${domain}`,
       enabled: true,
       forwarding_policy_id: null,
-      general_policy_id: null
-    }
+      general_policy_id: null,
+    };
 
-    createMailbox({ data: payload }, {
-      onError: (err) => {
-        toast("error", err?.response?.data?.message || "Failed to create mailbox");
-      }
-    })
-  }
+    createMailbox(
+      { data: payload },
+      {
+        onError: (err) => {
+          toast(
+            "error",
+            err?.response?.data?.message || "Failed to create mailbox",
+          );
+        },
+      },
+    );
+  };
 
   const onSubmit = (formData) => {
     const payload = {
@@ -330,7 +359,9 @@ const AddIdentity = () => {
             });
           }
           toast("success", "Successfully created E-Mail Identity");
-          navigate(`/identities/${payload.email_prefix}@${payload.email_domain}`);
+          navigate(
+            `/identities/${payload.email_prefix}@${payload.email_domain}`,
+          );
         },
         onError: (error) => {
           const message =
@@ -342,12 +373,18 @@ const AddIdentity = () => {
           );
           console.error(error);
         },
-      }
+      },
     );
   };
 
   const onInvalid = (formErrors) =>
-    jumpToErroredStep(formErrors, STEPS, setCurrentStep, toast, "before creating the identity");
+    jumpToErroredStep(
+      formErrors,
+      STEPS,
+      setCurrentStep,
+      toast,
+      "before creating the identity",
+    );
 
   if (!permissions.includes("identity:create")) {
     return <AccessDenied content="Don't have access to create identities." />;

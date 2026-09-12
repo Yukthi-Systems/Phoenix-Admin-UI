@@ -24,7 +24,7 @@ import { useBrowserNotification } from "@/hooks/useBrowserNotification";
 const NotificationToggle = ({ onToggle }) => {
   // ✅ Replaced manual state/query logic with the centralized hook
   const { uiInfo, updateUiInfo, isLoading, isSaving } = useSyncedUiInfo();
-  
+
   const [isInitialized, setIsInitialized] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
   const toast = useToastify();
@@ -76,7 +76,10 @@ const NotificationToggle = ({ onToggle }) => {
       {
         localOnly: skipApiCall,
         onSuccess: () => {
-          toggleLog("info", "Notification settings saved to server successfully");
+          toggleLog(
+            "info",
+            "Notification settings saved to server successfully",
+          );
           toast("success", `Notifications ${enabled ? "enabled" : "disabled"}`);
         },
         onError: (error) => {
@@ -85,7 +88,7 @@ const NotificationToggle = ({ onToggle }) => {
           });
           toast("error", "Failed to save notification settings");
         },
-      }
+      },
     );
   };
 
@@ -133,7 +136,7 @@ const NotificationToggle = ({ onToggle }) => {
     browserPermission,
     requestPermission,
     getDebugInfo,
-    isNotificationsEnabled
+    isNotificationsEnabled,
   ]);
 
   const handleToggle = async () => {

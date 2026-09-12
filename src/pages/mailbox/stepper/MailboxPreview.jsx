@@ -115,4 +115,3 @@ export const MailboxPreview = ({ formData }) => {
 };
 
 export default MailboxPreview;
-

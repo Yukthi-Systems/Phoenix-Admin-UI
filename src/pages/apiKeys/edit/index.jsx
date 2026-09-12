@@ -50,7 +50,7 @@ const EditApiKeys = () => {
   // State
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { organization_id } = useAtomValue(userInfoAtom);
-  
+
   // Stepper State
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState([]);
@@ -282,9 +282,7 @@ const EditApiKeys = () => {
         allowStepNavigation={true}
         isEditMode={true}
       >
-        <div className="min-h-[400px]">
-          {steps[currentStep - 1].component}
-        </div>
+        <div className="min-h-[400px]">{steps[currentStep - 1].component}</div>
       </FormLayout>
     </FormProvider>
   );

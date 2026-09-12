@@ -326,10 +326,14 @@ const MailboxCard = ({
               <div className="flex items-center gap-2">
                 <span
                   className={
-                    (mailbox.is_active ?? mailbox.is_enabled) ? "text-success" : "text-destructive"
+                    (mailbox.is_active ?? mailbox.is_enabled)
+                      ? "text-success"
+                      : "text-destructive"
                   }
                 >
-                  {(mailbox.is_active ?? mailbox.is_enabled) ? "Active" : "Inactive"}
+                  {(mailbox.is_active ?? mailbox.is_enabled)
+                    ? "Active"
+                    : "Inactive"}
                 </span>
                 {mailbox.total_messages_count !== undefined && (
                   <span className="text-muted-foreground">

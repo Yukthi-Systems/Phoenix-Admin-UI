@@ -265,7 +265,6 @@ const MailboxDetails = () => {
         icon: <ChartPie className="h-4 w-4" />,
         onClick: () => handleSpace(mailbox_details),
       });
-
     }
 
     if (permissions.includes("mailbox:delete") && !isLoading && !isError) {
@@ -466,7 +465,9 @@ const MailboxDetails = () => {
                   <div className="mt-3 pt-3 border-t border-border">
                     <div className="flex items-center gap-2 text-xs text-primary">
                       <Database className="w-3.5 h-3.5" />
-                      <span className="text-left font-medium">Domain Mailbox</span>
+                      <span className="text-left font-medium">
+                        Domain Mailbox
+                      </span>
                     </div>
                   </div>
                 </InfoCard>
@@ -488,7 +489,6 @@ const MailboxDetails = () => {
                       "Not assigned"
                     }
                   />
-
 
                   <InfoItem
                     label="Distribution Policy"

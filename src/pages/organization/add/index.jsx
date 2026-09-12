@@ -22,7 +22,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { userProfileAtom } from "@/store/userProfile";
 import { useToastify } from "@/hooks/useToastify";
-import { useCreateOrganization, useGetOrganizationDetail } from "@/hooks/useOrganization";
+import {
+  useCreateOrganization,
+  useGetOrganizationDetail,
+} from "@/hooks/useOrganization";
 import { organizationDefaultValues } from "./organizationDefaultValues";
 import { organizationFormSchema } from "./validationSchema";
 import AccessDenied from "@/components/common/AccessDenied";
@@ -193,7 +196,10 @@ const AddOrganization = () => {
   });
 
   const validateStep = async (stepNumber) => {
-    const fieldsToValidate = getRequiredFieldsForStep(filteredSteps, stepNumber);
+    const fieldsToValidate = getRequiredFieldsForStep(
+      filteredSteps,
+      stepNumber,
+    );
     const stepId = filteredSteps[stepNumber - 1]?.id;
 
     // Custom validation for branches step
@@ -301,25 +307,28 @@ const AddOrganization = () => {
       },
     };
 
-    mutate({ data: filteredData }, {
-      onSuccess: (data) => {
-        toast(
-          "success",
-          `Successfully added organization: ${data?.name || formData?.name}`,
-        );
-        navigate("/organization");
+    mutate(
+      { data: filteredData },
+      {
+        onSuccess: (data) => {
+          toast(
+            "success",
+            `Successfully added organization: ${data?.name || formData?.name}`,
+          );
+          navigate("/organization");
+        },
+        onError: (error) => {
+          const message =
+            error.response?.data?.message || error.message || "Unknown error";
+          const tracebackId = error.response?.data?.traceback_id;
+          toast(
+            "error",
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+          );
+          console.error(error);
+        },
       },
-      onError: (error) => {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
-        const tracebackId = error.response?.data?.traceback_id;
-        toast(
-          "error",
-          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-        );
-        console.error(error);
-      },
-    });
+    );
   };
 
   if (!permissions.includes("organization:create")) {

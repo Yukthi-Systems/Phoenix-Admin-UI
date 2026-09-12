@@ -35,11 +35,13 @@ const STEPS = [
     id: "configuration",
     label: "Configuration",
     description: "Policy settings & lists",
-    fields: ["policy_name",
+    fields: [
+      "policy_name",
       "is_active",
-      // "delete_mails", 
+      // "delete_mails",
       "white_entries",
-      "black_entries"],
+      "black_entries",
+    ],
   },
 ];
 
@@ -169,8 +171,8 @@ const AddFiltersPolicy = () => {
       currentStep={currentStep}
       completedSteps={completedSteps}
       onNext={() => handleStepNavigation(1)} // Single step
-      onPrevious={() => { }}
-      onStepClick={() => { }}
+      onPrevious={() => {}}
+      onStepClick={() => {}}
       onSubmit={handleSubmit(onSubmit)}
       isPending={isPending}
       submitLabel="Create Filters Policy"

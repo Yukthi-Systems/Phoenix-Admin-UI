@@ -56,7 +56,7 @@ const BugReports = () => {
 
   const [statusFilter, setStatusFilter] = useState("OPEN");
   const [searchQuery, setSearchQuery] = useState("");
- const { pagination, onPaginationChange: setPagination } =
+  const { pagination, onPaginationChange: setPagination } =
     useTablePagination();
   const [selectedReport, setSelectedReport] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -148,7 +148,7 @@ const BugReports = () => {
     const transitions = {
       OPEN: ["IN_PROGRESS", "RESOLVED"],
       IN_PROGRESS: ["OPEN", "RESOLVED"],
-      RESOLVED: [ "OPEN","IN_PROGRESS"],
+      RESOLVED: ["OPEN", "IN_PROGRESS"],
     };
     return transitions[currentStatus] || [];
   };
@@ -232,12 +232,13 @@ const BugReports = () => {
         cell: ({ row }) => {
           const report = row.original;
           const actions = [];
-          const currentStatus =  statusFilter;
-          const availableTransitions = getAvailableStatusTransitions(currentStatus);
+          const currentStatus = statusFilter;
+          const availableTransitions =
+            getAvailableStatusTransitions(currentStatus);
 
           if (permissions.includes("internal_action:edit")) {
             actions.push({ separator: true });
-            
+
             availableTransitions.forEach((status) => {
               const statusLabel = status.replace("_", " ");
               actions.push({
@@ -271,7 +272,7 @@ const BugReports = () => {
         size: 150,
       },
     ],
-    [permissions ,statusFilter],
+    [permissions, statusFilter],
   );
 
   const table = useReactTable({

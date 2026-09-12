@@ -73,7 +73,7 @@ const OrganizationTreeNode = ({
   setExpandedOrgs,
   onDelete,
   permissions,
-  fetchData = () => { },
+  fetchData = () => {},
   ancestors = new Set(),
   parentAvailableSpace = 0,
   parentAvailableIdentities = 0,
@@ -103,10 +103,13 @@ const OrganizationTreeNode = ({
   );
 
   // Use local state (NOT URL params) so each child node has independent pagination
-  const [childPagination, setChildPagination] = useState({ pageIndex: 0, pageSize: 10 });
+  const [childPagination, setChildPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const setPagination = useCallback((updater) => {
     setChildPagination((prev) =>
-      typeof updater === "function" ? updater(prev) : updater
+      typeof updater === "function" ? updater(prev) : updater,
     );
   }, []);
   const pagination = childPagination;
@@ -260,7 +263,10 @@ const OrganizationTreeNode = ({
   const OnIdentityChange = (allocationData) => {
     identityUpdate(allocationData, {
       onSuccess: async () => {
-        toast("success", "Successfully updated organization identity allocation");
+        toast(
+          "success",
+          "Successfully updated organization identity allocation",
+        );
 
         const { data } = await refetchOrgDetails();
         if (data) {
@@ -467,10 +473,11 @@ const OrganizationTreeNode = ({
                     }))
                   }
                   disabled={isLoading}
-                  className={`px-2 py-1 text-xs font-medium rounded transition-colors ${pageNum === currentPage
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent hover:text-accent-foreground"
-                    }`}
+                  className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
+                    pageNum === currentPage
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-accent hover:text-accent-foreground"
+                  }`}
                 >
                   {pageNum}
                 </button>
@@ -520,8 +527,9 @@ const OrganizationTreeNode = ({
     <>
       <div className="select-none">
         <div
-          className={`border-b border-border text-sm text-foreground hover:bg-muted/20 transition-colors duration-150 ${isCircular ? "bg-warning/5" : ""
-            }`}
+          className={`border-b border-border text-sm text-foreground hover:bg-muted/20 transition-colors duration-150 ${
+            isCircular ? "bg-warning/5" : ""
+          }`}
         >
           <div className="grid grid-cols-12 gap-4 p-2">
             <div
@@ -543,8 +551,9 @@ const OrganizationTreeNode = ({
 
               <Link
                 to={`/organization/${encodeURIComponent(organization.organization_id)}`}
-                className={`hover:underline font-medium truncate ${isCircular ? "text-warning" : "text-primary"
-                  }`}
+                className={`hover:underline font-medium truncate ${
+                  isCircular ? "text-warning" : "text-primary"
+                }`}
               >
                 {organization.organization_name}
                 {isParentPlaceholder && (
@@ -618,84 +627,94 @@ const OrganizationTreeNode = ({
             </div>
 
             <div className="col-span-2 flex items-center justify-center">
-              <TableActionsDropdown 
+              <TableActionsDropdown
                 height={300}
                 actions={[
-                  ...(permissions.includes("organization:edit") && userProfile?.organization_id !== organization.organization_id
+                  ...(permissions.includes("organization:edit") &&
+                  userProfile?.organization_id !== organization.organization_id
                     ? [
-                      {
-                        label: "Edit Organization",
-                        icon: Edit,
-                        variant: "default",
-                        onClick: () =>
-                          navigate(
-                            `/organization/edit/${organization.organization_id}`,
-                          ),
-                        tooltip: "Edit organization",
-                      },
-                    ]
+                        {
+                          label: "Edit Organization",
+                          icon: Edit,
+                          variant: "default",
+                          onClick: () =>
+                            navigate(
+                              `/organization/edit/${organization.organization_id}`,
+                            ),
+                          tooltip: "Edit organization",
+                        },
+                      ]
                     : []),
-                  ...(permissions.includes("organization:edit") && userProfile?.organization_id !== organization.organization_id)
+                  ...(permissions.includes("organization:edit") &&
+                  userProfile?.organization_id !== organization.organization_id
                     ? [
-                      {
-                        label: "Manage Space",
-                        icon: ChartPie,
-                        variant: "default",
-                        onClick: () => handleSpace(organization),
-                        tooltip: "Space allocation",
-                      }] : [],
-                  ...(permissions.includes("organization:edit") && userProfile?.organization_id !== organization.organization_id)
+                        {
+                          label: "Manage Space",
+                          icon: ChartPie,
+                          variant: "default",
+                          onClick: () => handleSpace(organization),
+                          tooltip: "Space allocation",
+                        },
+                      ]
+                    : []),
+                  ...(permissions.includes("organization:edit") &&
+                  userProfile?.organization_id !== organization.organization_id
                     ? [
-                      {
-                        label: "Manage Identities",
-                        icon: UserCog,
-                        variant: "default",
-                        onClick: () => handleIdentity(organization),
-                        tooltip: "Email identity allocation",
-                      }] : [],
-                  ...(permissions.includes("organization:edit") && userProfile?.organization_id !== organization.organization_id
+                        {
+                          label: "Manage Identities",
+                          icon: UserCog,
+                          variant: "default",
+                          onClick: () => handleIdentity(organization),
+                          tooltip: "Email identity allocation",
+                        },
+                      ]
+                    : []),
+                  ...(permissions.includes("organization:edit") &&
+                  userProfile?.organization_id !== organization.organization_id
                     ? [
-                      {
-                        label: "Rename Organization",
-                        icon: Edit,
-                        variant: "default",
-                        onClick: () => handleRename(organization),
-                        tooltip: "Rename organization",
-                      },
-                    ]
+                        {
+                          label: "Rename Organization",
+                          icon: Edit,
+                          variant: "default",
+                          onClick: () => handleRename(organization),
+                          tooltip: "Rename organization",
+                        },
+                      ]
                     : []),
 
-                  ...(permissions.includes("organization:delete") && userProfile?.organization_id !== organization.organization_id
+                  ...(permissions.includes("organization:delete") &&
+                  userProfile?.organization_id !== organization.organization_id
                     ? [
-                      { separator: true },
-                      {
-                        label: organization?.is_active
-                          ? "Deactivate"
-                          : "Activate",
-                        icon: organization?.is_active ? XCircle : CheckCircle,
-                        variant: organization?.is_active
-                          ? "danger"
-                          : "success",
-                        disabled: !organization?.is_active && !parentIsActive,
-                        onClick: () => handleStatus(organization),
-                        tooltip: organization?.is_active
-                          ? "Deactivate"
-                          : !parentIsActive
-                            ? "Parent organization is inactive"
+                        { separator: true },
+                        {
+                          label: organization?.is_active
+                            ? "Deactivate"
                             : "Activate",
-                      },
-                      {
-                        label:
-                          checkingDeleteId === organization.organization_id
-                            ? "Checking..."
-                            : "Delete Organization",
-                        icon: Trash2,
-                        variant: "danger",
-                        disabled: checkingDeleteId === organization.organization_id,
-                        onClick: handleDeleteClick,
-                        tooltip: "Delete organization",
-                      },
-                    ]
+                          icon: organization?.is_active ? XCircle : CheckCircle,
+                          variant: organization?.is_active
+                            ? "danger"
+                            : "success",
+                          disabled: !organization?.is_active && !parentIsActive,
+                          onClick: () => handleStatus(organization),
+                          tooltip: organization?.is_active
+                            ? "Deactivate"
+                            : !parentIsActive
+                              ? "Parent organization is inactive"
+                              : "Activate",
+                        },
+                        {
+                          label:
+                            checkingDeleteId === organization.organization_id
+                              ? "Checking..."
+                              : "Delete Organization",
+                          icon: Trash2,
+                          variant: "danger",
+                          disabled:
+                            checkingDeleteId === organization.organization_id,
+                          onClick: handleDeleteClick,
+                          tooltip: "Delete organization",
+                        },
+                      ]
                     : []),
                 ]}
               />

@@ -49,12 +49,12 @@ export const MessageInput = ({
 
   const processFiles = (files) => {
     if (!files || files.length === 0) return;
-    
+
     // Create synthetic event for compatibility with existing handleFileSelect
     const event = {
       target: {
-        files: files
-      }
+        files: files,
+      },
     };
     handleFileSelect(event);
   };
@@ -97,7 +97,7 @@ export const MessageInput = ({
 
     const files = [];
     for (let i = 0; i < items.length; i++) {
-      if (items[i].kind === 'file') {
+      if (items[i].kind === "file") {
         const file = items[i].getAsFile();
         if (file) files.push(file);
       }
@@ -109,11 +109,9 @@ export const MessageInput = ({
   };
 
   return (
-    <div 
+    <div
       className={`shrink-0 p-4 bg-card border-t z-10 transition-all ${
-        isDragging 
-          ? "border-primary border-2 bg-primary/5" 
-          : "border-border"
+        isDragging ? "border-primary border-2 bg-primary/5" : "border-border"
       }`}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
@@ -170,7 +168,9 @@ export const MessageInput = ({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onPaste={handlePaste}
-                placeholder={isDragging ? "Drop files here..." : "Add a comment..."}
+                placeholder={
+                  isDragging ? "Drop files here..." : "Add a comment..."
+                }
                 rows={isExpanded ? 12 : 4}
                 disabled={isSending || isUploading}
                 className="w-full"

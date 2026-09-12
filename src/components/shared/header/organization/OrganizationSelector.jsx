@@ -65,7 +65,12 @@ const OrganizationSelector = ({
   const [, setUserInfo] = useAtom(userInfoAtom);
 
   // ✅ Replaced manual Atom/Query logic with useSyncedUiInfo
-  const { uiInfo, updateUiInfo, isLoading: isLoadingUiInfo, isSaving: isSavingUiInfo } = useSyncedUiInfo();
+  const {
+    uiInfo,
+    updateUiInfo,
+    isLoading: isLoadingUiInfo,
+    isSaving: isSavingUiInfo,
+  } = useSyncedUiInfo();
 
   const { data, isLoading, isError } = useGetOrganizations(
     pagination.pageIndex + 1,
@@ -93,7 +98,9 @@ const OrganizationSelector = ({
     );
 
   const { data: storedOrgDetails, isLoading: isLoadingStoredOrg } =
-    useGetOrganizationDetail(needsStoredOrgLookup ? storedSelectionOrgId : null);
+    useGetOrganizationDetail(
+      needsStoredOrgLookup ? storedSelectionOrgId : null,
+    );
 
   // Helper to safely get stored data from the hook
   const getStoredOrgSelection = () => {
@@ -133,9 +140,12 @@ const OrganizationSelector = ({
       {
         localOnly: skipApiCall,
         onError: (error) => {
-          console.error(`Failed to save organization selection for key: ${uiInfoKey}`, error);
-        }
-      }
+          console.error(
+            `Failed to save organization selection for key: ${uiInfoKey}`,
+            error,
+          );
+        },
+      },
     );
   };
 
@@ -143,12 +153,15 @@ const OrganizationSelector = ({
   const clearInvalidStoredSelection = () => {
     const currentSelectorState = uiInfo?.organizationSelector || {};
 
-    updateUiInfo({
-      organizationSelector: {
-        ...currentSelectorState,
-        [uiInfoKey]: null,
+    updateUiInfo(
+      {
+        organizationSelector: {
+          ...currentSelectorState,
+          [uiInfoKey]: null,
+        },
       },
-    }, { localOnly: true }); // Usually local clean up is enough
+      { localOnly: true },
+    ); // Usually local clean up is enough
   };
 
   const isOrganizationAccessible = (orgId) => {
@@ -221,7 +234,9 @@ const OrganizationSelector = ({
         const storedOrgSelection = getStoredOrgSelection();
 
         if (storedOrgSelection) {
-          const isAccessible = isOrganizationAccessible(storedOrgSelection.organization_id);
+          const isAccessible = isOrganizationAccessible(
+            storedOrgSelection.organization_id,
+          );
 
           if (isAccessible) {
             // The stored selection only carries the org's identity (see
@@ -233,28 +248,38 @@ const OrganizationSelector = ({
 
             if (
               profileOrgDetails &&
-              profileOrgDetails.organization_id === storedOrgSelection.organization_id
+              profileOrgDetails.organization_id ===
+                storedOrgSelection.organization_id
             ) {
               completeOrgData = { ...storedOrgSelection, ...profileOrgDetails };
             } else {
               const foundInChildren = data?.organizations?.find(
-                (org) => org.organization_id === storedOrgSelection.organization_id,
+                (org) =>
+                  org.organization_id === storedOrgSelection.organization_id,
               );
               if (foundInChildren) {
                 completeOrgData = { ...storedOrgSelection, ...foundInChildren };
               } else if (
                 storedOrgDetails &&
-                storedOrgDetails.organization_id === storedOrgSelection.organization_id
+                storedOrgDetails.organization_id ===
+                  storedOrgSelection.organization_id
               ) {
-                completeOrgData = { ...storedOrgSelection, ...storedOrgDetails };
+                completeOrgData = {
+                  ...storedOrgSelection,
+                  ...storedOrgDetails,
+                };
               }
             }
 
             if (completeOrgData) {
-              completeOrgData.quota_allocated = completeOrgData.quota_allocated || 0;
-              completeOrgData.quota_utilized = completeOrgData.quota_utilized || 0;
-              completeOrgData.chat_service_enabled = completeOrgData.chat_service_enabled ?? false;
-              completeOrgData.email_service_enabled = completeOrgData.email_service_enabled ?? false;
+              completeOrgData.quota_allocated =
+                completeOrgData.quota_allocated || 0;
+              completeOrgData.quota_utilized =
+                completeOrgData.quota_utilized || 0;
+              completeOrgData.chat_service_enabled =
+                completeOrgData.chat_service_enabled ?? false;
+              completeOrgData.email_service_enabled =
+                completeOrgData.email_service_enabled ?? false;
 
               updateUserInfoAtom(completeOrgData);
               if (onSelect) onSelect(completeOrgData);
@@ -333,7 +358,12 @@ const OrganizationSelector = ({
     if (profileOrgDetails && profile?.organization_id && !selectedOrg) {
       setSelectedOrg(profileOrgDetails);
     }
-  }, [profileOrgDetails, profile?.organization_id, selectedOrg, setSelectedOrg]);
+  }, [
+    profileOrgDetails,
+    profile?.organization_id,
+    selectedOrg,
+    setSelectedOrg,
+  ]);
 
   const totalPages = data?.total_pages ?? 1;
   const currentPage = pagination.pageIndex + 1;
@@ -356,7 +386,8 @@ const OrganizationSelector = ({
           created_at: profileOrgDetails.created_at,
           is_active: profileOrgDetails.is_active,
           chat_service_enabled: profileOrgDetails.chat_service_enabled ?? false,
-          email_service_enabled: profileOrgDetails.email_service_enabled ?? false,
+          email_service_enabled:
+            profileOrgDetails.email_service_enabled ?? false,
         };
       } else {
         completeOrgData = {
@@ -364,7 +395,10 @@ const OrganizationSelector = ({
           quota_allocated: organization.quota_allocated || 0,
           quota_utilized: organization.quota_utilized || 0,
           created_at: organization.created_at,
-          is_active: organization.is_active !== undefined ? organization.is_active : true,
+          is_active:
+            organization.is_active !== undefined
+              ? organization.is_active
+              : true,
           chat_service_enabled: organization.chat_service_enabled ?? false,
           email_service_enabled: organization.email_service_enabled ?? false,
         };
@@ -393,16 +427,21 @@ const OrganizationSelector = ({
     setExpandedOrgs(new Set());
   };
 
-  const ParentOrganizationItem = ({ organization, selectedOrgId, onSelect }) => {
+  const ParentOrganizationItem = ({
+    organization,
+    selectedOrgId,
+    onSelect,
+  }) => {
     const isSelected = selectedOrgId === organization.organization_id;
 
     return (
       <div
         onClick={() => onSelect(organization)}
-        className={`flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors ${isSelected
-          ? "bg-primary/10 text-primary border-primary border-l-2"
-          : "hover:bg-accent hover:text-accent-foreground"
-          }`}
+        className={`flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors ${
+          isSelected
+            ? "bg-primary/10 text-primary border-primary border-l-2"
+            : "hover:bg-accent hover:text-accent-foreground"
+        }`}
       >
         <div className="flex-shrink-0">
           <OrganizationLogo
@@ -424,10 +463,11 @@ const OrganizationSelector = ({
             </div>
             <div className="flex items-center gap-3">
               <span
-                className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${organization.is_active
-                  ? "bg-success/10 text-success"
-                  : "bg-muted text-muted-foreground"
-                  }`}
+                className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${
+                  organization.is_active
+                    ? "bg-success/10 text-success"
+                    : "bg-muted text-muted-foreground"
+                }`}
               >
                 {organization.is_active ? "Active" : "Inactive"}
               </span>
@@ -458,7 +498,10 @@ const OrganizationSelector = ({
 
   const organizationsToDisplay = useMemo(() => {
     const orgs = [];
-    if (profileOrgDetails && profileOrgDetails.organization_id !== excludeOrgId) {
+    if (
+      profileOrgDetails &&
+      profileOrgDetails.organization_id !== excludeOrgId
+    ) {
       orgs.push({
         ...profileOrgDetails,
         isParentOrg: true,
@@ -509,7 +552,10 @@ const OrganizationSelector = ({
     return (
       <div className="border-border bg-muted/10 flex items-center justify-between border-t p-3">
         <div className="flex items-center gap-2">
-          <label htmlFor="pageSize" className="text-muted-foreground text-xs font-medium">
+          <label
+            htmlFor="pageSize"
+            className="text-muted-foreground text-xs font-medium"
+          >
             Per page:
           </label>
           <select
@@ -570,10 +616,11 @@ const OrganizationSelector = ({
                 setPagination((prev) => ({ ...prev, pageIndex: pageNum - 1 }))
               }
               disabled={isLoading}
-              className={`rounded px-2 py-1 text-xs font-medium transition-colors ${pageNum === currentPage
-                ? "bg-primary text-primary-foreground"
-                : "hover:bg-accent hover:text-accent-foreground border-border border"
-                }`}
+              className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+                pageNum === currentPage
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground border-border border"
+              }`}
             >
               {pageNum}
             </button>
@@ -670,7 +717,9 @@ const OrganizationSelector = ({
               <div className="flex items-center gap-2">
                 <Building2 className="text-primary h-5 w-5" />
                 <h2 className="text-card-foreground text-lg font-semibold">
-                  {excludeOrgId ? "Select Parent Organization" : "Select Organization"}
+                  {excludeOrgId
+                    ? "Select Parent Organization"
+                    : "Select Organization"}
                 </h2>
               </div>
               <button
@@ -694,7 +743,8 @@ const OrganizationSelector = ({
                 <div className="text-destructive flex items-center justify-center py-8">
                   <span>Failed to load organizations</span>
                 </div>
-              ) : !organizationsToDisplay || organizationsToDisplay.length === 0 ? (
+              ) : !organizationsToDisplay ||
+                organizationsToDisplay.length === 0 ? (
                 <div className="text-muted-foreground flex items-center justify-center py-8">
                   <span>No organizations available</span>
                 </div>
@@ -744,7 +794,9 @@ const OrganizationSelector = ({
                     return storedOrgSelection ? (
                       <span>
                         Last selected:{" "}
-                        {new Date(storedOrgSelection.selectedAt).toLocaleDateString()}
+                        {new Date(
+                          storedOrgSelection.selectedAt,
+                        ).toLocaleDateString()}
                       </span>
                     ) : (
                       <span>No previous selection</span>

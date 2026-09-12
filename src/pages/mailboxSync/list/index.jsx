@@ -56,8 +56,8 @@ import { useTablePagination } from "@/hooks/useTablePagination";
 
 const MailBoxSyncList = () => {
   const [domainName, setDomainName] = useState(null);
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
 
   const navigate = useNavigate();
   const { formatUserDateNice } = useUserTimezone();

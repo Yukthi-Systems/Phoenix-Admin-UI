@@ -16,7 +16,15 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChatConfig, updateChatConfig, updateChatQuota, getChatUsers, createChatUser, toggleChatUserStatus, deleteChatUser } from "../api/chat";
+import {
+  getChatConfig,
+  updateChatConfig,
+  updateChatQuota,
+  getChatUsers,
+  createChatUser,
+  toggleChatUserStatus,
+  deleteChatUser,
+} from "../api/chat";
 
 export function useGetChatConfig(organization_id) {
   return useQuery({
@@ -72,4 +80,3 @@ export function useDeleteChatUser() {
     mutationFn: ({ domain, email }) => deleteChatUser(domain, email),
   });
 }
-

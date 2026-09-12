@@ -164,7 +164,7 @@ export const editRestrictionPolicy = async (org_id, policy_id, data) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (![200, 204].includes(res.status))

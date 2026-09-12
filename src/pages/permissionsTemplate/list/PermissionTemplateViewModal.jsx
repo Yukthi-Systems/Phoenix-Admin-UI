@@ -38,7 +38,10 @@ const PermissionTemplateViewModal = ({ isOpen, onClose, template }) => {
   const [showAll, setShowAll] = useState(false);
 
   const { template_name, permissions } = template || {};
-  const permissionSet = useMemo(() => new Set(permissions || []), [permissions]);
+  const permissionSet = useMemo(
+    () => new Set(permissions || []),
+    [permissions],
+  );
 
   const isPermissionGranted = (permission) => permissionSet.has(permission);
 

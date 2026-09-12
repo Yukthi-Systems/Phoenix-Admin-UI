@@ -46,7 +46,7 @@ const DropdownButton = ({
 
   const handleOptionClick = (option) => {
     if (option.disabled) return;
-    
+
     if (option.onClick) {
       option.onClick();
     }
@@ -136,16 +136,22 @@ const DropdownButton = ({
                 } ${option.className || ""}`}
               >
                 {option.icon && (
-                  <span className={`flex-shrink-0 mt-0.5 ${option.disabled ? "opacity-70" : ""}`}>
+                  <span
+                    className={`flex-shrink-0 mt-0.5 ${option.disabled ? "opacity-70" : ""}`}
+                  >
                     {option.icon}
                   </span>
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className={`font-medium ${option.disabled ? "text-muted-foreground" : ""}`}>
+                  <div
+                    className={`font-medium ${option.disabled ? "text-muted-foreground" : ""}`}
+                  >
                     {option.label}
                   </div>
                   {option.description && (
-                    <div className={`text-xs mt-0.5 ${option.disabled ? "text-muted-foreground/80" : "text-muted-foreground"}`}>
+                    <div
+                      className={`text-xs mt-0.5 ${option.disabled ? "text-muted-foreground/80" : "text-muted-foreground"}`}
+                    >
                       {option.description}
                     </div>
                   )}

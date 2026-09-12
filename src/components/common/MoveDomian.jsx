@@ -33,10 +33,10 @@ import CopyOrganizationSelector from "../shared/header/organization/CopyOrgSelec
 
 function MoveDomain({
   isOpen = false,
-  onClose = () => { },
+  onClose = () => {},
   domains = [], // Can be single domain or multiple domains
-  onMove = async (currentOrg, domainId, targetOrgId) => { },
-  onComplete = () => { },
+  onMove = async (currentOrg, domainId, targetOrgId) => {},
+  onComplete = () => {},
   title = "Move Domain",
   description = "Are you sure you want to move the selected domain?",
   itemName = "domain",
@@ -172,10 +172,10 @@ function MoveDomain({
           prev.map((p) =>
             p.id === domain.id
               ? {
-                ...p,
-                status: "error",
-                error: errMsg || "Unknown error",
-              }
+                  ...p,
+                  status: "error",
+                  error: errMsg || "Unknown error",
+                }
               : p,
           ),
         );
@@ -669,10 +669,11 @@ function MoveDomain({
                 <div className="relative">
                   <div className="bg-muted h-3 w-full overflow-hidden rounded-full">
                     <div
-                      className={`h-3 rounded-full transition-all duration-500 ease-out ${isCancelled
+                      className={`h-3 rounded-full transition-all duration-500 ease-out ${
+                        isCancelled
                           ? "from-muted-foreground to-muted-foreground/80 bg-gradient-to-r"
                           : "bg-gradient-to-r from-blue-500 to-blue-500/80"
-                        }`}
+                      }`}
                       style={{ width: `${progressPercentage}%` }}
                     ></div>
                   </div>

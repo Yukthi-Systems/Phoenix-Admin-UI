@@ -70,7 +70,11 @@ const getRequiredFieldsForStep = (stepIndex) => {
 // Step renderer map
 const STEP_RENDERER = {
   1: (props) => <PolicyDetailsStep {...props} />,
-  2: (props) => <DndProvider backend={HTML5Backend}><FileTypesStep {...props} /></DndProvider>,
+  2: (props) => (
+    <DndProvider backend={HTML5Backend}>
+      <FileTypesStep {...props} />
+    </DndProvider>
+  ),
 };
 
 const EditAttachmentPolicy = () => {

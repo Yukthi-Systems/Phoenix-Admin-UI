@@ -21,22 +21,16 @@ import * as yup from "yup";
 
 const hybridConnectorPropertiesSchema = yup.object({
   description: yup.string().required("Description is required"),
-  fqdn: yup.string().test(
-    "fqdn-or-ipv4",
-    "Either FQDN or IPv4 is required",
-    function (value) {
+  fqdn: yup
+    .string()
+    .test("fqdn-or-ipv4", "Either FQDN or IPv4 is required", function (value) {
       return !!(value || this.parent.ipv4);
-    },
-  ),
+    }),
   ipv4: yup
     .string()
-    .test(
-      "fqdn-or-ipv4",
-      "Either FQDN or IPv4 is required",
-      function (value) {
-        return !!(value || this.parent.fqdn);
-      },
-    )
+    .test("fqdn-or-ipv4", "Either FQDN or IPv4 is required", function (value) {
+      return !!(value || this.parent.fqdn);
+    })
     .matches(
       /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
       { message: "Invalid IPv4 address", excludeEmptyString: true },
@@ -100,8 +94,6 @@ export const domainFormSchema = yup.object().shape({
       "Cannot start or end with a space",
       (value) => value === value?.trim(),
     ),
-
-
 
   // Updated password age validation - keep at root level for form functionality
   enable_max_password_age: yup.boolean().required(),
@@ -246,7 +238,10 @@ export const domainFormSchema = yup.object().shape({
   spam_destination: yup
     .string()
     .required("Spam destination is required")
-    .oneOf(["FOLDER", "INBOX", "TRASH", "DELETE", "SEND_DIGEST", "SPAM"], "Invalid spam destination"),
+    .oneOf(
+      ["FOLDER", "INBOX", "TRASH", "DELETE", "SEND_DIGEST", "SPAM"],
+      "Invalid spam destination",
+    ),
 
   // delete_spam: yup.boolean().required(),
 

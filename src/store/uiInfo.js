@@ -21,6 +21,11 @@ import { atomWithStorage } from "jotai/utils";
 export const uiInfoAtom = atomWithStorage("ui_info", {}, undefined, {
   getOnInit: true,
 });
-export const chatPositionAtom = atomWithStorage("ai_chat_position", null, undefined, {
-  getOnInit: true,
-});
+export const chatPositionAtom = atomWithStorage(
+  "ai_chat_position",
+  null,
+  undefined,
+  {
+    getOnInit: true,
+  },
+);

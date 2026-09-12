@@ -183,10 +183,11 @@ const Step1InitiateReset = ({
             type="text"
             id="username"
             placeholder="Enter your username"
-            className={`cosmic-input w-full rounded-lg border px-4 py-3 transition-all duration-200 ${errors.username
+            className={`cosmic-input w-full rounded-lg border px-4 py-3 transition-all duration-200 ${
+              errors.username
                 ? "border-destructive focus:border-destructive focus:ring-destructive/20"
                 : "border-border focus:border-primary focus:ring-primary/20"
-              } focus:ring-2 focus:outline-none`}
+            } focus:ring-2 focus:outline-none`}
             maxLength={100}
             {...register("username")}
           />
@@ -205,10 +206,11 @@ const Step1InitiateReset = ({
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label
-              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition-all ${verifyMethod === "email"
+              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition-all ${
+                verifyMethod === "email"
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50"
-                }`}
+              }`}
             >
               <input
                 type="radio"
@@ -232,10 +234,11 @@ const Step1InitiateReset = ({
             </label>
 
             <label
-              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition-all ${verifyMethod === "phone"
+              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition-all ${
+                verifyMethod === "phone"
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50"
-                }`}
+              }`}
             >
               <input
                 type="radio"
@@ -297,10 +300,11 @@ const Step1InitiateReset = ({
           disabled={
             initiateResetMutation.isPending || isSubmitting || !recaptchaToken
           }
-          className={`cosmic-button flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold ${initiateResetMutation.isPending || isSubmitting || !recaptchaToken
+          className={`cosmic-button flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold ${
+            initiateResetMutation.isPending || isSubmitting || !recaptchaToken
               ? "bg-primary/50 text-primary-foreground cursor-not-allowed opacity-60 disabled:scale-100 disabled:shadow-none disabled:hover:scale-100"
               : "bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-95"
-            }`}
+          }`}
         >
           {initiateResetMutation.isPending || isSubmitting ? (
             <>

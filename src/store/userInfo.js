@@ -31,11 +31,6 @@ export const selectedOrganizationAtom = atomWithStorage(
   },
 );
 
-export const parentOrgAtom = atomWithStorage(
-  "parent_org",
-  {},
-  undefined,
-  {
-    getOnInit: true,
-  },
-);
+export const parentOrgAtom = atomWithStorage("parent_org", {}, undefined, {
+  getOnInit: true,
+});

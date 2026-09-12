@@ -8,13 +8,13 @@ This page lists every distribution policy you've created, for the domain selecte
 
 ![The Distribution Policies list.](../images/policy-distribution-list.png)
 
-*The Distribution Policies list.*
+_The Distribution Policies list._
 
-| Field | What it means |
-| --- | --- |
-| Policy Name | Click it to open the policy's details. |
-| Status | Active or turned off. |
-| Distribution Type | Reserved for future use — shows N/A for now. |
+| Field                   | What it means                                                    |
+| ----------------------- | ---------------------------------------------------------------- |
+| Policy Name             | Click it to open the policy's details.                           |
+| Status                  | Active or turned off.                                            |
+| Distribution Type       | Reserved for future use — shows N/A for now.                     |
 | Created At / Updated At | When the policy was first created, and when it was last changed. |
 
 ### The Row Actions Menu
@@ -23,7 +23,7 @@ Click the ⋮ (three dots) at the end of any policy's row:
 
 ![The row actions menu on a distribution policy.](../images/policy-distribution-row-menu.png)
 
-*The row actions menu on a distribution policy.*
+_The row actions menu on a distribution policy._
 
 Edit Distribution Policy, Copy Distribution Policy and Delete Distribution Policy work the same way here as they do for General Policies — see section 8.1.
 
@@ -33,4 +33,4 @@ Click the Actions button (top right) for ways to work with distribution policies
 
 ![The Actions menu.](../images/policy-distribution-actions-menu.png)
 
-*The Actions menu.*
+_The Actions menu._

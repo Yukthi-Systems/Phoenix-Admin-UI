@@ -286,7 +286,8 @@ const SsoSession = () => {
           if (!device)
             return <span className="text-muted-foreground text-sm">N/A</span>;
 
-          const browser = device.browserName || device.browser || "Unknown Browser";
+          const browser =
+            device.browserName || device.browser || "Unknown Browser";
           const os = device.osName || device.os || "Unknown OS";
 
           return (
@@ -546,9 +547,8 @@ const SsoSession = () => {
           <div className="w-xl text-left">
             <p className="mb-3 text-lg font-medium">Are you sure?</p>
             <p className="mb-3 text-base">
-              You want to{" "}
-              {statusTarget?.nextActive ? "activate" : "deactivate"} the
-              session for{" "}
+              You want to {statusTarget?.nextActive ? "activate" : "deactivate"}{" "}
+              the session for{" "}
               <span className="text-primary font-medium">
                 {statusTarget?.email}
               </span>

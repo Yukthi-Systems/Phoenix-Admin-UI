@@ -47,9 +47,10 @@ const STEPS = [
     fields: [
       "policy_name",
       "is_active",
-      // "delete_mails", 
+      // "delete_mails",
       "white_entries",
-      "black_entries"],
+      "black_entries",
+    ],
   },
 ];
 
@@ -140,7 +141,11 @@ const EditFiltersPolicy = () => {
             exact: false,
           });
           queryClient.invalidateQueries({
-            queryKey: ["filters_policy_entry", organization_id, filters_policy_id],
+            queryKey: [
+              "filters_policy_entry",
+              organization_id,
+              filters_policy_id,
+            ],
           });
           navigate(-1);
         },
@@ -154,15 +159,20 @@ const EditFiltersPolicy = () => {
     );
   };
 
-  const isServerError = !error?.response?.status || error?.response?.status >= 500;
+  const isServerError =
+    !error?.response?.status || error?.response?.status >= 500;
 
   if (!permissions.includes("policy:filters:edit")) {
-    return <AccessDenied content="Don't have the access to edit filters policy." />;
+    return (
+      <AccessDenied content="Don't have the access to edit filters policy." />
+    );
   }
 
-  if (isError && isServerError) return <DataFechError content="Error fetching policy details." />;
+  if (isError && isServerError)
+    return <DataFechError content="Error fetching policy details." />;
   if (isLoading) return <DataLoading content="Loading policy details..." />;
-  if (isError && !isServerError) return <DataErrorWithReload content={error?.response?.data?.message} />;
+  if (isError && !isServerError)
+    return <DataErrorWithReload content={error?.response?.data?.message} />;
 
   const StepComponent = STEP_RENDERER[currentStep];
   const stepProps = {

@@ -20,7 +20,15 @@ import { Input } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 import PhoneInput from "@/components/common/PhoneInput";
 
-function IdentityDetailsStep({ register, errors, control, watch, setValue, domain_name, isEdit }) {
+function IdentityDetailsStep({
+  register,
+  errors,
+  control,
+  watch,
+  setValue,
+  domain_name,
+  isEdit,
+}) {
   const firstName = watch("first_name") || "";
   const emailPrefix = watch("email_prefix") || "";
   const isEmailTwoFAEnabled = watch("is_email_2fa_enabled");
@@ -161,7 +169,6 @@ function IdentityDetailsStep({ register, errors, control, watch, setValue, domai
           watch={watch}
           setValue={setValue}
           isRequired={true}
-      
         />
 
         {/* Secondary Email */}
@@ -172,12 +179,18 @@ function IdentityDetailsStep({ register, errors, control, watch, setValue, domai
           errors={errors}
           placeholder="recovery@example.com"
           isRequired={isEmailTwoFAEnabled}
-          info={isEmailTwoFAEnabled ? "Mandatory since Email 2FA is enabled" : "Required to enable Email 2FA"}
+          info={
+            isEmailTwoFAEnabled
+              ? "Mandatory since Email 2FA is enabled"
+              : "Required to enable Email 2FA"
+          }
         />
 
         {/* Identity Status Switch (moved to first step) */}
         <div className="md:col-span-2 border-t border-border pt-6 text-left">
-          <h4 className="text-sm font-semibold text-foreground mb-4">Identity Status</h4>
+          <h4 className="text-sm font-semibold text-foreground mb-4">
+            Identity Status
+          </h4>
           <Switch
             control={control}
             name="is_enabled"

@@ -23,7 +23,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { userProfileAtom } from "@/store/userProfile";
 import { useToastify } from "@/hooks/useToastify";
-import { useGetServer, useUpdateServer, useUpdateServerStatus } from "@/hooks/useServer";
+import {
+  useGetServer,
+  useUpdateServer,
+  useUpdateServerStatus,
+} from "@/hooks/useServer";
 import { serverDefaultValues } from "../add/serverDefaultValues";
 import { serverFormSchema } from "../add/validationSchema";
 import AccessDenied from "@/components/common/AccessDenied";
@@ -141,47 +145,58 @@ const EditServer = () => {
     await handleStepNavigation(stepNumber);
   };
 
-  const { mutate: statusUpdate, isPending: statusLoad } = useUpdateServerStatus();
-
+  const { mutate: statusUpdate, isPending: statusLoad } =
+    useUpdateServerStatus();
 
   const onSubmit = (data) => {
     data.host_name = data.host_name?.toLowerCase();
     if (data?.is_active === true && server?.is_active === false) {
-      statusUpdate({ server_id: server_id, status: data?.is_active, server_name: data?.host_name }, {
-        onSuccess: () => {
-          mutate(
-            { server_id: server_id, data: data },
-            {
-              onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["server", server_id] });
-                queryClient.invalidateQueries({ queryKey: ["servers"] });
-                toast("success", "Successfully updated server");
-                navigate(-1);
-              },
-              onError: (error) => {
-                const message =
-                  error.response?.data?.message || error.message || "Unknown error";
-                const tracebackId = error.response?.data?.traceback_id;
-                toast(
-                  "error",
-                  `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-                );
-                console.error(error);
-              },
-            },
-          );
+      statusUpdate(
+        {
+          server_id: server_id,
+          status: data?.is_active,
+          server_name: data?.host_name,
         },
-        onError: (error) => {
-          const message =
-            error.response?.data?.message || error.message || "Unknown error";
-          const tracebackId = error.response?.data?.traceback_id;
-          toast(
-            "error",
-            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-          );
-          console.error(error);
+        {
+          onSuccess: () => {
+            mutate(
+              { server_id: server_id, data: data },
+              {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: ["server", server_id],
+                  });
+                  queryClient.invalidateQueries({ queryKey: ["servers"] });
+                  toast("success", "Successfully updated server");
+                  navigate(-1);
+                },
+                onError: (error) => {
+                  const message =
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Unknown error";
+                  const tracebackId = error.response?.data?.traceback_id;
+                  toast(
+                    "error",
+                    `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+                  );
+                  console.error(error);
+                },
+              },
+            );
+          },
+          onError: (error) => {
+            const message =
+              error.response?.data?.message || error.message || "Unknown error";
+            const tracebackId = error.response?.data?.traceback_id;
+            toast(
+              "error",
+              `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+            );
+            console.error(error);
+          },
         },
-      });
+      );
     } else {
       mutate(
         { server_id: server_id, data: data },

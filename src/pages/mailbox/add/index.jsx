@@ -37,11 +37,7 @@ const STEPS = [
     id: "mailbox-info",
     label: "Mailbox Info",
     description: "Basic info",
-    fields: [
-      "email_identity",
-      "allocate_quota",
-      "enabled",
-    ],
+    fields: ["email_identity", "allocate_quota", "enabled"],
   },
   {
     id: "mail-policies",
@@ -149,22 +145,27 @@ const AddMailbox = () => {
       distribution_policy_id: formData.distribution_policy_id || null,
     };
 
-    mutate({data, addLog: true}, {
-      onSuccess: (resData) => {
-        toast("success", "Successfully added mailbox");
-        navigate(`/mailbox/${encodeURIComponent(resData?.email || formData.email_identity)}`);
+    mutate(
+      { data, addLog: true },
+      {
+        onSuccess: (resData) => {
+          toast("success", "Successfully added mailbox");
+          navigate(
+            `/mailbox/${encodeURIComponent(resData?.email || formData.email_identity)}`,
+          );
+        },
+        onError: (error) => {
+          const message =
+            error.response?.data?.message || error.message || "Unknown error";
+          const tracebackId = error.response?.data?.traceback_id;
+          toast(
+            "error",
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+          );
+          console.error(error);
+        },
       },
-      onError: (error) => {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
-        const tracebackId = error.response?.data?.traceback_id;
-        toast(
-          "error",
-          `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-        );
-        console.error(error);
-      },
-    });
+    );
   };
 
   if (!permissions.includes("mailbox:create")) {
@@ -198,11 +199,7 @@ const AddMailbox = () => {
           />
         );
       case 3:
-        return (
-          <MailboxPreview
-            formData={{ watch, domain_name }}
-          />
-        );
+        return <MailboxPreview formData={{ watch, domain_name }} />;
       default:
         return null;
     }

@@ -73,7 +73,10 @@ import {
   sidebarCollapsedAtom,
 } from "@/store/sidebar";
 import { parentOrgAtom, selectedOrganizationAtom } from "@/store/userInfo";
-import { SERVICE_KEYS, isServiceEnabledForOrg } from "@/constants/serviceAccess";
+import {
+  SERVICE_KEYS,
+  isServiceEnabledForOrg,
+} from "@/constants/serviceAccess";
 
 export const navItems = [
   {
@@ -186,7 +189,7 @@ export const navItems = [
         hasPermission: true,
         serviceName: SERVICE_KEYS.CHAT,
         permissionValue: "chat:view",
-      }
+      },
     ],
   },
   {
@@ -219,7 +222,7 @@ export const navItems = [
         hasPermission: true,
         serviceName: SERVICE_KEYS.FILE,
         permissionValue: "file:view",
-      }
+      },
     ],
   },
   {
@@ -503,7 +506,7 @@ const Aside = () => {
   const { t } = useTranslation();
   const userProfile = useAtomValue(userProfileAtom) || {};
   const parentOrg = useAtomValue(parentOrgAtom);
-  const selectedOrg = useAtomValue(selectedOrganizationAtom)
+  const selectedOrg = useAtomValue(selectedOrganizationAtom);
   const permissions = userProfile?.permissions || [];
   const location = useLocation();
 
@@ -591,22 +594,26 @@ const Aside = () => {
   };
 
   const linkClass = ({ isActive }) =>
-    `group flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${isActive
-      ? "bg-primary text-primary-foreground shadow-sm"
-      : "text-foreground hover:bg-accent"
+    `group flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+      isActive
+        ? "bg-primary text-primary-foreground shadow-sm"
+        : "text-foreground hover:bg-accent"
     } ${isCollapsed ? "justify-center px-2" : ""}`;
 
   const parentItemClass = (isExpanded, isActive) =>
-    `group flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 cursor-pointer ${isActive
-      ? "bg-primary/10 text-primary"
-      : "text-foreground hover:bg-accent"
-    } ${isCollapsed ? "justify-center px-2" : "justify-between"} ${isExpanded ? "bg-accent/60" : ""
+    `group flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 cursor-pointer ${
+      isActive
+        ? "bg-primary/10 text-primary"
+        : "text-foreground hover:bg-accent"
+    } ${isCollapsed ? "justify-center px-2" : "justify-between"} ${
+      isExpanded ? "bg-accent/60" : ""
     }`;
 
   const childLinkClass = ({ isActive }) =>
-    `group flex items-center gap-x-3 rounded-lg px-3 py-2 ml-6 text-sm font-medium transition-all duration-200 relative ${isActive
-      ? "text-primary font-semibold border-l-2 border-primary/60 bg-primary/5"
-      : "text-muted-foreground hover:text-foreground border-l-2 border-transparent hover:border-muted-foreground/30 hover:bg-accent/30"
+    `group flex items-center gap-x-3 rounded-lg px-3 py-2 ml-6 text-sm font-medium transition-all duration-200 relative ${
+      isActive
+        ? "text-primary font-semibold border-l-2 border-primary/60 bg-primary/5"
+        : "text-muted-foreground hover:text-foreground border-l-2 border-transparent hover:border-muted-foreground/30 hover:bg-accent/30"
     }`;
 
   // Fixed Position Flyout Menu
@@ -628,9 +635,10 @@ const Aside = () => {
               key={child.link}
               to={child.link}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded px-3 py-2 text-left text-sm transition-colors ${isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                `flex items-center gap-3 rounded px-3 py-2 text-left text-sm transition-colors ${
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`
               }
             >
@@ -646,8 +654,9 @@ const Aside = () => {
   return (
     <>
       <aside
-        className={`relative text-left flex h-full flex-col border-r bg-card transition-all duration-300 z-20 ${isCollapsed ? "w-16" : "w-64"
-          }`}
+        className={`relative text-left flex h-full flex-col border-r bg-card transition-all duration-300 z-20 ${
+          isCollapsed ? "w-16" : "w-64"
+        }`}
       >
         {/* Toggle Button */}
         <button
@@ -667,7 +676,7 @@ const Aside = () => {
           {navItems.map((item, index) => {
             if (item.hasChildren) {
               if (!hasVisibleChildren(item.children)) return null;
-              if (!hasServiceEnabled(item)) return null
+              if (!hasServiceEnabled(item)) return null;
 
               const isExpanded = expandedItem === item.name;
               const isActive = isItemOrChildActive(item);
@@ -703,10 +712,11 @@ const Aside = () => {
                   {/* Expanded Children (Non-collapsed) */}
                   {!isCollapsed && (
                     <div
-                      className={`space-y-1 transition-all duration-200 ${isExpanded
-                        ? "max-h-96 mt-1 opacity-100"
-                        : "max-h-0 opacity-0"
-                        }`}
+                      className={`space-y-1 transition-all duration-200 ${
+                        isExpanded
+                          ? "max-h-96 mt-1 opacity-100"
+                          : "max-h-0 opacity-0"
+                      }`}
                       style={{ overflow: isExpanded ? "visible" : "hidden" }}
                     >
                       {item.children?.map((child, childIndex) =>
@@ -755,8 +765,9 @@ const Aside = () => {
         <div className="border-t p-3 shrink-0 bg-card z-20">
           <button
             onClick={() => setShowVersionModal(true)}
-            className={`hover:bg-accent group flex w-full items-center gap-2 rounded-lg p-2 transition-all duration-200 ${isCollapsed ? "justify-center" : "justify-start"
-              }`}
+            className={`hover:bg-accent group flex w-full items-center gap-2 rounded-lg p-2 transition-all duration-200 ${
+              isCollapsed ? "justify-center" : "justify-start"
+            }`}
             title={isCollapsed ? "Build Information" : "View build information"}
           >
             <Info className="h-4 w-4 text-muted-foreground" />

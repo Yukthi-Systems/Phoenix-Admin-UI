@@ -25,7 +25,6 @@ import { APP_STORE_LINKS } from "@/constants/constants";
 
 // TODO: replace with real store listings once the app is published
 
-
 function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
   const secondaryEmail = watch("secondary_email");
   const primaryPhone = watch("primary_phone_number");
@@ -54,7 +53,9 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
           errors={errors}
           name="password"
           label={isEdit ? "New Password" : "Password"}
-          placeholder={isEdit ? "Enter new password (optional)" : "Enter secure password"}
+          placeholder={
+            isEdit ? "Enter new password (optional)" : "Enter secure password"
+          }
         />
         <Input
           type="password"
@@ -68,7 +69,9 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
       </div>
 
       <div className="border-t border-border pt-6 space-y-6 text-left">
-        <h4 className="text-sm font-semibold text-foreground">Two-Factor Authentication (2FA)</h4>
+        <h4 className="text-sm font-semibold text-foreground">
+          Two-Factor Authentication (2FA)
+        </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
@@ -129,7 +132,8 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
                 ) : (
                   <>
                     <AlertTriangle className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
-                    Add a primary phone number in the previous step for SMS 2FA to work.
+                    Add a primary phone number in the previous step for SMS 2FA
+                    to work.
                   </>
                 )}
               </p>
@@ -158,7 +162,8 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
                 ) : (
                   <>
                     <AlertTriangle className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
-                    Add a secondary email in the previous step — it's mandatory once Email 2FA is enabled.
+                    Add a secondary email in the previous step — it's mandatory
+                    once Email 2FA is enabled.
                   </>
                 )}
               </p>
@@ -169,12 +174,20 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
 
       <EditModelBox
         isOpen={!!qrModalStore}
-        label={qrModalStore === "ios" ? "Scan to download on the App Store" : "Scan to get it on Google Play"}
+        label={
+          qrModalStore === "ios"
+            ? "Scan to download on the App Store"
+            : "Scan to get it on Google Play"
+        }
         handleCancel={() => setQrModalStore(null)}
       >
         <div className="flex flex-col items-center gap-4 p-2">
           <QRCodeSVG
-            value={qrModalStore === "ios" ? APP_STORE_LINKS.ios : APP_STORE_LINKS.android}
+            value={
+              qrModalStore === "ios"
+                ? APP_STORE_LINKS.ios
+                : APP_STORE_LINKS.android
+            }
             size={200}
             bgColor="#ffffff"
             fgColor="#000000"
@@ -182,7 +195,9 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
             includeMargin
           />
           <p className="text-muted-foreground text-center text-xs break-all">
-            {qrModalStore === "ios" ? APP_STORE_LINKS.ios : APP_STORE_LINKS.android}
+            {qrModalStore === "ios"
+              ? APP_STORE_LINKS.ios
+              : APP_STORE_LINKS.android}
           </p>
         </div>
       </EditModelBox>

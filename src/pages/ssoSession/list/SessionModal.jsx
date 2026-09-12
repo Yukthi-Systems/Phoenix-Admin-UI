@@ -45,9 +45,13 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
   const deviceDetails = session.device_details || {};
 
   // Parse details
-  const browserName = deviceDetails.browser || deviceDetails.browserName || "Unknown Browser";
+  const browserName =
+    deviceDetails.browser || deviceDetails.browserName || "Unknown Browser";
   const osName = deviceDetails.os || deviceDetails.osName || "Unknown OS";
-  const deviceType = deviceDetails.deviceType || deviceDetails.device || (deviceDetails.isMobile ? "Mobile" : "Desktop/Web");
+  const deviceType =
+    deviceDetails.deviceType ||
+    deviceDetails.device ||
+    (deviceDetails.isMobile ? "Mobile" : "Desktop/Web");
   const ipAddress = deviceDetails.ip || "N/A";
 
   const handleCopy = (text, fieldName) => {
@@ -64,7 +68,13 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
     { id: "security_features", label: "Security & Features", icon: Shield },
   ];
 
-  const DetailRow = ({ label, value, isMonospace = false, isCopyable = false, copyText = "" }) => {
+  const DetailRow = ({
+    label,
+    value,
+    isMonospace = false,
+    isCopyable = false,
+    copyText = "",
+  }) => {
     let displayValue = "N/A";
     if (value !== undefined && value !== null && value !== "") {
       if (typeof value === "boolean") {
@@ -78,7 +88,9 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
       <div className="flex items-center justify-between py-2 border-b border-border/40 last:border-0 hover:bg-muted/10 px-2 rounded-md transition-colors">
         <p className="text-muted-foreground text-xs font-medium">{label}</p>
         <div className="flex items-center gap-2 max-w-[70%]">
-          <p className={`text-foreground text-sm font-semibold truncate ${isMonospace ? "font-mono text-xs" : ""}`}>
+          <p
+            className={`text-foreground text-sm font-semibold truncate ${isMonospace ? "font-mono text-xs" : ""}`}
+          >
             {displayValue}
           </p>
           {isCopyable && displayValue !== "N/A" && (
@@ -169,9 +181,20 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
 
                 {/* Session Card */}
                 <SectionCard title="Session Timestamps" icon={Clock}>
-                  <DetailRow label="Session ID" value={session.session_id} isMonospace isCopyable />
-                  <DetailRow label="Created At" value={formatUserDateNice(session.created_at)} />
-                  <DetailRow label="Last Authenticated At" value={formatUserDateNice(session.last_auth_at)} />
+                  <DetailRow
+                    label="Session ID"
+                    value={session.session_id}
+                    isMonospace
+                    isCopyable
+                  />
+                  <DetailRow
+                    label="Created At"
+                    value={formatUserDateNice(session.created_at)}
+                  />
+                  <DetailRow
+                    label="Last Authenticated At"
+                    value={formatUserDateNice(session.last_auth_at)}
+                  />
                 </SectionCard>
               </div>
 
@@ -210,23 +233,55 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
                 <SectionCard title="Browser Engine" icon={Globe}>
                   <DetailRow label="Vendor" value={deviceDetails.vendor} />
                   <DetailRow label="Product" value={deviceDetails.product} />
-                  <DetailRow label="Product Sub" value={deviceDetails.productSub} />
+                  <DetailRow
+                    label="Product Sub"
+                    value={deviceDetails.productSub}
+                  />
                 </SectionCard>
 
                 <SectionCard title="Hardware Specifications" icon={Cpu}>
                   <DetailRow label="Platform" value={deviceDetails.platform} />
-                  <DetailRow label="Device Memory" value={deviceDetails.deviceMemory ? `${deviceDetails.deviceMemory} GB` : null} />
-                  <DetailRow label="CPU Cores" value={deviceDetails.hardwareConcurrency} />
-                  <DetailRow label="Max Touch Points" value={deviceDetails.maxTouchPoints} />
+                  <DetailRow
+                    label="Device Memory"
+                    value={
+                      deviceDetails.deviceMemory
+                        ? `${deviceDetails.deviceMemory} GB`
+                        : null
+                    }
+                  />
+                  <DetailRow
+                    label="CPU Cores"
+                    value={deviceDetails.hardwareConcurrency}
+                  />
+                  <DetailRow
+                    label="Max Touch Points"
+                    value={deviceDetails.maxTouchPoints}
+                  />
                 </SectionCard>
               </div>
 
               <div className="space-y-5">
                 <SectionCard title="Display & Screen" icon={Laptop}>
-                  <DetailRow label="Screen Resolution" value={deviceDetails.screenResolution} />
-                  <DetailRow label="Viewport Resolution" value={deviceDetails.viewportResolution} />
-                  <DetailRow label="Pixel Ratio" value={deviceDetails.pixelRatio} />
-                  <DetailRow label="Color Depth" value={deviceDetails.colorDepth ? `${deviceDetails.colorDepth}-bit` : null} />
+                  <DetailRow
+                    label="Screen Resolution"
+                    value={deviceDetails.screenResolution}
+                  />
+                  <DetailRow
+                    label="Viewport Resolution"
+                    value={deviceDetails.viewportResolution}
+                  />
+                  <DetailRow
+                    label="Pixel Ratio"
+                    value={deviceDetails.pixelRatio}
+                  />
+                  <DetailRow
+                    label="Color Depth"
+                    value={
+                      deviceDetails.colorDepth
+                        ? `${deviceDetails.colorDepth}-bit`
+                        : null
+                    }
+                  />
                 </SectionCard>
               </div>
             </div>
@@ -235,15 +290,32 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
           {activeTab === "locale_network" && (
             <div className="grid grid-cols-2 gap-8">
               <SectionCard title="Network Details" icon={Network}>
-                <DetailRow label="IP Address" value={deviceDetails.ip} isCopyable />
-                <DetailRow label="Connection Type" value={deviceDetails.connectionType} />
+                <DetailRow
+                  label="IP Address"
+                  value={deviceDetails.ip}
+                  isCopyable
+                />
+                <DetailRow
+                  label="Connection Type"
+                  value={deviceDetails.connectionType}
+                />
               </SectionCard>
 
               <SectionCard title="Locale & Timezone" icon={Activity}>
                 <DetailRow label="Language" value={deviceDetails.language} />
-                <DetailRow label="Accept Language" value={deviceDetails.acceptLanguage} />
+                <DetailRow
+                  label="Accept Language"
+                  value={deviceDetails.acceptLanguage}
+                />
                 <DetailRow label="Time Zone" value={deviceDetails.timeZone} />
-                <DetailRow label="Timezone Offset" value={deviceDetails.timezoneOffset ? `${deviceDetails.timezoneOffset} min` : null} />
+                <DetailRow
+                  label="Timezone Offset"
+                  value={
+                    deviceDetails.timezoneOffset
+                      ? `${deviceDetails.timezoneOffset} min`
+                      : null
+                  }
+                />
               </SectionCard>
             </div>
           )}
@@ -252,19 +324,49 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
             <div className="space-y-5">
               <div className="grid grid-cols-2 gap-8">
                 <SectionCard title="Browser Capabilities" icon={Shield}>
-                  <DetailRow label="Cookie Enabled" value={deviceDetails.cookieEnabled} />
-                  <DetailRow label="Local Storage" value={deviceDetails.localStorageEnabled} />
-                  <DetailRow label="Session Storage" value={deviceDetails.sessionStorageEnabled} />
-                  <DetailRow label="Java Enabled" value={deviceDetails.javaEnabled} />
-                  <DetailRow label="PDF Viewer Enabled" value={deviceDetails.pdfViewerEnabled} />
-                  <DetailRow label="Webdriver (Automated)" value={deviceDetails.webdriver} />
-                  <DetailRow label="Do Not Track" value={deviceDetails.doNotTrack} />
+                  <DetailRow
+                    label="Cookie Enabled"
+                    value={deviceDetails.cookieEnabled}
+                  />
+                  <DetailRow
+                    label="Local Storage"
+                    value={deviceDetails.localStorageEnabled}
+                  />
+                  <DetailRow
+                    label="Session Storage"
+                    value={deviceDetails.sessionStorageEnabled}
+                  />
+                  <DetailRow
+                    label="Java Enabled"
+                    value={deviceDetails.javaEnabled}
+                  />
+                  <DetailRow
+                    label="PDF Viewer Enabled"
+                    value={deviceDetails.pdfViewerEnabled}
+                  />
+                  <DetailRow
+                    label="Webdriver (Automated)"
+                    value={deviceDetails.webdriver}
+                  />
+                  <DetailRow
+                    label="Do Not Track"
+                    value={deviceDetails.doNotTrack}
+                  />
                 </SectionCard>
 
                 <SectionCard title="Client Hints (sec-ch-ua)" icon={Laptop}>
-                  <DetailRow label="Browser Brand Hints" value={deviceDetails.secChUa} />
-                  <DetailRow label="Mobile Device Hint" value={deviceDetails.secChUaMobile} />
-                  <DetailRow label="Platform Hint" value={deviceDetails.secChUaPlatform} />
+                  <DetailRow
+                    label="Browser Brand Hints"
+                    value={deviceDetails.secChUa}
+                  />
+                  <DetailRow
+                    label="Mobile Device Hint"
+                    value={deviceDetails.secChUaMobile}
+                  />
+                  <DetailRow
+                    label="Platform Hint"
+                    value={deviceDetails.secChUaPlatform}
+                  />
                 </SectionCard>
               </div>
 
@@ -276,7 +378,9 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
                     User Agent & App Version
                   </h5>
                   <button
-                    onClick={() => handleCopy(deviceDetails.userAgent || "", "User Agent")}
+                    onClick={() =>
+                      handleCopy(deviceDetails.userAgent || "", "User Agent")
+                    }
                     className="text-xs flex items-center gap-1.5 text-muted-foreground hover:text-foreground px-2 py-1 bg-muted/40 rounded transition-colors"
                   >
                     {copiedField === "User Agent" ? (
@@ -294,14 +398,18 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">User Agent String</p>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
+                      User Agent String
+                    </p>
                     <pre className="bg-background/80 border border-border/40 text-muted-foreground p-3 rounded-lg text-[11px] font-mono whitespace-pre-wrap break-all leading-normal">
                       {deviceDetails.userAgent || "N/A"}
                     </pre>
                   </div>
                   {deviceDetails.appVersion && (
                     <div>
-                      <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">App Version String</p>
+                      <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1">
+                        App Version String
+                      </p>
                       <pre className="bg-background/80 border border-border/40 text-muted-foreground p-3 rounded-lg text-[11px] font-mono whitespace-pre-wrap break-all leading-normal">
                         {deviceDetails.appVersion}
                       </pre>
@@ -318,4 +426,3 @@ const SsoSessionDetailsModal = ({ isOpen, handleClose, session }) => {
 };
 
 export default SsoSessionDetailsModal;
-

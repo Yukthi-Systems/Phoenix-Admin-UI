@@ -59,7 +59,9 @@ const AssignTicketModal = ({
             </div>
             <div>
               <h2 className="text-lg font-semibold text-foreground">
-                {ticket?.assigned_to?.length > 0 ? "Reassign Ticket" : "Assign Ticket"}
+                {ticket?.assigned_to?.length > 0
+                  ? "Reassign Ticket"
+                  : "Assign Ticket"}
               </h2>
               <p className="text-sm text-muted-foreground">
                 Ticket #{ticket?.ticket_id}
@@ -92,7 +94,8 @@ const AssignTicketModal = ({
                     Currently Assigned To
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {ticket.assigned_to.length} user{ticket.assigned_to.length !== 1 ? 's' : ''}
+                    {ticket.assigned_to.length} user
+                    {ticket.assigned_to.length !== 1 ? "s" : ""}
                   </p>
                 </div>
               )}
@@ -134,7 +137,9 @@ const AssignTicketModal = ({
             </button>
             <button
               type="submit"
-              disabled={isPending || !selectedUsers || selectedUsers.length === 0}
+              disabled={
+                isPending || !selectedUsers || selectedUsers.length === 0
+              }
               className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isPending ? (
@@ -145,7 +150,9 @@ const AssignTicketModal = ({
               ) : (
                 <>
                   <UserPlus className="h-4 w-4" />
-                  <span>{ticket?.assigned_to?.length > 0 ? "Reassign" : "Assign"}</span>
+                  <span>
+                    {ticket?.assigned_to?.length > 0 ? "Reassign" : "Assign"}
+                  </span>
                 </>
               )}
             </button>

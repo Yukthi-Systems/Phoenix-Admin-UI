@@ -74,7 +74,7 @@ const InfoItem = ({ label, value, sublabel, link }) => {
       <span className="text-sm text-muted-foreground min-w-0 flex-1 text-left pt-0.5">
         {label}:
       </span>
-      
+
       <div className="flex flex-col items-end min-w-0 flex-1">
         {link ? (
           <button
@@ -91,7 +91,7 @@ const InfoItem = ({ label, value, sublabel, link }) => {
             {value}
           </span>
         )}
-        
+
         {sublabel && (
           <span className="text-xs text-muted-foreground mt-1 text-right">
             {sublabel}

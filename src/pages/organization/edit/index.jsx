@@ -159,7 +159,10 @@ const EditOrganization = () => {
   });
 
   const validateStep = async (stepNumber) => {
-    const fieldsToValidate = getRequiredFieldsForStep(filteredSteps, stepNumber);
+    const fieldsToValidate = getRequiredFieldsForStep(
+      filteredSteps,
+      stepNumber,
+    );
     const stepId = filteredSteps[stepNumber - 1]?.id;
 
     if (stepId === "branches" && branchKeys.length === 0) {
@@ -205,7 +208,7 @@ const EditOrganization = () => {
   const handleParentOrgSelect = (organization) => {
     let size =
       Number(organization?.quota_allocated) -
-      Number(organization?.quota_utilized) || 10000000;
+        Number(organization?.quota_utilized) || 10000000;
     setParentOrg({
       id: organization.organization_id,
       name: organization.organization_name,
@@ -319,9 +322,12 @@ const EditOrganization = () => {
         name: organization_details?.organization_name || "",
         parent_organization_id:
           organization_details?.parent_organization_id || "",
-        email_service_enabled: organization_details?.email_service_enabled ?? false,
-        chat_service_enabled: organization_details?.chat_service_enabled ?? false,
-        file_service_enabled: organization_details?.file_service_enabled ?? false,
+        email_service_enabled:
+          organization_details?.email_service_enabled ?? false,
+        chat_service_enabled:
+          organization_details?.chat_service_enabled ?? false,
+        file_service_enabled:
+          organization_details?.file_service_enabled ?? false,
       });
       setOrgName(organization_details?.organization_name || "");
       if (organization_details?.details?.branches) {

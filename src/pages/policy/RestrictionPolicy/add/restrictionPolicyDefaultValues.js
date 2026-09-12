@@ -21,5 +21,5 @@ export const restrictionPolicyDefaultValues = {
   ip_restrictions: [],
   is_active: true,
   policy_description: "",
-  policy_name: ""
-}
+  policy_name: "",
+};

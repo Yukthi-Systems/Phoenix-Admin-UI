@@ -29,7 +29,7 @@ export const useFollowUpLogic = (
   organizationId,
   ticketId,
   userProfile,
-  additionalInfo = "Sent via UI"
+  additionalInfo = "Sent via UI",
 ) => {
   const queryClient = useQueryClient();
   const [message, setMessage] = useState("");
@@ -117,7 +117,7 @@ export const useFollowUpLogic = (
             file_name: file.name,
             file_size_mb: Math.max(
               parseFloat((file.size / (1024 * 1024)).toFixed(2)),
-              0.1
+              0.1,
             ),
             file_type: file.type,
             uploaded_at: new Date().toISOString(),
@@ -156,7 +156,7 @@ export const useFollowUpLogic = (
         onError: (err) => {
           toast.error(err.message || "Failed to send message");
         },
-      }
+      },
     );
   };
 

@@ -41,6 +41,6 @@ export const useListImapSyncJobs = (domain_name, page, limit) => {
     queryKey: ["imap-sync-jobs", domain_name, page, limit],
     queryFn: () => listImapSyncJobs(domain_name, page, limit),
     enabled: !!domain_name,
-    keepPreviousData: true, 
+    keepPreviousData: true,
   });
 };

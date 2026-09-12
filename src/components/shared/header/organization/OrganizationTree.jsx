@@ -70,11 +70,11 @@ const OrganizationSelector = ({
   const [, setUserInfo] = useAtom(userInfoAtom);
 
   // ✅ Replaced manual Atom/Query logic with useSyncedUiInfo
-  const { 
-    uiInfo, 
-    updateUiInfo, 
-    isLoading: isLoadingUiInfo, 
-    isSaving: isSavingUiInfo 
+  const {
+    uiInfo,
+    updateUiInfo,
+    isLoading: isLoadingUiInfo,
+    isSaving: isSavingUiInfo,
   } = useSyncedUiInfo();
 
   const { data, isLoading, isError } = useGetOrganizations(
@@ -103,7 +103,9 @@ const OrganizationSelector = ({
     );
 
   const { data: storedOrgDetails, isLoading: isLoadingStoredOrg } =
-    useGetOrganizationDetail(needsStoredOrgLookup ? storedSelectionOrgId : null);
+    useGetOrganizationDetail(
+      needsStoredOrgLookup ? storedSelectionOrgId : null,
+    );
 
   // Helper to safely get stored data from the hook
   const getStoredOrgSelection = () => {
@@ -146,22 +148,28 @@ const OrganizationSelector = ({
       {
         localOnly: skipApiCall,
         onError: (error) => {
-          console.error(`Failed to save organization selection for key: ${uiInfoKey}`, error);
+          console.error(
+            `Failed to save organization selection for key: ${uiInfoKey}`,
+            error,
+          );
         },
-      }
+      },
     );
   };
 
   // ✅ Clear Function with Deep Merge Logic
   const clearInvalidStoredSelection = () => {
     const currentSelectorState = uiInfo?.organizationSelector || {};
-    
-    updateUiInfo({
-      organizationSelector: {
-        ...currentSelectorState,
-        [uiInfoKey]: null,
+
+    updateUiInfo(
+      {
+        organizationSelector: {
+          ...currentSelectorState,
+          [uiInfoKey]: null,
+        },
       },
-    }, { localOnly: true }); // Usually local clean up is sufficient
+      { localOnly: true },
+    ); // Usually local clean up is sufficient
   };
 
   const isOrganizationAccessible = (orgId) => {
@@ -189,8 +197,10 @@ const OrganizationSelector = ({
         is_active: profileOrgDetails.is_active,
         quota_allocated: profileOrgDetails.quota_allocated || 0,
         quota_utilized: profileOrgDetails.quota_utilized || 0,
-        allocated_email_identities: profileOrgDetails.allocated_email_identities ?? 0,
-        utilized_email_identities: profileOrgDetails.utilized_email_identities ?? 0,
+        allocated_email_identities:
+          profileOrgDetails.allocated_email_identities ?? 0,
+        utilized_email_identities:
+          profileOrgDetails.utilized_email_identities ?? 0,
         chat_service_enabled: profileOrgDetails.chat_service_enabled ?? false,
         email_service_enabled: profileOrgDetails.email_service_enabled ?? false,
       };
@@ -233,7 +243,9 @@ const OrganizationSelector = ({
         const storedOrgSelection = getStoredOrgSelection();
 
         if (storedOrgSelection) {
-          const isAccessible = isOrganizationAccessible(storedOrgSelection.organization_id);
+          const isAccessible = isOrganizationAccessible(
+            storedOrgSelection.organization_id,
+          );
 
           if (isAccessible) {
             // The stored selection only carries the org's identity (see
@@ -245,30 +257,42 @@ const OrganizationSelector = ({
 
             if (
               profileOrgDetails &&
-              profileOrgDetails.organization_id === storedOrgSelection.organization_id
+              profileOrgDetails.organization_id ===
+                storedOrgSelection.organization_id
             ) {
               completeOrgData = { ...storedOrgSelection, ...profileOrgDetails };
             } else {
               const foundInChildren = data?.organizations?.find(
-                (org) => org.organization_id === storedOrgSelection.organization_id,
+                (org) =>
+                  org.organization_id === storedOrgSelection.organization_id,
               );
               if (foundInChildren) {
                 completeOrgData = { ...storedOrgSelection, ...foundInChildren };
               } else if (
                 storedOrgDetails &&
-                storedOrgDetails.organization_id === storedOrgSelection.organization_id
+                storedOrgDetails.organization_id ===
+                  storedOrgSelection.organization_id
               ) {
-                completeOrgData = { ...storedOrgSelection, ...storedOrgDetails };
+                completeOrgData = {
+                  ...storedOrgSelection,
+                  ...storedOrgDetails,
+                };
               }
             }
 
             if (completeOrgData) {
-              completeOrgData.quota_allocated = completeOrgData.quota_allocated || 0;
-              completeOrgData.quota_utilized = completeOrgData.quota_utilized || 0;
-              completeOrgData.allocated_email_identities = completeOrgData.allocated_email_identities ?? 0;
-              completeOrgData.utilized_email_identities = completeOrgData.utilized_email_identities ?? 0;
-              completeOrgData.chat_service_enabled = completeOrgData.chat_service_enabled ?? false;
-              completeOrgData.email_service_enabled = completeOrgData.email_service_enabled ?? false;
+              completeOrgData.quota_allocated =
+                completeOrgData.quota_allocated || 0;
+              completeOrgData.quota_utilized =
+                completeOrgData.quota_utilized || 0;
+              completeOrgData.allocated_email_identities =
+                completeOrgData.allocated_email_identities ?? 0;
+              completeOrgData.utilized_email_identities =
+                completeOrgData.utilized_email_identities ?? 0;
+              completeOrgData.chat_service_enabled =
+                completeOrgData.chat_service_enabled ?? false;
+              completeOrgData.email_service_enabled =
+                completeOrgData.email_service_enabled ?? false;
 
               updateUserInfoAtom(completeOrgData);
               if (onSelect) onSelect(completeOrgData);
@@ -283,7 +307,7 @@ const OrganizationSelector = ({
           } else {
             // Stored ID is not accessible anymore
             clearInvalidStoredSelection();
-            
+
             // Proceed to fallback
             const fallbackOrg = getFallbackOrganization();
             if (fallbackOrg) {
@@ -334,7 +358,7 @@ const OrganizationSelector = ({
         }
       }
     }
-    
+
     setIsInitialized(true);
   }, [
     isLoadingUiInfo,
@@ -357,7 +381,12 @@ const OrganizationSelector = ({
     if (profileOrgDetails && profile?.organization_id && !selectedOrg) {
       setSelectedOrg(profileOrgDetails);
     }
-  }, [profileOrgDetails, profile?.organization_id, selectedOrg, setSelectedOrg]);
+  }, [
+    profileOrgDetails,
+    profile?.organization_id,
+    selectedOrg,
+    setSelectedOrg,
+  ]);
 
   const totalPages = data?.total_pages ?? 1;
   const currentPage = pagination.pageIndex + 1;
@@ -377,22 +406,30 @@ const OrganizationSelector = ({
           ...organization,
           quota_allocated: profileOrgDetails.quota_allocated || 0,
           quota_utilized: profileOrgDetails.quota_utilized || 0,
-          allocated_email_identities: profileOrgDetails.allocated_email_identities ?? 0,
-          utilized_email_identities: profileOrgDetails.utilized_email_identities ?? 0,
+          allocated_email_identities:
+            profileOrgDetails.allocated_email_identities ?? 0,
+          utilized_email_identities:
+            profileOrgDetails.utilized_email_identities ?? 0,
           created_at: profileOrgDetails.created_at,
           is_active: profileOrgDetails.is_active,
           chat_service_enabled: profileOrgDetails.chat_service_enabled ?? false,
-          email_service_enabled: profileOrgDetails.email_service_enabled ?? false,
+          email_service_enabled:
+            profileOrgDetails.email_service_enabled ?? false,
         };
       } else {
         completeOrgData = {
           ...organization,
           quota_allocated: organization.quota_allocated || 0,
           quota_utilized: organization.quota_utilized || 0,
-          allocated_email_identities: organization.allocated_email_identities ?? 0,
-          utilized_email_identities: organization.utilized_email_identities ?? 0,
+          allocated_email_identities:
+            organization.allocated_email_identities ?? 0,
+          utilized_email_identities:
+            organization.utilized_email_identities ?? 0,
           created_at: organization.created_at,
-          is_active: organization.is_active !== undefined ? organization.is_active : true,
+          is_active:
+            organization.is_active !== undefined
+              ? organization.is_active
+              : true,
           chat_service_enabled: organization.chat_service_enabled ?? false,
           email_service_enabled: organization.email_service_enabled ?? false,
         };
@@ -432,7 +469,11 @@ const OrganizationSelector = ({
     setExpandedOrgs(new Set());
   };
 
-  const ParentOrganizationItem = ({ organization, selectedOrgId, onSelect }) => {
+  const ParentOrganizationItem = ({
+    organization,
+    selectedOrgId,
+    onSelect,
+  }) => {
     const isSelected = selectedOrgId === organization.organization_id;
 
     return (
@@ -499,7 +540,10 @@ const OrganizationSelector = ({
 
   const organizationsToDisplay = useMemo(() => {
     const orgs = [];
-    if (profileOrgDetails && profileOrgDetails.organization_id !== excludeOrgId) {
+    if (
+      profileOrgDetails &&
+      profileOrgDetails.organization_id !== excludeOrgId
+    ) {
       orgs.push({
         ...profileOrgDetails,
         isParentOrg: true,
@@ -512,20 +556,25 @@ const OrganizationSelector = ({
   const displayName = useMemo(() => {
     if (isLoading && !data && !profileOrgDetails) return "Loading...";
     if (isError && !data && !profileOrgDetails) return "Error loading";
-    
+
     // Check saveToUiInfo logic if no explicit selectedOrgName provided
     if (saveToUiInfo && !selectedOrgName) {
-        const stored = getStoredOrgSelection();
-        if (stored?.organization_name) return stored.organization_name;
+      const stored = getStoredOrgSelection();
+      if (stored?.organization_name) return stored.organization_name;
     }
 
     if (selectedOrgName) return selectedOrgName;
-    
-    if (profileOrgDetails && profileOrgDetails.organization_id === selectedOrgId) {
-        return profileOrgDetails.organization_name;
+
+    if (
+      profileOrgDetails &&
+      profileOrgDetails.organization_id === selectedOrgId
+    ) {
+      return profileOrgDetails.organization_name;
     }
 
-    const foundOrg = data?.organizations?.find(o => o.organization_id === selectedOrgId);
+    const foundOrg = data?.organizations?.find(
+      (o) => o.organization_id === selectedOrgId,
+    );
     if (foundOrg) return foundOrg.organization_name;
 
     return placeholder;
@@ -537,7 +586,7 @@ const OrganizationSelector = ({
     isError,
     placeholder,
     profileOrgDetails,
-    uiInfo // Added dependency on hook state
+    uiInfo, // Added dependency on hook state
   ]);
 
   const effectiveSelectedOrgId = useMemo(() => {
@@ -566,7 +615,10 @@ const OrganizationSelector = ({
     return (
       <div className="border-border bg-muted/10 flex items-center justify-between border-t p-3">
         <div className="flex items-center gap-2">
-          <label htmlFor="pageSize" className="text-muted-foreground text-xs font-medium">
+          <label
+            htmlFor="pageSize"
+            className="text-muted-foreground text-xs font-medium"
+          >
             Per page:
           </label>
           <select
@@ -728,7 +780,9 @@ const OrganizationSelector = ({
               <div className="flex items-center gap-2">
                 <Building2 className="text-primary h-5 w-5" />
                 <h2 className="text-card-foreground text-lg font-semibold">
-                  {excludeOrgId ? "Select Parent Organization" : "Select Organization"}
+                  {excludeOrgId
+                    ? "Select Parent Organization"
+                    : "Select Organization"}
                 </h2>
               </div>
               <button
@@ -752,7 +806,8 @@ const OrganizationSelector = ({
                 <div className="text-destructive flex items-center justify-center py-8">
                   <span>Failed to load organizations</span>
                 </div>
-              ) : !organizationsToDisplay || organizationsToDisplay.length === 0 ? (
+              ) : !organizationsToDisplay ||
+                organizationsToDisplay.length === 0 ? (
                 <div className="text-muted-foreground flex items-center justify-center py-8">
                   <span>No organizations available</span>
                 </div>
@@ -802,7 +857,9 @@ const OrganizationSelector = ({
                     return storedOrgSelection ? (
                       <span>
                         Last selected:{" "}
-                        {new Date(storedOrgSelection.selectedAt).toLocaleDateString()}
+                        {new Date(
+                          storedOrgSelection.selectedAt,
+                        ).toLocaleDateString()}
                       </span>
                     ) : (
                       <span>No previous selection</span>

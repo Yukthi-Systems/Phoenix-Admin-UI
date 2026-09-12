@@ -136,7 +136,9 @@ const QuotaAllocationModal = ({
               <div className="bg-muted/30 p-2.5 rounded border space-y-1.5">
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">Allocated</span>
-                  <span className="font-medium">{currentDomainAllocation} GB</span>
+                  <span className="font-medium">
+                    {currentDomainAllocation} GB
+                  </span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">In Use</span>
@@ -147,7 +149,10 @@ const QuotaAllocationModal = ({
                 <div className="flex justify-between text-xs pt-1 border-t">
                   <span className="text-muted-foreground">Free</span>
                   <span className="font-semibold">
-                    {(currentDomainAllocation - currentUtilizedSpace).toFixed(2)} GB
+                    {(currentDomainAllocation - currentUtilizedSpace).toFixed(
+                      2,
+                    )}{" "}
+                    GB
                   </span>
                 </div>
               </div>
@@ -186,7 +191,9 @@ const QuotaAllocationModal = ({
                       : "border-border focus:ring-primary/20"
                   }`}
                 />
-                <span className="text-sm font-medium text-muted-foreground">GB</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  GB
+                </span>
               </div>
             </div>
 
@@ -201,10 +208,16 @@ const QuotaAllocationModal = ({
 
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>
-                Min: <span className="font-medium text-destructive">{minValue} GB</span>
+                Min:{" "}
+                <span className="font-medium text-destructive">
+                  {minValue} GB
+                </span>
               </span>
               <span>
-                Max: <span className="font-medium text-success">{maxValue.toFixed(2)} GB</span>
+                Max:{" "}
+                <span className="font-medium text-success">
+                  {maxValue.toFixed(2)} GB
+                </span>
               </span>
             </div>
 
@@ -215,8 +228,6 @@ const QuotaAllocationModal = ({
               </div>
             )}
           </div>
-
-        
 
           {/* Action Buttons */}
           <div className="flex justify-end items-center gap-3 pt-2 border-t m-1">

@@ -68,7 +68,10 @@ export function useUpdateCaution() {
 export function useDeleteCaution() {
   return useMutation({
     mutationKey: ["delete_caution"],
-    mutationFn: async ({ organization_id, caution_id, caution_name = "Unknown" }) =>
-      deleteCaution(organization_id, caution_id, caution_name),
+    mutationFn: async ({
+      organization_id,
+      caution_id,
+      caution_name = "Unknown",
+    }) => deleteCaution(organization_id, caution_id, caution_name),
   });
 }

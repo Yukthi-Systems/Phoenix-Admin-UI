@@ -66,8 +66,9 @@ function PreferenceToggleRow({
 }) {
   return (
     <div
-      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
-        }`}
+      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${
+        disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
+      }`}
     >
       <div className="flex items-start gap-4">
         <div
@@ -116,8 +117,9 @@ function PreferenceToggleRow({
 function FileSizeLimitRow({ value, onValueChange, disabled }) {
   return (
     <div
-      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
-        }`}
+      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${
+        disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
+      }`}
     >
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500">
@@ -158,12 +160,20 @@ function FileSizeLimitRow({ value, onValueChange, disabled }) {
 // ---------------------------------------------------------------------------
 // Quota row
 // ---------------------------------------------------------------------------
-function QuotaRow({ value, onValueChange, onUpdate, isUpdating, disabled, isQuotaChanged }) {
+function QuotaRow({
+  value,
+  onValueChange,
+  onUpdate,
+  isUpdating,
+  disabled,
+  isQuotaChanged,
+}) {
   const parentOrg = useAtomValue(parentOrgAtom);
   return (
     <div
-      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
-        }`}
+      className={`flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-5 transition-all duration-200 ${
+        disabled ? "opacity-60" : "hover:border-primary/30 hover:shadow-sm"
+      }`}
     >
       <div className="flex items-start gap-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-500">
@@ -193,16 +203,19 @@ function QuotaRow({ value, onValueChange, onUpdate, isUpdating, disabled, isQuot
                 outline-none ring-0 transition-colors
                 focus:border-primary focus:ring-2 focus:ring-primary/20
                 ${disabled ? "cursor-not-allowed opacity-50" : ""}
-                ${value > (parentOrg?.available_size || 0)
-                  ? "border-destructive text-destructive focus:border-destructive focus:ring-destructive/20"
-                  : ""
+                ${
+                  value > (parentOrg?.available_size || 0)
+                    ? "border-destructive text-destructive focus:border-destructive focus:ring-destructive/20"
+                    : ""
                 }`}
             />
             <span className="text-sm text-muted-foreground">GB</span>
           </div>
           <button
             onClick={onUpdate}
-            disabled={disabled || isUpdating || value > (parentOrg?.available_size || 0)}
+            disabled={
+              disabled || isUpdating || value > (parentOrg?.available_size || 0)
+            }
             className={`rounded-lg px-4 py-1.5 text-xs font-medium shadow transition-all disabled:opacity-50 ${
               isQuotaChanged
                 ? "bg-primary text-primary-foreground hover:bg-primary/90 ring-2 ring-primary ring-offset-1"
@@ -228,10 +241,11 @@ function QuotaRow({ value, onValueChange, onUpdate, isUpdating, disabled, isQuot
 function StatusPill({ label, active }) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${active
-        ? "bg-success/15 text-success"
-        : "bg-destructive/15 text-destructive"
-        }`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
+        active
+          ? "bg-success/15 text-success"
+          : "bg-destructive/15 text-destructive"
+      }`}
     >
       <span
         className={`h-1.5 w-1.5 rounded-full ${active ? "bg-success" : "bg-destructive"}`}
@@ -251,9 +265,16 @@ export default function ChatPreferencePage() {
   const organization_id = selectedOrg?.organization_id;
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
 
-  const { data: config, isLoading, refetch, isError } = useGetChatConfig(organization_id);
-  const { mutateAsync: updateConfig, isPending: isSaving } = useUpdateChatConfig();
-  const { mutateAsync: updateQuota, isPending: isUpdatingQuota } = useUpdateChatQuota();
+  const {
+    data: config,
+    isLoading,
+    refetch,
+    isError,
+  } = useGetChatConfig(organization_id);
+  const { mutateAsync: updateConfig, isPending: isSaving } =
+    useUpdateChatConfig();
+  const { mutateAsync: updateQuota, isPending: isUpdatingQuota } =
+    useUpdateChatQuota();
 
   // Working copy — what the user is currently editing
   const [prefs, setPrefs] = useState({
@@ -348,8 +369,11 @@ export default function ChatPreferencePage() {
     }
   };
 
-
-  if (!permissions.includes("chat:view") && !parentOrg?.chat_service_enabled && !selectedOrg?.chat_service_enabled) {
+  if (
+    !permissions.includes("chat:view") &&
+    !parentOrg?.chat_service_enabled &&
+    !selectedOrg?.chat_service_enabled
+  ) {
     return (
       <AccessDenied content="Don't have the access to list the Chat Preference." />
     );
@@ -359,14 +383,16 @@ export default function ChatPreferencePage() {
     <div className="flex h-full w-full flex-col px-2 text-left">
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="mb-4 flex w-full items-center justify-between gap-4">
-        <Breadcrumbs
-          items={[{ name: "Chat" }, { name: "Chat Preference" }]}
-        />
+        <Breadcrumbs items={[{ name: "Chat" }, { name: "Chat Preference" }]} />
 
         <button
           id="save-chat-preferences-btn"
           onClick={handleSave}
-          disabled={!isDirty || isSaving || prefs.quotaAllocated > (parentOrg?.available_size || 0)}
+          disabled={
+            !isDirty ||
+            isSaving ||
+            prefs.quotaAllocated > (parentOrg?.available_size || 0)
+          }
           className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all
             hover:bg-primary/90
             disabled:cursor-not-allowed disabled:opacity-40"
@@ -389,7 +415,9 @@ export default function ChatPreferencePage() {
       {isDirty && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-sm text-warning">
           <Info size={15} className="shrink-0" />
-          You have unsaved changes. Click <span className="mx-1 font-semibold">Save Preferences</span> to apply them.
+          You have unsaved changes. Click{" "}
+          <span className="mx-1 font-semibold">Save Preferences</span> to apply
+          them.
         </div>
       )}
 
@@ -458,7 +486,9 @@ export default function ChatPreferencePage() {
 
           <QuotaRow
             value={prefs.quotaAllocated}
-            onValueChange={(v) => setPrefs((prev) => ({ ...prev, quotaAllocated: v }))}
+            onValueChange={(v) =>
+              setPrefs((prev) => ({ ...prev, quotaAllocated: v }))
+            }
             onUpdate={handleUpdateQuota}
             isUpdating={isUpdatingQuota}
             disabled={isLoading}
@@ -518,10 +548,11 @@ export default function ChatPreferencePage() {
                     Max File Size
                   </span>
                   <span
-                    className={`text-xs font-semibold ${prefs.enableFileSharing
-                      ? "text-foreground"
-                      : "text-muted-foreground line-through"
-                      }`}
+                    className={`text-xs font-semibold ${
+                      prefs.enableFileSharing
+                        ? "text-foreground"
+                        : "text-muted-foreground line-through"
+                    }`}
                   >
                     {prefs.fileSizeLimit} MB
                   </span>

@@ -105,7 +105,7 @@ const BasicInfoStep = () => {
             </div>
           )}
 
-{fields.map((field, index) => (
+          {fields.map((field, index) => (
             <div key={field.id} className="group flex items-start gap-2">
               <div className="grid flex-1 grid-cols-2 gap-2">
                 <div className="relative">
@@ -116,7 +116,7 @@ const BasicInfoStep = () => {
                     errors={errors}
                     // customStyle="mb-0"
                     // Compact styling for list items
-                    // className="!mt-0 h-9 py-1 text-sm" 
+                    // className="!mt-0 h-9 py-1 text-sm"
                   />
                 </div>
                 <div className="relative">

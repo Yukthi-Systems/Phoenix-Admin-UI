@@ -49,7 +49,8 @@ const BranchesStep = ({
             </span>
           ) : (
             <span className="text-muted-foreground text-sm">
-              {branchKeys.length} {branchKeys.length === 1 ? "branch" : "branches"} added
+              {branchKeys.length}{" "}
+              {branchKeys.length === 1 ? "branch" : "branches"} added
             </span>
           )}
         </div>

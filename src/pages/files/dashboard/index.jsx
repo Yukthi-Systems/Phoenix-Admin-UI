@@ -15,14 +15,18 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import NotImplementedFeature from '@/components/common/NotImplementedFeature'
+import NotImplementedFeature from "@/components/common/NotImplementedFeature";
 
 function FilesDashboard() {
-    return (
-        <div className="flex items-center justify-center h-full">
-            <NotImplementedFeature title="Files Dashboard not yet implemented" showHome showBack />
-        </div>
-    )
+  return (
+    <div className="flex items-center justify-center h-full">
+      <NotImplementedFeature
+        title="Files Dashboard not yet implemented"
+        showHome
+        showBack
+      />
+    </div>
+  );
 }
 
-export default FilesDashboard
+export default FilesDashboard;

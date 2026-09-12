@@ -33,7 +33,10 @@ import {
 
 const IdentitiesTab = ({ orgId }) => {
   const [selectedDomain, setSelectedDomain] = useState("");
-  const { pagination, onPaginationChange: setPagination } = useTablePagination(5, 10);
+  const { pagination, onPaginationChange: setPagination } = useTablePagination(
+    5,
+    10,
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const { formatUserDateNice } = useUserTimezone();
 
@@ -42,7 +45,7 @@ const IdentitiesTab = ({ orgId }) => {
     orgId,
     1,
     100,
-    ""
+    "",
   );
 
   const domains = domainsData?.domains?.domains || [];
@@ -54,11 +57,15 @@ const IdentitiesTab = ({ orgId }) => {
   }, [domains, selectedDomain]);
 
   // 2. Fetch mailboxes for selected domain
-  const { data: mailboxesData, isLoading: mailboxesLoading, isError: mailboxesError } = useGetMailboxes(
+  const {
+    data: mailboxesData,
+    isLoading: mailboxesLoading,
+    isError: mailboxesError,
+  } = useGetMailboxes(
     selectedDomain,
     pagination.pageIndex + 1,
     pagination.pageSize,
-    searchQuery
+    searchQuery,
   );
 
   const mailboxes = mailboxesData?.mailboxes ?? [];
@@ -87,20 +94,24 @@ const IdentitiesTab = ({ orgId }) => {
         id: "storage",
         header: "Storage",
         cell: ({ row }) => {
-          const { quota_utilized_bytes = 0, quota_allocated = 0 } = row.original;
+          const { quota_utilized_bytes = 0, quota_allocated = 0 } =
+            row.original;
           const utilizedGb = Number(bytesToGB(quota_utilized_bytes));
           return (
             <div className="flex flex-col gap-1 w-full max-w-[150px]">
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span>{utilizedGb} / {quota_allocated} GB</span>
+                <span>
+                  {utilizedGb} / {quota_allocated} GB
+                </span>
               </div>
               <div className="bg-muted h-1.5 w-full rounded-full overflow-hidden">
                 <div
                   className="bg-primary h-1.5 rounded-full transition-all"
                   style={{
-                    width: `${quota_allocated > 0
-                      ? Math.min((utilizedGb / quota_allocated) * 100, 100)
-                      : 0
+                    width: `${
+                      quota_allocated > 0
+                        ? Math.min((utilizedGb / quota_allocated) * 100, 100)
+                        : 0
                     }%`,
                   }}
                 />
@@ -120,7 +131,7 @@ const IdentitiesTab = ({ orgId }) => {
         cell: ({ getValue }) => formatUserDateNice(getValue()),
       },
     ],
-    [formatUserDateNice]
+    [formatUserDateNice],
   );
 
   const table = useReactTable({
@@ -141,7 +152,9 @@ const IdentitiesTab = ({ orgId }) => {
   if (domains.length === 0) {
     return (
       <div className="text-center py-8 border border-dashed rounded-lg border-border bg-card/30">
-        <span className="text-muted-foreground text-sm">Please create a domain before viewing identities.</span>
+        <span className="text-muted-foreground text-sm">
+          Please create a domain before viewing identities.
+        </span>
       </div>
     );
   }
@@ -150,7 +163,9 @@ const IdentitiesTab = ({ orgId }) => {
     <div className="space-y-4">
       {/* Domain Selector Dropdown */}
       <div className="flex items-center gap-3">
-        <label className="text-sm font-medium text-muted-foreground">Select Domain:</label>
+        <label className="text-sm font-medium text-muted-foreground">
+          Select Domain:
+        </label>
         <select
           value={selectedDomain}
           onChange={(e) => {
@@ -173,11 +188,17 @@ const IdentitiesTab = ({ orgId }) => {
         <DataFechError content="Failed to load identities." />
       ) : mailboxes.length === 0 ? (
         <div className="text-center py-8 border border-dashed rounded-lg border-border bg-card/30">
-          <span className="text-muted-foreground text-sm">No identities found under this domain.</span>
+          <span className="text-muted-foreground text-sm">
+            No identities found under this domain.
+          </span>
         </div>
       ) : (
         <div className="border border-border rounded-lg bg-card overflow-hidden">
-          <Table table={table} totalCount={totalCount} pagination={pagination} />
+          <Table
+            table={table}
+            totalCount={totalCount}
+            pagination={pagination}
+          />
         </div>
       )}
     </div>

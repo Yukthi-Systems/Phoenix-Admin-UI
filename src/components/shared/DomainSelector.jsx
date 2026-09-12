@@ -128,11 +128,11 @@ const DomainSelector = ({ domainName, setDomainName }) => {
         updatedDomain &&
         storedDomain.organization_id === organization_id &&
         JSON.stringify(updatedDomain) !==
-        JSON.stringify({
-          ...storedDomain,
-          organization_id: undefined,
-          selected_at: undefined,
-        })
+          JSON.stringify({
+            ...storedDomain,
+            organization_id: undefined,
+            selected_at: undefined,
+          })
       ) {
         setStoredDomain({
           ...updatedDomain,
@@ -354,8 +354,8 @@ const DomainSelector = ({ domainName, setDomainName }) => {
               ) : domains.length > 0 ? (
                 <ul className="p-2 space-y-1">
                   {domains.map((domain) => {
-
-                    const isSelectable = domain.is_active && domain.is_dns_txt_verified;
+                    const isSelectable =
+                      domain.is_active && domain.is_dns_txt_verified;
                     const disabledReason = !domain.is_active
                       ? "Domain is inactive"
                       : "Domain DNS TXT record not verified";
@@ -365,20 +365,19 @@ const DomainSelector = ({ domainName, setDomainName }) => {
                         <button
                           disabled={!isSelectable}
                           title={isSelectable ? undefined : disabledReason}
-                          className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 flex items-center gap-2 ${!isSelectable
+                          className={`w-full text-left px-3 py-2 rounded-md transition-all duration-200 flex items-center gap-2 ${
+                            !isSelectable
                               ? "opacity-50 cursor-not-allowed text-muted-foreground"
                               : domainName === domain.domain_name
                                 ? "bg-primary/20 text-primary border border-primary/30"
                                 : "hover:bg-muted text-foreground"
-                            }`}
+                          }`}
                           onClick={() =>
                             isSelectable && handleDomainSelect(domain)
                           }
                         >
                           <Globe className="w-4 h-4 flex-shrink-0" />
-                          <span className="truncate">
-                            {domain.domain_name}
-                          </span>
+                          <span className="truncate">{domain.domain_name}</span>
                           {!isSelectable && (
                             <span className="ml-auto flex-shrink-0 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
                               {!domain.is_active ? "Inactive" : "Unverified"}

@@ -134,12 +134,12 @@ export function UserInfiniteSelectField({
           if (isMulti) {
             const selectedValues = field.value || [];
             displayValue = options.filter((opt) =>
-              selectedValues.includes(opt.value)
+              selectedValues.includes(opt.value),
             );
 
             // Add missing selected values
             const missingValues = selectedValues.filter(
-              (val) => !options.find((opt) => opt.value === val)
+              (val) => !options.find((opt) => opt.value === val),
             );
             if (missingValues.length > 0) {
               const missingOptions = missingValues.map((val) => ({
@@ -156,7 +156,7 @@ export function UserInfiniteSelectField({
             // Only try to find/create selected option if field has a value
             if (field.value) {
               displayValue = options.find((opt) => opt.value === field.value);
-              
+
               // If value exists but not in options, create a temporary option
               if (!displayValue) {
                 displayValue = {
@@ -177,9 +177,9 @@ export function UserInfiniteSelectField({
               onChange={(selected) => {
                 if (isMulti) {
                   field.onChange(
-                    selected && selected.length > 0 
-                      ? selected.map((item) => item.value) 
-                      : []
+                    selected && selected.length > 0
+                      ? selected.map((item) => item.value)
+                      : [],
                   );
                 } else {
                   field.onChange(selected ? selected.value : null);

@@ -6,6 +6,6 @@ Click Edit Distribution Policy to update an existing policy. It's a 2-step form 
 
 ![Step 1: Policy Information.](../../images/policy-distribution-step1-info.png)
 
-*Step 1: Policy Information — the Edit screen looks the same as the Add wizard's step.*
+_Step 1: Policy Information — the Edit screen looks the same as the Add wizard's step._
 
 Same fields as Policy Information in section 8.5 — Domain, Policy Name, Description and Policy Active.

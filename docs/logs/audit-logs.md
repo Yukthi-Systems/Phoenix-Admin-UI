@@ -10,22 +10,22 @@ Audit Logs record every change made in the panel — policies created or deleted
 
 ![The Audit Logs screen.](../images/logs-audit.png)
 
-*The Audit Logs screen.*
+_The Audit Logs screen._
 
-| Field | What it means |
-| --- | --- |
-| Search Message | Type a word or phrase to search for within the log entries. |
-| Action Type | Filter to just one kind of action, e.g. Create Filters Policy or User Login. |
-| User | Filter to actions performed by one specific user. |
-| Date Range | Required — the period of time to search within. |
+| Field          | What it means                                                                |
+| -------------- | ---------------------------------------------------------------------------- |
+| Search Message | Type a word or phrase to search for within the log entries.                  |
+| Action Type    | Filter to just one kind of action, e.g. Create Filters Policy or User Login. |
+| User           | Filter to actions performed by one specific user.                            |
+| Date Range     | Required — the period of time to search within.                              |
 
 Click Search Logs to run the search, Clear Filters to reset everything, or Export to download the results as a file.
 
-| Field | What it means |
-| --- | --- |
-| Title | A plain-language description of what happened, including the specific policy, user or item involved. |
-| Created By | Who performed the action. |
-| Type | The action type, e.g. Create Attachment Policy, User Login, Update User Permissions. |
-| Timestamp | When the action happened. |
+| Field      | What it means                                                                                        |
+| ---------- | ---------------------------------------------------------------------------------------------------- |
+| Title      | A plain-language description of what happened, including the specific policy, user or item involved. |
+| Created By | Who performed the action.                                                                            |
+| Type       | The action type, e.g. Create Attachment Policy, User Login, Update User Permissions.                 |
+| Timestamp  | When the action happened.                                                                            |
 
 > **Note:** The total record count and current page are shown at the top right and bottom of the results table — use Show to change how many rows appear per page.

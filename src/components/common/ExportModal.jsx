@@ -97,13 +97,13 @@ const ExportModal = ({
     if (progress.status === "success" || progress.status === "generating") {
       return "100%";
     }
-    
+
     // During fetching
     if (progress.currentPage && progress.totalPages) {
       const percent = (progress.currentPage / progress.totalPages) * 100;
       return `${Math.max(5, percent)}%`; // Ensure at least 5% visible
     }
-    
+
     return "5%"; // Initial loading state
   };
 
@@ -243,7 +243,8 @@ const ExportModal = ({
                   </div>
                   {(progress.totalFetched || progress.totalRecords) && (
                     <p className="text-xs text-muted-foreground text-center">
-                      {progress.totalFetched || progress.totalRecords} records processed
+                      {progress.totalFetched || progress.totalRecords} records
+                      processed
                       {progress.totalPages &&
                         progress.status === "fetching" &&
                         ` (Page ${progress.currentPage || 1} of ${progress.totalPages})`}

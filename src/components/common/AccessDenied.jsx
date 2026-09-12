@@ -31,13 +31,12 @@ function AccessDenied({ content = "Access Denied" }) {
         {/* Icon container */}
         <div className="relative">
           {/* Compact ring */}
-          
-          
+
           {/* Icon background */}
           <div className="relative bg-gradient-to-br from-destructive/10 via-destructive/5 to-destructive/8 p-6 rounded-full  border border-destructive/20">
             <div className="bg-gradient-to-br from-background to-card p-5 rounded-full shadow-inner">
-              <ShieldX 
-                size={56} 
+              <ShieldX
+                size={56}
                 className="text-destructive drop-shadow-sm"
                 strokeWidth={1.5}
               />
@@ -53,7 +52,7 @@ function AccessDenied({ content = "Access Denied" }) {
           <p className="text-base text-muted-foreground font-medium leading-relaxed">
             {content}
           </p>
-          
+
           {/* Subtle decorative line */}
           <div className="flex items-center gap-2 mt-2">
             <div className="h-px w-12 bg-gradient-to-r from-transparent via-border to-transparent"></div>

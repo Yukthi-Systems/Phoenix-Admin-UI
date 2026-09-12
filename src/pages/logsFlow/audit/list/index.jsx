@@ -57,8 +57,8 @@ function AuditLog() {
   const { formatUserDateNice, userTimezone } = useUserTimezone();
   const [selected, setSelected] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-   const { pagination, onPaginationChange: setPagination } =
-      useTablePagination();
+  const { pagination, onPaginationChange: setPagination } =
+    useTablePagination();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const getDefaultDateRange = () => {
     const nowInUserTz = moment.tz(userTimezone);

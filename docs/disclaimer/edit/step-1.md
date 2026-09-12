@@ -6,6 +6,6 @@ Click Edit Disclaimer to update an existing disclaimer. It's a 2-step form that 
 
 ![Step 1: Basic Information.](../../images/disclaimer-step1-info.png)
 
-*Step 1: Basic Information — looks the same as Step 1 of Adding a New Disclaimer, just pre-filled with this disclaimer's current details.*
+_Step 1: Basic Information — looks the same as Step 1 of Adding a New Disclaimer, just pre-filled with this disclaimer's current details._
 
 The same fields as Step 1 of Adding a New Disclaimer — Disclaimer Name and Description.

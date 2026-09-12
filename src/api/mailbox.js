@@ -144,7 +144,11 @@ export const addMailbox = async (data, addLog = true) => {
       throw new Error(res?.data?.message || "Failed to create mailbox.");
 
     if (addLog) return res.data;
-    const emailAddress = data?.email_address || data?.email_identity || `${data?.email_prefix}@${data?.domain_name}` || 'New Mailbox';
+    const emailAddress =
+      data?.email_address ||
+      data?.email_identity ||
+      `${data?.email_prefix}@${data?.domain_name}` ||
+      "New Mailbox";
     await addLogs({
       values: res,
       type: "success",
@@ -161,9 +165,14 @@ export const addMailbox = async (data, addLog = true) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    if (!addLog) throw new Error(response?.data?.message || "Failed to create mailbox.");
+    if (!addLog)
+      throw new Error(response?.data?.message || "Failed to create mailbox.");
 
-    const emailAddress = data?.email_address || data?.email_identity || `${data?.email_prefix}@${data?.domain_name}` || 'Unknown Mailbox';
+    const emailAddress =
+      data?.email_address ||
+      data?.email_identity ||
+      `${data?.email_prefix}@${data?.domain_name}` ||
+      "Unknown Mailbox";
     await addLogs({
       values: response,
       type: "error",
@@ -244,7 +253,7 @@ export const updateMailboxStatus = async (
       throw new Error(res?.data?.message || "Failed to update mailbox status.");
 
     const emailAddress = `${email_prefix}@${domain_name}`;
-    const statusText = status ? 'activated' : 'deactivated';
+    const statusText = status ? "activated" : "deactivated";
     await addLogs({
       values: res,
       type: "success",
@@ -260,7 +269,7 @@ export const updateMailboxStatus = async (
     AuthAPI({ status: response?.status });
 
     const emailAddress = `${email_prefix}@${domain_name}`;
-    const statusText = status ? 'activate' : 'deactivate';
+    const statusText = status ? "activate" : "deactivate";
     await addLogs({
       values: response,
       type: "error",

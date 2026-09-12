@@ -43,7 +43,11 @@ function RestrictionPolicyDetailsModal({ organizationId, policyId, onClose }) {
   });
 
   return (
-    <PolicyDetailsModal isLoading={isLoading} isError={isError} onClose={onClose}>
+    <PolicyDetailsModal
+      isLoading={isLoading}
+      isError={isError}
+      onClose={onClose}
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           <h4 className="text-lg font-semibold text-card-foreground">
@@ -59,10 +63,7 @@ function RestrictionPolicyDetailsModal({ organizationId, policyId, onClose }) {
       </div>
 
       <InfoCard icon={Info} title="Overview">
-        <InfoItem
-          label="Domain"
-          value={data?.domain_name || "Not specified"}
-        />
+        <InfoItem label="Domain" value={data?.domain_name || "Not specified"} />
         <InfoItem
           label="IP Restrictions"
           value={`${data?.ip_restriction?.length || 0} entries`}
@@ -201,7 +202,10 @@ export function RestrictionPolicyInfiniteSelectionField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -262,7 +266,7 @@ export function RestrictionPolicyInfiniteSelectionField({
           // Add the selected option to display options if it's not already there
           const displayOptions =
             selectedOption &&
-              !options.find((opt) => opt.value === selectedOption.value)
+            !options.find((opt) => opt.value === selectedOption.value)
               ? [selectedOption, ...options]
               : options;
 
@@ -278,7 +282,9 @@ export function RestrictionPolicyInfiniteSelectionField({
                 value={selectedOption}
                 options={displayOptions}
                 placeholder={placeholder}
-                onChange={(selected) => field.onChange(selected ? selected.value : null)}
+                onChange={(selected) =>
+                  field.onChange(selected ? selected.value : null)
+                }
                 onMenuScrollToBottom={handleMenuScrollToBottom}
                 onInputChange={handleInputChange}
                 isClearable

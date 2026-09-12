@@ -119,11 +119,7 @@ const Dashboard = () => {
     ].filter((item) => item.value > 0);
 
     const totalDomains = safeGet(domains, "data.data.total_domains", 0);
-    const totalActiveDomains = safeGet(
-      domains,
-      "data.data.active_domains",
-      0,
-    );
+    const totalActiveDomains = safeGet(domains, "data.data.active_domains", 0);
     const totalInactiveDomains = safeGet(
       domains,
       "data.data.inactive_domains",

@@ -17,19 +17,16 @@
 
 import { addLogs } from "@/api/logs";
 
-export const  ImportActionLog = async  ({
-    values = {},
-}) => {
-    const { action_type ="",message="", payload = {}} = values;
+export const ImportActionLog = async ({ values = {} }) => {
+  const { action_type = "", message = "", payload = {} } = values;
 
-    // Implement the import action log logic here
-    await addLogs({
-        values,
-        type: "success",
-        method: "POST",
-        action_type,
-        payload: payload,
-        message,
-    });
-
-}
+  // Implement the import action log logic here
+  await addLogs({
+    values,
+    type: "success",
+    method: "POST",
+    action_type,
+    payload: payload,
+    message,
+  });
+};

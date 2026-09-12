@@ -283,7 +283,9 @@ export function PasswordInput({
         </button>
       </div>
       {error && (
-        <p className="text-destructive text-left mt-1 text-sm">{error.message}</p>
+        <p className="text-destructive text-left mt-1 text-sm">
+          {error.message}
+        </p>
       )}
     </div>
   );
@@ -418,7 +420,9 @@ export function TextArea({
         />
       </div>
       {error && (
-        <p className="text-destructive mt-1 text-sm text-left">{error.message}</p>
+        <p className="text-destructive mt-1 text-sm text-left">
+          {error.message}
+        </p>
       )}
       {!error && info && (
         <p className="text-muted-foreground mt-1 flex items-center gap-1 text-sm">
@@ -452,11 +456,13 @@ export function ControlledInput({
   const inputClasses = `
     mt-1 w-full rounded-md border p-2 transition-colors duration-200
     bg-background text-foreground placeholder:text-muted-foreground
-    ${error
-      ? "border-destructive focus:border-destructive focus:ring-destructive/20"
-      : "border-border focus:border-primary hover:border-border/80"
+    ${
+      error
+        ? "border-destructive focus:border-destructive focus:ring-destructive/20"
+        : "border-border focus:border-primary hover:border-border/80"
     }
-    ${disabled ? "opacity-50 cursor-not-allowed bg-muted" : "hover:bg-accent/50"
+    ${
+      disabled ? "opacity-50 cursor-not-allowed bg-muted" : "hover:bg-accent/50"
     }
     focus:ring-2 focus:ring-offset-0 focus:outline-none
     ${icon ? "pr-8" : ""}

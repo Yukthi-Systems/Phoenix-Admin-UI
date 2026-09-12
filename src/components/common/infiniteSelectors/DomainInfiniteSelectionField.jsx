@@ -88,7 +88,10 @@ export function DomainInfiniteSelectField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -139,21 +142,23 @@ export function DomainInfiniteSelectField({
         control={control}
         render={({ field }) => {
           let selectedOption = null;
-        
+
           // Only try to find/create selected option if field has a value
           if (field.value) {
             selectedOption = options.find((opt) => opt.value === field.value);
-          
+
             // If value exists but not in options, create a temporary option
             if (!selectedOption) {
               selectedOption = { label: field.value, value: field.value };
             }
           }
-        
+
           // Add the selected option to display options if it's not already there
-          const displayOptions = selectedOption && !options.find(opt => opt.value === selectedOption.value)
-            ? [selectedOption, ...options]
-            : options;
+          const displayOptions =
+            selectedOption &&
+            !options.find((opt) => opt.value === selectedOption.value)
+              ? [selectedOption, ...options]
+              : options;
 
           return (
             <Select
@@ -161,7 +166,9 @@ export function DomainInfiniteSelectField({
               value={selectedOption}
               options={displayOptions}
               placeholder={placeholder}
-              onChange={(selected) => field.onChange(selected ? selected.value : null)}
+              onChange={(selected) =>
+                field.onChange(selected ? selected.value : null)
+              }
               onMenuScrollToBottom={handleMenuScrollToBottom}
               onInputChange={handleInputChange}
               isClearable

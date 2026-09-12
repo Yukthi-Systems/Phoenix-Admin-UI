@@ -15,22 +15,22 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import React, { useState } from 'react'
-import PolicyInformationStep from './stepper/PolicyInfoStep';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAtomValue } from 'jotai';
-import { userInfoAtom } from '@/store/userInfo';
-import { userProfileAtom } from '@/store/userProfile';
-import { useToastify } from '@/hooks/useToastify';
-import { distributionPolicyValidationSchema } from './validationSchema';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { distributionPolicyDefaultValues } from './distributionPolicyDefaultValues';
-import { useForm } from 'react-hook-form';
-import { useAddDistributionPolicy } from '@/hooks/useDistributionPolicy';
-import MailInfoStep from './stepper/MailInfoStep';
-import StepperFormLayout from '@/components/layouts/FormLayout';
-import PreviewStep from './stepper/PreviewStep';
-import AccessDenied from '@/components/common/AccessDenied';
+import React, { useState } from "react";
+import PolicyInformationStep from "./stepper/PolicyInfoStep";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAtomValue } from "jotai";
+import { userInfoAtom } from "@/store/userInfo";
+import { userProfileAtom } from "@/store/userProfile";
+import { useToastify } from "@/hooks/useToastify";
+import { distributionPolicyValidationSchema } from "./validationSchema";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { distributionPolicyDefaultValues } from "./distributionPolicyDefaultValues";
+import { useForm } from "react-hook-form";
+import { useAddDistributionPolicy } from "@/hooks/useDistributionPolicy";
+import MailInfoStep from "./stepper/MailInfoStep";
+import StepperFormLayout from "@/components/layouts/FormLayout";
+import PreviewStep from "./stepper/PreviewStep";
+import AccessDenied from "@/components/common/AccessDenied";
 
 const STEPS = [
   {
@@ -51,7 +51,7 @@ const STEPS = [
     description: "Review details",
     fields: [],
   },
-]
+];
 // Helper: Get required fields for step
 const getRequiredFieldsForStep = (stepIndex) => {
   const step = STEPS[stepIndex - 1];
@@ -64,8 +64,7 @@ const STEP_RENDERER = {
   1: (props) => <PolicyInformationStep {...props} />,
   2: (props) => <MailInfoStep {...props} />,
   3: (props) => <PreviewStep {...props} />,
-}
-
+};
 
 function AddDistributionPolicy() {
   const { domain_name } = useParams();
@@ -149,82 +148,82 @@ function AddDistributionPolicy() {
     await handleStepNavigation(stepNumber);
   };
 
-      const onSubmit = (formData) => {
-        if (!validateMembers()) return;
-        const data = {
-            ...formData,
-            domain_name: domain_name,
-            internal_members: internalList,
-            external_members: externalList,
-            specific_emails: specificEmails,
-        }
-        mutate(
-            { org_id: organization_id, data },
-            {
-                onSuccess: () => {
-                    toast("success", "Distribution Policy created successfully");
-                    navigate(-1);
-                },
-                onError: (error) => {
-                    const message =
-                        error.response?.data?.message || error.message || "Unknown error";
-                    const tracebackId = error.response?.data?.traceback_id;
-                    toast(
-                        "error",
-                        `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
-                    );
-                },
-            },
-        );
-    }
+  const onSubmit = (formData) => {
+    if (!validateMembers()) return;
+    const data = {
+      ...formData,
+      domain_name: domain_name,
+      internal_members: internalList,
+      external_members: externalList,
+      specific_emails: specificEmails,
+    };
+    mutate(
+      { org_id: organization_id, data },
+      {
+        onSuccess: () => {
+          toast("success", "Distribution Policy created successfully");
+          navigate(-1);
+        },
+        onError: (error) => {
+          const message =
+            error.response?.data?.message || error.message || "Unknown error";
+          const tracebackId = error.response?.data?.traceback_id;
+          toast(
+            "error",
+            `Message: ${message}${tracebackId ? `\nTraceback ID: ${tracebackId}` : ""}`,
+          );
+        },
+      },
+    );
+  };
 
-    if (!permissions.includes("policy:distribution:create")) {
-        return (
-            <AccessDenied content="Don't have permission to create distribution policy." />
-        );
-    }
+  if (!permissions.includes("policy:distribution:create")) {
+    return (
+      <AccessDenied content="Don't have permission to create distribution policy." />
+    );
+  }
 
-    const StepComponent = STEP_RENDERER[currentStep];
-    const stepProps = {
-        register,
-        errors,
-        control,
-        watch,
-        domain_name,
-        formData: getValues(),
-        externalList, 
-        setExternalList,
-        internalList, 
-        setInternalList,
-        specificEmails, 
-        setSpecificEmails
-    }
+  const StepComponent = STEP_RENDERER[currentStep];
+  const stepProps = {
+    register,
+    errors,
+    control,
+    watch,
+    domain_name,
+    formData: getValues(),
+    externalList,
+    setExternalList,
+    internalList,
+    setInternalList,
+    specificEmails,
+    setSpecificEmails,
+  };
 
   return (
-           <StepperFormLayout
-            breadcrumbItems={[
-                { name: "Distribution Policies", link: "/policies/distribution" },
-                { name: "Add Distribution Policy" },
-            ]}
-            steps={STEPS}
-            docId="policy/distribution-create"
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-            onNext={() =>
-                handleStepNavigation(Math.min(currentStep + 1, STEPS.length))
-            }
-            onPrevious={() => handleStepNavigation(Math.max(currentStep - 1, 1))}
-            onStepClick={handleStepClick}
-            onSubmit={handleSubmit(onSubmit)}
-            isPending={isPending}
-            submitLabel="Create Distribution Policy"
-            showRequiredNote={true}
-            allowStepNavigation={true}
-            isEditMode={false}
-        >
-            {StepComponent ? <StepComponent {...stepProps} /> : null}
-        </StepperFormLayout>
-  )
+    <StepperFormLayout
+      breadcrumbItems={[
+        { name: "Distribution Policies", link: "/policies/distribution" },
+        { name: "Add Distribution Policy" },
+      ]}
+      steps={STEPS}
+      docId="policy/distribution-create"
+      currentStep={currentStep}
+      completedSteps={completedSteps}
+      onNext={() =>
+        handleStepNavigation(Math.min(currentStep + 1, STEPS.length))
+      }
+      onPrevious={() => handleStepNavigation(Math.max(currentStep - 1, 1))}
+      onStepClick={handleStepClick}
+      onSubmit={handleSubmit(onSubmit)}
+      isPending={isPending}
+      submitLabel="Create Distribution Policy"
+      showRequiredNote={true}
+      allowStepNavigation={true}
+      isEditMode={false}
+    >
+      {StepComponent ? <StepComponent {...stepProps} /> : null}
+    </StepperFormLayout>
+  );
 }
 
-export default AddDistributionPolicy
+export default AddDistributionPolicy;

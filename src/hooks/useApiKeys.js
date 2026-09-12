@@ -64,7 +64,8 @@ export const useCreateApiKey = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ organizationId, data }) => createApiKey(organizationId, data),
+    mutationFn: ({ organizationId, data }) =>
+      createApiKey(organizationId, data),
     onSuccess: (_, variables) => {
       toast.success("API Key created successfully");
       queryClient.invalidateQueries({
@@ -89,7 +90,10 @@ export const useEditApiKey = () => {
     onSuccess: (_, variables) => {
       toast.success("API Key updated successfully");
       queryClient.invalidateQueries({
-        queryKey: apiKeyKeys.detail(variables.organizationId, variables.apiKeyId),
+        queryKey: apiKeyKeys.detail(
+          variables.organizationId,
+          variables.apiKeyId,
+        ),
       });
       queryClient.invalidateQueries({
         queryKey: apiKeyKeys.lists(),

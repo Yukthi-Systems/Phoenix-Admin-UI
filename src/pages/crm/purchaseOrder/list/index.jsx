@@ -53,7 +53,7 @@ function CRMPO() {
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
   const { organization_id } = useAtomValue(userInfoAtom);
   const { pagination, onPaginationChange: setPagination } =
-     useTablePagination();
+    useTablePagination();
   const { data, isLoading, isError } = useGetCRMPO({
     organization_id,
     page: pagination.pageIndex + 1,
@@ -126,7 +126,13 @@ function CRMPO() {
     }
 
     return options;
-  }, [permissions, handleAddCRMPO, isExportAvailable, handleExport, totalCount]);
+  }, [
+    permissions,
+    handleAddCRMPO,
+    isExportAvailable,
+    handleExport,
+    totalCount,
+  ]);
 
   const formatValue = (val) => {
     const parsedValue = parseFloat(val);

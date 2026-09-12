@@ -30,7 +30,6 @@ import "./i18n";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
- 
   <JotaiProvider store={adminStore}>
     <QueryClientProvider client={queryClient}>
       <App />

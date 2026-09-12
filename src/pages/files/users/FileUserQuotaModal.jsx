@@ -56,7 +56,9 @@ const FileUserQuotaModal = ({
     if (numValue < minValue) {
       setValidationError(`Minimum is ${minValue} GB (currently in use)`);
     } else if (numValue > maxValue) {
-      setValidationError(`Maximum is ${maxValue.toFixed(2)} GB (organization limit)`);
+      setValidationError(
+        `Maximum is ${maxValue.toFixed(2)} GB (organization limit)`,
+      );
     } else {
       setValidationError("");
     }
@@ -178,7 +180,9 @@ const FileUserQuotaModal = ({
                       : "border-border focus:ring-primary/20"
                   }`}
                 />
-                <span className="text-sm font-medium text-muted-foreground">GB</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  GB
+                </span>
               </div>
             </div>
 
@@ -193,10 +197,16 @@ const FileUserQuotaModal = ({
 
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>
-                Min: <span className="font-medium text-destructive">{minValue} GB</span>
+                Min:{" "}
+                <span className="font-medium text-destructive">
+                  {minValue} GB
+                </span>
               </span>
               <span>
-                Max: <span className="font-medium text-success">{maxValue.toFixed(2)} GB</span>
+                Max:{" "}
+                <span className="font-medium text-success">
+                  {maxValue.toFixed(2)} GB
+                </span>
               </span>
             </div>
 

@@ -8,12 +8,12 @@ This page lists every attachment policy you've created, for the domain selected 
 
 ![The Attachment Policies list.](../images/policy-attachment-list.png)
 
-*The Attachment Policies list.*
+_The Attachment Policies list._
 
-| Field | What it means |
-| --- | --- |
-| Policy Name | Click it to open the policy's details. |
-| Status | Active or turned off. |
+| Field                       | What it means                                                    |
+| --------------------------- | ---------------------------------------------------------------- |
+| Policy Name                 | Click it to open the policy's details.                           |
+| Status                      | Active or turned off.                                            |
 | Created Date / Updated Date | When the policy was first created, and when it was last changed. |
 
 ### The Row Actions Menu
@@ -22,7 +22,7 @@ Click the ⋮ (three dots) at the end of any policy's row:
 
 ![The row actions menu on an attachment policy.](../images/policy-attachment-row-menu.png)
 
-*The row actions menu on an attachment policy.*
+_The row actions menu on an attachment policy._
 
 Edit Policy, Copy Policy and Delete Policy work the same way here as they do for General Policies — see section 8.1.
 
@@ -32,4 +32,4 @@ Click the Create button (top right) for ways to work with attachment policies in
 
 ![The Create menu.](../images/policy-attachment-create-menu.png)
 
-*The Create menu.*
+_The Create menu._

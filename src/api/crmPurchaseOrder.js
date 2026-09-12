@@ -29,7 +29,6 @@ const getHeaders = () => ({
   "X-Csrf-Token": adminStore.get(csrfTokenAtom),
 });
 
-
 export const getCRMPO = async (organization_id, page, limit) => {
   const method = "GET";
   const url = `${API_URL}/crm/purchase-orders/${organization_id}/${page}/${limit}`;
@@ -67,7 +66,7 @@ export const getCRMPO = async (organization_id, page, limit) => {
 export const addCRMPO = async (data) => {
   const method = "POST";
   const url = `${API_URL}/crm/purchase-order`;
-  const poIdentifier = data?.name ||  'New Purchase Order';
+  const poIdentifier = data?.name || "New Purchase Order";
   const cleanData = trimInput(data);
   try {
     const res = await axios({
@@ -76,11 +75,13 @@ export const addCRMPO = async (data) => {
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (res.status !== 201)
-      throw new Error(res?.data?.message || "Failed to create CRM purchase order.");
+      throw new Error(
+        res?.data?.message || "Failed to create CRM purchase order.",
+      );
 
     await addLogs({
       values: res,
@@ -96,7 +97,7 @@ export const addCRMPO = async (data) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
-    
+
     await addLogs({
       values: response,
       type: "error",
@@ -107,7 +108,9 @@ export const addCRMPO = async (data) => {
       notify: false,
     });
 
-    throw new Error(response?.data?.message || "Failed to create CRM purchase order.");
+    throw new Error(
+      response?.data?.message || "Failed to create CRM purchase order.",
+    );
   }
 };
 
@@ -149,7 +152,7 @@ export const editCRMPO = async (po_id, data) => {
   const method = "PUT";
   const url = `${API_URL}/crm/purchase-order/${po_id}`;
 
-   const poIdentifier = data?.name || data?.po_name ||  `PO ID: ${po_id}`;
+  const poIdentifier = data?.name || data?.po_name || `PO ID: ${po_id}`;
 
   try {
     const res = await axios({
@@ -196,7 +199,11 @@ export const editCRMPO = async (po_id, data) => {
   }
 };
 
-export const deleteCRMPO = async (organization_id, po_id , po_name = "Unknown PO") => {
+export const deleteCRMPO = async (
+  organization_id,
+  po_id,
+  po_name = "Unknown PO",
+) => {
   const method = "DELETE";
   const url = `${API_URL}/crm/purchase-order/${organization_id}/${po_id}`;
 
@@ -220,7 +227,7 @@ export const deleteCRMPO = async (organization_id, po_id , po_name = "Unknown PO
       method,
       action_type: "delete_crm_po",
       payload: { organization_id, po_id },
-      message: `"${ po_name || po_id}" CRM purchase order deleted successfully`,
+      message: `"${po_name || po_id}" CRM purchase order deleted successfully`,
       org_Id: organization_id,
       notify: false,
     });
@@ -235,7 +242,7 @@ export const deleteCRMPO = async (organization_id, po_id , po_name = "Unknown PO
       method,
       action_type: "delete_crm_po",
       payload: { organization_id, po_id },
-      message: `Failed to delete "${ po_name || po_id}" CRM purchase order`,
+      message: `Failed to delete "${po_name || po_id}" CRM purchase order`,
       org_Id: organization_id,
       notify: false,
     });
@@ -262,7 +269,7 @@ export const addCRMPOLink = async (
       headers: getHeaders(),
       withCredentials: true,
       timeout: 8000,
-      data:cleanData,
+      data: cleanData,
     });
 
     if (res.status !== 201)

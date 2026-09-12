@@ -34,7 +34,11 @@ import { useUserTimezone } from "@/hooks/useTimezone";
 function DepartmentDetailsModal({ organizationId, departmentId, onClose }) {
   const { formatUserDateNice } = useUserTimezone();
 
-  const { data: response, isLoading, isError } = useQuery({
+  const {
+    data: response,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["department_details", organizationId, departmentId],
     queryFn: () => getDepartment(organizationId, departmentId),
     enabled: !!organizationId && !!departmentId,
@@ -48,7 +52,11 @@ function DepartmentDetailsModal({ organizationId, departmentId, onClose }) {
   );
 
   return (
-    <PolicyDetailsModal isLoading={isLoading} isError={isError} onClose={onClose}>
+    <PolicyDetailsModal
+      isLoading={isLoading}
+      isError={isError}
+      onClose={onClose}
+    >
       <h4 className="text-lg font-semibold text-card-foreground">
         {data?.department_name || "Unknown Department"}
       </h4>
@@ -102,10 +110,14 @@ function DepartmentDetailsModal({ organizationId, departmentId, onClose }) {
               >
                 {person.name && <div>{person.name}</div>}
                 {person.email && (
-                  <div className="font-mono text-muted-foreground">{person.email}</div>
+                  <div className="font-mono text-muted-foreground">
+                    {person.email}
+                  </div>
                 )}
                 {person.phone && (
-                  <div className="font-mono text-muted-foreground">{person.phone}</div>
+                  <div className="font-mono text-muted-foreground">
+                    {person.phone}
+                  </div>
                 )}
               </div>
             ))}
@@ -178,7 +190,10 @@ export function DepartmentInfiniteSelectField({
 
   const handleInputChange = (inputValue, actionMeta) => {
     // Don't trigger search when clearing or when menu is closed
-    if (actionMeta.action === 'input-blur' || actionMeta.action === 'menu-close') {
+    if (
+      actionMeta.action === "input-blur" ||
+      actionMeta.action === "menu-close"
+    ) {
       return;
     }
 
@@ -255,7 +270,9 @@ export function DepartmentInfiniteSelectField({
                 value={selectedOption}
                 options={displayOptions}
                 placeholder={placeholder}
-                onChange={(selected) => field.onChange(selected ? selected.value : null)}
+                onChange={(selected) =>
+                  field.onChange(selected ? selected.value : null)
+                }
                 onMenuScrollToBottom={handleMenuScrollToBottom}
                 onInputChange={handleInputChange}
                 isClearable

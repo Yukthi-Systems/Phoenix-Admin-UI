@@ -111,10 +111,11 @@ const ServerDetails = () => {
 
   const StatusBadge = ({ active }) => (
     <div
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${active
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        active
           ? "bg-success/10 text-success border-success/20 border"
           : "bg-destructive/10 text-destructive border-destructive/20 border"
-        }`}
+      }`}
     >
       {active ? (
         <Check className="h-3.5 w-3.5" />
@@ -209,10 +210,11 @@ const ServerDetails = () => {
 
   const MonitoringBadge = ({ isMonitoring }) => (
     <div
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${isMonitoring
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        isMonitoring
           ? "bg-primary/10 text-primary border-primary/20 border"
           : "bg-muted text-muted-foreground border-border border"
-        }`}
+      }`}
     >
       {isMonitoring ? (
         <Check className="h-3.5 w-3.5" />
@@ -225,10 +227,11 @@ const ServerDetails = () => {
 
   const MailboxBadge = ({ isMailbox }) => (
     <div
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${isMailbox
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        isMailbox
           ? "bg-primary/10 text-primary border-primary/20 border"
           : "bg-muted text-muted-foreground border-border border"
-        }`}
+      }`}
     >
       {isMailbox ? (
         <Check className="h-3.5 w-3.5" />
@@ -241,10 +244,11 @@ const ServerDetails = () => {
 
   const AcceptingMailboxesBadge = ({ isAccepting }) => (
     <div
-      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${isAccepting
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        isAccepting
           ? "bg-primary/10 text-primary border-primary/20 border"
           : "bg-muted text-muted-foreground border-border border"
-        }`}
+      }`}
     >
       {isAccepting ? (
         <Check className="h-3.5 w-3.5" />
@@ -254,7 +258,6 @@ const ServerDetails = () => {
       {isAccepting ? "Accepting Mailboxes" : "Not Accepting Mailboxes"}
     </div>
   );
-
 
   return (
     <>
@@ -333,10 +336,10 @@ const ServerDetails = () => {
                       <span className="text-right">
                         {server?.quota_allocated > 0
                           ? Math.round(
-                            (server?.quota_utilized /
-                              server?.quota_allocated) *
-                            100,
-                          )
+                              (server?.quota_utilized /
+                                server?.quota_allocated) *
+                                100,
+                            )
                           : 0}
                         %
                       </span>
@@ -483,16 +486,16 @@ const ServerDetails = () => {
 
               {(!server?.server_info ||
                 Object.keys(server.server_info).length === 0) && (
-                  <div className="bg-card border-border rounded-lg border p-8 text-center">
-                    <Info className="text-muted-foreground mx-auto mb-3 h-12 w-12 opacity-50" />
-                    <h3 className="text-card-foreground mb-2 text-lg font-medium">
-                      No Server Information
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      Additional server information has not been configured yet.
-                    </p>
-                  </div>
-                )}
+                <div className="bg-card border-border rounded-lg border p-8 text-center">
+                  <Info className="text-muted-foreground mx-auto mb-3 h-12 w-12 opacity-50" />
+                  <h3 className="text-card-foreground mb-2 text-lg font-medium">
+                    No Server Information
+                  </h3>
+                  <p className="text-muted-foreground text-sm">
+                    Additional server information has not been configured yet.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
