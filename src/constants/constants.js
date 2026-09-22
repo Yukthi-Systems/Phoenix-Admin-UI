@@ -45,7 +45,16 @@ export const BASE_ORG = getEnv("VITE_BASE_ORG", "YSPL");
 // against (distinct from this panel's own in-app help under src/docs).
 export const V3_API_DOCS_URL = getEnv(
   "VITE_V3_API_DOCS_URL",
-  "https://v3-api.docs.yukthi.net/docs/intro",
+  "https://docs.yukthi-mail.in/",
+);
+
+// Base URL of the public-facing REST API that a generated API key
+// authenticates against - shown to users so they know what host to call.
+// This is intentionally distinct from API_URL (this admin panel's own
+// backend), which is internal and not meant to be exposed to API key users.
+export const PUBLIC_API_URL = getEnv(
+  "VITE_PUBLIC_API_URL",
+  "https://public-api.mailservice25.com",
 );
 
 export const DNS_API_KEY = getEnv("VITE_DNS_API_KEY", "");

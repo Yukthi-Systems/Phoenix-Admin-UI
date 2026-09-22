@@ -28,7 +28,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import ApiKeyPDF from "./ApiKeypdf";
-import { API_URL, V3_API_DOCS_URL } from "@/constants/constants";
+import { PUBLIC_API_URL, V3_API_DOCS_URL } from "@/constants/constants";
 
 const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
   const [isKeyVisible, setIsKeyVisible] = useState(false);
@@ -38,7 +38,7 @@ const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
   if (!isOpen || !data) return null;
 
   const apiKeySecret = data.api_key || "";
-  const apiBaseUrl = API_URL.replace(/\/+$/, "");
+  const apiBaseUrl = PUBLIC_API_URL.replace(/\/+$/, "");
 
   const handleCopy = async () => {
     try {

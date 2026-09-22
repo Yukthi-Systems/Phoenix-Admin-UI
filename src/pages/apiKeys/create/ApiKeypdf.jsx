@@ -17,7 +17,7 @@
 
 import React from "react";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { API_URL } from "@/constants/constants";
+import { PUBLIC_API_URL } from "@/constants/constants";
 
 const styles = StyleSheet.create({
   page: {
@@ -143,7 +143,9 @@ const ApiKeyPDF = ({ data }) => {
         {/* Base URL Section */}
         <View style={styles.keyContainer}>
           <Text style={styles.keyLabel}>API Base URL</Text>
-          <Text style={styles.keyValue}>{API_URL.replace(/\/+$/, "")}</Text>
+          <Text style={styles.keyValue}>
+            {PUBLIC_API_URL.replace(/\/+$/, "")}
+          </Text>
         </View>
 
         {/* Details Section */}

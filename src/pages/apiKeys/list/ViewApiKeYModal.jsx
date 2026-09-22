@@ -35,7 +35,7 @@ import {
   EyeOff,
   BookOpen,
 } from "lucide-react";
-import { API_URL, V3_API_DOCS_URL } from "@/constants/constants";
+import { PUBLIC_API_URL, V3_API_DOCS_URL } from "@/constants/constants";
 
 const ViewApiKeyModal = ({ isOpen, onClose, key_id, organizationId }) => {
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ const ViewApiKeyModal = ({ isOpen, onClose, key_id, organizationId }) => {
   const { data: apiKey, isLoading } = useApiKeyDetails(organizationId, key_id);
   const [showKey, setShowKey] = React.useState(true);
   const [copied, setCopied] = React.useState(false);
-  const apiBaseUrl = API_URL.replace(/\/+$/, "");
+  const apiBaseUrl = PUBLIC_API_URL.replace(/\/+$/, "");
 
   const handleCopy = (text) => {
     if (text) {
