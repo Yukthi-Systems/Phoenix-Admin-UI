@@ -50,9 +50,9 @@ const API_KEY_PERMISSIONS_CONFIG = [
         label: "Domains",
         permissions: {
           view: "domain:view",
-          create: "domain:create",
+          // create: "domain:create",
           edit: "domain:edit",
-          delete: "domain:delete",
+          // delete: "domain:delete",
         },
       },
       {

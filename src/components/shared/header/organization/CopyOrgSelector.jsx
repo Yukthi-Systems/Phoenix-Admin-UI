@@ -15,7 +15,16 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { ChevronDown, X, Building2, Loader2, ChevronRight } from "lucide-react";
+import {
+  ChevronDown,
+  X,
+  Building2,
+  Loader2,
+  ChevronRight,
+  ChevronLeft,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { useState, useMemo } from "react";
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/store/userProfile";
@@ -34,16 +43,23 @@ const CopyOrganizationSelector = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedOrgs, setExpandedOrgs] = useState(new Set());
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const profile = useAtomValue(userProfileAtom);
 
   const { data, isLoading } = useGetOrganizations(
-    1,
-    50,
+    pagination.pageIndex + 1,
+    pagination.pageSize,
     profile?.organization_id || null,
   );
   const { data: profileOrgDetails } = useGetOrganizationDetail(
     profile?.organization_id,
   );
+
+  const totalPages = data?.total_pages ?? 1;
+  const currentPage = pagination.pageIndex + 1;
 
   const handleLocalSelect = (org) => {
     onSelect({
@@ -51,6 +67,137 @@ const CopyOrganizationSelector = ({
       organization_name: org.organization_name,
     });
     setIsOpen(false);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setPagination({ pageIndex: 0, pageSize: 10 });
+    setExpandedOrgs(new Set());
+  };
+
+  const renderRootPagination = () => {
+    if (totalPages <= 1) return null;
+
+    const getVisiblePages = () => {
+      const delta = 1;
+      const left = Math.max(1, currentPage - delta);
+      const right = Math.min(totalPages, currentPage + delta);
+      const pages = [];
+      for (let i = left; i <= right; i++) {
+        pages.push(i);
+      }
+      return pages;
+    };
+
+    return (
+      <div className="border-border bg-muted/10 flex items-center justify-between border-t p-3">
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="copyOrgPageSize"
+            className="text-muted-foreground text-xs font-medium"
+          >
+            Per page:
+          </label>
+          <select
+            id="copyOrgPageSize"
+            value={pagination.pageSize}
+            onChange={(e) => {
+              setPagination((prev) => ({
+                ...prev,
+                pageSize: Number(e.target.value),
+                pageIndex: 0,
+              }));
+              setExpandedOrgs(new Set());
+            }}
+            className="border-border bg-background rounded border px-2 py-1 text-xs"
+          >
+            {[10, 25, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize} className="bg-background">
+                {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-xs font-medium">
+            Page {currentPage} of {totalPages}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
+            disabled={currentPage === 1 || isLoading}
+            className="hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors disabled:opacity-50"
+            title="First page"
+          >
+            <ChevronsLeft className="h-3 w-3" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setPagination((prev) => ({
+                ...prev,
+                pageIndex: Math.max(0, prev.pageIndex - 1),
+              }))
+            }
+            disabled={currentPage === 1 || isLoading}
+            className="hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors disabled:opacity-50"
+            title="Previous page"
+          >
+            <ChevronLeft className="h-3 w-3" />
+          </button>
+
+          {getVisiblePages().map((pageNum) => (
+            <button
+              type="button"
+              key={pageNum}
+              onClick={() =>
+                setPagination((prev) => ({ ...prev, pageIndex: pageNum - 1 }))
+              }
+              disabled={isLoading}
+              className={`rounded px-2 py-1 text-xs font-medium transition-colors ${
+                pageNum === currentPage
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground border-border border"
+              }`}
+            >
+              {pageNum}
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={() =>
+              setPagination((prev) => ({
+                ...prev,
+                pageIndex: Math.min(totalPages - 1, prev.pageIndex + 1),
+              }))
+            }
+            disabled={currentPage === totalPages || isLoading}
+            className="hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors disabled:opacity-50"
+            title="Next page"
+          >
+            <ChevronRight className="h-3 w-3" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))
+            }
+            disabled={currentPage === totalPages || isLoading}
+            className="hover:bg-accent hover:text-accent-foreground rounded p-1 transition-colors disabled:opacity-50"
+            title="Last page"
+          >
+            <ChevronsRight className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+    );
   };
 
   const organizationsToDisplay = useMemo(() => {
@@ -118,7 +265,7 @@ const CopyOrganizationSelector = ({
       {isOpen && (
         <div
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/30 backdrop-blur-sm"
-          onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
+          onClick={(e) => e.target === e.currentTarget && handleClose()}
         >
           <div className="bg-card border-border max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-lg border shadow-lg">
             <div className="border-border flex items-center justify-between border-b p-4">
@@ -127,7 +274,7 @@ const CopyOrganizationSelector = ({
                 <h2 className="text-lg font-semibold">Select Organization</h2>
               </div>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 className="text-muted-foreground hover:text-destructive"
               >
                 <X size={20} />
@@ -163,6 +310,8 @@ const CopyOrganizationSelector = ({
                 </div>
               )}
             </div>
+
+            {renderRootPagination()}
           </div>
         </div>
       )}
