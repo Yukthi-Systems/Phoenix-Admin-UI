@@ -30,6 +30,8 @@ echo "  VITE_RUM_APPLICATION_ID: \"${VITE_RUM_APPLICATION_ID}\"," >> ./dist/env-
 echo "  VITE_RUM_SERVICE: \"${VITE_RUM_SERVICE}\"," >> ./dist/env-config.js
 echo "  VITE_RUM_ORG_IDENTIFIER: \"${VITE_RUM_ORG_IDENTIFIER}\"," >> ./dist/env-config.js
 echo "  VITE_RECAPTCHA_SITE_KEY: \"${VITE_RECAPTCHA_SITE_KEY}\"," >> ./dist/env-config.js
+echo "  VITE_PUBLIC_API_URL: \"${VITE_PUBLIC_API_URL}\"," >> ./dist/env-config.js
+echo "  VITE_V3_API_DOCS_URL: \"${VITE_V3_API_DOCS_URL}\"," >> ./dist/env-config.js
 
 echo "}" >> ./dist/env-config.js
 
