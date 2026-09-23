@@ -422,10 +422,10 @@ const PermissionTables = ({
               <p>
                 API keys are assigned permissions independently of the admin
                 user creating them. Even if this admin user has{" "}
-                <strong>no other permissions</strong>, they can still create
-                an API key with additional permissions of their choosing —
-                such as access to organisations, identities, domains,
-                mailboxes or departments — and use that key to gain{" "}
+                <strong>no other permissions</strong>, they can still create an
+                API key with additional permissions of their choosing — such as
+                access to organisations, identities, domains, mailboxes or
+                departments — and use that key to gain{" "}
                 <strong>unauthorized access</strong> to the system.
               </p>
               <p>Only grant this to administrators you fully trust.</p>

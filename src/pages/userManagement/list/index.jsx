@@ -111,7 +111,6 @@ const ListUsers = () => {
     handleImportComplete,
     isImportAvailable,
   } = useBulkImport("users", async (userData) => {
-   
     const templateName = String(userData.permission_template || "").trim();
     let resolvedPermissions = [];
     let resolvedPermissionsTemplate = {};

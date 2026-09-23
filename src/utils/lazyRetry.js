@@ -23,7 +23,6 @@ export const lazyRetry = (importFn) => {
       const msg = error?.message?.toLowerCase() || "";
       return (
         error?.name === "ChunkLoadError" ||
-       
         error?.name === "SyntaxError" ||
         msg.includes("loading chunk") ||
         msg.includes("failed to fetch") ||

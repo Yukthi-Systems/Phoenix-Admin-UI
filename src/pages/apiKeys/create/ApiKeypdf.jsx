@@ -166,9 +166,7 @@ const ApiKeyPDF = ({ data }) => {
         {/* Organization Section */}
         <View style={styles.section}>
           <Text style={styles.label}>Organization</Text>
-          <Text style={styles.value}>
-            {data?.organization_name || "-"}
-          </Text>
+          <Text style={styles.value}>{data?.organization_name || "-"}</Text>
 
           <Text style={styles.label}>Organization ID</Text>
           <Text style={styles.value}>{data?.organization_id || "-"}</Text>
