@@ -23,9 +23,15 @@ export const lazyRetry = (importFn) => {
       const msg = error?.message?.toLowerCase() || "";
       return (
         error?.name === "ChunkLoadError" ||
+       
+        error?.name === "SyntaxError" ||
         msg.includes("loading chunk") ||
         msg.includes("failed to fetch") ||
-        msg.includes("network error")
+        msg.includes("network error") ||
+        msg.includes("unexpected end of input") ||
+        msg.includes("unexpected token") ||
+        msg.includes("is not a valid javascript mime type") ||
+        msg.includes("mime type")
       );
     };
 
