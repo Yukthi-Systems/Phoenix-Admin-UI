@@ -16,6 +16,12 @@
  */
 
 import * as yup from "yup";
+import {
+  NAME_TOKEN_REGEX,
+  PLACE_NAME_REGEX,
+  ADDRESS_LINE_REGEX,
+  POSTAL_CODE_REGEX,
+} from "@/utils/validators";
 
 export const organizationFormSchema = yup.object().shape({
   name: yup
@@ -53,31 +59,42 @@ export const organizationFormSchema = yup.object().shape({
             (branch) =>
               typeof branch?.name === "string" &&
               branch.name.trim() !== "" &&
+              NAME_TOKEN_REGEX.test(branch.name.trim()) &&
               typeof branch?.address_one === "string" &&
               branch.address_one.trim() !== "" &&
+              ADDRESS_LINE_REGEX.test(branch.address_one.trim()) &&
               typeof branch?.city === "string" &&
               branch.city.trim() !== "" &&
+              PLACE_NAME_REGEX.test(branch.city.trim()) &&
               typeof branch?.state === "string" &&
               branch.state.trim() !== "" &&
+              PLACE_NAME_REGEX.test(branch.state.trim()) &&
               typeof branch?.country === "string" &&
               branch.country.trim() !== "" &&
               typeof branch?.pincode === "string" &&
-              branch.pincode.trim() !== "",
+              branch.pincode.trim() !== "" &&
+              POSTAL_CODE_REGEX.test(branch.pincode.trim()),
           );
         },
       ),
     contact_info: yup
       .object()
       .test(
-        "contact-phone-validation",
-        "Phone numbers must be in international format (e.g., +123456789012)",
+        "all-contacts-have-required-fields",
+        "Each contact must have a valid Name, and Phone/Email must be in a valid format",
         function (value) {
           if (!value || typeof value !== "object") return true;
 
           return Object.values(value).every(
             (contact) =>
-              !contact.phone || // Skip validation if phone is empty
-              /^\+?\d{1,15}$/.test(contact.phone), // Validate if phone exists
+              typeof contact?.name === "string" &&
+              contact.name.trim() !== "" &&
+              PLACE_NAME_REGEX.test(contact.name.trim()) &&
+              (!contact.phone ||
+                /^\+?\d{1,15}$/.test(contact.phone)) &&
+              (!contact.email ||
+                (typeof contact.email === "string" &&
+                  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()))),
           );
         },
       ),

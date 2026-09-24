@@ -23,6 +23,40 @@ import { COUNTRIES_NAME } from "@/constants/countries";
 import { getReactSelectStyles } from "@/utils/selectTheme";
 import { useToastify } from "@/hooks/useToastify";
 import { nanoid } from "nanoid";
+import {
+  NAME_TOKEN_REGEX,
+  PLACE_NAME_REGEX,
+  ADDRESS_LINE_REGEX,
+  POSTAL_CODE_REGEX,
+} from "@/utils/validators";
+
+const getBranchValidationError = (branch) => {
+  const name = branch?.name?.trim() || "";
+  const addressOne = branch?.address_one?.trim() || "";
+  const city = branch?.city?.trim() || "";
+  const state = branch?.state?.trim() || "";
+  const country = branch?.country?.trim() || "";
+  const pincode = branch?.pincode?.trim() || "";
+
+  if (!name) return "Branch name is required";
+  if (/\s/.test(name)) return "Branch name must not contain spaces";
+  if (!NAME_TOKEN_REGEX.test(name))
+    return "Branch name can only contain letters, numbers, hyphens, and underscores";
+  if (!addressOne) return "Address is required";
+  if (!ADDRESS_LINE_REGEX.test(addressOne))
+    return "Address line 1 contains invalid characters";
+  if (!city) return "City is required";
+  if (!PLACE_NAME_REGEX.test(city))
+    return "City can only contain letters, spaces, apostrophes, hyphens, and periods";
+  if (!state) return "State is required";
+  if (!PLACE_NAME_REGEX.test(state))
+    return "State can only contain letters, spaces, apostrophes, hyphens, and periods";
+  if (!country) return "Country is required";
+  if (!pincode) return "Zip Code / Pincode is required";
+  if (!POSTAL_CODE_REGEX.test(pincode))
+    return "Zip Code / Pincode contains invalid characters";
+  return null;
+};
 
 const BranchManager = ({
   branchKeys,
@@ -40,27 +74,15 @@ const BranchManager = ({
 
   const handleBranchChange = (e) => {
     const { name, value } = e.target;
-    setNewBranch((prev) => ({ ...prev, [name]: value }));
+    // Branch name must never contain spaces; strip them as the user types.
+    const nextValue = name === "name" ? value.replace(/\s/g, "") : value;
+    setNewBranch((prev) => ({ ...prev, [name]: nextValue }));
   };
 
   const addBranch = () => {
-    if (!newBranch.name.trim()) {
-      toast("error", "Branch name is required");
-      return;
-    } else if (!newBranch.address_one.trim()) {
-      toast("error", "Address is required");
-      return;
-    } else if (!newBranch.city.trim()) {
-      toast("error", "City is required");
-      return;
-    } else if (!newBranch.state.trim()) {
-      toast("error", "State is required");
-      return;
-    } else if (!newBranch.country.trim()) {
-      toast("error", "Country is required");
-      return;
-    } else if (!newBranch.pincode.trim()) {
-      toast("error", "Zip Code / Pincode is required");
+    const error = getBranchValidationError(newBranch);
+    if (error) {
+      toast("error", error);
       return;
     }
 
@@ -80,6 +102,12 @@ const BranchManager = ({
   };
 
   const saveBranch = (id) => {
+    const branch = getValues(`details.branches.${id}`) || {};
+    const error = getBranchValidationError(branch);
+    if (error) {
+      toast("error", error);
+      return;
+    }
     setEditingBranch(null);
     toast("success", "Branch updated successfully");
   };

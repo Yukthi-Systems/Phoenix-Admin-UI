@@ -16,6 +16,12 @@
  */
 
 import * as yup from "yup";
+import {
+  NAME_TOKEN_REGEX,
+  PLACE_NAME_REGEX,
+  ADDRESS_LINE_REGEX,
+  POSTAL_CODE_REGEX,
+} from "@/utils/validators";
 
 export const organizationFormSchema = yup.object().shape({
   activate: yup.boolean().required("Status is required"),
@@ -127,21 +133,26 @@ export const organizationFormSchema = yup.object().shape({
               typeof branch?.name === "string" &&
               branch.name.trim() !== "" &&
               branch.name.length <= 100 &&
+              NAME_TOKEN_REGEX.test(branch.name.trim()) &&
               typeof branch?.address_one === "string" &&
               branch.address_one.trim() !== "" &&
               branch.address_one.length <= 200 &&
+              ADDRESS_LINE_REGEX.test(branch.address_one.trim()) &&
               typeof branch?.city === "string" &&
               branch.city.trim() !== "" &&
               branch.city.length <= 100 &&
+              PLACE_NAME_REGEX.test(branch.city.trim()) &&
               typeof branch?.state === "string" &&
               branch.state.trim() !== "" &&
               branch.state.length <= 100 &&
+              PLACE_NAME_REGEX.test(branch.state.trim()) &&
               typeof branch?.country === "string" &&
               branch.country.trim() !== "" &&
               branch.country.length <= 100 &&
               typeof branch?.pincode === "string" &&
               branch.pincode.trim() !== "" &&
-              branch.pincode.length <= 20,
+              branch.pincode.length <= 20 &&
+              POSTAL_CODE_REGEX.test(branch.pincode.trim()),
           );
         },
       ),
@@ -149,17 +160,24 @@ export const organizationFormSchema = yup.object().shape({
     contact_info: yup
       .object()
       .test(
-        "contact-phone-validation",
-        "Phone numbers must be in international format (e.g., +123456789012)",
+        "all-contacts-have-required-fields",
+        "Each contact must have a valid Name, and Phone/Email must be in a valid format",
         function (value) {
           if (!value || typeof value !== "object") return true;
 
           return Object.values(value).every(
             (contact) =>
-              !contact.phone ||
-              (typeof contact.phone === "string" &&
-                contact.phone.length <= 20 &&
-                /^\+?\d{1,15}$/.test(contact.phone)),
+              typeof contact?.name === "string" &&
+              contact.name.trim() !== "" &&
+              contact.name.length <= 100 &&
+              PLACE_NAME_REGEX.test(contact.name.trim()) &&
+              (!contact.phone ||
+                (typeof contact.phone === "string" &&
+                  contact.phone.length <= 20 &&
+                  /^\+?\d{1,15}$/.test(contact.phone))) &&
+              (!contact.email ||
+                (typeof contact.email === "string" &&
+                  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()))),
           );
         },
       ),

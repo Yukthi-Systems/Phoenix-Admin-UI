@@ -21,6 +21,26 @@ import { Input, InputOnly } from "@/components/common/Inputs";
 import { useToastify } from "@/hooks/useToastify";
 import { nanoid } from "nanoid";
 import PhoneInput, { PhoneInputOnly } from "@/components/common/PhoneInput";
+import { PLACE_NAME_REGEX, EMAIL_REGEX } from "@/utils/validators";
+
+const CONTACT_TYPE_REGEX = /^[A-Za-z][A-Za-z\s-]*$/;
+
+const getContactValidationError = (contact) => {
+  const name = contact?.name?.trim() || "";
+  const phone = contact?.phone?.trim() || "";
+  const email = contact?.email?.trim() || "";
+  const type = contact?.type?.trim() || "";
+
+  if (!name) return "Contact name is required";
+  if (!PLACE_NAME_REGEX.test(name))
+    return "Contact name can only contain letters, spaces, apostrophes, hyphens, and periods";
+  if (phone && !/^\+?\d{1,15}$/.test(phone))
+    return "Phone number must be in international format";
+  if (email && !EMAIL_REGEX.test(email)) return "Enter a valid email address";
+  if (type && !CONTACT_TYPE_REGEX.test(type))
+    return "Contact type can only contain letters, spaces, and hyphens";
+  return null;
+};
 
 const ContactManager = ({
   contactKeys,
@@ -45,13 +65,9 @@ const ContactManager = ({
   );
 
   const addContact = () => {
-    if (!newContact.name.trim()) {
-      toast("error", "Contact name is required");
-      return;
-    }
-
-    if (newContact.phone && !/^\+?\d{1,15}$/.test(newContact.phone)) {
-      toast("error", "Phone number must be in international format");
+    const error = getContactValidationError(newContact);
+    if (error) {
+      toast("error", error);
       return;
     }
 
@@ -69,6 +85,12 @@ const ContactManager = ({
   };
 
   const saveContact = (id) => {
+    const contact = getValues(`details.contact_info.${id}`) || {};
+    const error = getContactValidationError(contact);
+    if (error) {
+      toast("error", error);
+      return;
+    }
     setEditingContact(null);
     toast("success", "Contact updated successfully");
   };
