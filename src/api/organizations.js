@@ -28,9 +28,9 @@ const getHeaders = () => ({
   "X-Csrf-Token": adminStore.get(csrfTokenAtom),
 });
 
-export const getOrganizations = async (page, pageSize, orgId) => {
+export const getOrganizations = async (page, pageSize, orgId, query = "") => {
   const method = "GET";
-  const url = `${API_URL}/organization/list/${orgId}?page=${page}&limit=${pageSize}`;
+  const url = `${API_URL}/organization/list/${orgId}?page=${page}&limit=${pageSize}&query_string=${encodeURIComponent(query)}`;
 
   try {
     const res = await axios({
@@ -50,7 +50,7 @@ export const getOrganizations = async (page, pageSize, orgId) => {
       type: "error",
       method,
       action_type: "get_organization_list",
-      payload: { orgId, page, pageSize },
+      payload: { orgId, page, pageSize, query },
       message: `Failed to retrieve organizations list - Page: ${page}, Page Size: ${pageSize}`,
       notify: false,
     });

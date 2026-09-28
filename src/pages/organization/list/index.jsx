@@ -56,6 +56,8 @@ import {
 } from "@/store/userInfo";
 import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import { useUrlParam } from "@/hooks/useUrlParam";
+import SearchBar from "@/components/shared/SearchBar";
 
 const OrganizationTreeView = () => {
   const { permissions = [], organization_id } = useAtomValue(userProfileAtom);
@@ -79,12 +81,14 @@ const OrganizationTreeView = () => {
     10,
     50,
   );
+  const [searchQuery, setSearchQuery] = useUrlParam("search", "");
   const toast = useToastify();
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useGetOrganizations(
+  const { data, isLoading, isError, refetch } = useGetOrganizations(
     pagination.pageIndex + 1,
     pagination.pageSize,
     organization_id,
+    searchQuery,
   );
   const { data: defaultOrgDetails } = useGetOrganizationDetail(organization_id);
 
@@ -175,6 +179,18 @@ const OrganizationTreeView = () => {
       ? -1
       : (defaultOrgDetails?.allocated_email_identities ?? 0) -
         (defaultOrgDetails?.utilized_email_identities ?? 0);
+
+  const handleSearch = (query) => {
+    if (query) {
+      setSearchQuery(query);
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
 
   function handleDelete({ name, id }) {
     runDeleteCheck({
@@ -408,8 +424,16 @@ const OrganizationTreeView = () => {
   return (
     <>
       <div className="px-2 w-full h-full">
-        <div className="w-full flex justify-between items-center mb-2.5">
+        <div className="w-full flex justify-between items-center gap-6 mb-2.5">
           <Breadcrumbs items={[{ name: "Organization" }]} />
+          <div className="flex flex-1 gap-2">
+            <SearchBar
+              placeholder="Search organization..."
+              onSearch={handleSearch}
+              onClear={handleClearSearch}
+              onRefresh={refetch}
+            />
+          </div>
           {permissions.includes("organization:create") &&
             (email_service_enabled || chat_service_enabled) && (
               <div className="flex items-center gap-2">
@@ -474,16 +498,25 @@ const OrganizationTreeView = () => {
               <div className="flex items-center justify-center py-8">
                 <div className="text-center">
                   <div className="text-muted-foreground mb-2">
-                    No organizations found
+                    {searchQuery
+                      ? `No organizations match "${searchQuery}"`
+                      : "No organizations found"}
                   </div>
-                  {permissions.includes("organization:create") && (
-                    <button
-                      onClick={handleAddOrganization}
-                      className="text-primary hover:underline text-sm"
-                    >
-                      Create your first organization
-                    </button>
+                  {searchQuery && (
+                    <div className="text-muted-foreground text-xs">
+                      Search only covers direct sub-organizations. To find a
+                      nested org, expand its parent.
+                    </div>
                   )}
+                  {!searchQuery &&
+                    permissions.includes("organization:create") && (
+                      <button
+                        onClick={handleAddOrganization}
+                        className="text-primary hover:underline text-sm"
+                      >
+                        Create your first organization
+                      </button>
+                    )}
                 </div>
               </div>
             ) : (
