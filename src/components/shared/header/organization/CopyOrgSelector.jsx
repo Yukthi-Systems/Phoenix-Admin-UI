@@ -25,7 +25,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import OrgChildSearch from "./OrgChildSearch";
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/store/userProfile";
 import {
@@ -47,12 +48,14 @@ const CopyOrganizationSelector = ({
     pageIndex: 0,
     pageSize: 10,
   });
+  const [rootQuery, setRootQuery] = useState("");
   const profile = useAtomValue(userProfileAtom);
 
   const { data, isLoading } = useGetOrganizations(
     pagination.pageIndex + 1,
     pagination.pageSize,
     profile?.organization_id || null,
+    rootQuery,
   );
   const { data: profileOrgDetails } = useGetOrganizationDetail(
     profile?.organization_id,
@@ -67,11 +70,19 @@ const CopyOrganizationSelector = ({
       organization_name: org.organization_name,
     });
     setIsOpen(false);
+    setRootQuery("");
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setPagination({ pageIndex: 0, pageSize: 10 });
+    setExpandedOrgs(new Set());
+    setRootQuery("");
+  };
+
+  const handleRootSearch = (query) => {
+    setRootQuery(query);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     setExpandedOrgs(new Set());
   };
 
@@ -200,17 +211,6 @@ const CopyOrganizationSelector = ({
     );
   };
 
-  const organizationsToDisplay = useMemo(() => {
-    const orgs = [];
-    if (profileOrgDetails) {
-      orgs.push({ ...profileOrgDetails, isParentOrg: true });
-    }
-    if (data?.organizations) {
-      orgs.push(...data.organizations);
-    }
-    return orgs;
-  }, [profileOrgDetails, data?.organizations]);
-
   const ParentOrgItem = ({ organization, isSelected }) => (
     <div
       onClick={() => handleLocalSelect(organization)}
@@ -288,14 +288,24 @@ const CopyOrganizationSelector = ({
                 </div>
               ) : (
                 <div className="py-2">
-                  {organizationsToDisplay.map((org) =>
-                    org.isParentOrg ? (
-                      <ParentOrgItem
-                        key={`parent-${org.organization_id}`}
-                        organization={org}
-                        isSelected={selectedOrgId === org.organization_id}
-                      />
-                    ) : (
+                  {profileOrgDetails && (
+                    <ParentOrgItem
+                      organization={profileOrgDetails}
+                      isSelected={
+                        selectedOrgId === profileOrgDetails.organization_id
+                      }
+                    />
+                  )}
+                  <OrgChildSearch
+                    parentName={profileOrgDetails?.organization_name}
+                    onSearch={handleRootSearch}
+                  />
+                  {rootQuery && !data?.organizations?.length ? (
+                    <div className="text-muted-foreground px-4 py-3 text-center text-xs italic">
+                      No sub-organizations match "{rootQuery}"
+                    </div>
+                  ) : (
+                    (data?.organizations ?? []).map((org) => (
                       <OrganizationTreeItem
                         key={org.organization_id}
                         organization={org}
@@ -305,7 +315,7 @@ const CopyOrganizationSelector = ({
                         expandedOrgs={expandedOrgs}
                         setExpandedOrgs={setExpandedOrgs}
                       />
-                    ),
+                    ))
                   )}
                 </div>
               )}

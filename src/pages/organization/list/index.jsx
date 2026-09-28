@@ -41,6 +41,7 @@ import useBulkImport from "@/hooks/useImport";
 import { ImportActionLog } from "@/utils/importActionLog";
 import { getOrganizationImportFieldMapping } from "@/constants/import";
 import OrganizationTreeNode from "./OrganizationTree";
+import OrgChildSearch from "@/components/shared/header/organization/OrgChildSearch";
 import {
   Loader2,
   ChevronLeft,
@@ -79,12 +80,14 @@ const OrganizationTreeView = () => {
     10,
     50,
   );
+  const [rootQuery, setRootQuery] = useState("");
   const toast = useToastify();
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useGetOrganizations(
     pagination.pageIndex + 1,
     pagination.pageSize,
     organization_id,
+    rootQuery,
   );
   const { data: defaultOrgDetails } = useGetOrganizationDetail(organization_id);
 
@@ -175,6 +178,11 @@ const OrganizationTreeView = () => {
       ? -1
       : (defaultOrgDetails?.allocated_email_identities ?? 0) -
         (defaultOrgDetails?.utilized_email_identities ?? 0);
+
+  const handleRootSearch = (query) => {
+    setRootQuery(query);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
 
   function handleDelete({ name, id }) {
     runDeleteCheck({
@@ -463,6 +471,11 @@ const OrganizationTreeView = () => {
                 disableExpand
               />
             )}
+            <OrgChildSearch
+              parentName={defaultOrgDetails?.organization_name}
+              onSearch={handleRootSearch}
+              paddingLeft={32}
+            />
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-primary mr-3" />
@@ -474,16 +487,19 @@ const OrganizationTreeView = () => {
               <div className="flex items-center justify-center py-8">
                 <div className="text-center">
                   <div className="text-muted-foreground mb-2">
-                    No organizations found
+                    {rootQuery
+                      ? `No sub-organizations match "${rootQuery}"`
+                      : "No organizations found"}
                   </div>
-                  {permissions.includes("organization:create") && (
-                    <button
-                      onClick={handleAddOrganization}
-                      className="text-primary hover:underline text-sm"
-                    >
-                      Create your first organization
-                    </button>
-                  )}
+                  {!rootQuery &&
+                    permissions.includes("organization:create") && (
+                      <button
+                        onClick={handleAddOrganization}
+                        className="text-primary hover:underline text-sm"
+                      >
+                        Create your first organization
+                      </button>
+                    )}
                 </div>
               </div>
             ) : (

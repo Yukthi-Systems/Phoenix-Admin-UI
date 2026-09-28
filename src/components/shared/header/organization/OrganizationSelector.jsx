@@ -28,6 +28,7 @@ import {
 import { useState, useEffect, useMemo } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import OrganizationTreeItem from "./OrganizationTreeItem";
+import OrgChildSearch from "./OrgChildSearch";
 import {
   useGetOrganizationDetail,
   useGetOrganizations,
@@ -59,6 +60,7 @@ const OrganizationSelector = ({
     pageIndex: 0,
     pageSize: 10,
   });
+  const [rootQuery, setRootQuery] = useState("");
 
   const profile = useAtomValue(userProfileAtom);
   const [selectedOrg, setSelectedOrg] = useAtom(selectedOrganizationAtom);
@@ -76,6 +78,7 @@ const OrganizationSelector = ({
     pagination.pageIndex + 1,
     pagination.pageSize,
     profile?.organization_id || null,
+    rootQuery,
   );
 
   const { data: profileOrgDetails } = useGetOrganizationDetail(
@@ -413,6 +416,7 @@ const OrganizationSelector = ({
 
     onSelect(completeOrgData);
     setIsOpen(false);
+    setRootQuery("");
   };
 
   const handleBackdropClick = (e) => {
@@ -424,6 +428,19 @@ const OrganizationSelector = ({
   const handleClose = () => {
     setIsOpen(false);
     setPagination({ pageIndex: 0, pageSize: 10 });
+    setExpandedOrgs(new Set());
+    setRootQuery("");
+  };
+
+  // Every close path (backdrop, vetoed select, ...) must drop the search -
+  // the input remounts empty on reopen.
+  useEffect(() => {
+    if (!isOpen) setRootQuery("");
+  }, [isOpen]);
+
+  const handleRootSearch = (query) => {
+    setRootQuery(query);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     setExpandedOrgs(new Set());
   };
 
@@ -743,22 +760,34 @@ const OrganizationSelector = ({
                 <div className="text-destructive flex items-center justify-center py-8">
                   <span>Failed to load organizations</span>
                 </div>
-              ) : !organizationsToDisplay ||
-                organizationsToDisplay.length === 0 ? (
+              ) : !rootQuery &&
+                (!organizationsToDisplay ||
+                  organizationsToDisplay.length === 0) ? (
                 <div className="text-muted-foreground flex items-center justify-center py-8">
                   <span>No organizations available</span>
                 </div>
               ) : (
                 <div className="py-2">
-                  {organizationsToDisplay.map((org) =>
-                    org.isParentOrg ? (
+                  {organizationsToDisplay
+                    .filter((org) => org.isParentOrg)
+                    .map((org) => (
                       <ParentOrganizationItem
                         key={`parent-${org.organization_id}`}
                         organization={org}
                         selectedOrgId={effectiveSelectedOrgId}
                         onSelect={handleSelect}
                       />
-                    ) : (
+                    ))}
+                  <OrgChildSearch
+                    parentName={profileOrgDetails?.organization_name}
+                    onSearch={handleRootSearch}
+                  />
+                  {rootQuery && filteredOrganizations.length === 0 ? (
+                    <div className="text-muted-foreground px-4 py-3 text-center text-xs italic">
+                      No sub-organizations match "{rootQuery}"
+                    </div>
+                  ) : (
+                    filteredOrganizations.map((org) => (
                       <OrganizationTreeItem
                         key={org.organization_id}
                         organization={org}
@@ -768,7 +797,7 @@ const OrganizationSelector = ({
                         expandedOrgs={expandedOrgs}
                         setExpandedOrgs={setExpandedOrgs}
                       />
-                    ),
+                    ))
                   )}
                 </div>
               )}

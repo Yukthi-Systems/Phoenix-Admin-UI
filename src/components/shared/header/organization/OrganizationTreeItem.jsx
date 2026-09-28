@@ -29,6 +29,7 @@ import { useGetOrganizations } from "@/hooks/useOrganization";
 import OrganizationLogo from "../../OrgLogo";
 import IdentityProgress from "@/components/common/IdentityProgress";
 import { BASE_ORG } from "@/constants/constants";
+import OrgChildSearch from "./OrgChildSearch";
 
 const OrganizationTreeItem = ({
   organization,
@@ -43,6 +44,10 @@ const OrganizationTreeItem = ({
     pageIndex: 0,
     pageSize: 10,
   });
+  const [childQuery, setChildQuery] = useState("");
+  // Sticky once this level has been seen to have any children, so the
+  // search box doesn't vanish when a search matches nothing.
+  const [isSearchable, setIsSearchable] = useState(false);
 
   const isExpanded = expandedOrgs.has(organization.organization_id);
   const baseOrgName = BASE_ORG;
@@ -52,6 +57,7 @@ const OrganizationTreeItem = ({
     pagination.pageIndex + 1,
     pagination.pageSize,
     isExpanded ? organization.organization_id : null,
+    childQuery,
   );
 
   const totalPages = data?.total_pages ?? 1;
@@ -67,8 +73,19 @@ const OrganizationTreeItem = ({
     if (!isExpanded) {
       setChildren([]);
       setPagination({ pageIndex: 0, pageSize: 10 }); // Reset pagination when collapsed
+      setChildQuery("");
+      setIsSearchable(false);
     }
   }, [isExpanded]);
+
+  useEffect(() => {
+    if (!childQuery && (data?.total_count ?? 0) > 0) setIsSearchable(true);
+  }, [data, childQuery]);
+
+  const handleChildSearch = (query) => {
+    setChildQuery(query);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -278,6 +295,14 @@ const OrganizationTreeItem = ({
       {/* Child organizations */}
       {isExpanded && (
         <div className="bg-muted/20">
+          {(isSearchable || childQuery) && (
+            <OrgChildSearch
+              parentName={organization.organization_name}
+              onSearch={handleChildSearch}
+              paddingLeft={16 + indentWidth + 32}
+            />
+          )}
+
           {/* Render pagination controls */}
           {renderChildPagination()}
 
@@ -306,7 +331,9 @@ const OrganizationTreeItem = ({
                 className="text-muted-foreground text-center text-xs py-2 px-4 italic"
                 style={{ paddingLeft: `${16 + indentWidth + 32}px` }}
               >
-                No further organizations
+                {childQuery
+                  ? `No sub-organizations match "${childQuery}"`
+                  : "No further organizations"}
               </div>
             )
           )}

@@ -65,6 +65,7 @@ import { useAtom } from "jotai";
 import { selectedOrganizationAtom } from "@/store/userInfo";
 import StatusBadge from "@/components/common/StatusBadge";
 import { userProfileAtom } from "@/store/userProfile";
+import OrgChildSearch from "@/components/shared/header/organization/OrgChildSearch";
 
 const OrganizationTreeNode = ({
   organization,
@@ -113,6 +114,10 @@ const OrganizationTreeNode = ({
     );
   }, []);
   const pagination = childPagination;
+  const [childQuery, setChildQuery] = useState("");
+  // Sticky once this level has been seen to have any children, so the
+  // search box doesn't vanish when a search matches nothing.
+  const [isSearchable, setIsSearchable] = useState(false);
   const toast = useToastify();
   const { mutate: statusUpdate, isPending: statusLoad } =
     useUpdateOrganizationStatus();
@@ -148,6 +153,7 @@ const OrganizationTreeNode = ({
     isExpanded && !isCircular && !isMaxDepthReached
       ? organization.organization_id
       : null,
+    childQuery,
   );
 
   const totalPages = data?.total_pages ?? 1;
@@ -175,8 +181,19 @@ const OrganizationTreeNode = ({
     if (!isExpanded) {
       setChildren([]);
       setChildPagination({ pageIndex: 0, pageSize: 10 });
+      setChildQuery("");
+      setIsSearchable(false);
     }
   }, [isExpanded]);
+
+  useEffect(() => {
+    if (!childQuery && (data?.total_count ?? 0) > 0) setIsSearchable(true);
+  }, [data, childQuery]);
+
+  const handleChildSearch = (query) => {
+    setChildQuery(query);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -724,6 +741,14 @@ const OrganizationTreeNode = ({
 
         {isExpanded && !isCircular && !isMaxDepthReached && (
           <div>
+            {(isSearchable || childQuery) && (
+              <OrgChildSearch
+                parentName={organization.organization_name}
+                onSearch={handleChildSearch}
+                paddingLeft={indentWidth + 32}
+              />
+            )}
+
             {/* Render pagination controls */}
             {renderPagination()}
 
@@ -764,7 +789,9 @@ const OrganizationTreeNode = ({
                       className="col-span-12 text-muted-foreground italic"
                       style={{ paddingLeft: `${indentWidth + 32}px` }}
                     >
-                      No child organizations
+                      {childQuery
+                        ? `No sub-organizations match "${childQuery}"`
+                        : "No child organizations"}
                     </div>
                   </div>
                 </div>
