@@ -24,10 +24,8 @@ import {
   ChevronLeft,
   ChevronsLeft,
   ChevronsRight,
-  Search,
 } from "lucide-react";
 import { useState, useMemo } from "react";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useAtomValue } from "jotai";
 import { userProfileAtom } from "@/store/userProfile";
 import {
@@ -49,17 +47,12 @@ const CopyOrganizationSelector = ({
     pageIndex: 0,
     pageSize: 10,
   });
-  // Local rather than the shared `?search=` URL param (SearchBar) - this
-  // picker sits on top of list pages that own that param.
-  const [searchInput, setSearchInput] = useState("");
-  const searchQuery = useDebounce(searchInput.trim(), 300);
   const profile = useAtomValue(userProfileAtom);
 
   const { data, isLoading } = useGetOrganizations(
     pagination.pageIndex + 1,
     pagination.pageSize,
     profile?.organization_id || null,
-    searchQuery,
   );
   const { data: profileOrgDetails } = useGetOrganizationDetail(
     profile?.organization_id,
@@ -74,19 +67,11 @@ const CopyOrganizationSelector = ({
       organization_name: org.organization_name,
     });
     setIsOpen(false);
-    setSearchInput("");
   };
 
   const handleClose = () => {
     setIsOpen(false);
     setPagination({ pageIndex: 0, pageSize: 10 });
-    setExpandedOrgs(new Set());
-    setSearchInput("");
-  };
-
-  const handleSearchChange = (value) => {
-    setSearchInput(value);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     setExpandedOrgs(new Set());
   };
 
@@ -217,22 +202,14 @@ const CopyOrganizationSelector = ({
 
   const organizationsToDisplay = useMemo(() => {
     const orgs = [];
-    // The parent org comes from a separate detail call, not the searched
-    // list endpoint, so match it against the search client-side.
-    if (
-      profileOrgDetails &&
-      (!searchQuery ||
-        profileOrgDetails.organization_name
-          ?.toLowerCase()
-          .includes(searchQuery.toLowerCase()))
-    ) {
+    if (profileOrgDetails) {
       orgs.push({ ...profileOrgDetails, isParentOrg: true });
     }
     if (data?.organizations) {
       orgs.push(...data.organizations);
     }
     return orgs;
-  }, [profileOrgDetails, data?.organizations, searchQuery]);
+  }, [profileOrgDetails, data?.organizations]);
 
   const ParentOrgItem = ({ organization, isSelected }) => (
     <div
@@ -304,47 +281,10 @@ const CopyOrganizationSelector = ({
               </button>
             </div>
 
-            <div className="border-border border-b p-3">
-              <div className="relative">
-                <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-                <input
-                  type="text"
-                  value={searchInput}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  placeholder="Search organization..."
-                  autoFocus
-                  className="border-border bg-background focus:ring-primary/20 w-full rounded-md border py-2 pr-8 pl-9 text-sm focus:ring-2 focus:outline-none"
-                />
-                {searchInput && (
-                  <button
-                    type="button"
-                    onClick={() => handleSearchChange("")}
-                    className="text-muted-foreground hover:text-foreground absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-
             <div className="max-h-[60vh] overflow-y-auto">
               {isLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="text-primary h-6 w-6 animate-spin" />
-                </div>
-              ) : organizationsToDisplay.length === 0 ? (
-                <div className="text-muted-foreground flex flex-col items-center justify-center gap-1 py-8 text-center">
-                  <span>
-                    {searchQuery
-                      ? `No organizations match "${searchQuery}"`
-                      : "No organizations available"}
-                  </span>
-                  {searchQuery && (
-                    <span className="text-xs">
-                      Search only covers direct sub-organizations. To find a
-                      nested org, expand its parent.
-                    </span>
-                  )}
                 </div>
               ) : (
                 <div className="py-2">

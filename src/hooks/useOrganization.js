@@ -48,12 +48,11 @@ export function useGetOrganizations(
   page,
   pageSize,
   orgId = null,
-  query = "",
   options = {},
 ) {
   return useQuery({
-    queryKey: ["organizations", page, pageSize, orgId, query],
-    queryFn: () => getOrganizations(page, pageSize, orgId, query),
+    queryKey: ["organizations", page, pageSize, orgId],
+    queryFn: () => getOrganizations(page, pageSize, orgId),
     enabled: orgId !== null,
     staleTime: 0,
     refetchOnMount: true,
