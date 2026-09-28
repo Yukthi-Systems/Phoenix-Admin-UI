@@ -18,9 +18,11 @@
 import {
   useMutation,
   useQuery,
+  useInfiniteQuery,
   useQueryClient,
   keepPreviousData,
 } from "@tanstack/react-query";
+import { useMemo } from "react";
 import {
   createOrganization,
   deleteOrganization,
@@ -61,6 +63,43 @@ export function useGetOrganizations(
     placeholderData: keepPreviousData,
     ...options,
   });
+}
+
+// Scroll-to-load variant of useGetOrganizations for the org trees (list page
+// + pickers): one query per expanded level, each page appended as the user
+// scrolls. Keyed under "organizations" so invalidateOrganizationQueries()
+// still refreshes it.
+export function useInfiniteOrganizations(
+  orgId = null,
+  query = "",
+  pageSize = 20,
+) {
+  const result = useInfiniteQuery({
+    queryKey: ["organizations", "infinite", orgId, query, pageSize],
+    queryFn: ({ pageParam }) =>
+      getOrganizations(pageParam, pageSize, orgId, query),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) =>
+      allPages.length < (lastPage?.total_pages ?? 0)
+        ? allPages.length + 1
+        : undefined,
+    enabled: orgId !== null,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    placeholderData: keepPreviousData,
+  });
+
+  const organizations = useMemo(
+    () => result.data?.pages.flatMap((page) => page?.organizations ?? []) ?? [],
+    [result.data],
+  );
+
+  return {
+    ...result,
+    organizations,
+    totalCount: result.data?.pages[0]?.total_count ?? 0,
+  };
 }
 
 export function useGetOrganizationDetail(org_id) {

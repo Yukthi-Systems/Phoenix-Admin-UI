@@ -28,6 +28,9 @@ const OrgChildSearch = ({
   onSearch,
   paddingLeft = 16,
   className = "",
+  // Optional text shown beside the input (e.g. a match count) - callers
+  // pass it only while a search is active.
+  summary = null,
 }) => {
   const [input, setInput] = useState("");
   const debouncedInput = useDebounce(input.trim(), 300);
@@ -45,10 +48,10 @@ const OrgChildSearch = ({
 
   return (
     <div
-      className={`border-border border-b py-2 pr-4 ${className}`}
+      className={`border-border flex items-center gap-3 border-b py-2 pr-4 ${className}`}
       style={{ paddingLeft: `${paddingLeft}px` }}
     >
-      <div className="relative max-w-sm">
+      <div className="relative w-full max-w-sm">
         <Search className="text-muted-foreground absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2" />
         <input
           type="text"
@@ -79,6 +82,11 @@ const OrgChildSearch = ({
           </button>
         )}
       </div>
+      {summary && (
+        <span className="text-muted-foreground shrink-0 text-xs">
+          {summary}
+        </span>
+      )}
     </div>
   );
 };

@@ -16,20 +16,13 @@
  */
 
 import { useState, useEffect } from "react";
-import {
-  ChevronRight,
-  ChevronDown,
-  Loader2,
-  Building2,
-  ChevronLeft,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import { useGetOrganizations } from "@/hooks/useOrganization";
+import { ChevronRight, ChevronDown, Loader2 } from "lucide-react";
+import { useInfiniteOrganizations } from "@/hooks/useOrganization";
 import OrganizationLogo from "../../OrgLogo";
 import IdentityProgress from "@/components/common/IdentityProgress";
 import { BASE_ORG } from "@/constants/constants";
 import OrgChildSearch from "./OrgChildSearch";
+import LoadMoreTrigger from "./LoadMoreTrigger";
 
 const OrganizationTreeItem = ({
   organization,
@@ -39,11 +32,6 @@ const OrganizationTreeItem = ({
   expandedOrgs,
   setExpandedOrgs,
 }) => {
-  const [children, setChildren] = useState([]);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const [childQuery, setChildQuery] = useState("");
   // Sticky once this level has been seen to have any children, so the
   // search box doesn't vanish when a search matches nothing.
@@ -53,39 +41,30 @@ const OrganizationTreeItem = ({
   const baseOrgName = BASE_ORG;
   const indentWidth = level * 20;
 
-  const { data, isLoading, isError } = useGetOrganizations(
-    pagination.pageIndex + 1,
-    pagination.pageSize,
+  const {
+    organizations,
+    totalCount,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteOrganizations(
     isExpanded ? organization.organization_id : null,
     childQuery,
   );
-
-  const totalPages = data?.total_pages ?? 1;
-  const currentPage = pagination.pageIndex + 1;
-
-  useEffect(() => {
-    if (data && isExpanded) {
-      setChildren(data.organizations || []);
-    }
-  }, [data, isExpanded]);
+  const children = isExpanded ? organizations : [];
 
   useEffect(() => {
     if (!isExpanded) {
-      setChildren([]);
-      setPagination({ pageIndex: 0, pageSize: 10 }); // Reset pagination when collapsed
       setChildQuery("");
       setIsSearchable(false);
     }
   }, [isExpanded]);
 
   useEffect(() => {
-    if (!childQuery && (data?.total_count ?? 0) > 0) setIsSearchable(true);
-  }, [data, childQuery]);
-
-  const handleChildSearch = (query) => {
-    setChildQuery(query);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  };
+    if (!childQuery && totalCount > 0) setIsSearchable(true);
+  }, [totalCount, childQuery]);
 
   const handleToggle = (e) => {
     e.stopPropagation();
@@ -110,112 +89,6 @@ const OrganizationTreeItem = ({
   if (baseOrgName && organization.organization_name === baseOrgName) {
     return null;
   }
-
-  // Child level pagination component
-  const renderChildPagination = () => {
-    if (!isExpanded || totalPages <= 1) return null;
-
-    const getVisiblePages = () => {
-      const delta = 1; // Show 1 page on each side of current
-      const left = Math.max(1, currentPage - delta);
-      const right = Math.min(totalPages, currentPage + delta);
-      const pages = [];
-
-      for (let i = left; i <= right; i++) {
-        pages.push(i);
-      }
-      return pages;
-    };
-
-    return (
-      <div className="border-b border-border bg-muted/5">
-        <div
-          className="flex items-center justify-between py-2 px-4"
-          style={{ paddingLeft: `${16 + indentWidth + 32}px` }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              Page {currentPage} of {totalPages} • {data?.total_count || 0}{" "}
-              child organizations
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, pageIndex: 0 }))
-              }
-              disabled={currentPage === 1 || isLoading}
-              className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-              title="First page"
-            >
-              <ChevronsLeft className="w-3 h-3" />
-            </button>
-
-            <button
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: Math.max(0, prev.pageIndex - 1),
-                }))
-              }
-              disabled={currentPage === 1 || isLoading}
-              className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-              title="Previous page"
-            >
-              <ChevronLeft className="w-3 h-3" />
-            </button>
-
-            {/* Page numbers */}
-            {getVisiblePages().map((pageNum) => (
-              <button
-                key={pageNum}
-                onClick={() =>
-                  setPagination((prev) => ({ ...prev, pageIndex: pageNum - 1 }))
-                }
-                disabled={isLoading}
-                className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
-                  pageNum === currentPage
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-accent hover:text-accent-foreground border border-border"
-                }`}
-              >
-                {pageNum}
-              </button>
-            ))}
-
-            <button
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: Math.min(totalPages - 1, prev.pageIndex + 1),
-                }))
-              }
-              disabled={currentPage === totalPages || isLoading}
-              className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-              title="Next page"
-            >
-              <ChevronRight className="w-3 h-3" />
-            </button>
-
-            <button
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  pageIndex: totalPages - 1,
-                }))
-              }
-              disabled={currentPage === totalPages || isLoading}
-              className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-              title="Last page"
-            >
-              <ChevronsRight className="w-3 h-3" />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <div className="select-none">
@@ -298,13 +171,10 @@ const OrganizationTreeItem = ({
           {(isSearchable || childQuery) && (
             <OrgChildSearch
               parentName={organization.organization_name}
-              onSearch={handleChildSearch}
+              onSearch={setChildQuery}
               paddingLeft={16 + indentWidth + 32}
             />
           )}
-
-          {/* Render pagination controls */}
-          {renderChildPagination()}
 
           {isError ? (
             <div
@@ -314,17 +184,25 @@ const OrganizationTreeItem = ({
               Failed to load child organizations
             </div>
           ) : children.length > 0 ? (
-            children.map((childOrg) => (
-              <OrganizationTreeItem
-                key={childOrg.organization_id}
-                organization={childOrg}
-                level={level + 1}
-                selectedOrgId={selectedOrgId}
-                onSelect={onSelect}
-                expandedOrgs={expandedOrgs}
-                setExpandedOrgs={setExpandedOrgs}
+            <>
+              {children.map((childOrg) => (
+                <OrganizationTreeItem
+                  key={childOrg.organization_id}
+                  organization={childOrg}
+                  level={level + 1}
+                  selectedOrgId={selectedOrgId}
+                  onSelect={onSelect}
+                  expandedOrgs={expandedOrgs}
+                  setExpandedOrgs={setExpandedOrgs}
+                />
+              ))}
+              <LoadMoreTrigger
+                hasNextPage={hasNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                paddingLeft={16 + indentWidth + 32}
               />
-            ))
+            </>
           ) : (
             !isLoading && (
               <div

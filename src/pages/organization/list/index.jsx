@@ -18,12 +18,12 @@
 import { useAtomValue, useAtom } from "jotai";
 import { userProfileAtom } from "@/store/userProfile";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   useCreateOrganization,
   useDeleteOrganization,
   useGetOrganizationDetail,
-  useGetOrganizations,
+  useInfiniteOrganizations,
 } from "@/hooks/useOrganization";
 import { getOrganizations } from "@/api/organizations";
 import { getDomains } from "@/api/domain";
@@ -42,21 +42,14 @@ import { ImportActionLog } from "@/utils/importActionLog";
 import { getOrganizationImportFieldMapping } from "@/constants/import";
 import OrganizationTreeNode from "./OrganizationTree";
 import OrgChildSearch from "@/components/shared/header/organization/OrgChildSearch";
-import {
-  Loader2,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-  Upload,
-} from "lucide-react";
+import LoadMoreTrigger from "@/components/shared/header/organization/LoadMoreTrigger";
+import { Loader2, Upload } from "lucide-react";
 import {
   selectedOrganizationAtom,
   userInfoAtom,
   parentOrgAtom,
 } from "@/store/userInfo";
 import { useSyncedUiInfo } from "@/hooks/useSyncedUiInfo";
-import { useTablePagination } from "@/hooks/useTablePagination";
 
 const OrganizationTreeView = () => {
   const { permissions = [], organization_id } = useAtomValue(userProfileAtom);
@@ -76,19 +69,18 @@ const OrganizationTreeView = () => {
     clearBlock: clearDeleteBlock,
   } = usePreDeleteCheck();
   const [expandedOrgs, setExpandedOrgs] = useState(new Set());
-  const { pagination, onPaginationChange: setPagination } = useTablePagination(
-    10,
-    50,
-  );
   const [rootQuery, setRootQuery] = useState("");
   const toast = useToastify();
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useGetOrganizations(
-    pagination.pageIndex + 1,
-    pagination.pageSize,
-    organization_id,
-    rootQuery,
-  );
+  const {
+    organizations: rootOrganizations,
+    totalCount,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteOrganizations(organization_id, rootQuery);
   const { data: defaultOrgDetails } = useGetOrganizationDetail(organization_id);
 
   const { mutate, isPending } = useDeleteOrganization();
@@ -163,14 +155,6 @@ const OrganizationTreeView = () => {
     fetchData();
   };
 
-  const rootOrganizations = data?.organizations ?? [];
-  const totalPagesRef = useRef(1);
-  if (data?.total_pages) {
-    totalPagesRef.current = data.total_pages;
-  }
-  const totalPages = totalPagesRef.current;
-  const currentPage = pagination.pageIndex + 1;
-  const totalCount = data?.total_count ?? 0;
   const rootParentAvailableSpace =
     defaultOrgDetails?.quota_allocated - defaultOrgDetails?.quota_utilized;
   const rootParentAvailableIdentities =
@@ -178,11 +162,6 @@ const OrganizationTreeView = () => {
       ? -1
       : (defaultOrgDetails?.allocated_email_identities ?? 0) -
         (defaultOrgDetails?.utilized_email_identities ?? 0);
-
-  const handleRootSearch = (query) => {
-    setRootQuery(query);
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  };
 
   function handleDelete({ name, id }) {
     runDeleteCheck({
@@ -209,12 +188,7 @@ const OrganizationTreeView = () => {
   }
 
   function fetchData() {
-    queryClient.invalidateQueries([
-      "organizations",
-      pagination.pageIndex + 1,
-      pagination.pageSize,
-      organization_id,
-    ]);
+    queryClient.invalidateQueries({ queryKey: ["organizations"] });
   }
 
   const OnDelete = () => {
@@ -224,12 +198,7 @@ const OrganizationTreeView = () => {
         {
           onSuccess: () => {
             toast("success", "Organization deleted successfully");
-            queryClient.invalidateQueries([
-              "organizations",
-              pagination.pageIndex + 1,
-              pagination.pageSize,
-              organization_id,
-            ]);
+            queryClient.invalidateQueries({ queryKey: ["organizations"] });
 
             if (
               deleteId === selectedOrg?.organization_id &&
@@ -284,127 +253,6 @@ const OrganizationTreeView = () => {
     navigate("/organization/add");
   };
 
-  const renderRootPagination = () => {
-    // if (totalPages <= 1) return null;
-
-    const getVisiblePages = () => {
-      const delta = 1;
-      const left = Math.max(1, currentPage - delta);
-      const right = Math.min(totalPages, currentPage + delta);
-      const pages = [];
-
-      for (let i = left; i <= right; i++) {
-        pages.push(i);
-      }
-      return pages;
-    };
-
-    return (
-      <div className="flex items-center justify-between mt-4 gap-4 flex-wrap px-2.5 border-t pt-2 bg-card">
-        <div className="flex items-center gap-2">
-          <label
-            htmlFor="pageSize"
-            className="text-[13px] font-medium text-muted-foreground"
-          >
-            Rows per page:
-          </label>
-          <select
-            id="pageSize"
-            value={pagination.pageSize}
-            onChange={(e) => {
-              setPagination((prev) => ({
-                ...prev,
-                pageSize: Number(e.target.value),
-                pageIndex: 0, // Reset to first page when changing page size
-              }));
-            }}
-            className="border border-border rounded px-2 py-1 text-sm bg-background"
-          >
-            {[10, 15, 25, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize} className="bg-background">
-                {pageSize}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-[13px] font-medium text-muted-foreground">
-            Page {currentPage} of {totalPages} • {totalCount} organizations
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPagination((prev) => ({ ...prev, pageIndex: 0 }))}
-            disabled={currentPage === 1 || isLoading}
-            className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-            title="First page"
-          >
-            <ChevronsLeft className="w-4 h-4" />
-          </button>
-
-          <button
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: Math.max(0, prev.pageIndex - 1),
-              }))
-            }
-            disabled={currentPage === 1 || isLoading}
-            className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-            title="Previous page"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-
-          {/* Page numbers */}
-          {getVisiblePages().map((pageNum) => (
-            <button
-              key={pageNum}
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, pageIndex: pageNum - 1 }))
-              }
-              disabled={isLoading}
-              className={`px-3 py-1 text-sm font-medium rounded transition-colors ${
-                pageNum === currentPage
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-accent hover:text-accent-foreground border border-border"
-              }`}
-            >
-              {pageNum}
-            </button>
-          ))}
-
-          <button
-            onClick={() =>
-              setPagination((prev) => ({
-                ...prev,
-                pageIndex: Math.min(totalPages - 1, prev.pageIndex + 1),
-              }))
-            }
-            disabled={currentPage === totalPages || isLoading}
-            className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-            title="Next page"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-
-          <button
-            onClick={() =>
-              setPagination((prev) => ({ ...prev, pageIndex: totalPages - 1 }))
-            }
-            disabled={currentPage === totalPages || isLoading}
-            className="p-1 rounded disabled:opacity-50 hover:bg-accent hover:text-accent-foreground transition-colors"
-            title="Last page"
-          >
-            <ChevronsRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    );
-  };
-
   if (!permissions.includes("organization:view"))
     return (
       <AccessDenied content="Don't have access to view organization details." />
@@ -438,7 +286,7 @@ const OrganizationTreeView = () => {
             )}
         </div>
 
-        <div className="w-full h-[calc(100vh-150px)] shadow-lg overflow-hidden rounded-lg bg-card border border-border">
+        <div className="w-full h-[calc(100vh-150px)] flex flex-col shadow-lg overflow-hidden rounded-lg bg-card border border-border">
           <div className="bg-muted sticky top-0 left-0 z-10">
             <div className="min-w-full text-center">
               <div className="grid grid-cols-12 gap-4 px-2 py-2.5 border-b border-border font-semibold text-foreground">
@@ -453,7 +301,7 @@ const OrganizationTreeView = () => {
             </div>
           </div>
 
-          <div className="w-full h-[calc(100vh-270px)] overflow-y-auto relative">
+          <div className="w-full flex-1 min-h-0 overflow-y-auto relative">
             {defaultOrgDetails && (
               <OrganizationTreeNode
                 organization={defaultOrgDetails}
@@ -473,8 +321,13 @@ const OrganizationTreeView = () => {
             )}
             <OrgChildSearch
               parentName={defaultOrgDetails?.organization_name}
-              onSearch={handleRootSearch}
+              onSearch={setRootQuery}
               paddingLeft={32}
+              summary={
+                rootQuery &&
+                !isLoading &&
+                `Showing ${rootOrganizations.length} of ${totalCount} matching`
+              }
             />
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
@@ -526,10 +379,15 @@ const OrganizationTreeView = () => {
                     checkingDeleteId={checkingDeleteId}
                   />
                 ))}
+                <LoadMoreTrigger
+                  hasNextPage={hasNextPage}
+                  isFetchingNextPage={isFetchingNextPage}
+                  fetchNextPage={fetchNextPage}
+                  paddingLeft={32}
+                />
               </div>
             )}
           </div>
-          {renderRootPagination()}
         </div>
       </div>
 
