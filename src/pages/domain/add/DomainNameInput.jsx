@@ -21,9 +21,7 @@ import { CheckCircle, XCircle, Loader2, AlertCircle } from "lucide-react";
 
 import axios from "axios";
 import { Input } from "@/components/common/Inputs";
-import { DNS_API_KEY } from "@/constants/constants";
-
-const dnsURL = import.meta.env.VITE_DNS_URL || "";
+import { DNS_API_KEY, DNS_URL } from "@/constants/constants";
 
 const DomainNameInput = ({
   label = "Domain Name",
@@ -56,7 +54,7 @@ const DomainNameInput = ({
     const timer = setTimeout(async () => {
       setIsValidating(true);
       try {
-        const response = await axios.get(`${dnsURL}/api/dns/a-record`, {
+        const response = await axios.get(`${DNS_URL}/api/dns/a-record`, {
           params: {
             domain: domainName.toLowerCase(),
           },

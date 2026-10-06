@@ -30,7 +30,7 @@ import {
   GitCompare,
 } from "lucide-react";
 import { useGetDNSRecord } from "@/hooks/useDomain";
-import { DNS_API_KEY } from "@/constants/constants";
+import { DNS_API_KEY, DNS_URL } from "@/constants/constants";
 
 const DNSRecordsModal = ({ isOpen, onClose, domainName = "nekonik.com" }) => {
   const [copiedValue, setCopiedValue] = useState(null);
@@ -38,8 +38,6 @@ const DNSRecordsModal = ({ isOpen, onClose, domainName = "nekonik.com" }) => {
   const [isValidating, setIsValidating] = useState(false);
   const [validationResults, setValidationResults] = useState(null);
   const { data, isLoading, isError, error } = useGetDNSRecord(domainName);
-
-  const dnsURL = import.meta.env.VITE_DNS_URL || "";
 
   const mailServerRecords = data?.dns_records || [];
 
@@ -71,7 +69,7 @@ const DNSRecordsModal = ({ isOpen, onClose, domainName = "nekonik.com" }) => {
 
     try {
       const response = await fetch(
-        `${dnsURL}/api/dns/validate?domain=${encodeURIComponent(domainName)}`,
+        `${DNS_URL}/api/dns/validate?domain=${encodeURIComponent(domainName)}`,
         {
           headers: {
             "x-api-key": DNS_API_KEY,

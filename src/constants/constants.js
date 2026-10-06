@@ -57,6 +57,7 @@ export const PUBLIC_API_URL = getEnv(
   "https://public-api.example.com",
 );
 
+export const DNS_URL = getEnv("VITE_DNS_URL", "");
 export const DNS_API_KEY = getEnv("VITE_DNS_API_KEY", "");
 
 // Observability (OpenObserve RUM/logs)
