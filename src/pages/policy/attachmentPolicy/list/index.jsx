@@ -519,11 +519,9 @@ const ListAttachmentPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "attachment_policy_list",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["attachment_policy_list", organization_id, domainName],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -543,11 +541,9 @@ const ListAttachmentPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "attachment_policy_list",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["attachment_policy_list", organization_id, domainName],
+    });
   };
 
   const OnCancel = () => {
@@ -612,11 +608,9 @@ const ListAttachmentPolicy = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries([
-      "attachment_policy_list",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["attachment_policy_list", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

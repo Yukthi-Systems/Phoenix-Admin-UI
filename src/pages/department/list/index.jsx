@@ -370,7 +370,9 @@ const ListDepartments = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["departments", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["departments", organization_id],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -389,7 +391,9 @@ const ListDepartments = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["departments", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["departments", organization_id],
+    });
   };
 
   const OnDelete = () => {
@@ -403,7 +407,9 @@ const ListDepartments = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted department");
-            queryClient.invalidateQueries(["departments", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["departments", organization_id],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -443,7 +449,9 @@ const ListDepartments = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["departments", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["departments", organization_id],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

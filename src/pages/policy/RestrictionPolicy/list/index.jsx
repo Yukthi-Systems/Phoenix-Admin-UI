@@ -272,7 +272,9 @@ const ListRestrictionPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries(["restriction_policy", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["restriction_policy", organization_id],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -290,7 +292,9 @@ const ListRestrictionPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries(["restriction_policy", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["restriction_policy", organization_id],
+    });
   };
 
   const onCancel = () => {
@@ -361,7 +365,9 @@ const ListRestrictionPolicy = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["restriction_policy", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["restriction_policy", organization_id],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

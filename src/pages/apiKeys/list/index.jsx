@@ -143,7 +143,9 @@ const ListApiKeys = () => {
         {
           onSuccess: () => {
             // Toast is handled in the hook, but we can add extra logic here
-            queryClient.invalidateQueries(["api-keys", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["api-keys", organization_id],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -171,7 +173,7 @@ const ListApiKeys = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["api-keys", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["api-keys", organization_id] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

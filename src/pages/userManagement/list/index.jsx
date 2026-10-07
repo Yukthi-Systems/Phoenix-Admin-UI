@@ -396,7 +396,7 @@ const ListUsers = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["users", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["users", organization_id] });
   };
 
   const OnDelete = () => {
@@ -459,7 +459,7 @@ const ListUsers = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["users", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["users", organization_id] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

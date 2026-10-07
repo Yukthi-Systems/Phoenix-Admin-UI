@@ -80,7 +80,9 @@ const DisableTFA = ({
   });
 
   const refreshData = () =>
-    queryClient.invalidateQueries(["get_user_tfa", organization_id, user_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["get_user_tfa", organization_id, user_id],
+    });
 
   const handleEdit = (item) =>
     setEditState({ id: item.totp_id, value: item.totp_name });

@@ -146,11 +146,9 @@ export const useFollowUpLogic = (
         onSuccess: () => {
           setMessage("");
           setSelectedFiles([]);
-          queryClient.invalidateQueries([
-            "support-ticket-followups",
-            organizationId,
-            ticketId,
-          ]);
+          queryClient.invalidateQueries({
+            queryKey: ["support-ticket-followups", organizationId, ticketId],
+          });
           toast.success("Message sent successfully!");
         },
         onError: (err) => {

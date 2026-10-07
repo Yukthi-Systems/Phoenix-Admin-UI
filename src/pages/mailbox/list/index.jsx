@@ -602,7 +602,7 @@ const ListMailboxes = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["mailboxes", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["mailboxes", domainName] });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -621,7 +621,7 @@ const ListMailboxes = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["mailboxes", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["mailboxes", domainName] });
   };
 
   const OnDelete = () => {
@@ -632,7 +632,9 @@ const ListMailboxes = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted mailbox");
-            queryClient.invalidateQueries(["mailboxes", domainName]);
+            queryClient.invalidateQueries({
+              queryKey: ["mailboxes", domainName],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -667,7 +669,9 @@ const ListMailboxes = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully update mailbox status");
-            queryClient.invalidateQueries(["mailboxes", domainName]);
+            queryClient.invalidateQueries({
+              queryKey: ["mailboxes", domainName],
+            });
             removeFromSelection([statusId]);
             setShowStatusModal(false);
             setStatusId("");
@@ -702,8 +706,12 @@ const ListMailboxes = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully updated mailbox quota");
-            queryClient.invalidateQueries(["mailboxes", domainName]);
-            queryClient.invalidateQueries(["domains", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["mailboxes", domainName],
+            });
+            queryClient.invalidateQueries({
+              queryKey: ["domains", organization_id],
+            });
             removeFromSelection([deleteId]);
             setSpaceId("");
             setSpaceValue("");
@@ -734,7 +742,9 @@ const ListMailboxes = () => {
       {
         onSuccess: () => {
           toast("success", "Successfully password is updated");
-          queryClient.invalidateQueries(["mailboxes", domainName]);
+          queryClient.invalidateQueries({
+            queryKey: ["mailboxes", domainName],
+          });
           setPasswordId("");
           setShowPasswordModal(false);
           reset({
@@ -780,7 +790,7 @@ const ListMailboxes = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["mailboxes", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["mailboxes", domainName] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

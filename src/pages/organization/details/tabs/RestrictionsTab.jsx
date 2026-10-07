@@ -83,7 +83,9 @@ const RestrictionsTab = ({ orgId }) => {
         {
           onSuccess: () => {
             toast("success", "Restriction policy deleted successfully");
-            queryClient.invalidateQueries(["restriction_policy", orgId]);
+            queryClient.invalidateQueries({
+              queryKey: ["restriction_policy", orgId],
+            });
             setShowDeleteModal(false);
             setDeletePolicyId("");
             setDeletePolicyName("");

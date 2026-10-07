@@ -278,11 +278,9 @@ const ListFiltersPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "filters_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["filters_policy", organization_id, domainName],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -302,11 +300,9 @@ const ListFiltersPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "filters_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["filters_policy", organization_id, domainName],
+    });
   };
 
   const onCancel = () => {
@@ -374,11 +370,9 @@ const ListFiltersPolicy = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries([
-      "filters_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["filters_policy", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

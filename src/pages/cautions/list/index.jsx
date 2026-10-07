@@ -378,7 +378,7 @@ const ListCautions = () => {
     };
     ImportActionLog({ values: ActionLog });
     // Refresh the cautions list
-    queryClient.invalidateQueries(["cautions", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["cautions", organization_id] });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -397,7 +397,7 @@ const ListCautions = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["cautions", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["cautions", organization_id] });
   };
 
   const OnDelete = () => {
@@ -407,7 +407,9 @@ const ListCautions = () => {
         {
           onSuccess: (data) => {
             toast("success", "Successfully deleted caution message");
-            queryClient.invalidateQueries(["cautions", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["cautions", organization_id],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -447,7 +449,7 @@ const ListCautions = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["cautions", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["cautions", organization_id] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

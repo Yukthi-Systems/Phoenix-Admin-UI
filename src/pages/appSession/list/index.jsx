@@ -110,7 +110,7 @@ const AppSession = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted Mail25 app session");
-            queryClient.invalidateQueries(["app_session"]);
+            queryClient.invalidateQueries({ queryKey: ["app_session"] });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -143,7 +143,7 @@ const AppSession = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["app_session"]);
+    queryClient.invalidateQueries({ queryKey: ["app_session"] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

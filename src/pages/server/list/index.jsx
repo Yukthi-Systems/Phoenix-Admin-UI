@@ -433,12 +433,12 @@ const ListServers = () => {
   const handleImportCompleteWithRefresh = (results) => {
     handleImportComplete(results);
     // Refresh the servers list
-    queryClient.invalidateQueries(["servers"]);
+    queryClient.invalidateQueries({ queryKey: ["servers"] });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
     handleEditComplete(results);
-    queryClient.invalidateQueries(["servers"]);
+    queryClient.invalidateQueries({ queryKey: ["servers"] });
   };
 
   const OnStatusChange = () => {
@@ -531,7 +531,7 @@ const ListServers = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["servers"]);
+    queryClient.invalidateQueries({ queryKey: ["servers"] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

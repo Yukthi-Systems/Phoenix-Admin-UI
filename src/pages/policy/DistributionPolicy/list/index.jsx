@@ -287,11 +287,9 @@ const ListDistributionPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "distribution_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["distribution_policy", organization_id, domainName],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -311,11 +309,9 @@ const ListDistributionPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "distribution_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["distribution_policy", organization_id, domainName],
+    });
   };
 
   const onCancel = () => {
@@ -389,11 +385,9 @@ const ListDistributionPolicy = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries([
-      "distribution_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["distribution_policy", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }
@@ -447,11 +441,9 @@ const ListDistributionPolicy = () => {
   };
 
   const handleBulkCopyComplete = (results) => {
-    queryClient.invalidateQueries([
-      "distribution_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["distribution_policy", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

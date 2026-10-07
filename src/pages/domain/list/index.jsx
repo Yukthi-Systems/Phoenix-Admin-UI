@@ -617,7 +617,7 @@ const ListDomains = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["domains", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["domains", organization_id] });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -636,7 +636,7 @@ const ListDomains = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["domains", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["domains", organization_id] });
   };
 
   const handleBulkModalClose = () => {
@@ -650,7 +650,9 @@ const ListDomains = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted domain");
-            queryClient.invalidateQueries(["domains", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["domains", organization_id],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -680,7 +682,9 @@ const ListDomains = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully update domain status");
-            queryClient.invalidateQueries(["domains", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["domains", organization_id],
+            });
             removeFromSelection([deleteId]);
             setShowStatusModal(false);
             setStatusId("");
@@ -710,7 +714,9 @@ const ListDomains = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully update domain status");
-            queryClient.invalidateQueries(["domains", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["domains", organization_id],
+            });
             removeFromSelection([deleteId]);
             setSpaceId("");
             setSpaceValue("");
@@ -750,7 +756,7 @@ const ListDomains = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["domains", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["domains", organization_id] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }
@@ -879,7 +885,7 @@ const ListDomains = () => {
   };
 
   const handleBulkMoveComplete = (results) => {
-    queryClient.invalidateQueries(["domains", organization_id]);
+    queryClient.invalidateQueries({ queryKey: ["domains", organization_id] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

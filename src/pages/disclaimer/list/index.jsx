@@ -351,7 +351,9 @@ const ListDisclaimers = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["disclaimers", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["disclaimers", organization_id],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -370,7 +372,9 @@ const ListDisclaimers = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["disclaimers", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["disclaimers", organization_id],
+    });
   };
 
   const OnDelete = () => {
@@ -384,7 +388,9 @@ const ListDisclaimers = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted disclaimer");
-            queryClient.invalidateQueries(["disclaimers", organization_id]);
+            queryClient.invalidateQueries({
+              queryKey: ["disclaimers", organization_id],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -424,7 +430,9 @@ const ListDisclaimers = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["disclaimers", organization_id]);
+    queryClient.invalidateQueries({
+      queryKey: ["disclaimers", organization_id],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

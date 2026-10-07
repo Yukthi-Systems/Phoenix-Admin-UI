@@ -773,7 +773,7 @@ const ListIdentities = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["identities", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["identities", domainName] });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -792,7 +792,7 @@ const ListIdentities = () => {
       },
     };
     ImportActionLog({ values: ActionLog });
-    queryClient.invalidateQueries(["identities", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["identities", domainName] });
   };
 
   const OnDelete = () => {
@@ -803,7 +803,9 @@ const ListIdentities = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted identity");
-            queryClient.invalidateQueries(["identities", domainName]);
+            queryClient.invalidateQueries({
+              queryKey: ["identities", domainName],
+            });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -854,7 +856,9 @@ const ListIdentities = () => {
             {
               onSuccess: () => {
                 toast("success", "Successfully updated identity status");
-                queryClient.invalidateQueries(["identities", domainName]);
+                queryClient.invalidateQueries({
+                  queryKey: ["identities", domainName],
+                });
                 setShowStatusModal(false);
                 setStatusId("");
                 setStatusValue(false);
@@ -894,7 +898,7 @@ const ListIdentities = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["identities", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["identities", domainName] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

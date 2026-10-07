@@ -261,7 +261,9 @@ function PolicyRulesListing() {
 
   const handleImportCompleteWithRefresh = (results) => {
     handleImportComplete(results);
-    queryClient.invalidateQueries(["policyrules", organization_id, domainName]);
+    queryClient.invalidateQueries({
+      queryKey: ["policyrules", organization_id, domainName],
+    });
   };
 
   const OnCancel = () => {
@@ -325,7 +327,9 @@ function PolicyRulesListing() {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["policyrules", organization_id, domainName]);
+    queryClient.invalidateQueries({
+      queryKey: ["policyrules", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

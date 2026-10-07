@@ -120,7 +120,7 @@ const SsoSession = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully deleted SSO session");
-            queryClient.invalidateQueries(["sso_session"]);
+            queryClient.invalidateQueries({ queryKey: ["sso_session"] });
             removeFromSelection([deleteId]);
             setShowDeleteModal(false);
             setDeleteId("");
@@ -153,7 +153,7 @@ const SsoSession = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries(["sso_session"]);
+    queryClient.invalidateQueries({ queryKey: ["sso_session"] });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

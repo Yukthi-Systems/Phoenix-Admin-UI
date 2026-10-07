@@ -236,7 +236,9 @@ const ListEmailClientSessions = () => {
             "success",
             `Session ${selectedSession.is_active ? "deactivated" : "activated"} successfully`,
           );
-          queryClient.invalidateQueries(["email_client_sessions", domainName]);
+          queryClient.invalidateQueries({
+            queryKey: ["email_client_sessions", domainName],
+          });
           setShowActiveModal(false);
           setSelectedSession(null);
         },
@@ -265,7 +267,9 @@ const ListEmailClientSessions = () => {
       {
         onSuccess: () => {
           toast("success", "Successfully deleted session");
-          queryClient.invalidateQueries(["email_client_sessions", domainName]);
+          queryClient.invalidateQueries({
+            queryKey: ["email_client_sessions", domainName],
+          });
           setShowDeleteModal(false);
           setDeleteValue("");
           setSelectedSession(null);

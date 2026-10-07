@@ -145,11 +145,9 @@ const MailboxDetails = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully updated mailbox status");
-            queryClient.invalidateQueries([
-              "mailbox",
-              domain_name,
-              email_prefix,
-            ]);
+            queryClient.invalidateQueries({
+              queryKey: ["mailbox", domain_name, email_prefix],
+            });
             setShowStatusModal(false);
             setStatusId("");
             setStatusValue(false);
@@ -183,11 +181,9 @@ const MailboxDetails = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully updated mailbox quota");
-            queryClient.invalidateQueries([
-              "mailbox",
-              domain_name,
-              email_prefix,
-            ]);
+            queryClient.invalidateQueries({
+              queryKey: ["mailbox", domain_name, email_prefix],
+            });
             setSpaceId("");
             setSpaceValue("");
             setShowSpaceModal(false);

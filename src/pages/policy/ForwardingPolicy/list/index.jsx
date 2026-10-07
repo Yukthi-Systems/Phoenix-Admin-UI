@@ -292,11 +292,9 @@ const ListForwardingPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "forwarding_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["forwarding_policy", organization_id, domainName],
+    });
   };
 
   const handleEditCompleteWithRefresh = (results) => {
@@ -316,11 +314,9 @@ const ListForwardingPolicy = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries([
-      "forwarding_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["forwarding_policy", organization_id, domainName],
+    });
   };
 
   const onCancel = () => {
@@ -394,11 +390,9 @@ const ListForwardingPolicy = () => {
   };
 
   const handleBulkDeleteComplete = (results) => {
-    queryClient.invalidateQueries([
-      "forwarding_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["forwarding_policy", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }
@@ -452,11 +446,9 @@ const ListForwardingPolicy = () => {
   };
 
   const handleBulkCopyComplete = (results) => {
-    queryClient.invalidateQueries([
-      "forwarding_policy",
-      organization_id,
-      domainName,
-    ]);
+    queryClient.invalidateQueries({
+      queryKey: ["forwarding_policy", organization_id, domainName],
+    });
     if (results.successful.length > 0) {
       removeFromSelection(results.successful);
     }

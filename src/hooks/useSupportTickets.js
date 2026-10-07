@@ -117,7 +117,7 @@ export const useUpdateSupportTicketStatus = () => {
       updateSupportTicketStatus(organization_id, ticket_id, payload),
     onSuccess: () => {
       toast.success("Ticket status updated successfully");
-      queryClient.invalidateQueries(["admin-support-tickets"]);
+      queryClient.invalidateQueries({ queryKey: ["admin-support-tickets"] });
     },
     onError: (error) => {
       toast.error(
@@ -134,7 +134,7 @@ export const useDeleteSupportTicket = () => {
       deleteSupportTicket(organization_id, ticket_id),
     onSuccess: () => {
       toast.success("Ticket deleted successfully");
-      queryClient.invalidateQueries(["admin-support-tickets"]);
+      queryClient.invalidateQueries({ queryKey: ["admin-support-tickets"] });
     },
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Failed to delete ticket");

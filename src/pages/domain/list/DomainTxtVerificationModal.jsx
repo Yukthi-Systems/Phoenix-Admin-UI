@@ -91,9 +91,11 @@ const DomainTxtVerificationModal = ({
   };
 
   const invalidateAll = () => {
-    queryClient.invalidateQueries(["domain", domain_name]);
-    queryClient.invalidateQueries(["domain_txt_key", domain_name]);
-    queryClient.invalidateQueries(["domains"]);
+    queryClient.invalidateQueries({ queryKey: ["domain", domain_name] });
+    queryClient.invalidateQueries({
+      queryKey: ["domain_txt_key", domain_name],
+    });
+    queryClient.invalidateQueries({ queryKey: ["domains"] });
   };
 
   const handleValidate = () => {

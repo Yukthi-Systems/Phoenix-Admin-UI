@@ -149,8 +149,12 @@ const DomainDetails = () => {
                   "success",
                   "Domain DNS TXT record verified and domain activated successfully",
                 );
-                queryClient.invalidateQueries(["domain", domain_name]);
-                queryClient.invalidateQueries(["domain_txt_key", domain_name]);
+                queryClient.invalidateQueries({
+                  queryKey: ["domain", domain_name],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["domain_txt_key", domain_name],
+                });
               },
               onError: (error) => {
                 toast(
@@ -158,7 +162,9 @@ const DomainDetails = () => {
                   "Domain was verified, but activating it failed. Please activate it manually from More Actions.",
                 );
                 console.error(error);
-                queryClient.invalidateQueries(["domain", domain_name]);
+                queryClient.invalidateQueries({
+                  queryKey: ["domain", domain_name],
+                });
               },
             },
           );
@@ -180,8 +186,10 @@ const DomainDetails = () => {
             );
             console.error(error);
           }
-          queryClient.invalidateQueries(["domain", domain_name]);
-          queryClient.invalidateQueries(["domain_txt_key", domain_name]);
+          queryClient.invalidateQueries({ queryKey: ["domain", domain_name] });
+          queryClient.invalidateQueries({
+            queryKey: ["domain_txt_key", domain_name],
+          });
         },
       },
     );
@@ -236,7 +244,9 @@ const DomainDetails = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully update domain status");
-            queryClient.invalidateQueries(["domain", domain_name]);
+            queryClient.invalidateQueries({
+              queryKey: ["domain", domain_name],
+            });
             setShowStatusModal(false);
             setStatusId("");
             setStatusValue(false);
@@ -265,7 +275,9 @@ const DomainDetails = () => {
         {
           onSuccess: () => {
             toast("success", "Successfully update domain status");
-            queryClient.invalidateQueries(["domain", domain_name]);
+            queryClient.invalidateQueries({
+              queryKey: ["domain", domain_name],
+            });
             setSpaceId("");
             setSpaceValue("");
             setShowSpaceModal(false);

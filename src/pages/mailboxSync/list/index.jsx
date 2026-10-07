@@ -155,7 +155,7 @@ const MailBoxSyncList = () => {
     };
     ImportActionLog({ values: ActionLog });
 
-    queryClient.invalidateQueries(["imap_sync_jobs", domainName]);
+    queryClient.invalidateQueries({ queryKey: ["imap-sync-jobs", domainName] });
   };
 
   const columns = useMemo(() => {
