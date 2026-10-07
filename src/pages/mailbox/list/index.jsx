@@ -984,9 +984,6 @@ const ListMailboxes = () => {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the email address exactly to confirm deletion:"
         title="Delete Mailbox"
         description="This action cannot be undone and will remove all mailbox data."
       />

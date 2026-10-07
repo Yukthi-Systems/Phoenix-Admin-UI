@@ -614,9 +614,6 @@ const ListUsers = () => {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the username exactly to confirm deletion:"
         title="Delete User"
         description="This action cannot be undone and will remove all user data."
       />

@@ -640,9 +640,6 @@ const ListCautions = () => {
         value={deleteValue || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the caution name exactly to confirm deletion:"
       />
 
       {/* Bulk Delete Modal */}

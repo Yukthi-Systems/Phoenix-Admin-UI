@@ -278,9 +278,6 @@ function ViewPolicyRules() {
         value={data?.rule_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={data?.rule_name}
-        confirmationPlaceholder={`Type "${data?.rule_name}" to confirm`}
-        confirmationLabel="Please type the policy rule name exactly to confirm deletion:"
         title="Delete Policy Rule"
         description="This action cannot be undone and will remove all policy rule data."
       />

@@ -792,9 +792,6 @@ const OrganizationDetails = () => {
         value={organization_details?.organization_name || ""}
         isLoading={isDeletePending}
         requireConfirmation={true}
-        confirmationText={organization_details?.organization_name || ""}
-        confirmationPlaceholder={`Type "${organization_details?.organization_name || ""}" to confirm`}
-        confirmationLabel="Please type the organization name exactly to confirm deletion:"
         title="Delete Organization"
         description="This action cannot be undone and will remove all organization data."
       />

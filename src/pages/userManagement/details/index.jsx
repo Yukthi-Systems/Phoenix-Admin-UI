@@ -892,9 +892,6 @@ const UserDetails = () => {
         value={user_details?.user_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={user_details?.user_name}
-        confirmationPlaceholder={`Type "${user_details?.user_name}" to confirm`}
-        confirmationLabel="Please type the username exactly to confirm deletion:"
         title="Delete User"
         description="This action cannot be undone and will remove all user data."
       />

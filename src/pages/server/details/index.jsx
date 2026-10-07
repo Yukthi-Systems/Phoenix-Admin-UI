@@ -508,9 +508,6 @@ const ServerDetails = () => {
         value={server?.host_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={server?.host_name}
-        confirmationPlaceholder={`Type "${server?.host_name}" to confirm`}
-        confirmationLabel="Please type the server hostname exactly to confirm deletion:"
         title="Delete Server"
         description="This action cannot be undone and will remove all server data."
       />

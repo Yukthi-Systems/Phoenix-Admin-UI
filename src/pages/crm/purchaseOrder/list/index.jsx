@@ -348,9 +348,6 @@ function CRMPO() {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the CRM purchase order exactly to confirm deletion:"
         title="Delete CRM purchase order"
         description="This action cannot be undone and will remove all CRM purchase order data."
       />

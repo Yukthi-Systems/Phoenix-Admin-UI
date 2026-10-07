@@ -536,9 +536,6 @@ const MailboxDetails = () => {
         value={mailbox_details?.email || " email address"}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={mailbox_details?.email || "email address"}
-        confirmationPlaceholder={`Type "${mailbox_details?.email || "email address"}" to confirm`}
-        confirmationLabel="Please type the email address exactly to confirm deletion:"
         title="Delete Mailbox"
         description="This action cannot be undone and will remove all mailbox data."
       />

@@ -1100,9 +1100,6 @@ const ListIdentities = () => {
         value={deleteValue}
         isLoading={deletePending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the identity email exactly to confirm deletion:"
         title="Delete E-Mail Identity"
         description="This action cannot be undone and will permanently remove this E-Mail Identity."
       />

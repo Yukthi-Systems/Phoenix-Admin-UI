@@ -647,9 +647,6 @@ const ListAdminTickets = () => {
         description={`Are you sure?. This action cannot be undone.`}
         isLoading={isDeletingTicket}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the Ticket subject exactly to confirm deletion:"
       />
 
       {showAssignModal && selectedTicket && (

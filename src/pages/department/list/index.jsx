@@ -628,9 +628,6 @@ const ListDepartments = () => {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the department name exactly to confirm deletion:"
         title="Delete Department"
         description="This action cannot be undone and will remove all department data."
       />

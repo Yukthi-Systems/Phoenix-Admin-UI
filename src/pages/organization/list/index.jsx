@@ -398,9 +398,6 @@ const OrganizationTreeView = () => {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the Organization name exactly to confirm deletion:"
         title="Delete Organization"
         description="This action cannot be undone and will remove all Organization data."
       />

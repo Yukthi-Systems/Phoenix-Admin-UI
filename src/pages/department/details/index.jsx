@@ -343,9 +343,6 @@ const DepartmentDetails = () => {
         value={department?.department_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={department?.department_name || ""}
-        confirmationPlaceholder={`Type "${department?.department_name || ""}" to confirm`}
-        confirmationLabel="Please type the department name exactly to confirm deletion:"
         title="Delete Department"
         description="This action cannot be undone and will remove all department data."
       />

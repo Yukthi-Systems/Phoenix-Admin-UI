@@ -19,6 +19,10 @@ import { CircleX } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { TableCancelButton, TableDeleteButton } from "./Buttons";
 
+// Same fixed word BulkDeleteModal asks for - typing the record's own name
+// (domain, org, email...) is no longer required anywhere.
+const CONFIRMATION_WORD = "Delete";
+
 function DeleteModelBox({
   isOpen = false,
   handleDelete = () => {},
@@ -26,9 +30,6 @@ function DeleteModelBox({
   value = "",
   isLoading = false,
   requireConfirmation = false,
-  confirmationText = "",
-  confirmationPlaceholder = "Type to confirm",
-  confirmationLabel = "Please type the name to confirm deletion:",
   title = "Are you sure?",
   description = "It will be removed from the list",
 }) {
@@ -43,18 +44,10 @@ function DeleteModelBox({
   }, [isOpen]);
 
   useEffect(() => {
-    if (requireConfirmation) {
-      if (confirmationText) {
-        setIsConfirmationValid(
-          confirmationInput.trim() === confirmationText.trim(),
-        );
-      } else {
-        setIsConfirmationValid(confirmationInput.trim().length > 0);
-      }
-    } else {
-      setIsConfirmationValid(true);
-    }
-  }, [confirmationInput, confirmationText, requireConfirmation]);
+    setIsConfirmationValid(
+      !requireConfirmation || confirmationInput.trim() === CONFIRMATION_WORD,
+    );
+  }, [confirmationInput, requireConfirmation]);
 
   if (!isOpen) return null;
 
@@ -113,7 +106,7 @@ function DeleteModelBox({
           {requireConfirmation && (
             <div className="mb-4">
               <label className="block text-sm font-medium text-card-foreground mb-2">
-                {confirmationLabel}
+                Please type "{CONFIRMATION_WORD}" to confirm deletion:
               </label>
               <input
                 type="text"
@@ -123,7 +116,7 @@ function DeleteModelBox({
                 onPaste={handlePrevent}
                 onCut={handlePrevent}
                 onContextMenu={handlePrevent}
-                placeholder={confirmationPlaceholder}
+                placeholder={`Type '${CONFIRMATION_WORD}' to confirm`}
                 className={`w-full px-3 py-2 border rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors ${
                   requireConfirmation && confirmationInput.length > 0
                     ? isConfirmationValid
@@ -135,21 +128,11 @@ function DeleteModelBox({
                 autoFocus
                 onKeyDown={handleKeyDown}
               />
-              {requireConfirmation &&
-                confirmationText &&
-                confirmationInput.length > 0 &&
-                !isConfirmationValid && (
-                  <p className="text-sm text-destructive mt-1 select-none">
-                    Please type "{confirmationText}" exactly to confirm
-                  </p>
-                )}
-              {requireConfirmation &&
-                !confirmationText &&
-                confirmationInput.length === 0 && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Type anything to confirm deletion
-                  </p>
-                )}
+              {confirmationInput.length > 0 && !isConfirmationValid && (
+                <p className="text-sm text-destructive mt-1 select-none">
+                  Please type "{CONFIRMATION_WORD}" exactly to confirm
+                </p>
+              )}
             </div>
           )}
         </div>

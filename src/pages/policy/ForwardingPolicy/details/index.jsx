@@ -322,9 +322,6 @@ function ViewForwardingPolicy() {
         value={data?.policy_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={data?.policy_name || ""}
-        confirmationPlaceholder={`Type "${data?.policy_name || "policy name"}" to confirm`}
-        confirmationLabel="Please type the policy name exactly to confirm deletion:"
         title="Delete Forwarding Policy"
         description="This action cannot be undone and will remove all forwarding policy data, including all forwarding rules and filters."
       />

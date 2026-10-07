@@ -269,9 +269,6 @@ function ListPermissionTemplate() {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the template name exactly to confirm deletion:"
         title="Delete Permission Template"
         description={
           <div className="space-y-3 text-left">

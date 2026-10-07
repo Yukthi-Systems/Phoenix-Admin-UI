@@ -260,9 +260,6 @@ function CRMService() {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the CRM service exactly to confirm deletion:"
         title="Delete CRM Service"
         description="This action cannot be undone and will remove all CRM service data."
       />

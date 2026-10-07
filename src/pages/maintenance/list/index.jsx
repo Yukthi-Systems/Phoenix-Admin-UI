@@ -423,9 +423,6 @@ function MaintenanceStatusListing() {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the maintenance title exactly to confirm deletion:"
         title="Delete Maintenance Status"
         description="This action cannot be undone and will permanently remove the maintenance status."
       />

@@ -669,9 +669,6 @@ const ListRestrictionPolicy = () => {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the policy name exactly to confirm deletion:"
         title="Delete Restriction Policy"
         description="This action cannot be undone and will remove all policy data."
       />

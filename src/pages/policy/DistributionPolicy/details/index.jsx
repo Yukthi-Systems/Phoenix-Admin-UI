@@ -449,9 +449,6 @@ function ViewDistributionPolicy() {
         value={data?.policy_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={data?.policy_name || ""}
-        confirmationPlaceholder={`Type "${data?.policy_name || "policy name"}" to confirm`}
-        confirmationLabel="Please type the policy name exactly to confirm deletion:"
         title="Delete Distribution Policy"
         description="This action cannot be undone and will remove all distribution policy data, including all member configurations."
       />

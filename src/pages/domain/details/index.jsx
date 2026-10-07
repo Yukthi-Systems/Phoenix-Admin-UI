@@ -877,9 +877,6 @@ const DomainDetails = () => {
         value={domain_name || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={domain_name}
-        confirmationPlaceholder={`Type "${domain_name}" to confirm`}
-        confirmationLabel="Please type the domain name exactly to confirm deletion:"
         title="Delete Domain"
         description="This action cannot be undone and will remove all domain data."
       />

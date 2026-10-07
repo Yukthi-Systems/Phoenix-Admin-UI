@@ -1049,9 +1049,6 @@ const ListDomains = () => {
         value={deleteValue}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={deleteValue}
-        confirmationPlaceholder={`Type "${deleteValue}" to confirm`}
-        confirmationLabel="Please type the domain name exactly to confirm deletion:"
         title="Delete Domain"
         description="This action cannot be undone and will remove all domain data."
       />

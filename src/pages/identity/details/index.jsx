@@ -374,9 +374,6 @@ const IdentityDetails = () => {
         value={identity?.email || email || ""}
         isLoading={isPending}
         requireConfirmation={true}
-        confirmationText={identity?.email || email || ""}
-        confirmationPlaceholder={`Type "${identity?.email || email || ""}" to confirm`}
-        confirmationLabel="Please type the email exactly to confirm deletion:"
         title="Delete E-Mail Identity"
         description="This action cannot be undone and will permanently delete this identity."
       />

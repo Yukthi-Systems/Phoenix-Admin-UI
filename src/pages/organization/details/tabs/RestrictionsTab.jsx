@@ -171,9 +171,6 @@ const RestrictionsTab = ({ orgId }) => {
         value={deletePolicyName}
         isLoading={isDeletePending}
         requireConfirmation={true}
-        confirmationText={deletePolicyName}
-        confirmationPlaceholder={`Type "${deletePolicyName}" to confirm`}
-        confirmationLabel="Please type the policy name exactly to confirm deletion:"
         title="Delete Restriction Policy"
         description="This action cannot be undone and will permanently delete this restriction policy."
       />
