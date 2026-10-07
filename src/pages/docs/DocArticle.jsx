@@ -15,17 +15,17 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { Suspense, lazy, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import DataLoading from "@/components/common/DataLoading";
 import DocContent from "@/components/docs/DocContent";
-import { getFlowDocs, getFlowMeta } from "@/docs/registry";
+import { getDocComponent, getFlowDocs, getFlowMeta } from "@/docs/registry";
 
 const titleCase = (s = "") =>
   s.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
 const Section = ({ entry, anchor }) => {
-  const Lazy = useMemo(() => lazy(entry.load), [entry]);
+  const Lazy = getDocComponent(entry);
   return (
     <section id={anchor} className="scroll-mt-24">
       <Suspense fallback={<DataLoading content="Loading section..." />}>
@@ -44,9 +44,13 @@ const DocArticle = ({ feature, flow }) => {
   const meta = getFlowMeta(feature, flow);
   const steps = getFlowDocs(feature, flow);
   const { hash } = useLocation();
+  const articleRef = useRef(null);
 
   useEffect(() => {
     if (!hash) {
+      // The docs page scrolls inside its own content pane, not the window -
+      // reset that too, or switching guides keeps the previous scroll offset.
+      articleRef.current?.closest("[data-doc-scroll]")?.scrollTo({ top: 0 });
       window.scrollTo({ top: 0 });
       return;
     }
@@ -63,7 +67,7 @@ const DocArticle = ({ feature, flow }) => {
   }
 
   return (
-    <article className="mx-auto max-w-3xl pb-24 text-left">
+    <article ref={articleRef} className="mx-auto max-w-3xl pb-24 text-left">
       <header className="mb-6">
         <p className="text-muted-foreground text-xs tracking-wide uppercase">
           {titleCase(feature)}

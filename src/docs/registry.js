@@ -35,6 +35,8 @@
  *   ---
  */
 
+import { lazy } from "react";
+
 // Lazy component loaders - one code-split chunk per doc.
 const loaders = import.meta.glob("./**/*.mdx");
 // Eager frontmatter only (cheap) - used for nav, ordering and search.
@@ -86,6 +88,17 @@ const ENTRIES = Object.entries(loaders).map(([key, load]) => {
 });
 
 const sortByStep = (a, b) => (a.step ?? 999) - (b.step ?? 999);
+
+const lazyComponents = new Map();
+
+/** The (cached) lazy component that renders a registry entry. */
+export const getDocComponent = (entry) => {
+  if (!entry) return null;
+  if (!lazyComponents.has(entry.key)) {
+    lazyComponents.set(entry.key, lazy(entry.load));
+  }
+  return lazyComponents.get(entry.key);
+};
 
 /** All step docs for a flow, ordered by step (excludes `_meta`). */
 export const getFlowDocs = (feature, flow) =>

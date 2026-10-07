@@ -15,12 +15,12 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { Suspense, lazy, useMemo } from "react";
+import { Suspense } from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, ArrowUpRight } from "lucide-react";
 import DataLoading from "@/components/common/DataLoading";
 import DocContent from "./DocContent";
-import { getStepDoc } from "@/docs/registry";
+import { getDocComponent, getStepDoc } from "@/docs/registry";
 
 /**
  * Renders the documentation for a single wizard step inside the DocDrawer.
@@ -30,9 +30,7 @@ const StepDoc = ({ docId, step }) => {
   const [feature, flow] = (docId || "").split("/");
   const entry = getStepDoc(feature, flow, step);
 
-  // `entry` is a stable module-level object from the registry, so keying on
-  // it is safe and recomputes only when the step actually changes.
-  const LazyDoc = useMemo(() => (entry ? lazy(entry.load) : null), [entry]);
+  const LazyDoc = getDocComponent(entry);
 
   if (!entry || !LazyDoc) {
     return (

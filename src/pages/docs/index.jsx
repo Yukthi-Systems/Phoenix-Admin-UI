@@ -63,7 +63,7 @@ const DocsPage = () => {
       </aside>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div data-doc-scroll className="flex-1 overflow-y-auto">
         {feature && flow ? (
           <DocArticle feature={feature} flow={flow} />
         ) : (
