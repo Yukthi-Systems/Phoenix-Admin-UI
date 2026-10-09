@@ -149,6 +149,10 @@ const OrganizationInfo = ({ organization_id }) => {
         label="File Service"
         value={<BooleanIndicator value={data?.file_service_enabled} />}
       />
+      <InfoItem
+        label="Tasks & Calendar Service"
+        value={<BooleanIndicator value={data?.tasks_service_enabled} />}
+      />
     </>
   );
 };

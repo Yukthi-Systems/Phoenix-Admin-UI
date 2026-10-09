@@ -55,6 +55,7 @@ const STEPS = [
       "email_service_enabled",
       "chat_service_enabled",
       "file_service_enabled",
+      "tasks_service_enabled",
     ],
   },
   {
@@ -138,6 +139,8 @@ const AddOrganization = () => {
         email_service_enabled: parentOrgDetails.email_service_enabled ?? false,
         chat_service_enabled: parentOrgDetails.chat_service_enabled ?? false,
         file_service_enabled: parentOrgDetails.file_service_enabled ?? false,
+        tasks_service_enabled:
+          parentOrgDetails.tasks_service_enabled ?? false,
       }
     : parentOrg;
 
@@ -271,6 +274,7 @@ const AddOrganization = () => {
       email_service_enabled: organization?.email_service_enabled ?? false,
       chat_service_enabled: organization?.chat_service_enabled ?? false,
       file_service_enabled: organization?.file_service_enabled ?? false,
+      tasks_service_enabled: organization?.tasks_service_enabled ?? false,
     });
 
     setValue("parent_organization_id", organization.organization_id, {

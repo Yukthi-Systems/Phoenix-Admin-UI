@@ -309,6 +309,11 @@ const EditChatUser = lazyRetry(() => import("@/pages/chat/preference"));
 const FilePreference = lazyRetry(() => import("@/pages/files/preference"));
 const FileUserList = lazyRetry(() => import("@/pages/files/users"));
 const FilesDashboard = lazyRetry(() => import("@/pages/files/dashboard"));
+
+// Calendar & Tasks
+const CalendarDashboard = lazyRetry(() => import("@/pages/calendar/dashboard"));
+const CalendarSettings = lazyRetry(() => import("@/pages/calendar/settings"));
+const CalendarUserList = lazyRetry(() => import("@/pages/calendar/users"));
 const MaintenanceStatusListing = lazyRetry(
   () => import("@/pages/maintenance/list"),
 );
@@ -1432,6 +1437,32 @@ const Router = [
             element: (
               <LazyWrapper>
                 <FileUserList />
+              </LazyWrapper>
+            ),
+          },
+
+          // Calendar & Tasks routes
+          {
+            path: "/calendar/dashboard",
+            element: (
+              <LazyWrapper>
+                <CalendarDashboard />
+              </LazyWrapper>
+            ),
+          },
+          {
+            path: "/calendar/settings",
+            element: (
+              <LazyWrapper>
+                <CalendarSettings />
+              </LazyWrapper>
+            ),
+          },
+          {
+            path: "/calendar/users",
+            element: (
+              <LazyWrapper>
+                <CalendarUserList />
               </LazyWrapper>
             ),
           },

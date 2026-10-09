@@ -161,6 +161,10 @@ const PreviewStep = ({
                 label="File"
                 enabled={formData.file_service_enabled}
               />
+              <ServiceBadge
+                label="Tasks & Calendar"
+                enabled={formData.tasks_service_enabled}
+              />
             </div>
           }
         />

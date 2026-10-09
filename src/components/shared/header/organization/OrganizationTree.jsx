@@ -207,6 +207,9 @@ const OrganizationSelector = ({
           profileOrgDetails.utilized_email_identities ?? 0,
         chat_service_enabled: profileOrgDetails.chat_service_enabled ?? false,
         email_service_enabled: profileOrgDetails.email_service_enabled ?? false,
+        file_service_enabled: profileOrgDetails.file_service_enabled ?? false,
+        tasks_service_enabled:
+          profileOrgDetails.tasks_service_enabled ?? false,
       };
     }
     return null;

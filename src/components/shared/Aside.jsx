@@ -64,6 +64,7 @@ import {
   MessageCircle,
   User,
   FolderOpen,
+  CalendarDays,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import VersionModal from "./VersionModal";
@@ -222,6 +223,39 @@ export const navItems = [
         hasPermission: true,
         serviceName: SERVICE_KEYS.FILE,
         permissionValue: "file:view",
+      },
+    ],
+  },
+  {
+    name: "Calendar & Tasks",
+    icon: <CalendarDays size={18} />,
+    hasChildren: true,
+    hasPermission: true,
+    serviceName: SERVICE_KEYS.TASKS,
+    children: [
+      {
+        name: "Dashboard",
+        icon: <LayoutDashboard size={16} />,
+        link: "/calendar/dashboard",
+        hasPermission: true,
+        serviceName: SERVICE_KEYS.TASKS,
+        permissionValue: "tasks_calendar:view",
+      },
+      {
+        name: "Users",
+        icon: <Users size={16} />,
+        link: "/calendar/users",
+        hasPermission: true,
+        serviceName: SERVICE_KEYS.TASKS,
+        permissionValue: "tasks_calendar:view",
+      },
+      {
+        name: "Settings",
+        icon: <Settings size={16} />,
+        link: "/calendar/settings",
+        hasPermission: true,
+        serviceName: SERVICE_KEYS.TASKS,
+        permissionValue: "tasks_calendar:view",
       },
     ],
   },

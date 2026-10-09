@@ -31,6 +31,7 @@ import {
   Mail,
   MessageSquare,
   FolderOpen,
+  CalendarDays,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -486,6 +487,12 @@ const OrganizationTreeNode = ({
                 className={`rounded-md p-1 ${organization.file_service_enabled ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground/50"}`}
               >
                 <FolderOpen className="h-3.5 w-3.5" />
+              </div>
+              <div
+                title={`Tasks & Calendar Service ${organization.tasks_service_enabled ? "Enabled" : "Disabled"}`}
+                className={`rounded-md p-1 ${organization.tasks_service_enabled ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground/50"}`}
+              >
+                <CalendarDays className="h-3.5 w-3.5" />
               </div>
             </div>
 

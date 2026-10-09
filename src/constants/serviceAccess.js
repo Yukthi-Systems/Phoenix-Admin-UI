@@ -19,12 +19,14 @@ export const SERVICE_KEYS = {
   EMAIL: "email_service_enabled",
   CHAT: "chat_service_enabled",
   FILE: "file_service_enabled",
+  TASKS: "tasks_service_enabled",
 };
 
 export const SERVICE_LABELS = {
   [SERVICE_KEYS.EMAIL]: "Email service",
   [SERVICE_KEYS.CHAT]: "Chat service",
   [SERVICE_KEYS.FILE]: "File service",
+  [SERVICE_KEYS.TASKS]: "Tasks & Calendar service",
 };
 
 export const SERVICE_ROUTE_PREFIXES = [
@@ -49,6 +51,8 @@ export const SERVICE_ROUTE_PREFIXES = [
   { prefix: "/chat", service: SERVICE_KEYS.CHAT },
 
   { prefix: "/files", service: SERVICE_KEYS.FILE },
+
+  { prefix: "/calendar", service: SERVICE_KEYS.TASKS },
 ];
 
 export const getRequiredServiceForPath = (pathname) => {

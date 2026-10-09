@@ -384,6 +384,7 @@ const Header = () => {
             chat_service_enabled: data?.chat_service_enabled,
             email_service_enabled: data?.email_service_enabled,
             file_service_enabled: data?.file_service_enabled,
+            tasks_service_enabled: data?.tasks_service_enabled,
           });
         } catch (error) {
           console.error("Failed to fetch parent organization:", error);

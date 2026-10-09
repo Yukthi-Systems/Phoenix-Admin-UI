@@ -230,9 +230,10 @@ export const editOrganization = async (organization_id, data) => {
     email_service_enabled,
     chat_service_enabled,
     file_service_enabled,
+    tasks_service_enabled,
     ...rest
   } = data;
-  const url = `${API_URL}/organization/edit/${organization_id}?email_service_enabled=${email_service_enabled}&chat_service_enabled=${chat_service_enabled}&file_service_enabled=${file_service_enabled}`;
+  const url = `${API_URL}/organization/edit/${organization_id}?email_service_enabled=${email_service_enabled}&chat_service_enabled=${chat_service_enabled}&file_service_enabled=${file_service_enabled}&tasks_service_enabled=${tasks_service_enabled}`;
   const cleanData = trimInput(rest);
   try {
     const res = await axios({

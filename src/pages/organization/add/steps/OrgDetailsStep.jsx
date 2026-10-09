@@ -48,6 +48,9 @@ const OrganizationDetailsStep = ({
   const activeFileService = parentOrg.id
     ? (parentOrg.file_service_enabled ?? false)
     : (loggedInParentOrg.file_service_enabled ?? false);
+  const activeTasksService = parentOrg.id
+    ? (parentOrg.tasks_service_enabled ?? false)
+    : (loggedInParentOrg.tasks_service_enabled ?? false);
 
   return (
     <div className="space-y-6">
@@ -203,6 +206,24 @@ const OrganizationDetailsStep = ({
               falseSublabel="Organization will not have access to file services"
               trueLabel="File Service Enabled"
               trueSublabel="Organization will have access to file services"
+            />
+          </div>
+          <div
+            className={
+              activeTasksService ? "" : "opacity-50 cursor-not-allowed"
+            }
+          >
+            <Switch
+              control={control}
+              name="tasks_service_enabled"
+              register={register}
+              disabled={!activeTasksService}
+              watch={watch}
+              errors={errors}
+              falseLabel="Tasks & Calendar Service Disabled"
+              falseSublabel="Organization will not have access to tasks & calendar services"
+              trueLabel="Tasks & Calendar Service Enabled"
+              trueSublabel="Organization will have access to tasks & calendar services"
             />
           </div>
         </div>

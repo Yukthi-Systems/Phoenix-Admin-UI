@@ -36,6 +36,9 @@ export const organizationFormSchema = yup.object().shape({
   file_service_enabled: yup
     .boolean()
     .required("File service status is required"),
+  tasks_service_enabled: yup
+    .boolean()
+    .required("Tasks & Calendar service status is required"),
 
   details: yup.object().shape({
     description: yup.string().optional(),

@@ -15,19 +15,18 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-export const organizationDefaultValues = {
-  details: {
-    description: "",
-    gst_number: "",
-    website: "",
-    branches: {},
-    contact_info: {},
-    type: "",
-  },
-  email_service_enabled: false,
-  chat_service_enabled: false,
-  file_service_enabled: false,
-  tasks_service_enabled: false,
-  name: "",
-  parent_organization_id: "",
-};
+import NotImplementedFeature from "@/components/common/NotImplementedFeature";
+
+function CalendarDashboard() {
+  return (
+    <div className="flex items-center justify-center h-full">
+      <NotImplementedFeature
+        title="Calendar & Tasks Dashboard not yet implemented"
+        showHome
+        showBack
+      />
+    </div>
+  );
+}
+
+export default CalendarDashboard;

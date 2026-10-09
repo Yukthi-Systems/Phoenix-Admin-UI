@@ -62,6 +62,7 @@ import {
   Edit,
   MessageSquare,
   LayoutGrid,
+  CalendarDays,
 } from "lucide-react";
 import OrganizationLogo from "@/components/shared/OrgLogo";
 import CopyButton from "@/components/common/CopyId";
@@ -757,7 +758,7 @@ const OrganizationDetails = () => {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between border-b border-border/50 pb-2">
                       <div className="flex items-center gap-2">
                         <div className="bg-primary/10 text-primary rounded-md p-1.5">
                           <FileText className="h-3.5 w-3.5" />
@@ -767,6 +768,26 @@ const OrganizationDetails = () => {
                         </span>
                       </div>
                       {organization_details?.file_service_enabled ? (
+                        <div className="bg-success/10 text-success flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                          <Check className="h-2.5 w-2.5" /> Enabled
+                        </div>
+                      ) : (
+                        <div className="bg-destructive/10 text-destructive flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                          <X className="h-2.5 w-2.5" /> Disabled
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-primary/10 text-primary rounded-md p-1.5">
+                          <CalendarDays className="h-3.5 w-3.5" />
+                        </div>
+                        <span className="text-sm font-medium">
+                          Tasks & Calendar Service
+                        </span>
+                      </div>
+                      {organization_details?.tasks_service_enabled ? (
                         <div className="bg-success/10 text-success flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider">
                           <Check className="h-2.5 w-2.5" /> Enabled
                         </div>

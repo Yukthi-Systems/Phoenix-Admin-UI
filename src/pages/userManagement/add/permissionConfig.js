@@ -151,6 +151,16 @@ export const baseConfig = {
           },
         },
         {
+          name: "calendar",
+          label: "Calendar & Tasks",
+          permissions: {
+            view: "tasks_calendar:view",
+            create: "tasks_calendar:create",
+            edit: "tasks_calendar:edit",
+            delete: "tasks_calendar:delete",
+          },
+        },
+        {
           name: "user",
           label: "Admin Panel Users",
           permissions: {

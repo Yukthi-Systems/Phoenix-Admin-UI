@@ -30,6 +30,7 @@ export const organizationDefaultValues = {
   email_service_enabled: false,
   chat_service_enabled: false,
   file_service_enabled: false,
+  tasks_service_enabled: false,
   name: "",
   parent_organization_id: "",
 };

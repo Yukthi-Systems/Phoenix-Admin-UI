@@ -113,8 +113,12 @@ const OrganizationTreeView = () => {
               activate: orgData.activate ?? true,
               email_service_enabled: orgData.email_service_enabled ?? false,
               chat_service_enabled: orgData.chat_service_enabled ?? false,
-              // File service isn't wired up for organizations yet - always off.
+              // File and Tasks & Calendar services aren't wired up for bulk
+              // organization import yet - always off. (Both are still
+              // required fields on the backend's create payload, so they
+              // must be sent as something.)
               file_service_enabled: false,
+              tasks_service_enabled: false,
               details: {
                 type: orgData.details?.type,
                 description: orgData.details?.description || "",

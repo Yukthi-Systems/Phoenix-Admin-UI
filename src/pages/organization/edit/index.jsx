@@ -54,6 +54,7 @@ const STEPS = [
       "email_service_enabled",
       "chat_service_enabled",
       "file_service_enabled",
+      "tasks_service_enabled",
     ],
   },
   {
@@ -216,6 +217,7 @@ const EditOrganization = () => {
       email_service_enabled: organization.email_service_enabled ?? false,
       chat_service_enabled: organization.chat_service_enabled ?? false,
       file_service_enabled: organization.file_service_enabled ?? false,
+      tasks_service_enabled: organization.tasks_service_enabled ?? false,
     });
     setValue("parent_organization_id", organization.organization_id, {
       shouldValidate: true,
@@ -248,6 +250,7 @@ const EditOrganization = () => {
       email_service_enabled: formData.email_service_enabled,
       chat_service_enabled: formData.chat_service_enabled,
       file_service_enabled: formData.file_service_enabled,
+      tasks_service_enabled: formData.tasks_service_enabled,
     };
 
     mutate(
@@ -259,6 +262,7 @@ const EditOrganization = () => {
             email_service_enabled: filteredData.email_service_enabled,
             chat_service_enabled: filteredData.chat_service_enabled,
             file_service_enabled: filteredData.file_service_enabled,
+            tasks_service_enabled: filteredData.tasks_service_enabled,
           };
 
           if (selectedOrg?.organization_id === org_id) {
@@ -328,6 +332,8 @@ const EditOrganization = () => {
           organization_details?.chat_service_enabled ?? false,
         file_service_enabled:
           organization_details?.file_service_enabled ?? false,
+        tasks_service_enabled:
+          organization_details?.tasks_service_enabled ?? false,
       });
       setOrgName(organization_details?.organization_name || "");
       if (organization_details?.details?.branches) {
@@ -364,6 +370,7 @@ const EditOrganization = () => {
         email_service_enabled: data?.email_service_enabled ?? false,
         chat_service_enabled: data?.chat_service_enabled ?? false,
         file_service_enabled: data?.file_service_enabled ?? false,
+        tasks_service_enabled: data?.tasks_service_enabled ?? false,
       });
     } catch (err) {
       console.error("Failed to fetch parent org name", err);
@@ -374,6 +381,7 @@ const EditOrganization = () => {
         email_service_enabled: false,
         chat_service_enabled: false,
         file_service_enabled: false,
+        tasks_service_enabled: false,
       });
     }
   };
