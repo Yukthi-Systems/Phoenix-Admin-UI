@@ -397,7 +397,7 @@ export const navItems = [
         permissionValue: "mailq:view",
       },
       {
-        name: "Pflogsum Report", // New Item
+        name: "Summary Report",
         icon: <FileText size={16} />,
         link: "/server/pflogsum-report",
         hasPermission: true,
