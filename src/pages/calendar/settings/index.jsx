@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Share2, Save, Info, CalendarDays } from "lucide-react";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { useToastify } from "@/hooks/useToastify";
@@ -127,14 +127,29 @@ export default function CalendarSettingsPage() {
 
   const isDirty = savedValue !== null && isExternalSharingEnabled !== savedValue;
 
+  // Org has never saved Tasks & Calendar settings before - getTasksServiceConfig
+  // returns this shape (updated_at: null) instead of throwing when the
+  // backend's 404 ends up re-wrapped as a 424 (see the "do not exist"
+  // handling in api/calendar.js). Only notify once per mount, not on every
+  // refetch.
+  const hasShownFirstTimeNotice = useRef(false);
+
   useEffect(() => {
     if (config) {
       const value = config?.data?.is_external_sharing_enabled ?? false;
       setIsExternalSharingEnabled(value);
       setSavedValue(value);
       setUpdatedAt(config?.data?.updated_at || null);
+
+      if (!config?.data?.updated_at && !hasShownFirstTimeNotice.current) {
+        hasShownFirstTimeNotice.current = true;
+        toast(
+          "info",
+          "No Tasks & Calendar settings saved yet for this organization. Set your preferences below, then click Save Settings to get started.",
+        );
+      }
     }
-  }, [config]);
+  }, [config, toast]);
 
   const handleSave = async () => {
     if (!isDirty || !organization_id) return;

@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   MessageCircle,
   Users,
@@ -290,6 +290,12 @@ export default function ChatPreferencePage() {
 
   const isDirty = !prefsEqual(prefs, savedPrefs);
 
+  // Org has never saved chat preferences before - getChatConfig returns this
+  // shape (updated_at: null) instead of throwing when the backend's 404
+  // ends up re-wrapped as a 424 (see the "does not exist" handling in
+  // api/chat.js). Only notify once per mount, not on every refetch.
+  const hasShownFirstTimeNotice = useRef(false);
+
   useEffect(() => {
     if (config) {
       const mapped = {
@@ -301,8 +307,16 @@ export default function ChatPreferencePage() {
       };
       setPrefs(mapped);
       setSavedPrefs(mapped);
+
+      if (!config?.data?.updated_at && !hasShownFirstTimeNotice.current) {
+        hasShownFirstTimeNotice.current = true;
+        toast(
+          "info",
+          "No chat preferences saved yet for this organization. Set your preferences and storage quota below, then click Save Preferences to get started.",
+        );
+      }
     }
-  }, [config]);
+  }, [config, toast]);
 
   const toggle = useCallback(
     (key) => setPrefs((prev) => ({ ...prev, [key]: !prev[key] })),
