@@ -185,7 +185,14 @@ const DomainLookup = () => {
     useDomainLookup(searchedDomain);
   const info = data?.organization_details ?? null;
   const hierarchy = info?.full_hierarchy ?? [];
-  const managingOrg = hierarchy[hierarchy.length - 1];
+  // The root org is stored as its own parent - treat that as "no parent".
+  const isRootOrg =
+    !info?.parent_organization_id ||
+    info.parent_organization_id === info.organization_id;
+  const parentOrgName = isRootOrg
+    ? "None (root organization)"
+    : hierarchy[hierarchy.length - 2]?.organization_name ||
+      info.parent_organization_id;
   const canViewDomain = permissions.includes("domain:view");
 
   const handleSearch = () => {
@@ -286,17 +293,10 @@ const DomainLookup = () => {
             />
             <InfoItem
               label="Status"
-              value={<StatusBadge status={managingOrg?.is_active} />}
+              value={<StatusBadge status={info.is_active} />}
             />
             <InfoItem label="Organization ID" value={info.organization_id} />
-            <InfoItem
-              label="Parent Organization"
-              value={
-                hierarchy[hierarchy.length - 2]?.organization_name ||
-                info.parent_organization_id ||
-                "--"
-              }
-            />
+            <InfoItem label="Parent Organization" value={parentOrgName} />
             <InfoItem label="Hierarchy Depth" value={hierarchy.length} />
           </InfoCard>
 
