@@ -297,6 +297,7 @@ const MailQSearch = lazyRetry(
 const MailMapping = lazyRetry(() => import("@/pages/server/mapmapping"));
 
 const IdentityLookup = lazyRetry(() => import("@/pages/server/identityLookup"));
+const DomainLookup = lazyRetry(() => import("@/pages/server/domainLookup"));
 
 // Chat
 const ChatDashboard = lazyRetry(() => import("@/pages/chat/dashboard"));
@@ -1315,6 +1316,14 @@ const Router = [
             element: (
               <LazyWrapper>
                 <IdentityLookup />
+              </LazyWrapper>
+            ),
+          },
+          {
+            path: "/server/domain-lookup",
+            element: (
+              <LazyWrapper>
+                <DomainLookup />
               </LazyWrapper>
             ),
           },

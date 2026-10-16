@@ -263,6 +263,16 @@ export const baseConfig = {
           },
         },
         {
+          name: "domain_admin_lookup",
+          label: "Domain Admin Lookup",
+          permissions: {
+            view: "domain:admin:view",
+            create: null,
+            edit: null,
+            delete: null,
+          },
+        },
+        {
           name: "system_maintenance",
           label: "Admin Maintenance - System Alerts",
           permissions: {

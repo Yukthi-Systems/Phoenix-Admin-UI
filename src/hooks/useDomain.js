@@ -21,6 +21,7 @@ import {
   deleteDomain,
   getDNSRecord,
   getDomain,
+  lookupDomain,
   getDomains,
   getDomainTxtKey,
   moveDomain,
@@ -53,6 +54,16 @@ export function useGetDomain(domain_name) {
     cacheTime: 1000 * 60,
     keepPreviousData: true,
     retry: 3,
+  });
+}
+
+export function useDomainLookup(domain_name) {
+  return useQuery({
+    queryKey: ["domain_lookup", domain_name],
+    queryFn: () => lookupDomain(domain_name),
+    enabled: !!domain_name,
+    retry: (failureCount, error) =>
+      !(error?.status >= 400 && error?.status < 500) && failureCount < 3,
   });
 }
 

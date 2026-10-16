@@ -89,6 +89,45 @@ export const getDomain = async (domain_name) => {
   }
 };
 
+// Resolves which organization manages a domain, plus that org's full
+// hierarchy from the root down. Gated server-side on "domain:admin:view".
+export const lookupDomain = async (domain_name) => {
+  const method = "GET";
+  const url = `${API_URL}/domain/lookup/${encodeURIComponent(domain_name)}`;
+
+  try {
+    const res = await axios({
+      method,
+      url,
+      headers: getHeaders(),
+      withCredentials: true,
+      timeout: 8000,
+    });
+
+    return res.data;
+  } catch (error) {
+    const response = error?.response || {};
+    AuthAPI({ status: response?.status });
+    await addLogs({
+      values: response,
+      type: "error",
+      method,
+      action_type: "lookup_domain",
+      payload: { domain_name },
+      message: `Failed to look up domain - "${domain_name}"`,
+      notify: false,
+    });
+
+    // Keep the HTTP status so the hook can skip retrying 4xx and the page
+    // can tell "not found" apart from "no access".
+    const err = new Error(
+      response?.data?.message || "Failed to look up domain.",
+    );
+    err.status = response?.status;
+    throw err;
+  }
+};
+
 export const addDomain = async (data, addLog = true) => {
   const method = "POST";
   const url = `${API_URL}/domain/create`;

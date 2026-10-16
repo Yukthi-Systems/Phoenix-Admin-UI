@@ -54,6 +54,7 @@ import {
   Paperclip,
   MailSearch,
   UserSearch,
+  ScanSearch,
   ListChecks,
   Activity,
   Key,
@@ -450,6 +451,13 @@ export const navItems = [
         link: "/server/identity-lookup",
         hasPermission: true,
         permissionValue: "identity:admin:view",
+      },
+      {
+        name: "Domain Lookup",
+        icon: <ScanSearch size={16} />,
+        link: "/server/domain-lookup",
+        hasPermission: true,
+        permissionValue: "domain:admin:view",
       },
       {
         name: "Maintenance",
