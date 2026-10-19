@@ -255,6 +255,10 @@ const IdentityDetails = () => {
                     value={identity.last_name || "--"}
                   />
                   <InfoItem
+                    label="Employee ID"
+                    value={identity.employee_id || "--"}
+                  />
+                  <InfoItem
                     label="Status"
                     value={<StatusBadge status={identity.is_enabled ?? true} />}
                   />

@@ -186,6 +186,15 @@ function IdentityDetailsStep({
           }
         />
 
+        {/* Employee ID */}
+        <Input
+          label="Employee ID"
+          name="employee_id"
+          register={register}
+          errors={errors}
+          placeholder="E12345"
+        />
+
         {/* Identity Status Switch (moved to first step) */}
         <div className="md:col-span-2 border-t border-border pt-6 text-left">
           <h4 className="text-sm font-semibold text-foreground mb-4">

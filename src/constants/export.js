@@ -994,6 +994,12 @@ export const FIELD_MAPPINGS = {
       width: 20,
     },
     {
+      key: "employee_id",
+      header: "Employee ID",
+      type: "string",
+      width: 20,
+    },
+    {
       key: "primary_phone",
       header: "Phone Number",
       type: "string",

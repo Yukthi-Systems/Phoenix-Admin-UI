@@ -54,6 +54,7 @@ const identityFormSchema = yup.object().shape({
   email_domain: yup.string().required("Email domain is required"),
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().nullable(),
+  employee_id: yup.string().nullable(),
   primary_phone_number: yup
     .string()
     .required("Primary phone number is required"),
@@ -195,6 +196,7 @@ const EditIdentity = () => {
         email_domain: domain_name || "",
         first_name: identityDetails.first_name || "",
         last_name: identityDetails.last_name || "",
+        employee_id: identityDetails.employee_id || "",
         primary_phone_number: identityDetails.primary_phone || "",
         secondary_email: identityDetails.secondary_email || "",
         password: "",
@@ -253,6 +255,7 @@ const EditIdentity = () => {
       email_domain: domain_name,
       first_name: formData.first_name,
       last_name: formData.last_name || "",
+      employee_id: formData.employee_id || null,
       primary_phone_number: formData.primary_phone_number,
       secondary_email: formData.secondary_email || "",
       base64_password: "",

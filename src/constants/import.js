@@ -1122,6 +1122,17 @@ export const IMPORT_FIELD_MAPPINGS = {
       transform: (value) => (value ? String(value).trim() : ""),
     },
     {
+      key: "employee_id",
+      header: "Employee ID",
+      csvHeader: "Employee ID",
+      type: "string",
+      required: false,
+      width: 20,
+      sampleValue: "E12345",
+      sampleValue2: "E67890",
+      transform: (value) => (value ? String(value).trim() : ""),
+    },
+    {
       key: "email_prefix",
       header: "Email Prefix",
       csvHeader: "Email Prefix",

@@ -28,6 +28,7 @@ function IdentityPreviewStep({ formData, organization_id }) {
   const email_domain = watch("email_domain") || "";
   const first_name = watch("first_name") || "";
   const last_name = watch("last_name") || "";
+  const employee_id = watch("employee_id") || "";
   const primary_phone_number = watch("primary_phone_number") || "";
   const secondary_email = watch("secondary_email") || "";
   const restriction_policy_id = watch("restriction_policy_id") || "";
@@ -65,6 +66,7 @@ function IdentityPreviewStep({ formData, organization_id }) {
               label="Full Name"
               value={`${first_name} ${last_name}`.trim()}
             />
+            <InfoItem label="Employee ID" value={employee_id || "--"} />
             <InfoItem label="Primary Phone" value={primary_phone_number} />
             <InfoItem label="Secondary Email" value={secondary_email || "--"} />
             <InfoItem
