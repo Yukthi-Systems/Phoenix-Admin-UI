@@ -53,8 +53,8 @@ const HostConfigurationStep = ({
   }, [isMailboxServer, isAcceptingNewMailboxes, setValue]);
 
   return (
-    <div className="space-y-6">
-      <div className="text-left">
+    <div className="space-y-6 text-left">
+      <div className="">
         <h3 className="text-foreground text-lg font-semibold">
           Host Configuration
         </h3>

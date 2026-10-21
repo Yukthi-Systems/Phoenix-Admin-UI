@@ -25,7 +25,7 @@ import {
   useGetOrganizationDetail,
   useInfiniteOrganizations,
 } from "@/hooks/useOrganization";
-import { getOrganizations } from "@/api/organizations";
+import { getOrganizations, getGlobalOrganizations } from "@/api/organizations";
 import { getDomains } from "@/api/domain";
 import { useQueryClient } from "@tanstack/react-query";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
@@ -43,7 +43,10 @@ import { getOrganizationImportFieldMapping } from "@/constants/import";
 import OrganizationTreeNode from "./OrganizationTree";
 import OrgChildSearch from "@/components/shared/header/organization/OrgChildSearch";
 import LoadMoreTrigger from "@/components/shared/header/organization/LoadMoreTrigger";
-import { Loader2, Upload } from "lucide-react";
+import { Download, Loader2, Upload } from "lucide-react";
+import useExport from "@/hooks/useExport";
+import ExportModal from "@/components/common/ExportModal";
+import { FIELD_MAPPINGS } from "@/constants/export";
 import {
   selectedOrganizationAtom,
   userInfoAtom,
@@ -139,6 +142,51 @@ const OrganizationTreeView = () => {
     },
     {},
     organizationImportFieldMapping,
+  );
+
+  const canExportAllOrgs = permissions.includes("organization:admin:view");
+
+  // Global export - every org in the system, not just the browsed subtree.
+  // Loads all pages up front (on the exporter's first page request) so each
+  // row's parent and full hierarchy can be resolved to names, then hands the
+  // whole set back as a single page.
+  const fetchAllOrganizationsForExport = async ({ page }) => {
+    if (page > 1) return { organizations: [], total_pages: 1 };
+
+    const limit = 500;
+    let all = [];
+    for (let current = 1; ; current++) {
+      const res = await getGlobalOrganizations(current, limit);
+      const batch = res?.organizations || [];
+      all = [...all, ...batch];
+      if (batch.length < limit || all.length >= (res?.total_count ?? 0)) break;
+    }
+
+    const nameById = new Map(
+      all.map((org) => [org.organization_id, org.organization_name]),
+    );
+    const organizations = all.map((org) => ({
+      ...org,
+      parent_organization_name: nameById.get(org.parent_organization_id) || "",
+      hierarchy_names: (org.hierarchy_path || [])
+        .map((id) => nameById.get(String(id)) || String(id))
+        .join(" > "),
+    }));
+
+    return { organizations, total_pages: 1 };
+  };
+
+  const {
+    isExportModalOpen,
+    exportConfig,
+    handleExport,
+    handleExportModalClose,
+    isExportAvailable,
+  } = useExport(
+    "organizations",
+    canExportAllOrgs ? fetchAllOrganizationsForExport : null,
+    {},
+    FIELD_MAPPINGS.organizations,
   );
 
   const handleImportCompleteWithRefresh = (results) => {
@@ -270,24 +318,35 @@ const OrganizationTreeView = () => {
       <div className="px-2 w-full h-full">
         <div className="w-full flex justify-between items-center mb-2.5">
           <Breadcrumbs items={[{ name: "Organization" }]} />
-          {permissions.includes("organization:create") &&
-            (email_service_enabled || chat_service_enabled) && (
-              <div className="flex items-center gap-2">
-                {isImportAvailable && (
-                  <Button
-                    variant="secondary"
-                    icon={Upload}
-                    onClick={handleImport}
-                  >
-                    Import
-                  </Button>
-                )}
-                <AddButton
-                  label="Add Organization"
-                  handleClick={handleAddOrganization}
-                />
-              </div>
+          <div className="flex items-center gap-2">
+            {canExportAllOrgs && isExportAvailable && (
+              <Button
+                variant="secondary"
+                icon={Download}
+                onClick={handleExport}
+              >
+                Export All
+              </Button>
             )}
+            {permissions.includes("organization:create") &&
+              (email_service_enabled || chat_service_enabled) && (
+                <div className="flex items-center gap-2">
+                  {isImportAvailable && (
+                    <Button
+                      variant="secondary"
+                      icon={Upload}
+                      onClick={handleImport}
+                    >
+                      Import
+                    </Button>
+                  )}
+                  <AddButton
+                    label="Add Organization"
+                    handleClick={handleAddOrganization}
+                  />
+                </div>
+              )}
+          </div>
         </div>
 
         <div className="w-full h-[calc(100vh-150px)] flex flex-col shadow-lg overflow-hidden rounded-lg bg-card border border-border">
@@ -427,6 +486,14 @@ const OrganizationTreeView = () => {
         title="Bulk Import Organizations"
         description={`Upload a CSV or Excel file to create multiple organizations at once. Each row is created as a separate organization under the Parent Organization ID you specify. Every organization needs at least one branch${hasCrmPermission ? " and one contact" : ""}.`}
         onComplete={handleImportCompleteWithRefresh}
+      />
+
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={handleExportModalClose}
+        exportConfig={exportConfig}
+        title="Export All Organizations"
+        description="Exports every organization in the system as a flat list, with each one's parent and full hierarchy path. Sort by name to spot duplicates."
       />
     </>
   );

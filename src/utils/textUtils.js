@@ -42,3 +42,15 @@ export const trimInput = (input) => {
   // Return primitives (numbers, booleans, null, undefined) as is
   return input;
 };
+
+/**
+ * Splits pasted text like "a@x.com, b@y.com; c@z.com" (commas, semicolons,
+ * whitespace or newlines) into a list of non-empty, trimmed entries.
+ * @param {string} text - Raw input text
+ * @returns {string[]} - The individual entries
+ */
+export const splitListInput = (text) =>
+  String(text || "")
+    .split(/[\s,;]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);

@@ -23,6 +23,7 @@ import { X } from "lucide-react";
 import { getMailboxes } from "@/api/mailbox";
 import { getReactSelectStyles } from "@/utils/selectTheme";
 import { useToastify } from "@/hooks/useToastify";
+import { splitListInput } from "@/utils/textUtils";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -179,6 +180,11 @@ export function MailboxMultiSelectField({
   };
 
   const handleCreate = (inputValue) => {
+    const entries = splitListInput(inputValue);
+    if (entries.length > 1) {
+      handleCreateMany(entries);
+      return;
+    }
     const trimmed = inputValue.trim();
     if (!emailRegex.test(trimmed)) {
       toast("error", "Enter a valid email address");
@@ -198,6 +204,41 @@ export function MailboxMultiSelectField({
         : [...prev, { label: trimmed, value: trimmed }],
     );
     addEmails([trimmed]);
+  };
+
+  // Pasted comma/semicolon/newline separated list - add every valid, not yet
+  // selected email in one go and report the rest.
+  const handleCreateMany = (entries) => {
+    const invalid = entries.filter((email) => !emailRegex.test(email));
+    const existingLower = new Set((value || []).map((e) => e.toLowerCase()));
+    const seen = new Set();
+    const toAdd = entries.filter((email) => {
+      const lower = email.toLowerCase();
+      if (
+        !emailRegex.test(email) ||
+        existingLower.has(lower) ||
+        seen.has(lower)
+      )
+        return false;
+      seen.add(lower);
+      return true;
+    });
+
+    if (toAdd.length) {
+      setOptions((prev) => {
+        const prevLower = new Set(prev.map((opt) => opt.value.toLowerCase()));
+        return [
+          ...prev,
+          ...toAdd
+            .filter((email) => !prevLower.has(email.toLowerCase()))
+            .map((email) => ({ label: email, value: email })),
+        ];
+      });
+      addEmails(toAdd);
+    }
+    if (invalid.length) {
+      toast("error", `Invalid email address: ${invalid.join(", ")}`);
+    }
   };
 
   const removeEmail = (email) => {
@@ -243,7 +284,10 @@ export function MailboxMultiSelectField({
           onChange={handleChange}
           onCreateOption={handleCreate}
           isValidNewOption={(inputValue) => inputValue.trim().length > 0}
-          formatCreateLabel={(inputValue) => `Add "${inputValue}"`}
+          formatCreateLabel={(inputValue) => {
+            const count = splitListInput(inputValue).length;
+            return count > 1 ? `Add ${count} emails` : `Add "${inputValue}"`;
+          }}
           onMenuScrollToBottom={handleMenuScrollToBottom}
           onInputChange={handleInputChange}
           isLoading={loading}

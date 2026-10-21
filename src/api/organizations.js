@@ -61,6 +61,41 @@ export const getOrganizations = async (page, pageSize, orgId, query = "") => {
   }
 };
 
+// Flat list of every organization in the system, regardless of the browsed
+// org - requires "organization:admin:view". Used for the global org export.
+export const getGlobalOrganizations = async (page, pageSize, query = "") => {
+  const method = "GET";
+  const url = `${API_URL}/organization/global-list?page=${page}&limit=${pageSize}&query_string=${encodeURIComponent(query)}`;
+
+  try {
+    const res = await axios({
+      method,
+      url,
+      headers: getHeaders(),
+      withCredentials: true,
+      timeout: 15000,
+    });
+
+    return res.data;
+  } catch (error) {
+    const response = error?.response || {};
+    AuthAPI({ status: response?.status });
+    await addLogs({
+      values: response,
+      type: "error",
+      method,
+      action_type: "get_global_organization_list",
+      payload: { page, pageSize, query },
+      message: `Failed to retrieve global organizations list - Page: ${page}, Page Size: ${pageSize}`,
+      notify: false,
+    });
+
+    throw new Error(
+      response?.data?.message || "Failed to get global organization list.",
+    );
+  }
+};
+
 export const getOrganizationDetail = async (orgId) => {
   const method = "GET";
   const url = `${API_URL}/organization/details/${orgId}`;

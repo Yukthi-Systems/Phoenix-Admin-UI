@@ -433,6 +433,104 @@ export const FIELD_MAPPINGS = {
     },
   ],
 
+  // Global (all-orgs) export, fed by getGlobalOrganizations - flat rather
+  // than a tree; parent_organization_name / hierarchy_names are resolved
+  // client-side in the org list page's export fetcher, so rows can be
+  // sorted/filtered in a spreadsheet to spot duplicates.
+  organizations: [
+    {
+      key: "organization_id",
+      header: "Organization ID",
+      type: "string",
+      width: 38,
+      dataPath: "organizations",
+    },
+    {
+      key: "organization_name",
+      header: "Organization Name",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "parent_organization_name",
+      header: "Parent Organization",
+      type: "string",
+      width: 30,
+    },
+    {
+      key: "parent_organization_id",
+      header: "Parent Organization ID",
+      type: "string",
+      width: 38,
+    },
+    {
+      key: "hierarchy_names",
+      header: "Hierarchy Path",
+      type: "string",
+      width: 50,
+    },
+    {
+      key: "is_active",
+      header: "Status",
+      type: "boolean",
+      width: 12,
+      transform: (value) => (value ? "Active" : "Inactive"),
+    },
+    {
+      key: "email_service_enabled",
+      header: "Email Service",
+      type: "boolean",
+      width: 12,
+      transform: (value) => (value ? "Yes" : "No"),
+    },
+    {
+      key: "chat_service_enabled",
+      header: "Chat Service",
+      type: "boolean",
+      width: 12,
+      transform: (value) => (value ? "Yes" : "No"),
+    },
+    {
+      key: "file_service_enabled",
+      header: "File Service",
+      type: "boolean",
+      width: 12,
+      transform: (value) => (value ? "Yes" : "No"),
+    },
+    {
+      key: "tasks_service_enabled",
+      header: "Tasks Service",
+      type: "boolean",
+      width: 12,
+      transform: (value) => (value ? "Yes" : "No"),
+    },
+    {
+      key: "quota_allocated",
+      header: "Quota Allocated (GB)",
+      type: "number",
+      width: 15,
+    },
+    {
+      key: "quota_utilized",
+      header: "Quota Utilized (GB)",
+      type: "number",
+      width: 15,
+    },
+    {
+      key: "allocated_email_identities",
+      header: "Allocated Identities",
+      type: "number",
+      width: 15,
+      transform: (value) => (value === -1 ? "Unlimited" : value),
+    },
+    {
+      key: "utilized_email_identities",
+      header: "Utilized Identities",
+      type: "number",
+      width: 15,
+    },
+  ],
+
   users: [
     {
       key: "user_id",

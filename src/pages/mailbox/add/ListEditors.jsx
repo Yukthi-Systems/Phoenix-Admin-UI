@@ -18,6 +18,7 @@
 import { useToastify } from "@/hooks/useToastify";
 import { countryOptions } from "@/utils/constants";
 import { getReactSelectStyles } from "@/utils/selectTheme";
+import { splitListInput } from "@/utils/textUtils";
 import { useState } from "react";
 import { Edit2, Plus, Save, X } from "lucide-react";
 import Select from "react-select";
@@ -386,12 +387,31 @@ export const ListEditorEmail = ({
   const [editIndex, setEditIndex] = useState(null);
   const [editValue, setEditValue] = useState("");
 
+  // Accepts a single email or a pasted comma/semicolon/newline separated
+  // list - valid new entries are added, invalid ones are left in the input
+  // so the user can fix them.
+  const addEmails = () => {
+    const entries = splitListInput(newItem);
+    const invalid = entries.filter((email) => !emailRegex.test(email));
+    const toAdd = [
+      ...new Set(entries.filter((email) => emailRegex.test(email))),
+    ].filter((email) => !list.includes(email));
+
+    if (toAdd.length) {
+      setList([...list, ...toAdd]);
+    }
+    if (invalid.length) {
+      toast("error", `Enter valid email id: ${invalid.join(", ")}`);
+    }
+    setNewItem(invalid.join(", "));
+  };
+
   const addItem = () => {
-    const trimmed = newItem.trim();
-    if (type == "email" && !emailRegex.test(trimmed)) {
-      toast("error", "Enter valid email id");
+    if (type == "email") {
+      addEmails();
       return;
     }
+    const trimmed = newItem.trim();
     if (type == "ip" && !ipv4Regex.test(trimmed)) {
       toast("error", "Enter valid ip address");
       return;
@@ -463,7 +483,8 @@ export const ListEditorEmail = ({
           ) : (
             <>
               <input
-                type={type}
+                type={type == "email" ? "text" : type}
+                inputMode={type == "email" ? "email" : undefined}
                 value={newItem}
                 onChange={(e) => setNewItem(e.target.value)}
                 onKeyPress={handleKeyPress}
