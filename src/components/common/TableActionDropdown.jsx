@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { MoreVertical } from "lucide-react";
 
 const TableActionsDropdown = ({ actions = [], height = 200 }) => {
@@ -29,19 +29,38 @@ const TableActionsDropdown = ({ actions = [], height = 200 }) => {
   // Filter out separators for navigation
   const navigableActions = actions.filter((action) => !action.separator);
 
-  const calculatePosition = () => {
+  // Visible vertical bounds for the menu: the viewport, narrowed by the
+  // nearest scrolling ancestor (e.g. the table's overflow-auto body),
+  // since anything past that edge gets clipped even if the window has room.
+  const getVerticalBounds = () => {
+    let top = 0;
+    let bottom = window.innerHeight;
+    let el = triggerRef.current?.parentElement;
+    while (el && el !== document.body) {
+      const { overflowY } = window.getComputedStyle(el);
+      if (/(auto|scroll)/.test(overflowY)) {
+        const rect = el.getBoundingClientRect();
+        top = Math.max(top, rect.top);
+        bottom = Math.min(bottom, rect.bottom);
+        break;
+      }
+      el = el.parentElement;
+    }
+    return { top, bottom };
+  };
+
+  const calculatePosition = (menuHeight = height) => {
     if (!triggerRef.current) return;
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
-    const viewport = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
+    const bounds = getVerticalBounds();
 
-    // Check vertical position
-    const spaceBelow = viewport.height - triggerRect.bottom;
-    const dropdownHeight = height;
-    const shouldOpenBelow = spaceBelow >= dropdownHeight;
+    // Prefer opening below; only flip up when it doesn't fit below and
+    // there's more room above.
+    const spaceBelow = bounds.bottom - triggerRect.bottom;
+    const spaceAbove = triggerRect.top - bounds.top;
+    const shouldOpenBelow =
+      spaceBelow >= menuHeight || spaceBelow >= spaceAbove;
 
     // Check horizontal position - prioritize left alignment
     const spaceLeft = triggerRect.right; // Space available to the left of trigger
@@ -50,11 +69,21 @@ const TableActionsDropdown = ({ actions = [], height = 200 }) => {
     // Only open to right if not enough space on left
     const shouldOpenLeft = spaceLeft >= dropdownWidth;
 
-    setPosition({
-      top: shouldOpenBelow,
-      left: shouldOpenLeft,
-    });
+    setPosition((prev) =>
+      prev.top === shouldOpenBelow && prev.left === shouldOpenLeft
+        ? prev
+        : { top: shouldOpenBelow, left: shouldOpenLeft },
+    );
   };
+
+  // Re-check with the menu's real rendered height (the `height` prop is only
+  // an estimate) - runs before paint, so there's no visible flip.
+  useLayoutEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      calculatePosition(dropdownRef.current.offsetHeight + 4);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, actions.length]);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
