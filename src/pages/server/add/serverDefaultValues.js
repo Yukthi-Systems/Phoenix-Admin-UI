@@ -21,6 +21,7 @@ export const serverDefaultValues = {
   quota_allocated: 10,
   is_monitoring: false,
   is_mailbox_server: false,
+  is_on_prem: false,
   is_accepting_new_mailboxes: false,
   server_info: {
     description: "",

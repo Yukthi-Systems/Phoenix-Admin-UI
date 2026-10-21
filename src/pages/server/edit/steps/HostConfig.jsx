@@ -196,6 +196,19 @@ const HostConfigurationStep = ({
               )}
             </div>
           </div>
+          <div className="flex items-center">
+            <Switch
+              control={control}
+              name="is_on_prem"
+              register={register}
+              watch={watch}
+              errors={errors}
+              falseLabel="On-Prem Server: No"
+              falseSublabel="This is not an in-house server"
+              trueLabel="On-Prem Server: Yes"
+              trueSublabel="This is an in-house server"
+            />
+          </div>
         </div>
       </fieldset>
 

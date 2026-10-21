@@ -259,6 +259,23 @@ const ServerDetails = () => {
     </div>
   );
 
+  const OnPremBadge = ({ isOnPrem }) => (
+    <div
+      className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium ${
+        isOnPrem
+          ? "bg-primary/10 text-primary border-primary/20 border"
+          : "bg-muted text-muted-foreground border-border border"
+      }`}
+    >
+      {isOnPrem ? (
+        <Check className="h-3.5 w-3.5" />
+      ) : (
+        <X className="h-3.5 w-3.5" />
+      )}
+      {isOnPrem ? "On-Prem" : "Not On-Prem"}
+    </div>
+  );
+
   return (
     <>
       <div className="h-full w-full px-2">
@@ -387,6 +404,12 @@ const ServerDetails = () => {
                       <AcceptingMailboxesBadge
                         isAccepting={server?.is_accepting_new_mailboxes}
                       />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground text-xs font-medium">
+                        On-Prem Server
+                      </span>
+                      <OnPremBadge isOnPrem={server?.is_on_prem} />
                     </div>
                   </div>
                 </InfoCard>

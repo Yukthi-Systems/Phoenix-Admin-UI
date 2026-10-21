@@ -163,6 +163,16 @@ const PreviewStep = ({ formData }) => {
             />
           }
         />
+        <PreviewItem
+          label="On-Prem Server"
+          value={
+            <StatusBadge
+              enabled={formData.is_on_prem}
+              enabledText="Yes"
+              disabledText="No"
+            />
+          }
+        />
       </PreviewSection>
 
       {/* Server Information */}

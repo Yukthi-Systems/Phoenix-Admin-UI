@@ -300,6 +300,23 @@ const ListServers = () => {
         },
       },
       {
+        accessorKey: "is_on_prem",
+        header: "On-Prem",
+        cell: ({ getValue }) => {
+          return (
+            <span
+              className={`inline-flex items-center rounded-2xl border px-2.5 py-1 text-sm font-medium transition-colors ${
+                getValue() === true
+                  ? "border-success/30 bg-success/10 text-success dark:border-success/50 dark:bg-success/20"
+                  : "border-destructive/30 bg-destructive/10 text-destructive dark:border-destructive/50 dark:bg-destructive/20"
+              }`}
+            >
+              {getValue() === true ? "Yes" : "No"}
+            </span>
+          );
+        },
+      },
+      {
         accessorKey: "created_at",
         header: "Created",
         cell: ({ getValue }) => {

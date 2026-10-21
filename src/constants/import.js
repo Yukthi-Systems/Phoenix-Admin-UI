@@ -1543,6 +1543,20 @@ export const IMPORT_FIELD_MAPPINGS = {
       },
     },
     {
+      key: "is_on_prem",
+      header: "On-Prem",
+      csvHeader: "On-Prem",
+      type: "boolean",
+      required: false,
+      width: 12,
+      alwaysSend: true, // backend requires is_on_prem on create/update
+      sampleValue: "No",
+      sampleValue2: "Yes",
+      // A blank cell parses to "" - coerce to a real boolean so the key is
+      // never empty (CreateServerForm.is_on_prem is a required bool).
+      validate: (value) => value === true,
+    },
+    {
       key: "server_info.description",
       header: "Description",
       csvHeader: "Description",

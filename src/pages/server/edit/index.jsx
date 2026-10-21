@@ -52,6 +52,7 @@ const STEPS = [
       "is_monitoring",
       "is_mailbox_server",
       "is_accepting_new_mailboxes",
+      "is_on_prem",
     ],
   },
   {
@@ -230,6 +231,7 @@ const EditServer = () => {
         is_monitoring: server?.is_monitoring || false,
         is_mailbox_server: server.is_mailbox_server || false,
         is_accepting_new_mailboxes: server?.is_accepting_new_mailboxes || false,
+        is_on_prem: server?.is_on_prem || false,
         quota_allocated: server?.quota_allocated || 0,
         server_info: {
           description: server?.server_info?.description || "",

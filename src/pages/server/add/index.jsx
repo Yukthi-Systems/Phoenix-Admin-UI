@@ -45,6 +45,7 @@ const STEPS = [
       "is_monitoring",
       "is_mailbox_server",
       "is_accepting_new_mailboxes",
+      "is_on_prem",
     ],
   },
   {
