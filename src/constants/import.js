@@ -2370,8 +2370,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 30,
-      sampleValue: "Strict Incoming Policy",
-      sampleValue2: "Standard Incoming Filter",
+      sampleValue: "Office Network Access",
+      sampleValue2: "Regional Access Restriction",
       // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
       // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
@@ -2395,8 +2395,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: false,
       alwaysSend: true, // backend requires this key present even when empty
       width: 40,
-      sampleValue: "Blocks all incoming emails except from trusted domains",
-      sampleValue2: "Standard filtering for incoming email security",
+      sampleValue: "Allows mailbox access only from office IP ranges",
+      sampleValue2: "Restricts mailbox access to selected countries",
     },
     {
       key: "is_active",
@@ -2515,8 +2515,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 30,
-      sampleValue: "Strict Incoming Policy",
-      sampleValue2: "Standard Incoming Filter",
+      sampleValue: "All Staff Distribution",
+      sampleValue2: "Support Team Distribution",
       // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
       // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
@@ -2540,8 +2540,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: false,
       alwaysSend: true, // backend requires this key present even when empty
       width: 40,
-      sampleValue: "Blocks all incoming emails except from trusted domains",
-      sampleValue2: "Standard filtering for incoming email security",
+      sampleValue: "Distributes company-wide announcements to all staff",
+      sampleValue2: "Distributes support emails to the support team",
     },
     {
       // key must be "domain_name", not "domain" - CreateDistributionPolicyForm
@@ -2614,7 +2614,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "array",
       required: false,
       width: 50,
-      sampleValue: "abc@gmail.com,xyz@company.com",
+      sampleValue: "abc@example.com,xyz@example.com",
       sampleValue2: "test@internal.com,admin@partner.org",
       transform: (value) => {
         if (!value || value.trim() === "") return [];
@@ -2684,7 +2684,7 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "array",
       required: false,
       width: 50,
-      sampleValue: "john11@example.com,jane11@example.com",
+      sampleValue: "",
       sampleValue2: "admin11@company.org,support11@company.org",
       transform: (value) => {
         if (!value || value.trim() === "") return [];
@@ -2733,8 +2733,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       type: "string",
       required: true,
       width: 30,
-      sampleValue: "Strict Incoming Policy",
-      sampleValue2: "Standard Incoming Filter",
+      sampleValue: "Sales Forwarding",
+      sampleValue2: "Support Forwarding",
       // Mirrors the matching "Add ... Policy" form's yup schema (3-200 chars) -
       // see src/pages/policy/<Module>Policy/add/validationSchema.js
       validate: (value) => {
@@ -2758,8 +2758,8 @@ export const IMPORT_FIELD_MAPPINGS = {
       required: false,
       alwaysSend: true, // backend requires this key present even when empty
       width: 40,
-      sampleValue: "Blocks all incoming emails except from trusted domains",
-      sampleValue2: "Standard filtering for incoming email security",
+      sampleValue: "Forwards matching sales emails to the sales lead",
+      sampleValue2: "Forwards matching support emails to the helpdesk",
     },
     {
       // key must be "domain_name", not "domain" - CreateForwardingPolicyForm
