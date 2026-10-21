@@ -16,6 +16,11 @@
  */
 
 import * as Yup from "yup";
+import {
+  MAX_EXPIRY_MONTHS,
+  getMaxExpiryDate,
+  getMinExpiryDate,
+} from "../expiry";
 
 export const apiKeyValidationSchema = Yup.object().shape({
   key_name: Yup.string()
@@ -42,4 +47,21 @@ export const apiKeyValidationSchema = Yup.object().shape({
     .of(Yup.string().max(100, "Permission must not exceed 100 characters"))
     .min(1, "Select at least one permission")
     .required("Select at least one permission"),
+});
+
+// Expiry is only chosen at creation - edit keeps the base schema and sends
+// the key's existing expired_at back untouched.
+export const apiKeyCreateValidationSchema = apiKeyValidationSchema.shape({
+  expired_at: Yup.string()
+    .required("Expiry date is required")
+    .test(
+      "min-expiry",
+      "Expiry date must be in the future",
+      (value) => !value || value >= getMinExpiryDate(),
+    )
+    .test(
+      "max-expiry",
+      `Expiry date can be at most ${MAX_EXPIRY_MONTHS} months from today`,
+      (value) => !value || value <= getMaxExpiryDate(),
+    ),
 });

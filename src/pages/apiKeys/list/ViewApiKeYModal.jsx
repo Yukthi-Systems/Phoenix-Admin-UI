@@ -36,6 +36,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { PUBLIC_API_URL, V3_API_DOCS_URL } from "@/constants/constants";
+import { isApiKeyExpired } from "../expiry";
 
 const ViewApiKeyModal = ({ isOpen, onClose, key_id, organizationId }) => {
   const { t } = useTranslation();
@@ -203,6 +204,31 @@ const ViewApiKeyModal = ({ isOpen, onClose, key_id, organizationId }) => {
                   </div>
                   <span className="text-sm font-semibold text-foreground">
                     {formatUserDateNice(apiKey.created_at)}
+                  </span>
+                </div>
+
+                {/* Expires On */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Calendar size={14} />
+                    <span className="text-xs font-medium">
+                      {t("Expires On")}
+                    </span>
+                  </div>
+                  <span
+                    className={`text-sm font-semibold ${
+                      isApiKeyExpired(apiKey.expired_at)
+                        ? "text-destructive"
+                        : "text-foreground"
+                    }`}
+                  >
+                    {apiKey.expired_at
+                      ? `${formatUserDateNice(apiKey.expired_at)}${
+                          isApiKeyExpired(apiKey.expired_at)
+                            ? ` (${t("Expired")})`
+                            : ""
+                        }`
+                      : "-"}
                   </span>
                 </div>
 

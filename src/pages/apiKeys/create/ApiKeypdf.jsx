@@ -161,6 +161,13 @@ const ApiKeyPDF = ({ data }) => {
 
           <Text style={styles.label}>Generated On</Text>
           <Text style={styles.value}>{createdDate}</Text>
+
+          <Text style={styles.label}>Expires On</Text>
+          <Text style={styles.value}>
+            {data?.expired_at
+              ? new Date(data.expired_at).toLocaleString()
+              : "-"}
+          </Text>
         </View>
 
         {/* Organization Section */}

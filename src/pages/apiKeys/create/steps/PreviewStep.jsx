@@ -42,6 +42,7 @@ const PreviewStep = () => {
           <DetailRow label={t("Key Name")} value={values.key_name} />
 
           <DetailRow label={t("Description")} value={values.description} />
+          <DetailRow label={t("Expires On")} value={values.expired_at} />
         </div>
       </div>
 

@@ -187,6 +187,16 @@ const ApiKeySuccessModal = ({ isOpen, onClose, data }) => {
             </div>
             <div className="border-border rounded-lg border p-4 bg-card">
               <p className="text-muted-foreground mb-2 text-xs tracking-wide uppercase">
+                Expires On
+              </p>
+              <p className="text-foreground text-base font-semibold">
+                {data?.expired_at
+                  ? new Date(data.expired_at).toLocaleString()
+                  : "N/A"}
+              </p>
+            </div>
+            <div className="border-border rounded-lg border p-4 bg-card">
+              <p className="text-muted-foreground mb-2 text-xs tracking-wide uppercase">
                 Organization
               </p>
               <p className="text-foreground text-base font-semibold">

@@ -41,6 +41,7 @@ import PermissionsStep from "../create/steps/PermissionStep";
 import PreviewStep from "../create/steps/PreviewStep";
 import { apiKeyValidationSchema } from "../create/validationSchema";
 import { apiKeyDefaultValues } from "../create/defaultValues";
+import { toDateInputValue } from "../expiry";
 
 const EditApiKeys = () => {
   const { t } = useTranslation();
@@ -94,6 +95,10 @@ const EditApiKeys = () => {
         created_by: apiKeyData.details?.created_by || "",
         permissions: apiKeyData.permissions || [],
         custom_details: customDetailsArray,
+        // Display only - the original timestamp is sent back on save
+        expired_at: apiKeyData.expired_at
+          ? toDateInputValue(new Date(apiKeyData.expired_at))
+          : "",
       });
 
       // Mark first two steps as completed since we are in edit mode with existing data
@@ -103,7 +108,7 @@ const EditApiKeys = () => {
 
   // 3. Define Steps
   const steps = [
-    { label: t("Basic Info"), component: <BasicInfoStep /> },
+    { label: t("Basic Info"), component: <BasicInfoStep isEdit /> },
     { label: t("Permissions"), component: <PermissionsStep /> },
     { label: t("Preview"), component: <PreviewStep /> },
   ];
@@ -210,6 +215,9 @@ const EditApiKeys = () => {
       key_name: data.key_name,
       details: detailsObject,
       permissions: data.permissions || [],
+      // Backend's edit endpoint reuses the create schema, so expired_at is
+      // required - but expiry can't be edited, so always send it back as-is.
+      expired_at: apiKeyData?.expired_at,
     };
 
     mutate(

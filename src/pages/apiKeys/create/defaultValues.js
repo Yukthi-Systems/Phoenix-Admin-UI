@@ -21,4 +21,5 @@ export const apiKeyDefaultValues = {
   created_by: "",
   custom_details: [], // Array for handling dynamic key-value pairs
   permissions: [], // Default to empty array
+  expired_at: "", // "YYYY-MM-DD" - create only, see ../expiry.js
 };

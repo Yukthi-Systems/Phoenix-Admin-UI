@@ -25,7 +25,8 @@ import { toast } from "react-toastify";
 import { useCreateApiKey } from "@/hooks/useApiKeys";
 import { useGetOrganizationDetail } from "@/hooks/useOrganization";
 import { apiKeyDefaultValues } from "./defaultValues";
-import { apiKeyValidationSchema } from "./validationSchema";
+import { apiKeyCreateValidationSchema } from "./validationSchema";
+import { expiryDateToISO } from "../expiry";
 import BasicInfoStep from "./steps/BasicInfoStep";
 import PermissionsStep from "./steps/PermissionStep";
 import PreviewStep from "./steps/PreviewStep";
@@ -60,7 +61,7 @@ const CreateApiKeys = () => {
 
   // Form Setup
   const methods = useForm({
-    resolver: yupResolver(apiKeyValidationSchema),
+    resolver: yupResolver(apiKeyCreateValidationSchema),
     defaultValues: apiKeyDefaultValues,
     mode: "onChange",
   });
@@ -90,6 +91,7 @@ const CreateApiKeys = () => {
           "created_by",
           "description",
           "custom_details",
+          "expired_at",
         ]);
         break;
       case 2:
@@ -106,11 +108,14 @@ const CreateApiKeys = () => {
 
     if (!isValid) {
       const hasKeyError = errors.key_name;
+      const hasExpiryError = errors.expired_at;
       const hasDetailError = errors.custom_details;
       const hasPermError = errors.permissions;
 
       if (hasKeyError) {
         toast.error(t("Key Name is required"));
+      } else if (hasExpiryError) {
+        toast.error(t(hasExpiryError.message));
       } else if (hasDetailError) {
         toast.error(t("Please fill in all metadata fields"));
       } else if (hasPermError) {
@@ -182,6 +187,7 @@ const CreateApiKeys = () => {
       key_name: data.key_name,
       details: detailsObject,
       permissions: data.permissions || [],
+      expired_at: expiryDateToISO(data.expired_at),
     };
 
     createApiKey(
@@ -196,6 +202,7 @@ const CreateApiKeys = () => {
             details: detailsObject,
             key_name: data.key_name,
             permissions: data.permissions,
+            expired_at: payload.expired_at,
             organization_id,
             organization_name: organizationDetails?.organization_name,
           });

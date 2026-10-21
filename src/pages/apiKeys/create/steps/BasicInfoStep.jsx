@@ -16,12 +16,20 @@
  */
 
 import React from "react";
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Input, TextArea } from "@/components/common/Inputs";
+import DateTimePicker from "@/components/common/DateTimePicker";
 import { Key, FileText, Trash2, Plus, Tag, Info } from "lucide-react";
+import {
+  MAX_EXPIRY_MONTHS,
+  fromDateInputValue,
+  getMaxExpiryDate,
+  getMinExpiryDate,
+  toDateInputValue,
+} from "../../expiry";
 
-const BasicInfoStep = () => {
+const BasicInfoStep = ({ isEdit = false }) => {
   const { t } = useTranslation();
   const {
     register,
@@ -69,6 +77,33 @@ const BasicInfoStep = () => {
           placeholder="Describe the purpose of this key..."
           icon={<FileText className="text-muted-foreground h-4 w-4" />}
           rows={3}
+        />
+        {/* Form value stays a "YYYY-MM-DD" string (see ../../expiry.js) */}
+        <Controller
+          name="expired_at"
+          control={control}
+          render={({ field, fieldState }) => (
+            <DateTimePicker
+              label="Expires On"
+              value={fromDateInputValue(field.value)}
+              onChange={(date) =>
+                field.onChange(date ? toDateInputValue(date) : "")
+              }
+              includeTime={false}
+              isClearable={false}
+              disabled={isEdit}
+              minDate={fromDateInputValue(getMinExpiryDate())}
+              maxDate={fromDateInputValue(getMaxExpiryDate())}
+              placeholder="Select expiry date..."
+              isRequired={!isEdit}
+              error={fieldState.error?.message}
+              info={
+                isEdit
+                  ? "Expiry date can't be changed after the key is created."
+                  : `For compliance, a key can be valid for at most ${MAX_EXPIRY_MONTHS} months. This can't be changed later.`
+              }
+            />
+          )}
         />
       </div>
 

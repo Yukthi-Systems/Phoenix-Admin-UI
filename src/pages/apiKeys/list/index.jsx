@@ -48,6 +48,7 @@ import SearchBar from "@/components/shared/SearchBar";
 import { useUrlParam } from "@/hooks/useUrlParam";
 import ViewApiKeyModal from "./ViewApiKeYModal";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import { isApiKeyExpired } from "../expiry";
 
 const ListApiKeys = () => {
   const navigate = useNavigate();
@@ -211,6 +212,24 @@ const ListApiKeys = () => {
         },
       },
 
+      {
+        accessorKey: "expired_at",
+        header: "Expires On",
+        cell: ({ getValue }) => {
+          const value = getValue();
+          if (!value) return "-";
+          return (
+            <span className="inline-flex items-center gap-2">
+              {formatUserDateNice(value)}
+              {isApiKeyExpired(value) && (
+                <span className="border-destructive/30 bg-destructive/10 text-destructive rounded-2xl border px-2 py-0.5 text-xs font-medium">
+                  Expired
+                </span>
+              )}
+            </span>
+          );
+        },
+      },
       {
         accessorKey: "created_at",
         header: "Created Date",
