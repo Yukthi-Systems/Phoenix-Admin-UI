@@ -178,7 +178,9 @@ function EditDistributionPolicy() {
       {
         onSuccess: () => {
           toast("success", "Distribution Policy Updated successfully");
-          navigate(-1);
+          navigate(
+            `/policies/distribution/${encodeURIComponent(policy_distribution_id)}`,
+          );
         },
         onError: (error) => {
           const message =

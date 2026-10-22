@@ -38,6 +38,11 @@ import IdentityDetailsStep from "../stepper/IdentityDetailsStep";
 import PasswordSetupStep from "../stepper/PasswordSetupStep";
 import IdentityPoliciesStep from "../stepper/IdentityPoliciesStep";
 import { jumpToErroredStep } from "@/utils/formUtils";
+import {
+  EMPLOYEE_ID_MAX_LENGTH,
+  EMPLOYEE_ID_MESSAGE,
+  EMPLOYEE_ID_REGEX,
+} from "@/constants/constants";
 
 const identityFormSchema = yup.object().shape({
   email_prefix: yup
@@ -54,7 +59,18 @@ const identityFormSchema = yup.object().shape({
   email_domain: yup.string().required("Email domain is required"),
   first_name: yup.string().required("First name is required"),
   last_name: yup.string().nullable(),
-  employee_id: yup.string().nullable(),
+  employee_id: yup
+    .string()
+    .nullable()
+    .trim()
+    .max(
+      EMPLOYEE_ID_MAX_LENGTH,
+      `Employee ID must not exceed ${EMPLOYEE_ID_MAX_LENGTH} characters`,
+    )
+    .matches(EMPLOYEE_ID_REGEX, {
+      message: EMPLOYEE_ID_MESSAGE,
+      excludeEmptyString: true,
+    }),
   primary_phone_number: yup
     .string()
     .required("Primary phone number is required"),
@@ -101,6 +117,7 @@ const STEPS = [
       "email_prefix",
       "email_domain",
       "first_name",
+      "employee_id",
       "primary_phone_number",
       "secondary_email",
     ],
@@ -284,7 +301,7 @@ const EditIdentity = () => {
                     "success",
                     "Successfully updated identity details and password",
                   );
-                  navigate("/identities");
+                  navigate(`/identities/${encodeURIComponent(email)}`);
                 },
                 onError: (error) => {
                   const message =
@@ -295,13 +312,13 @@ const EditIdentity = () => {
                     "error",
                     `Details updated, but password failed: ${message}`,
                   );
-                  navigate("/identities");
+                  navigate(`/identities/${encodeURIComponent(email)}`);
                 },
               },
             );
           } else {
             toast("success", "Successfully updated identity details");
-            navigate("/identities");
+            navigate(`/identities/${encodeURIComponent(email)}`);
           }
         },
         onError: (error) => {

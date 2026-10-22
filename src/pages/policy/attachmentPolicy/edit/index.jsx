@@ -187,7 +187,9 @@ const EditAttachmentPolicy = () => {
       {
         onSuccess: () => {
           toast("success", "Attachment Policy updated successfully");
-          navigate(-1);
+          navigate(
+            `/policies/attachments/${encodeURIComponent(policy_id)}/${encodeURIComponent(domain_name)}`,
+          );
         },
         onError: (error) => {
           const message =

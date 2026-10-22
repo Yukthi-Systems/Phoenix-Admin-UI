@@ -24,6 +24,18 @@ import {
   getDisclaimersList,
 } from "@/api/disclaimer";
 
+
+function invalidateDisclaimerQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["disclaimers"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["disclaimer_details"],
+    refetchType: "none",
+  });
+}
+
 export function useGetDisclaimers(organization_id, page, pageSize, query = "") {
   return useQuery({
     queryKey: ["disclaimers", organization_id, page, pageSize, query],
@@ -62,14 +74,17 @@ export function useCreateDisclaimer() {
 }
 
 export function useUpdateDisclaimer() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_disclaimer"],
     mutationFn: async ({ disclaimer_id, data }) =>
       updateDisclaimer(disclaimer_id, data),
+    onSuccess: () => invalidateDisclaimerQueries(queryClient),
   });
 }
 
 export function useDeleteDisclaimer() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_disclaimer"],
     mutationFn: async ({
@@ -77,5 +92,6 @@ export function useDeleteDisclaimer() {
       disclaimer_id,
       disclaimer_name = "Unknown Disclaimer",
     }) => deleteDisclaimer(organization_id, disclaimer_id, disclaimer_name),
+    onSuccess: () => invalidateDisclaimerQueries(queryClient),
   });
 }

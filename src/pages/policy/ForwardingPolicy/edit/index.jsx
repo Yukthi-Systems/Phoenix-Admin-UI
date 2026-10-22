@@ -185,7 +185,9 @@ function EditForwardingPolicy() {
       {
         onSuccess: () => {
           toast("success", "Forwarding Policy updated successfully");
-          navigate(-1);
+          navigate(
+            `/policies/forwarding/${encodeURIComponent(policy_forwarding_id)}`,
+          );
         },
         onError: (error) => {
           const message =

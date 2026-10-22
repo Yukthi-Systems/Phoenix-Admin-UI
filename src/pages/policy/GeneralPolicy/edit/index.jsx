@@ -163,7 +163,9 @@ const EditGeneralPolicy = () => {
       {
         onSuccess: () => {
           toast("success", "General Policy updated successfully");
-          navigate(-1);
+          navigate(
+            `/policies/general/${encodeURIComponent(general_policy_id)}`,
+          );
         },
         onError: (error) => {
           const message =

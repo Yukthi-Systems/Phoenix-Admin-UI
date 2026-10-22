@@ -39,6 +39,12 @@ import { useDebounce } from "./useDebounce";
 import { useAtom } from "jotai";
 import { uiInfoAtom } from "@/store/uiInfo";
 
+
+function invalidateUserQueries(queryClient) {
+  queryClient.invalidateQueries({ queryKey: ["users"], refetchType: "none" });
+  queryClient.invalidateQueries({ queryKey: ["user"], refetchType: "none" });
+}
+
 export function useGetUsers(organization_id, page, pageSize) {
   return useQuery({
     queryKey: ["users", organization_id, page, pageSize],
@@ -78,18 +84,22 @@ export function useAddUser() {
 }
 
 export function useUpdateUser() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_user"],
     mutationFn: async ({ orgId, body, queryParams }) =>
       updateUser(orgId, body, queryParams),
+    onSuccess: () => invalidateUserQueries(queryClient),
   });
 }
 
 export function useDeleteUser() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_user"],
     mutationFn: async ({ orgId, queryParams }) =>
       deleteUser(orgId, queryParams),
+    onSuccess: () => invalidateUserQueries(queryClient),
   });
 }
 
@@ -102,10 +112,12 @@ export function useChangePassword() {
 }
 
 export function useChangePermission() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["change_permission"],
     mutationFn: async ({ orgId, user_id, data, userName }) =>
       changePermission(orgId, user_id, data, userName),
+    onSuccess: () => invalidateUserQueries(queryClient),
   });
 }
 

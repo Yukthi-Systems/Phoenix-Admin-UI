@@ -24,6 +24,23 @@ import {
   updateDepartment,
 } from "../api/department";
 
+// Edits/deletes only mark the list + details cache stale (no refetch here):
+// the next page that shows the data fetches it fresh on mount, instead of
+// serving pre-edit data until staleTime runs out (e.g. an edited field "not
+// updating" until several hard refreshes). Not refetching keeps this free -
+// bulk import/edit/delete run these mutations once per row, and the list
+// pages already refetch once when a batch or in-page action completes.
+function invalidateDepartmentQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["departments"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["department"],
+    refetchType: "none",
+  });
+}
+
 export function useGetDepartments(organization_id, page, pageSize, query = "") {
   return useQuery({
     queryKey: ["departments", organization_id, page, pageSize, query],
@@ -61,17 +78,21 @@ export function useCreateDepartment() {
 }
 
 export function useUpdateDepartment() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_department"],
     mutationFn: async ({ department_id, data }) =>
       updateDepartment(department_id, data),
+    onSuccess: () => invalidateDepartmentQueries(queryClient),
   });
 }
 
 export function useDeleteDepartment() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_department"],
     mutationFn: async ({ organization_id, department_id, department_name }) =>
       deleteDepartment(organization_id, department_id, department_name),
+    onSuccess: () => invalidateDepartmentQueries(queryClient),
   });
 }

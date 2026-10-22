@@ -147,7 +147,9 @@ const EditFiltersPolicy = () => {
               filters_policy_id,
             ],
           });
-          navigate(-1);
+          navigate(
+            `/policies/filters/${encodeURIComponent(filters_policy_id)}`,
+          );
         },
         onError: (error) => {
           const message =

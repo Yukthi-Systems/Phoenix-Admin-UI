@@ -24,6 +24,18 @@ import {
   getCautionsList,
 } from "../api/cautions";
 
+
+function invalidateCautionQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["cautions"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["caution_details"],
+    refetchType: "none",
+  });
+}
+
 export function useGetCautions(organization_id, page, pageSize, query = "") {
   return useQuery({
     queryKey: ["cautions", organization_id, page, pageSize, query],
@@ -58,14 +70,17 @@ export function useCreateCaution() {
 }
 
 export function useUpdateCaution() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_caution"],
     mutationFn: async ({ organization_id, caution_id, data }) =>
       updateCaution(organization_id, caution_id, data),
+    onSuccess: () => invalidateCautionQueries(queryClient),
   });
 }
 
 export function useDeleteCaution() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_caution"],
     mutationFn: async ({
@@ -73,5 +88,6 @@ export function useDeleteCaution() {
       caution_id,
       caution_name = "Unknown",
     }) => deleteCaution(organization_id, caution_id, caution_name),
+    onSuccess: () => invalidateCautionQueries(queryClient),
   });
 }

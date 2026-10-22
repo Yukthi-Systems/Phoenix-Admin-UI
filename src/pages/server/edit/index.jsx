@@ -169,7 +169,7 @@ const EditServer = () => {
                   });
                   queryClient.invalidateQueries({ queryKey: ["servers"] });
                   toast("success", "Successfully updated server");
-                  navigate(-1);
+                  navigate(`/server/${encodeURIComponent(server_id)}`);
                 },
                 onError: (error) => {
                   const message =
@@ -206,7 +206,7 @@ const EditServer = () => {
             queryClient.invalidateQueries({ queryKey: ["server", server_id] });
             queryClient.invalidateQueries({ queryKey: ["servers"] });
             toast("success", "Successfully updated server");
-            navigate(-1);
+            navigate(`/server/${encodeURIComponent(server_id)}`);
           },
           onError: (error) => {
             const message =

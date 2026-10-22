@@ -24,6 +24,23 @@ import {
   deleteForwardingPolicy,
 } from "../api/forwardingPolicy";
 
+// Edits/deletes only mark the list + details cache stale (no refetch here):
+// the next page that shows the data fetches it fresh on mount, instead of
+// serving pre-edit data until staleTime runs out (e.g. an edited field "not
+// updating" until several hard refreshes). Not refetching keeps this free -
+// bulk import/edit/delete run these mutations once per row, and the list
+// pages already refetch once when a batch or in-page action completes.
+function invalidateForwardingPolicyQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["forwarding_policy"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["forwarding_policy_entry"],
+    refetchType: "none",
+  });
+}
+
 export function useForwardingPolicy({
   organization_id,
   domain_name,
@@ -80,14 +97,17 @@ export function useAddForwardingPolicy() {
 }
 
 export function useEditForwardingPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_forwarding_policy"],
     mutationFn: async ({ org_id, policy_id, data }) =>
       editForwardingPolicy(org_id, policy_id, data),
+    onSuccess: () => invalidateForwardingPolicyQueries(queryClient),
   });
 }
 
 export function useDeleteForwardingPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_forwarding_policy"],
     mutationFn: async ({
@@ -96,5 +116,6 @@ export function useDeleteForwardingPolicy() {
       domain_name,
       policy_name = "Unknown Policy",
     }) => deleteForwardingPolicy(org_id, policy_id, domain_name, policy_name),
+    onSuccess: () => invalidateForwardingPolicyQueries(queryClient),
   });
 }

@@ -24,6 +24,18 @@ import {
   deleteDistributionPolicy,
 } from "../api/distributionPolicy";
 
+
+function invalidateDistributionPolicyQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["distribution_policy"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["distribution_policy_entry"],
+    refetchType: "none",
+  });
+}
+
 export function useDistributionPolicy({
   organization_id,
   domain_name,
@@ -80,14 +92,17 @@ export function useAddDistributionPolicy() {
 }
 
 export function useEditDistributionPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_distribution_policy"],
     mutationFn: async ({ org_id, policy_id, data }) =>
       editDistributionPolicy(org_id, policy_id, data),
+    onSuccess: () => invalidateDistributionPolicyQueries(queryClient),
   });
 }
 
 export function useDeleteDistributionPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_distribution_policy"],
     mutationFn: async ({
@@ -96,5 +111,6 @@ export function useDeleteDistributionPolicy() {
       domain_name,
       policy_name = "Unknown Policy",
     }) => deleteDistributionPolicy(org_id, policy_id, domain_name, policy_name),
+    onSuccess: () => invalidateDistributionPolicyQueries(queryClient),
   });
 }

@@ -162,7 +162,9 @@ const EditRestrictionPolicy = () => {
       {
         onSuccess: () => {
           toast("success", "Restriction Policy edited successfully");
-          navigate(-1);
+          navigate(
+            `/policies/restrictions/${encodeURIComponent(policy_restrictions_id)}`,
+          );
         },
         onError: (error) => {
           const message =

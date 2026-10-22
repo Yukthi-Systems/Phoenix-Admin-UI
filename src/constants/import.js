@@ -17,6 +17,11 @@
 
 import { ALLOWED_EXTENSIONS, GLOBAL_BLOCKED } from "./blockedFileTypes";
 import { generateSecretCode } from "@/utils/secretCode";
+import {
+  EMPLOYEE_ID_MAX_LENGTH,
+  EMPLOYEE_ID_MESSAGE,
+  EMPLOYEE_ID_REGEX,
+} from "@/constants/constants";
 
 // Backend IDs (policy/department/organization/etc.) are UUIDs of any RFC 4122
 // version - e.g. "530b2473-b224-5f54-9185-89189ee72df8" is a v5 UUID, not v4 -
@@ -1130,7 +1135,20 @@ export const IMPORT_FIELD_MAPPINGS = {
       width: 20,
       sampleValue: "E12345",
       sampleValue2: "E67890",
-      transform: (value) => (value ? String(value).trim() : ""),
+      // Same rule as the add/edit identity forms
+      validate: (value) => {
+        const trimmed = value ? String(value).trim() : "";
+        if (!trimmed) return "";
+        if (trimmed.length > EMPLOYEE_ID_MAX_LENGTH) {
+          throw new Error(
+            `Employee ID must not exceed ${EMPLOYEE_ID_MAX_LENGTH} characters`,
+          );
+        }
+        if (!EMPLOYEE_ID_REGEX.test(trimmed)) {
+          throw new Error(EMPLOYEE_ID_MESSAGE);
+        }
+        return trimmed;
+      },
     },
     {
       key: "email_prefix",

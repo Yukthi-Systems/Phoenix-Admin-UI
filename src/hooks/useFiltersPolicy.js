@@ -24,6 +24,18 @@ import {
   getFiltersPolicyEntry,
 } from "../api/filterpolicy";
 
+
+function invalidateFiltersPolicyQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["filters_policy"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["filters_policy_entry"],
+    refetchType: "none",
+  });
+}
+
 export function useFiltersPolicy(
   organization_id,
   domain_name,
@@ -73,17 +85,21 @@ export function useAddFiltersPolicy() {
 }
 
 export function useEditFiltersPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_filters_policy"],
     mutationFn: async ({ org_id, policy_id, data }) =>
       editFiltersPolicy(org_id, policy_id, data),
+    onSuccess: () => invalidateFiltersPolicyQueries(queryClient),
   });
 }
 
 export function useDeleteFiltersPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_filters_policy"],
     mutationFn: async ({ org_id, policy_id, policy_name = "Unknown Policy" }) =>
       deleteFiltersPolicy(org_id, policy_id, policy_name),
+    onSuccess: () => invalidateFiltersPolicyQueries(queryClient),
   });
 }

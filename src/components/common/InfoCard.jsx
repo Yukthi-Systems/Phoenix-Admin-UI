@@ -87,7 +87,7 @@ const InfoItem = ({ label, value, sublabel, link }) => {
             <ExternalLink className="h-3.5 w-3.5 text-primary/70 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
           </button>
         ) : (
-          <span className="text-sm font-medium text-card-foreground text-right">
+          <span className="text-sm font-medium text-card-foreground text-right max-w-full [overflow-wrap:anywhere]">
             {value}
           </span>
         )}

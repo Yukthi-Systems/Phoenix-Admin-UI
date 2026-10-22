@@ -263,7 +263,7 @@ const EditDomain = () => {
       {
         onSuccess: (res) => {
           toast("success", `Successfully updated domain: ${rawDomainName}`);
-          navigate(-1);
+          navigate(`/domain/${encodeURIComponent(domain_name)}`);
         },
         onError: (error) => {
           const message =

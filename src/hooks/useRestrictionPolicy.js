@@ -25,6 +25,17 @@ import {
   deleteRestrictionPolicy,
 } from "../api/restrictionpolicy"; // Adjust the import path as needed
 
+function invalidateRestrictionPolicyQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["restriction_policy"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["restriction_policy_entry"],
+    refetchType: "none",
+  });
+}
+
 // Hook for fetching restriction policy list
 export function useRestrictionPolicy({
   organization_id,
@@ -69,18 +80,22 @@ export function useAddRestrictionPolicy() {
 
 // Hook for editing a restriction policy
 export function useEditRestrictionPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_restriction_policy"],
     mutationFn: async ({ org_id, policy_id, data }) =>
       editRestrictionPolicy(org_id, policy_id, data),
+    onSuccess: () => invalidateRestrictionPolicyQueries(queryClient),
   });
 }
 
 // Hook for deleting a restriction policy
 export function useDeleteRestrictionPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_restriction_policy"],
     mutationFn: async ({ org_id, policy_id, policy_name = "Unknown Policy" }) =>
       deleteRestrictionPolicy(org_id, policy_id, policy_name),
+    onSuccess: () => invalidateRestrictionPolicyQueries(queryClient),
   });
 }

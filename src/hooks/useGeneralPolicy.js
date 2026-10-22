@@ -24,6 +24,18 @@ import {
   getGeneralPolicyEntry,
 } from "../api/generalpolicy";
 
+
+function invalidateGeneralPolicyQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["general_policy"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["general_policy_entry"],
+    refetchType: "none",
+  });
+}
+
 export function useGeneralPolicy({
   organization_id,
   domain_name,
@@ -73,14 +85,17 @@ export function useAddGeneralPolicy() {
 }
 
 export function useEditGeneralPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_general_policy"],
     mutationFn: async ({ org_id, policy_id, data }) =>
       editGeneralPolicy(org_id, policy_id, data),
+    onSuccess: () => invalidateGeneralPolicyQueries(queryClient),
   });
 }
 
 export function useDeleteGeneralPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_general_policy"],
     mutationFn: async ({
@@ -89,5 +104,6 @@ export function useDeleteGeneralPolicy() {
       domain_name,
       policy_name = "Unknown Policy",
     }) => deleteGeneralPolicy(org_id, policy_id, domain_name, policy_name),
+    onSuccess: () => invalidateGeneralPolicyQueries(queryClient),
   });
 }

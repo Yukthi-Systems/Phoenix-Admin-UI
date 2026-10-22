@@ -25,6 +25,18 @@ import {
   updateIdentityPassword,
 } from "../api/identities";
 
+
+function invalidateIdentityQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["identities"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["identity"],
+    refetchType: "none",
+  });
+}
+
 export function useGetIdentities(domain_name, page, pageSize, query = "") {
   return useQuery({
     queryKey: ["identities", domain_name, page, pageSize, query],
@@ -61,24 +73,30 @@ export function useAddIdentity() {
 }
 
 export function useUpdateIdentity() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_identity"],
     mutationFn: async ({ data }) => updateIdentity(data),
+    onSuccess: () => invalidateIdentityQueries(queryClient),
   });
 }
 
 export function useDeleteIdentity() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_identity"],
     mutationFn: async ({ domain_name, email_prefix, identity_name }) =>
       deleteIdentity(domain_name, email_prefix, identity_name),
+    onSuccess: () => invalidateIdentityQueries(queryClient),
   });
 }
 
 export function useUpdateIdentityPassword() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_identity_password"],
     mutationFn: async ({ domain_name, email_prefix, password }) =>
       updateIdentityPassword(domain_name, email_prefix, password),
+    onSuccess: () => invalidateIdentityQueries(queryClient),
   });
 }

@@ -195,7 +195,7 @@ const EditDisclaimer = () => {
       {
         onSuccess: () => {
           toast("success", "Successfully updated disclaimer");
-          navigate(`/disclaimer`);
+          navigate(`/disclaimer/${encodeURIComponent(disclaimer_id)}`);
         },
         onError: (error) => {
           const message =

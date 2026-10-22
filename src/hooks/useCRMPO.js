@@ -27,6 +27,18 @@ import {
 } from "@/api/crmPurchaseOrder";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+
+function invalidateCRMPOQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["crm_purchase_order"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["get_crm_purchase_order_item"],
+    refetchType: "none",
+  });
+}
+
 export function useGetCRMPO({ organization_id, page, limit }) {
   return useQuery({
     queryKey: ["crm_purchase_order", organization_id, page, limit],
@@ -62,17 +74,21 @@ export function useGetCRMPOItem({ organization_id, po_id }) {
 }
 
 export function useEditCRMPO() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_crm_purchase_order"],
     mutationFn: async ({ po_id, data }) => editCRMPO(po_id, data),
+    onSuccess: () => invalidateCRMPOQueries(queryClient),
   });
 }
 
 export function useDeleteCRMPO() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_crm_purchase_order"],
     mutationFn: async ({ organization_id, po_id, po_name }) =>
       deleteCRMPO(organization_id, po_id, po_name),
+    onSuccess: () => invalidateCRMPOQueries(queryClient),
   });
 }
 
@@ -90,14 +106,17 @@ export function useAddCRMPOLink() {
 }
 
 export function useDeleteCRMPOLink() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_crm_purchase_order_link"],
     mutationFn: async ({ organization_id, po_id, assignment_id }) =>
       deleteCRMPOLink(organization_id, po_id, assignment_id),
+    onSuccess: () => invalidateCRMPOQueries(queryClient),
   });
 }
 
 export function useEditCRMPOLink() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_crm_purchase_order_link"],
     mutationFn: async ({
@@ -108,5 +127,6 @@ export function useEditCRMPOLink() {
       data,
     }) =>
       editCRMPOLink(organization_id, po_id, service_code, assignment_id, data),
+    onSuccess: () => invalidateCRMPOQueries(queryClient),
   });
 }

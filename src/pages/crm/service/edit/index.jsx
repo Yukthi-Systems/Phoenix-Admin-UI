@@ -76,8 +76,8 @@ function EditCRMService() {
         { service_code: service_id, data },
         {
           onSuccess: () => {
-            toast("success", "Successfully added CRM service");
-            navigate(-1);
+            toast("success", "Successfully updated CRM service");
+            navigate(`/crm/services/${encodeURIComponent(service_id)}`);
           },
           onError: (error) => {
             const message =

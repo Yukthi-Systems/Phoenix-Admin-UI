@@ -25,6 +25,17 @@ import {
   getAttachmentPolicyList,
 } from "../api/attachmentPolicy";
 
+function invalidateAttachmentPolicyQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["attachment_policy_list"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["attachment_policy_details"],
+    refetchType: "none",
+  });
+}
+
 // Hook to get attachment policy list
 export function useGetAttachmentPolicyList(
   organization_id,
@@ -101,19 +112,23 @@ export function useCreateAttachmentPolicy() {
 
 // Hook to edit attachment policy
 export function useEditAttachmentPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_attachment_policy"],
     mutationFn: async ({ organization_id, domain_name, policy_id, data }) =>
       editAttachmentPolicy(organization_id, domain_name, policy_id, data),
+    onSuccess: () => invalidateAttachmentPolicyQueries(queryClient),
   });
 }
 
 // Hook to delete attachment policy
 export function useDeleteAttachmentPolicy() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_attachment_policy"],
     mutationFn: async ({ organization_id, domain_name, policy_id }) =>
       deleteAttachmentPolicy(organization_id, domain_name, policy_id),
+    onSuccess: () => invalidateAttachmentPolicyQueries(queryClient),
   });
 }
 

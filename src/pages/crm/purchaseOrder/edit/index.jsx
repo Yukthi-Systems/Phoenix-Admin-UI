@@ -112,8 +112,8 @@ function EditCRMPO() {
         { po_id: po_id, data },
         {
           onSuccess: () => {
-            toast("success", "Successfully added CRM purchase order");
-            navigate(-1);
+            toast("success", "Successfully updated CRM purchase order");
+            navigate(`/crm/purchase-order/${encodeURIComponent(po_id)}`);
           },
           onError: (error) => {
             const message =

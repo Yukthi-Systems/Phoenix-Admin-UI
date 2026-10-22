@@ -19,6 +19,7 @@ import React, { useEffect, useRef } from "react";
 import { Input } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 import PhoneInput from "@/components/common/PhoneInput";
+import { EMPLOYEE_ID_MAX_LENGTH } from "@/constants/constants";
 
 function IdentityDetailsStep({
   register,
@@ -193,6 +194,7 @@ function IdentityDetailsStep({
           register={register}
           errors={errors}
           placeholder="E12345"
+          maxLength={EMPLOYEE_ID_MAX_LENGTH}
         />
 
         {/* Identity Status Switch (moved to first step) */}

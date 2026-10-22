@@ -196,7 +196,7 @@ function EditUser() {
       {
         onSuccess: () => {
           toast("success", "Successfully updated user");
-          navigate(-1);
+          navigate(`/user/${encodeURIComponent(user_id)}`);
         },
         onError: (error) => {
           const message =

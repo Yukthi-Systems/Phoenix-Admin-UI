@@ -286,7 +286,7 @@ const EditOrganization = () => {
                     "success",
                     `Successfully updated organization: ${data?.name || formData?.name}`,
                   );
-                  navigate("/organization");
+                  navigate(`/organization/${encodeURIComponent(org_id)}`);
                 },
               },
             );
@@ -295,7 +295,7 @@ const EditOrganization = () => {
               "success",
               `Successfully updated organization: ${data?.name || formData?.name}`,
             );
-            navigate("/organization");
+            navigate(`/organization/${encodeURIComponent(org_id)}`);
           }
         },
         onError: (error) => {

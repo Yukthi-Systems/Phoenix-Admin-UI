@@ -87,3 +87,9 @@ export const APP_STORE_LINKS = {
   ios: "https://apps.apple.com/app/mail25/id0000000000",
   android: "https://play.google.com/store/apps/details?id=com.mail25.app",
 };
+
+
+export const EMPLOYEE_ID_MAX_LENGTH = 50;
+export const EMPLOYEE_ID_REGEX = /^[a-zA-Z0-9._/-]+$/;
+export const EMPLOYEE_ID_MESSAGE =
+  "Employee ID can only contain letters, numbers and . _ / - (no spaces)";

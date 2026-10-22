@@ -200,7 +200,7 @@ const EditCaution = () => {
       {
         onSuccess: () => {
           toast("success", "Successfully updated caution message");
-          navigate(`/caution`);
+          navigate(`/caution/${encodeURIComponent(caution_id)}`);
         },
         onError: (error) => {
           const message =

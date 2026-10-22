@@ -24,6 +24,23 @@ import {
 } from "@/api/crmService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+// Edits/deletes only mark the list + details cache stale (no refetch here):
+// the next page that shows the data fetches it fresh on mount, instead of
+// serving pre-edit data until staleTime runs out (e.g. an edited field "not
+// updating" until several hard refreshes). Not refetching keeps this free -
+// bulk import/edit/delete run these mutations once per row, and the list
+// pages already refetch once when a batch or in-page action completes.
+function invalidateCRMServiceQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["crm_service"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["get_crm_service_item"],
+    refetchType: "none",
+  });
+}
+
 export function useGetCRMService() {
   return useQuery({
     queryKey: ["crm_service"],
@@ -61,16 +78,20 @@ export function useGetCRMServiceItem({ service_code }) {
 }
 
 export function useEditCRMService() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_crm_service"],
     mutationFn: async ({ service_code, data }) =>
       editCRMService(service_code, data),
+    onSuccess: () => invalidateCRMServiceQueries(queryClient),
   });
 }
 
 export function useDeleteCRMService() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_crm_service"],
     mutationFn: async ({ service_code }) => deleteCRMService(service_code),
+    onSuccess: () => invalidateCRMServiceQueries(queryClient),
   });
 }

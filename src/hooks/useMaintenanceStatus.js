@@ -24,6 +24,19 @@ import {
 } from "@/api/maintenance";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
+// Edits/deletes only mark the list + details cache stale (no refetch here):
+// the next page that shows the data fetches it fresh on mount, instead of
+// serving pre-edit data until staleTime runs out (e.g. an edited field "not
+// updating" until several hard refreshes). Not refetching keeps this free -
+// bulk import/edit/delete run these mutations once per row, and the list
+// pages already refetch once when a batch or in-page action completes.
+function invalidateMaintenanceQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["maintenance_status"],
+    refetchType: "none",
+  });
+}
+
 export function useGetMaintenanceStatus(is_active = true) {
   return useQuery({
     queryKey: ["maintenance_status", is_active],
@@ -52,17 +65,21 @@ export function useCreateMaintenanceStatus() {
 }
 
 export function useUpdateMaintenanceStatus() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["update_maintenance_status"],
     mutationFn: ({ data, maintenance_id }) =>
       updateMaintenanceStatus({ data, maintenance_id }),
+    onSuccess: () => invalidateMaintenanceQueries(queryClient),
   });
 }
 
 export function useDeleteMaintenanceStatus() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, maintenance_title = "Unknown Maintenance" }) =>
       deleteMaintenanceStatus({ maintenance_id: id, maintenance_title }),
     mutationKey: ["delete_maintenance_status"],
+    onSuccess: () => invalidateMaintenanceQueries(queryClient),
   });
 }

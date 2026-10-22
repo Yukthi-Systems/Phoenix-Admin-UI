@@ -24,6 +24,18 @@ import {
 } from "@/api/policyRules";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+
+function invalidatePolicyRuleQueries(queryClient) {
+  queryClient.invalidateQueries({
+    queryKey: ["policyrules"],
+    refetchType: "none",
+  });
+  queryClient.invalidateQueries({
+    queryKey: ["get_policy_rule"],
+    refetchType: "none",
+  });
+}
+
 export function useGetPolicyRules(
   organization_id,
   domain_name,
@@ -62,17 +74,21 @@ export function useGetPolicyRule({ organization_id, rule_id }) {
 }
 
 export function useEditPolicyRule() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["edit_policy_rule"],
     mutationFn: async ({ organization_id, rule_id, data }) =>
       editPolicyRule(organization_id, rule_id, data),
+    onSuccess: () => invalidatePolicyRuleQueries(queryClient),
   });
 }
 
 export function useDeletePolicyRule() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["delete_policy_rule"],
     mutationFn: async ({ organization_id, rule_id }) =>
       deletePolicyRule(organization_id, rule_id),
+    onSuccess: () => invalidatePolicyRuleQueries(queryClient),
   });
 }
