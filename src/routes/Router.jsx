@@ -298,6 +298,7 @@ const MailMapping = lazyRetry(() => import("@/pages/server/mapmapping"));
 
 const IdentityLookup = lazyRetry(() => import("@/pages/server/identityLookup"));
 const DomainLookup = lazyRetry(() => import("@/pages/server/domainLookup"));
+const OrganizationLookup = lazyRetry(() => import("@/pages/server/orgLookup"));
 
 // Chat
 const ChatDashboard = lazyRetry(() => import("@/pages/chat/dashboard"));
@@ -1324,6 +1325,14 @@ const Router = [
             element: (
               <LazyWrapper>
                 <DomainLookup />
+              </LazyWrapper>
+            ),
+          },
+          {
+            path: "/server/org-lookup",
+            element: (
+              <LazyWrapper>
+                <OrganizationLookup />
               </LazyWrapper>
             ),
           },

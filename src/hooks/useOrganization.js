@@ -28,6 +28,7 @@ import {
   deleteOrganization,
   editOrganization,
   getOrganizationDetail,
+  getGlobalOrganizations,
   getOrganizationLogoUrl,
   getOrganizations,
   updateOrganizationSpace,
@@ -111,6 +112,19 @@ export function useGetOrganizationDetail(org_id) {
     cacheTime: 1000 * 60, // 60 Seconds
     keepPreviousData: true,
     retry: 3,
+  });
+}
+
+// Every organization in the system (not just the browsed subtree), for the
+// Tools > Organization Lookup page - requires "organization:admin:view".
+export function useGlobalOrganizations(page, pageSize, query = "") {
+  return useQuery({
+    queryKey: ["organizations", "global", page, pageSize, query],
+    queryFn: () => getGlobalOrganizations(page, pageSize, query),
+    // Search-first page - nothing is fetched until there's a search term
+    enabled: query.length > 0,
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 30,
   });
 }
 

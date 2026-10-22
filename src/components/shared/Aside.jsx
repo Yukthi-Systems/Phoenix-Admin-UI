@@ -460,6 +460,13 @@ export const navItems = [
         permissionValue: "domain:admin:view",
       },
       {
+        name: "Organization Lookup",
+        icon: <Building2 size={16} />,
+        link: "/server/org-lookup",
+        hasPermission: true,
+        permissionValue: "organization:admin:view",
+      },
+      {
         name: "Maintenance",
         icon: <Wrench size={16} />,
         link: "/maintenance",
