@@ -46,7 +46,7 @@ const BlockingSettingsStep = ({
         </p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-8 text-left">
         {/* Incoming Emails Section */}
         <div className="space-y-4 rounded-lg border p-4">
           <h4 className="font-medium">Incoming Email Settings</h4>
