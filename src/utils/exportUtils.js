@@ -434,7 +434,12 @@ const transformItem = (item, fieldMapping) => {
 
   fieldMapping.forEach((field) => {
     let value = getNestedValue(item, field.key);
-    if (field.transform && typeof field.transform === "function") {
+    // A field's own transform already produces the final display value
+    // (e.g. "Inactive", "No", "Unlimited") - the type-based formatting below
+    // must not re-coerce it, or any non-empty string reads as truthy and
+    // every boolean exports as "Yes"/"Active".
+    const hasTransform = typeof field.transform === "function";
+    if (hasTransform) {
       value = field.transform(value, item);
     }
     if (value !== null && value !== undefined) {
@@ -443,13 +448,16 @@ const transformItem = (item, fieldMapping) => {
           value = formatDate(value);
           break;
         case "boolean":
-          value = value ? "Yes" : "No";
+          if (!hasTransform) value = value ? "Yes" : "No";
           break;
         case "status":
-          value = value ? "Active" : "Inactive";
+          if (!hasTransform) value = value ? "Active" : "Inactive";
           break;
         case "number":
-          value = Number(value);
+          // Keep non-numeric labels like "Unlimited"/"No Limit" as-is
+          if (value !== "" && !Number.isNaN(Number(value))) {
+            value = Number(value);
+          }
           break;
         case "currency":
           value = `$${Number(value).toFixed(2)}`;
