@@ -273,6 +273,18 @@ export const baseConfig = {
           },
         },
         {
+          // Tools > Organization Lookup + Organizations > Export All
+          // (global-list endpoint, every org in the system)
+          name: "organization_admin_lookup",
+          label: "Organization Admin Lookup",
+          permissions: {
+            view: "organization:admin:view",
+            create: null,
+            edit: null,
+            delete: null,
+          },
+        },
+        {
           name: "system_maintenance",
           label: "Admin Maintenance - System Alerts",
           permissions: {
