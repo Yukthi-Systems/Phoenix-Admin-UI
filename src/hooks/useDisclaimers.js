@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   createDisclaimer,
   getDisclaimerDetails,
@@ -23,7 +24,6 @@ import {
   deleteDisclaimer,
   getDisclaimersList,
 } from "@/api/disclaimer";
-
 
 function invalidateDisclaimerQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -45,7 +45,7 @@ export function useGetDisclaimers(organization_id, page, pageSize, query = "") {
     cacheTime: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["disclaimers", organization_id]),
     retry: 3,
   });
 }

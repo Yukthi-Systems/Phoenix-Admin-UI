@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   addFiltersPolicy,
   deleteFiltersPolicy,
@@ -23,7 +24,6 @@ import {
   getFiltersPolicy,
   getFiltersPolicyEntry,
 } from "../api/filterpolicy";
-
 
 function invalidateFiltersPolicyQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -57,7 +57,11 @@ export function useFiltersPolicy(
     enabled: !!domain_name,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage([
+      "filters_policy",
+      organization_id,
+      domain_name,
+    ]),
     retry: 3,
   });
 }

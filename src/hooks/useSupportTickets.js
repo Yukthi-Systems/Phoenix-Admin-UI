@@ -16,6 +16,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import { toast } from "react-toastify";
 import {
   uploadTicketFile,
@@ -72,7 +73,7 @@ export const useGetSupportTickets = (organization_id, page, size, query) =>
     queryKey: ["support-tickets", organization_id, page, size, query],
     queryFn: () => getSupportTickets(organization_id, page, size, query),
     enabled: !!organization_id,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["support-tickets", organization_id]),
   });
 
 export const useGetTicketFollowUps = (organization_id, ticket_id, page, size) =>

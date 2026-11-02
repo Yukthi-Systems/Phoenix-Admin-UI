@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   createCaution,
   getCautionDetails,
@@ -23,7 +24,6 @@ import {
   deleteCaution,
   getCautionsList,
 } from "../api/cautions";
-
 
 function invalidateCautionQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -45,7 +45,7 @@ export function useGetCautions(organization_id, page, pageSize, query = "") {
     cacheTime: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["cautions", organization_id]),
   });
 }
 

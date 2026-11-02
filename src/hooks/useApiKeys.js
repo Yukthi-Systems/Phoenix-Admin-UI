@@ -16,6 +16,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import { toast } from "react-toastify";
 import {
   getApiKeys,
@@ -42,7 +43,7 @@ export const useApiKeys = (organizationId, page = 1, limit = 10) => {
     queryKey: ["api-keys", organizationId, page, limit],
     queryFn: () => getApiKeys(organizationId, page, limit),
     enabled: !!organizationId,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["api-keys", organizationId]),
   });
 };
 

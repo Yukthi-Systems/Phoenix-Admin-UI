@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   addDomain,
   deleteDomain,
@@ -40,7 +41,7 @@ export function useGetDomains(organization_id, page, pageSize, query = "") {
     cacheTime: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["domains", organization_id]),
     retry: 3,
   });
 }

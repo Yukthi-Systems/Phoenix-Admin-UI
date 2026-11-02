@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   getDistributionPolicy,
   getDistributionPolicyEntry,
@@ -23,7 +24,6 @@ import {
   editDistributionPolicy,
   deleteDistributionPolicy,
 } from "../api/distributionPolicy";
-
 
 function invalidateDistributionPolicyQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -63,7 +63,11 @@ export function useDistributionPolicy({
     enabled: !!domain_name && !!organization_id,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage([
+      "distribution_policy",
+      organization_id,
+      domain_name,
+    ]),
     retry: 3,
   });
 }

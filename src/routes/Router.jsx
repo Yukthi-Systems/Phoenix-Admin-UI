@@ -23,15 +23,8 @@ import FullLayout from "@/components/layouts/FullLayout";
 import BlankLayout from "@/components/layouts/BlankLayout";
 import DataLoading from "@/components/common/DataLoading";
 import PrivateRoutes from "./PrivateRoutes";
-import EmailClientSessions from "@/pages/clientSession/list";
-import StatusPage from "@/pages/status";
 import { lazyRetry } from "@/utils/lazyRetry";
-import AppSession from "@/pages/appSession/list";
-import SsoSession from "@/pages/ssoSession/list";
 import PublicRoutes from "./PublicRoute";
-import ResetPassword from "@/pages/auth/resetPassword";
-import ListAdminTickets from "@/pages/tickets/admin/list";
-import ServerProcsCopy from "@/pages/server/procs/ProcsCopy";
 
 // Create a wrapper component for lazyRetry loading with consistent loading UI
 const LazyWrapper = ({ children }) => (
@@ -45,6 +38,18 @@ const LazyWrapper = ({ children }) => (
   >
     {children}
   </Suspense>
+);
+
+const EmailClientSessions = lazyRetry(
+  () => import("@/pages/clientSession/list"),
+);
+const StatusPage = lazyRetry(() => import("@/pages/status"));
+const AppSession = lazyRetry(() => import("@/pages/appSession/list"));
+const SsoSession = lazyRetry(() => import("@/pages/ssoSession/list"));
+const ResetPassword = lazyRetry(() => import("@/pages/auth/resetPassword"));
+const ListAdminTickets = lazyRetry(() => import("@/pages/tickets/admin/list"));
+const ServerProcsCopy = lazyRetry(
+  () => import("@/pages/server/procs/ProcsCopy"),
 );
 
 // Auth Pages
@@ -1370,7 +1375,11 @@ const Router = [
           },
           {
             path: "/status",
-            element: <StatusPage />,
+            element: (
+              <LazyWrapper>
+                <StatusPage />
+              </LazyWrapper>
+            ),
           },
 
           // Documentation

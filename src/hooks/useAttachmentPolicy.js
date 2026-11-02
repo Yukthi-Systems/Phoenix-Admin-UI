@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   createAttachmentPolicy,
   deleteAttachmentPolicy,
@@ -66,7 +67,11 @@ export function useGetAttachmentPolicyList(
     cacheTime: 1000 * 60,
     // refetchOnMount: true,
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage([
+      "attachment_policy_list",
+      organization_id,
+      domain_name,
+    ]),
   });
 }
 

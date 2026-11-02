@@ -16,6 +16,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   createInitialInvoice,
   createInvoiceRevision,
@@ -81,7 +82,7 @@ export const useGetGlobalInvoices = ({
   return useQuery({
     queryKey: ["invoices-global", page, page_Size, query],
     queryFn: () => getAllGlobalInvoices(page, page_Size, query),
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["invoices-global"]),
     enabled,
     staleTime: 1000 * 60 * 5,
   });

@@ -151,8 +151,11 @@ export function useGetOrganizationLogoUrl(organization_id) {
     queryKey: ["organization_logo_url", organization_id],
     queryFn: () => getOrganizationLogoUrl(organization_id),
     enabled: !!organization_id,
-    staleTime: 0,
-    cacheTime: 0,
+    // Logos are rendered once per org in the header, selector and tree; without
+    // caching every open re-downloads all of them at once and queues the page's
+    // own requests behind them. Uploads invalidate this key, so it stays fresh.
+    staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 10,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnMount: true,

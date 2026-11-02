@@ -17,6 +17,7 @@
 
 // hooks/useRestrictionPolicy.js
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   getRestrictionPolicy,
   getRestrictionPolicyEntry,
@@ -50,7 +51,7 @@ export function useRestrictionPolicy({
     enabled: !!organization_id,
     staleTime: 1000 * 60, // 60 Seconds
     cacheTime: 1000 * 60, // 60 Secondss
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["restriction_policy", organization_id]),
     retry: 3,
   });
 }

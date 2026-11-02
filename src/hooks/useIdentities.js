@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   createIdentity,
   deleteIdentity,
@@ -24,7 +25,6 @@ import {
   updateIdentity,
   updateIdentityPassword,
 } from "../api/identities";
-
 
 function invalidateIdentityQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -46,7 +46,7 @@ export function useGetIdentities(domain_name, page, pageSize, query = "") {
     cacheTime: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["identities", domain_name]),
     retry: 3,
   });
 }

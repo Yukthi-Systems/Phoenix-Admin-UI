@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   addGeneralPolicy,
   deleteGeneralPolicy,
@@ -23,7 +24,6 @@ import {
   getGeneralPolicy,
   getGeneralPolicyEntry,
 } from "../api/generalpolicy";
-
 
 function invalidateGeneralPolicyQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -57,7 +57,11 @@ export function useGeneralPolicy({
     enabled: !!domain_name,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage([
+      "general_policy",
+      organization_id,
+      domain_name,
+    ]),
     retry: 3,
   });
 }

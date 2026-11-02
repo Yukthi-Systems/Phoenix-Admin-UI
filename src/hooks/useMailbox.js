@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   addMailbox,
   deleteMailbox,
@@ -28,7 +29,6 @@ import {
   updateMailboxSpace,
   updateMailboxStatus,
 } from "../api/mailbox";
-
 
 function invalidateMailboxQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -53,7 +53,7 @@ export function useGetMailboxes(domain_name, page, pageSize, query = "") {
     enabled: !!domain_name,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["mailboxes", domain_name]),
     retry: (failureCount, error) => {
       if (error?.response?.status >= 400 && error?.response?.status < 500) {
         return false;

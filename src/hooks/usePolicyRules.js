@@ -23,7 +23,7 @@ import {
   getPolicyRules,
 } from "@/api/policyRules";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { keepPreviousPage } from "@/utils/queryUtils";
 
 function invalidatePolicyRuleQueries(queryClient) {
   queryClient.invalidateQueries({
@@ -48,7 +48,11 @@ export function useGetPolicyRules(
     enabled: !!domain_name,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage([
+      "policyrules",
+      organization_id,
+      domain_name,
+    ]),
   });
 }
 

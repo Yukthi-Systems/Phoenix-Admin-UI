@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import { createImapSyncJob, listImapSyncJobs } from "@/api/imapSync";
 
 // Hook to create a new IMAP Sync Job
@@ -41,6 +42,6 @@ export const useListImapSyncJobs = (domain_name, page, limit) => {
     queryKey: ["imap-sync-jobs", domain_name, page, limit],
     queryFn: () => listImapSyncJobs(domain_name, page, limit),
     enabled: !!domain_name,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["imap-sync-jobs", domain_name]),
   });
 };

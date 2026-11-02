@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   addUser,
   changePassword,
@@ -39,7 +40,6 @@ import { useDebounce } from "./useDebounce";
 import { useAtom } from "jotai";
 import { uiInfoAtom } from "@/store/uiInfo";
 
-
 function invalidateUserQueries(queryClient) {
   queryClient.invalidateQueries({ queryKey: ["users"], refetchType: "none" });
   queryClient.invalidateQueries({ queryKey: ["user"], refetchType: "none" });
@@ -52,7 +52,7 @@ export function useGetUsers(organization_id, page, pageSize) {
     enabled: !!organization_id,
     staleTime: 1000 * 60,
     cacheTime: 1000 * 60,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["users", organization_id]),
     retry: 3,
   });
 }

@@ -16,6 +16,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   createDepartment,
   deleteDepartment,
@@ -50,7 +51,7 @@ export function useGetDepartments(organization_id, page, pageSize, query = "") {
     cacheTime: 1000 * 60,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["departments", organization_id]),
     retry: 3,
   });
 }

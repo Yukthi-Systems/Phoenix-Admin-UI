@@ -21,6 +21,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { keepPreviousPage } from "@/utils/queryUtils";
 import {
   addServer,
   deleteServer,
@@ -163,7 +164,7 @@ export function useGetMailboxesFromServer(
       getMailboxesFromServer(server_id, emailStartsWith, page, pageSize),
     enabled: !!server_id,
     staleTime: 1000 * 10,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["mailboxes_from_server", server_id]),
   });
 }
 
@@ -173,7 +174,7 @@ export function useGetMailboxMigrationLogs(email, page = 1, pageSize = 25) {
     queryFn: () => getMailboxMigrationLogs(email, page, pageSize),
     enabled: !!email,
     staleTime: 1000 * 10,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage(["mailbox_migration_logs", email]),
   });
 }
 
@@ -187,7 +188,10 @@ export function useGetMigrationsFromSourceServer(
     queryFn: () => getMigrationsFromSourceServer(server_id, page, pageSize),
     enabled: !!server_id,
     staleTime: 1000 * 10,
-    keepPreviousData: true,
+    placeholderData: keepPreviousPage([
+      "migrations_from_source_server",
+      server_id,
+    ]),
   });
 }
 
