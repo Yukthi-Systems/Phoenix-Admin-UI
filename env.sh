@@ -24,11 +24,11 @@ echo "  VITE_API_VERSION: \"${VITE_API_VERSION}\"," >> ./dist/env-config.js
 echo "  VITE_ENVIRONMENT: \"${VITE_ENVIRONMENT}\"," >> ./dist/env-config.js
 echo "  VITE_COPYRIGHT: \"${VITE_COPYRIGHT}\"," >> ./dist/env-config.js
 echo "  VITE_DNS_API_KEY: \"${VITE_DNS_API_KEY}\"," >> ./dist/env-config.js
-echo "  VITE_RUM_CLIENT_TOKEN: \"${VITE_RUM_CLIENT_TOKEN}\"," >> ./dist/env-config.js
-echo "  VITE_RUM_SITE: \"${VITE_RUM_SITE}\"," >> ./dist/env-config.js
-echo "  VITE_RUM_APPLICATION_ID: \"${VITE_RUM_APPLICATION_ID}\"," >> ./dist/env-config.js
-echo "  VITE_RUM_SERVICE: \"${VITE_RUM_SERVICE}\"," >> ./dist/env-config.js
-echo "  VITE_RUM_ORG_IDENTIFIER: \"${VITE_RUM_ORG_IDENTIFIER}\"," >> ./dist/env-config.js
+# O-Tel disabled: echo "  VITE_RUM_CLIENT_TOKEN: \"${VITE_RUM_CLIENT_TOKEN}\"," >> ./dist/env-config.js
+# O-Tel disabled: echo "  VITE_RUM_SITE: \"${VITE_RUM_SITE}\"," >> ./dist/env-config.js
+# O-Tel disabled: echo "  VITE_RUM_APPLICATION_ID: \"${VITE_RUM_APPLICATION_ID}\"," >> ./dist/env-config.js
+# O-Tel disabled: echo "  VITE_RUM_SERVICE: \"${VITE_RUM_SERVICE}\"," >> ./dist/env-config.js
+# O-Tel disabled: echo "  VITE_RUM_ORG_IDENTIFIER: \"${VITE_RUM_ORG_IDENTIFIER}\"," >> ./dist/env-config.js
 echo "  VITE_RECAPTCHA_SITE_KEY: \"${VITE_RECAPTCHA_SITE_KEY}\"," >> ./dist/env-config.js
 echo "  VITE_PUBLIC_API_URL: \"${VITE_PUBLIC_API_URL}\"," >> ./dist/env-config.js
 echo "  VITE_V3_API_DOCS_URL: \"${VITE_V3_API_DOCS_URL}\"," >> ./dist/env-config.js

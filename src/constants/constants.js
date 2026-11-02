@@ -60,15 +60,15 @@ export const PUBLIC_API_URL = getEnv(
 export const DNS_URL = getEnv("VITE_DNS_URL", "");
 export const DNS_API_KEY = getEnv("VITE_DNS_API_KEY", "");
 
-// Observability (OpenObserve RUM/logs)
-export const RUM_CLIENT_TOKEN = getEnv("VITE_RUM_CLIENT_TOKEN", "");
-export const RUM_SITE = getEnv("VITE_RUM_SITE", "");
-export const RUM_APPLICATION_ID = getEnv(
-  "VITE_RUM_APPLICATION_ID",
-  "phoenix-admin-ui-id",
-);
-export const RUM_SERVICE = getEnv("VITE_RUM_SERVICE", "phoenix-admin-ui-app");
-export const RUM_ORG_IDENTIFIER = getEnv("VITE_RUM_ORG_IDENTIFIER", "default");
+// Observability (OpenObserve RUM/logs) - disabled, see the O-Tel note in App.jsx
+// export const RUM_CLIENT_TOKEN = getEnv("VITE_RUM_CLIENT_TOKEN", "");
+// export const RUM_SITE = getEnv("VITE_RUM_SITE", "");
+// export const RUM_APPLICATION_ID = getEnv(
+//   "VITE_RUM_APPLICATION_ID",
+//   "phoenix-admin-ui-id",
+// );
+// export const RUM_SERVICE = getEnv("VITE_RUM_SERVICE", "phoenix-admin-ui-app");
+// export const RUM_ORG_IDENTIFIER = getEnv("VITE_RUM_ORG_IDENTIFIER", "default");
 
 export const RECAPTCHA_SITE_KEY = getEnv("VITE_RECAPTCHA_SITE_KEY", "");
 
@@ -87,7 +87,6 @@ export const APP_STORE_LINKS = {
   ios: "https://apps.apple.com/app/mail25/id0000000000",
   android: "https://play.google.com/store/apps/details?id=com.mail25.app",
 };
-
 
 export const EMPLOYEE_ID_MAX_LENGTH = 50;
 export const EMPLOYEE_ID_REGEX = /^[a-zA-Z0-9._/-]+$/;
