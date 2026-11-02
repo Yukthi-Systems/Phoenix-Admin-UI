@@ -161,7 +161,8 @@ export function useGetProfilePictureUrl(organization_id, user_id) {
   // every re-render/remount.
   return useQuery({
     queryKey: ["profile_picture_url", organization_id, user_id],
-    queryFn: () => getProfilePictureUrl(organization_id, user_id),
+    queryFn: ({ signal }) =>
+      getProfilePictureUrl(organization_id, user_id, signal),
     enabled: !!organization_id && !!user_id,
     staleTime: 5 * 60 * 1000,
     gcTime: 5 * 60 * 1000,

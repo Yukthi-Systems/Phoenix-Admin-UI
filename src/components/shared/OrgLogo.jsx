@@ -27,6 +27,7 @@ import { useToastify } from "@/hooks/useToastify";
 import { userInfoAtom } from "@/store/userInfo";
 import { userProfileAtom } from "@/store/userProfile";
 import ImageUploadModal from "../common/ImageUploadModal";
+import { getInitialsAvatar } from "@/utils/avatar";
 
 const OrganizationLogo = ({
   size = "large",
@@ -215,7 +216,7 @@ const OrganizationLogo = ({
     }
 
     // Fallback to generic organization logo
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(targetOrgName)}&background=random&size=120&format=png`;
+    return getInitialsAvatar(targetOrgName);
   };
 
   const hasLogo = () => {
@@ -235,7 +236,7 @@ const OrganizationLogo = ({
             alt={`${targetOrgName} Logo`}
             className={getImageClasses()}
             onError={(e) => {
-              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(targetOrgName)}&background=random&size=120&format=png`;
+              e.target.src = getInitialsAvatar(targetOrgName);
             }}
           />
         )}

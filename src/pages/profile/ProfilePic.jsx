@@ -27,6 +27,7 @@ import { useToastify } from "@/hooks/useToastify";
 import { userInfoAtom } from "@/store/userInfo";
 import { userProfileAtom } from "@/store/userProfile";
 import ImageUploadModal from "@/components/common/ImageUploadModal";
+import { getInitialsAvatar } from "@/utils/avatar";
 
 const ProfilePicture = ({
   size = "large",
@@ -261,7 +262,7 @@ const ProfilePicture = ({
       return profilePictureData.url;
     }
 
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(targetDisplayName)}&background=random&size=120`;
+    return getInitialsAvatar(targetDisplayName);
   };
 
   const getBorderClass = () => {
@@ -310,7 +311,7 @@ const ProfilePicture = ({
             }`}
             onClick={handleImageClick}
             onError={(e) => {
-              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(targetDisplayName)}&background=random&size=120`;
+              e.target.src = getInitialsAvatar(targetDisplayName);
             }}
           />
         )}
@@ -377,7 +378,7 @@ const ProfilePicture = ({
               className="max-w-[80vh] max-h-[80vh] w-auto h-auto rounded-full object-cover shadow-2xl"
               onClick={(e) => e.stopPropagation()}
               onError={(e) => {
-                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(targetDisplayName)}&background=random&size=400`;
+                e.target.src = getInitialsAvatar(targetDisplayName);
               }}
             />
           </div>

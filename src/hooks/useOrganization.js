@@ -149,7 +149,7 @@ export function useUploadOrganizationLogo() {
 export function useGetOrganizationLogoUrl(organization_id) {
   return useQuery({
     queryKey: ["organization_logo_url", organization_id],
-    queryFn: () => getOrganizationLogoUrl(organization_id),
+    queryFn: ({ signal }) => getOrganizationLogoUrl(organization_id, signal),
     enabled: !!organization_id,
     // Logos are rendered once per org in the header, selector and tree; without
     // caching every open re-downloads all of them at once and queues the page's

@@ -16,6 +16,7 @@
  */
 
 import axios from "axios";
+import { withImageRequestSlot } from "@/utils/queryUtils";
 import { adminStore } from "../store/store";
 import { csrfTokenAtom } from "../store/csrftoken";
 import { addLogs } from "./logs";
@@ -375,7 +376,11 @@ export const uploadProfilePicture = async (organization_id, user_id, file) => {
   return res.data;
 };
 
-export const getProfilePictureUrl = async (organization_id, user_id) => {
+export const getProfilePictureUrl = async (
+  organization_id,
+  user_id,
+  signal,
+) => {
   let config = {
     method: "GET",
     url: `${API_URL}/user/profile-photo/${organization_id}/${user_id}`,
@@ -385,10 +390,11 @@ export const getProfilePictureUrl = async (organization_id, user_id) => {
     withCredentials: true,
     timeout: 10 * 1000,
     responseType: "blob",
+    signal,
   };
 
   try {
-    const res = await axios(config);
+    const res = await withImageRequestSlot(() => axios(config), signal);
     if (res.status === 200) {
       const blob = new Blob([res.data], {
         type: res.headers["content-type"] || "image/png",
@@ -403,6 +409,8 @@ export const getProfilePictureUrl = async (organization_id, user_id) => {
       };
     }
   } catch (error) {
+    // Let React Query see a cancelled request as a cancellation, not a failure.
+    if (axios.isCancel(error) || signal?.aborted) throw error;
     if (error.response?.status === 404) {
       return {
         url: null,
