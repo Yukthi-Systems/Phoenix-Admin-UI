@@ -106,11 +106,11 @@ export function useGetTotalUsersMetrics(organization_id) {
 }
 
 // Hook for Top Logins Per Domain
-export function useGetTopLoginsPerDomain(organization_id) {
+export function useGetTopLoginsPerDomain(organization_id, enabled = true) {
   return useQuery({
     queryKey: ["dashboard", "top_logins_per_domain", organization_id],
     queryFn: () => getTopLoginsPerDomain(organization_id),
-    enabled: !!organization_id,
+    enabled: !!organization_id && enabled,
     staleTime: 1000 * 60 * 3,
     cacheTime: 1000 * 60 * 3,
     retry: 3,
@@ -121,11 +121,11 @@ export function useGetTopLoginsPerDomain(organization_id) {
 }
 
 // Hook for Top IP Logins Per Domain
-export function useGetTopIPLoginsPerDomain(organization_id) {
+export function useGetTopIPLoginsPerDomain(organization_id, enabled = true) {
   return useQuery({
     queryKey: ["dashboard", "top_ip_logins_per_domain", organization_id],
     queryFn: () => getTopIPLoginsPerDomain(organization_id),
-    enabled: !!organization_id,
+    enabled: !!organization_id && enabled,
     staleTime: 1000 * 60 * 3,
     cacheTime: 1000 * 60 * 3,
     retry: 3,
@@ -136,11 +136,11 @@ export function useGetTopIPLoginsPerDomain(organization_id) {
 }
 
 // Hook for Logins Per Domain
-export function useGetLoginsPerDomain(organization_id) {
+export function useGetLoginsPerDomain(organization_id, enabled = true) {
   return useQuery({
     queryKey: ["dashboard", "logins_per_domain", organization_id],
     queryFn: () => getLoginsPerDomain(organization_id),
-    enabled: !!organization_id,
+    enabled: !!organization_id && enabled,
     staleTime: 1000 * 60 * 3,
     cacheTime: 1000 * 60 * 3,
     retry: 3,
@@ -199,10 +199,33 @@ export function useGetAllDashboardMetrics(organization_id) {
   const domains = useGetDomainsMetrics(organization_id);
   const mailboxesSpace = useGetMailboxesSpaceMetrics(organization_id);
   const totalUsers = useGetTotalUsersMetrics(organization_id);
-  const topLogins = useGetTopLoginsPerDomain(organization_id);
-  const topIPLogins = useGetTopIPLoginsPerDomain(organization_id);
-  const loginsPerDomain = useGetLoginsPerDomain(organization_id);
   const status = useGetStatus();
+
+  // Load in two waves: the summary cards and system health first, then the
+  // login charts further down the page, so the first wave isn't competing
+  // with the heavier login queries for connections and backend time.
+  const firstWaveSettled = [
+    organizationSpace,
+    domains,
+    mailboxesSpace,
+    totalUsers,
+    status,
+  ].every((query) => !query.isLoading);
+
+  // A query waiting on `enabled` reports isLoading: false, so keep the
+  // widgets on their loading state until their wave actually starts.
+  const deferred = (query) =>
+    firstWaveSettled ? query : { ...query, isLoading: true };
+
+  const topLogins = deferred(
+    useGetTopLoginsPerDomain(organization_id, firstWaveSettled),
+  );
+  const topIPLogins = deferred(
+    useGetTopIPLoginsPerDomain(organization_id, firstWaveSettled),
+  );
+  const loginsPerDomain = deferred(
+    useGetLoginsPerDomain(organization_id, firstWaveSettled),
+  );
 
   const refetchAll = async () => {
     await Promise.all([
