@@ -18,7 +18,7 @@
 import { lazy } from "react";
 
 export const lazyRetry = (importFn) => {
-  return lazy(async () => {
+  const Component = lazy(async () => {
     const isChunkError = (error) => {
       const msg = error?.message?.toLowerCase() || "";
       return (
@@ -62,4 +62,7 @@ export const lazyRetry = (importFn) => {
     sessionStorage.removeItem("page-has-been-reloaded");
     throw new Error("Failed to load component after retries");
   });
+  // Lets the route's chunk be fetched ahead of navigation (see routes/prefetch.js).
+  Component.preload = importFn;
+  return Component;
 };

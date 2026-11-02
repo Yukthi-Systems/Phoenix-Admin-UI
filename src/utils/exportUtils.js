@@ -15,9 +15,12 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import ExcelJS from "exceljs";
 import { formatDate } from "./dateFormat";
 import { FIELD_MAPPINGS } from "@/constants/export";
+
+// exceljs is large (~260 KB gzipped) and only needed when a file is actually
+// imported or exported, so load it on demand instead of with every list page.
+const loadExcelJS = () => import("exceljs").then((module) => module.default);
 
 /**
  * Generic export utility for exporting data to Excel using ExcelJS
@@ -130,6 +133,7 @@ export const exportToExcel = async (config) => {
     });
 
     // --- ExcelJS Generation Logic ---
+    const ExcelJS = await loadExcelJS();
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet(sheetName);
 

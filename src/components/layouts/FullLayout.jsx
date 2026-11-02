@@ -35,6 +35,7 @@ import DocHelpDrawer from "@/components/docs/DocHelpDrawer";
 import { useGetUserUiInfo } from "@/hooks/useUser";
 import { useEffect, useRef } from "react";
 import { uiInfoAtom } from "@/store/uiInfo";
+import { prefetchCommonRoutes } from "@/routes/prefetch";
 import SessionGuard from "./SessionGuard";
 import RouterProgressBar from "../common/RouteProgress";
 import { useSessionMonitor } from "@/hooks/useSessionMonitor";
@@ -62,6 +63,14 @@ const FullLayout = () => {
   const { pathname } = useLocation();
 
   const uiInfoInitialized = useRef(false);
+
+  // Once the logged-in app has loaded, fetch the most-used pages' code in the
+  // background so the first click on them doesn't wait for a download. The
+  // delay keeps it from competing with the current page's own API calls.
+  useEffect(() => {
+    const timer = setTimeout(prefetchCommonRoutes, 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Fetch maintenance status
   const { data: maintenanceData } = useGetMaintenanceStatus();

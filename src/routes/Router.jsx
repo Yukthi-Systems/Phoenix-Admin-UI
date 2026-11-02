@@ -25,6 +25,7 @@ import DataLoading from "@/components/common/DataLoading";
 import PrivateRoutes from "./PrivateRoutes";
 import { lazyRetry } from "@/utils/lazyRetry";
 import PublicRoutes from "./PublicRoute";
+import { registerRoutePreload } from "./prefetch";
 
 // Create a wrapper component for lazyRetry loading with consistent loading UI
 const LazyWrapper = ({ children }) => (
@@ -1514,22 +1515,6 @@ const Router = [
             ),
           },
           {
-            path: "/reset/admin",
-            element: (
-              <LazyWrapper>
-                <ResetPassword />
-              </LazyWrapper>
-            ),
-          },
-          {
-            // Identity (mailbox) password reset now lives inside the same
-            // unified reset page — this keeps old bookmarks/links working
-            // by pre-selecting the "Email Identity" tab.
-            path: "/reset/email",
-            element: <Navigate to="/reset/admin?mode=identity" replace />,
-          },
-
-          {
             path: "/2fa/validate/:method",
             element: (
               <LazyWrapper>
@@ -1557,8 +1542,37 @@ const Router = [
       },
     ],
   },
+  {
+    path: "/",
+    errorElement: <ErrorPage />,
+    element: <BlankLayout />,
+    children: [
+      {
+        path: "/reset/admin",
+        element: (
+          <LazyWrapper>
+            <ResetPassword />
+          </LazyWrapper>
+        ),
+      },
+      {
+        path: "/reset/email",
+        element: <Navigate to="/reset/admin?mode=identity" replace />,
+      },
+    ],
+  },
   { path: "*", element: <PageNotFound /> },
 ];
+
+// Register every lazy route's chunk so it can be prefetched by path
+// (sidebar hover, idle prefetch of common pages).
+const registerPreloads = (routes) =>
+  routes.forEach((route) => {
+    const preload = route.element?.props?.children?.type?.preload;
+    if (route.path && preload) registerRoutePreload(route.path, preload);
+    if (route.children) registerPreloads(route.children);
+  });
+registerPreloads(Router);
 
 const router = createBrowserRouter(Router, { basename: "/" });
 

@@ -15,10 +15,13 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import ExcelJS from "exceljs";
 import Papa from "papaparse";
 import { IMPORT_FIELD_MAPPINGS } from "@/constants/import";
 import { formatErrorMessage } from "./errorProcessing";
+
+// exceljs is large (~260 KB gzipped) and only needed when a file is actually
+// imported or exported, so load it on demand instead of with every list page.
+const loadExcelJS = () => import("exceljs").then((module) => module.default);
 
 /**
  * Process uploaded file (CSV or Excel) for bulk import
@@ -117,6 +120,7 @@ const extractCellValue = (cellValue) => {
 const parseExcelFile = async (file) => {
   try {
     const buffer = await file.arrayBuffer();
+    const ExcelJS = await loadExcelJS();
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer);
 
@@ -533,6 +537,7 @@ export const generateSampleFile = async (
     downloadFile(csvContent, `${filename}.csv`, "text/csv");
   } else {
     // Excel format
+    const ExcelJS = await loadExcelJS();
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sample Data");
 

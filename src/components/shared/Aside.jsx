@@ -18,6 +18,7 @@
 import { useState, useEffect } from "react";
 import { useAtom, useAtomValue } from "jotai";
 import { NavLink, useLocation } from "react-router-dom";
+import { prefetchRoute } from "@/routes/prefetch";
 import { userProfileAtom } from "../../store/userProfile";
 import {
   LayoutDashboard,
@@ -683,6 +684,8 @@ const Aside = () => {
             <NavLink
               key={child.link}
               to={child.link}
+              onMouseEnter={() => prefetchRoute(child.link)}
+              onFocus={() => prefetchRoute(child.link)}
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded px-3 py-2 text-left text-sm transition-colors ${
                   isActive
@@ -773,6 +776,8 @@ const Aside = () => {
                           <NavLink
                             key={childIndex}
                             to={child.link}
+                            onMouseEnter={() => prefetchRoute(child.link)}
+                            onFocus={() => prefetchRoute(child.link)}
                             className={childLinkClass}
                           >
                             {child.icon}
@@ -797,6 +802,8 @@ const Aside = () => {
                 <NavLink
                   key={index}
                   to={item.link}
+                  onMouseEnter={() => prefetchRoute(item.link)}
+                  onFocus={() => prefetchRoute(item.link)}
                   className={linkClass}
                   title={isCollapsed ? item.name : ""}
                 >
