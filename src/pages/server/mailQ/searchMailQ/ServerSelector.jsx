@@ -28,7 +28,6 @@ export const servers = [
   { name: "Relay In - 4", url: "ri4", id: "ri4", category: "Relay In" },
   { name: "Relay In - 7", url: "ri7", id: "ri7", category: "Relay In" },
   { name: "Relay In - 8", url: "ri8", id: "ri8", category: "Relay In" },
-  { name: "Relay In - 11", url: "ri11", id: "ri11", category: "Relay In" },
 
   // Cloud
   { name: "Cloud - 17", url: "c17", id: "c17", category: "Cloud" },
@@ -64,18 +63,21 @@ export const servers = [
     url: "wm52",
     id: "wm52",
     category: "Webmail",
+    noMailQueue: true,
   },
   {
     name: "POP 52",
     url: "pop52",
     id: "pop52",
     category: "POP",
+    noMailQueue: true,
   },
   {
     name: "IMAP 52",
     url: "imap52",
     id: "imap52",
     category: "IMAP",
+    noMailQueue: true,
   },
 
   // Storage
@@ -87,11 +89,41 @@ export const servers = [
   },
 
   // Database
-  { name: "PgSQL - 1", url: "pgsql1", id: "pgsql1", category: "Database" },
-  { name: "PgSQL - 2", url: "pgsql2", id: "pgsql2", category: "Database" },
-  { name: "PgSQL - 3", url: "pgsql3", id: "pgsql3", category: "Database" },
-  { name: "PgSQL - 4", url: "pgsql4", id: "pgsql4", category: "Database" },
-  { name: "PgSQL - 5", url: "pgsql5", id: "pgsql5", category: "Database" },
+  {
+    name: "PgSQL - 1",
+    url: "pgsql1",
+    id: "pgsql1",
+    category: "Database",
+    noMailQueue: true,
+  },
+  {
+    name: "PgSQL - 2",
+    url: "pgsql2",
+    id: "pgsql2",
+    category: "Database",
+    noMailQueue: true,
+  },
+  {
+    name: "PgSQL - 3",
+    url: "pgsql3",
+    id: "pgsql3",
+    category: "Database",
+    noMailQueue: true,
+  },
+  {
+    name: "PgSQL - 4",
+    url: "pgsql4",
+    id: "pgsql4",
+    category: "Database",
+    noMailQueue: true,
+  },
+  {
+    name: "PgSQL - 5",
+    url: "pgsql5",
+    id: "pgsql5",
+    category: "Database",
+    noMailQueue: true,
+  },
 
   // Hybrid MX
   {
@@ -99,14 +131,20 @@ export const servers = [
     url: "h3mx1",
     id: "h3mx1",
     category: "Hybrid MX",
+    noMailQueue: true,
   },
   {
     name: "v3-hybrid-mx2.yukthi.net",
     url: "h3mx2",
     id: "h3mx2",
     category: "Hybrid MX",
+    noMailQueue: true,
   },
 ];
+
+// Servers that don't run a mail queue (webmail/POP/IMAP, databases, hybrid MX)
+// stay available to Procs/PFLogSum but are left out of the Mail Queue page.
+export const mailQueueServers = servers.filter((server) => !server.noMailQueue);
 
 const ServerSelector = ({
   selectedServer,
@@ -114,11 +152,12 @@ const ServerSelector = ({
   onFetch,
   isLoading,
   fetchText = "Fetch Queue",
+  serverList = servers,
 }) => {
   const groupedOptions = useMemo(() => {
     const groups = {};
 
-    servers.forEach((server) => {
+    serverList.forEach((server) => {
       if (!groups[server.category]) {
         groups[server.category] = [];
       }
@@ -133,7 +172,7 @@ const ServerSelector = ({
       label: category,
       options: options.sort((a, b) => a.label.localeCompare(b.label)),
     }));
-  }, []);
+  }, [serverList]);
 
   const selectedOption = useMemo(() => {
     if (!selectedServer) return null;

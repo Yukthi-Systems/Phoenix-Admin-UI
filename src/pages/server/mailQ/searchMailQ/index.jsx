@@ -28,7 +28,7 @@ import {
   PlayCircle,
   SendHorizonal,
 } from "lucide-react";
-import ServerSelector from "./ServerSelector";
+import ServerSelector, { mailQueueServers } from "./ServerSelector";
 import QueueTable from "./Table";
 import DomainStatsModal from "./DomainStats";
 import QueueStatsModal from "./QueueStatModal";
@@ -357,6 +357,7 @@ const SearchQueue = () => {
           setQueueFilter={setQueueFilter}
           onFetch={fetchQueueData}
           isLoading={isLoadingOrFetching}
+          serverList={mailQueueServers}
         />
 
         {selectedServer && hasResults && (

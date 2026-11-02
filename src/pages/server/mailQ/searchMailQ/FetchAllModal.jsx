@@ -24,7 +24,7 @@ import {
   Loader2,
   ArrowUpDown,
 } from "lucide-react";
-import { servers } from "./ServerSelector";
+import { mailQueueServers as servers } from "./ServerSelector";
 import { SearchMailQueue } from "@/api/mailQ";
 import { formatDuration } from "@/utils/numberFormat";
 
