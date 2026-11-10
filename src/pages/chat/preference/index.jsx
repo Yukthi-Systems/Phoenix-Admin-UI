@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   MessageCircle,
   Users,
@@ -167,6 +167,7 @@ function QuotaRow({
   isUpdating,
   disabled,
   isQuotaChanged,
+  updateDisabledReason = null,
 }) {
   const parentOrg = useAtomValue(parentOrgAtom);
   return (
@@ -214,8 +215,12 @@ function QuotaRow({
           <button
             onClick={onUpdate}
             disabled={
-              disabled || isUpdating || value > (parentOrg?.available_size || 0)
+              disabled ||
+              isUpdating ||
+              !!updateDisabledReason ||
+              value > (parentOrg?.available_size || 0)
             }
+            title={updateDisabledReason || undefined}
             className={`rounded-lg px-4 py-1.5 text-xs font-medium shadow transition-all disabled:opacity-50 ${
               isQuotaChanged
                 ? "bg-primary text-primary-foreground hover:bg-primary/90 ring-2 ring-primary ring-offset-1"
@@ -290,11 +295,13 @@ export default function ChatPreferencePage() {
 
   const isDirty = !prefsEqual(prefs, savedPrefs);
 
-  // Org has never saved chat preferences before - getChatConfig returns this
-  // shape (updated_at: null) instead of throwing when the backend's 404
+  // Org has never saved chat preferences before - getChatConfig returns
+  // defaults with updated_at: null instead of throwing when the backend's 404
   // ends up re-wrapped as a 424 (see the "does not exist" handling in
-  // api/chat.js). Only notify once per mount, not on every refetch.
-  const hasShownFirstTimeNotice = useRef(false);
+  // api/chat.js). Saving is what creates the configuration, so it must be
+  // allowed even when the defaults are left unchanged.
+  const isNewConfig = !!config && !config?.data?.updated_at;
+  const canSave = isDirty || isNewConfig;
 
   useEffect(() => {
     if (config) {
@@ -307,16 +314,8 @@ export default function ChatPreferencePage() {
       };
       setPrefs(mapped);
       setSavedPrefs(mapped);
-
-      if (!config?.data?.updated_at && !hasShownFirstTimeNotice.current) {
-        hasShownFirstTimeNotice.current = true;
-        toast(
-          "info",
-          "No chat preferences saved yet for this organization. Set your preferences and storage quota below, then click Save Preferences to get started.",
-        );
-      }
     }
-  }, [config, toast]);
+  }, [config]);
 
   const toggle = useCallback(
     (key) => setPrefs((prev) => ({ ...prev, [key]: !prev[key] })),
@@ -324,7 +323,7 @@ export default function ChatPreferencePage() {
   );
 
   const handleSave = async () => {
-    if (!isDirty || !organization_id) return;
+    if (!canSave || !organization_id) return;
 
     const maxQuota = parentOrg?.available_size || 0;
     if (prefs.quotaAllocated > maxQuota) {
@@ -346,7 +345,12 @@ export default function ChatPreferencePage() {
       };
       await updateConfig(payload);
       setSavedPrefs({ ...prefs });
-      toast("success", "Chat preferences saved successfully.");
+      toast(
+        "success",
+        isNewConfig
+          ? "Chat configuration created successfully."
+          : "Chat preferences saved successfully.",
+      );
       refetch();
     } catch (err) {
       const message = err?.message || "Unknown error";
@@ -403,7 +407,7 @@ export default function ChatPreferencePage() {
           id="save-chat-preferences-btn"
           onClick={handleSave}
           disabled={
-            !isDirty ||
+            !canSave ||
             isSaving ||
             prefs.quotaAllocated > (parentOrg?.available_size || 0)
           }
@@ -419,14 +423,27 @@ export default function ChatPreferencePage() {
           ) : (
             <>
               <Save size={15} />
-              Save Preferences
+              {isNewConfig ? "Create Configuration" : "Save Preferences"}
             </>
           )}
         </button>
       </div>
 
+      {/* ── Not-yet-configured notice ──────────────────────────────────── */}
+      {isNewConfig && !isLoading && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm text-primary">
+          <Info size={15} className="shrink-0" />
+          <span>
+            Chat hasn&apos;t been configured for this organization yet. Review
+            the preferences and storage quota below, then click{" "}
+            <span className="font-semibold">Create Configuration</span> to set
+            it up.
+          </span>
+        </div>
+      )}
+
       {/* ── Unsaved-changes notice ───────────────────────────────────── */}
-      {isDirty && (
+      {isDirty && !isNewConfig && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-sm text-warning">
           <Info size={15} className="shrink-0" />
           You have unsaved changes. Click{" "}
@@ -507,6 +524,11 @@ export default function ChatPreferencePage() {
             isUpdating={isUpdatingQuota}
             disabled={isLoading}
             isQuotaChanged={prefs.quotaAllocated !== savedPrefs?.quotaAllocated}
+            updateDisabledReason={
+              isNewConfig
+                ? "Chat isn't configured yet - the quota is saved with Create Configuration"
+                : null
+            }
           />
         </div>
 
@@ -518,10 +540,16 @@ export default function ChatPreferencePage() {
               <h3 className="text-sm font-semibold text-foreground">
                 Current Configuration
               </h3>
-              {isDirty && (
-                <span className="ml-auto rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
-                  Unsaved
+              {isNewConfig ? (
+                <span className="ml-auto rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  Not configured
                 </span>
+              ) : (
+                isDirty && (
+                  <span className="ml-auto rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
+                    Unsaved
+                  </span>
+                )
               )}
             </div>
 

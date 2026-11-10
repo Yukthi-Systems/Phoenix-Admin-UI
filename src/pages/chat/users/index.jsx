@@ -48,6 +48,9 @@ import {
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { useToastify } from "@/hooks/useToastify";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import ServiceSetupBanner, {
+  useServiceSetupStatus,
+} from "@/components/common/ServiceSetupBanner";
 
 const ChatUsers = () => {
   const [domainName, setDomainName] = useState(null);
@@ -68,6 +71,8 @@ const ChatUsers = () => {
   const [deleteEmail, setDeleteEmail] = useState("");
 
   const { permissions = [] } = useAtomValue(userProfileAtom) || {};
+  // Chat refuses to create users until the org's chat settings exist.
+  const { isNotConfigured: chatNotConfigured } = useServiceSetupStatus("chat");
   const toast = useToastify();
   const queryClient = useQueryClient();
 
@@ -410,7 +415,13 @@ const ChatUsers = () => {
             {domainName && permissions.includes("chat:create") && (
               <button
                 onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 transition-all"
+                disabled={chatNotConfigured}
+                title={
+                  chatNotConfigured
+                    ? "Set up Chat for this organization before adding users"
+                    : undefined
+                }
+                className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 transition-all disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Plus size={16} />
                 Add Chat User
@@ -419,6 +430,8 @@ const ChatUsers = () => {
           </div>
         </div>
       </div>
+
+      <ServiceSetupBanner service="chat" />
 
       {domainName ? (
         <>

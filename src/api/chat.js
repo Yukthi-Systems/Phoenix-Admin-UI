@@ -16,6 +16,7 @@
  */
 
 import axios from "axios";
+import { isServiceConfigMissing } from "@/utils/serviceConfig";
 import { adminStore } from "../store/store";
 import { csrfTokenAtom } from "../store/csrftoken";
 import { addLogs } from "./logs";
@@ -45,16 +46,8 @@ export const getChatConfig = async (organization_id) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    // get_chat_config_for_organization raises a clean 404 when no row exists
-    // yet in chat_settings (org has never saved preferences), but that 404 is
-    // itself caught by the handler's own blanket `except Exception` and
-    // re-raised as a 424 "Failed to fetch chat configuration: ... does not
-    // exist" - a backend bug (Phoenix-Admin-API), not a real dependency
-    // failure. Treat that specific shape as "nothing saved yet" rather than
-    // a hard error, so a brand-new organization can still open this page and
-    // save its first set of preferences instead of seeing a failure.
-    const message = response?.data?.message || "";
-    if (response?.status === 424 && /does not exist/i.test(message)) {
+    // No settings saved yet for this org - see isServiceConfigMissing.
+    if (isServiceConfigMissing(response)) {
       return {
         data: {
           organization_id,

@@ -48,6 +48,7 @@ import {
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { useToastify } from "@/hooks/useToastify";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import ServiceSetupBanner from "@/components/common/ServiceSetupBanner";
 
 const TasksUsers = () => {
   const [domainName, setDomainName] = useState(null);
@@ -372,9 +373,7 @@ const TasksUsers = () => {
   });
 
   if (!permissions.includes("tasks_calendar:view")) {
-    return (
-      <AccessDenied content="You don't have access to view Task Users." />
-    );
+    return <AccessDenied content="You don't have access to view Task Users." />;
   }
 
   if (isError) {
@@ -424,6 +423,8 @@ const TasksUsers = () => {
           </div>
         </div>
       </div>
+
+      <ServiceSetupBanner service="tasks" />
 
       {domainName ? (
         <>

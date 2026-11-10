@@ -15,7 +15,7 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Share2, Save, Info, CalendarDays } from "lucide-react";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { useToastify } from "@/hooks/useToastify";
@@ -103,7 +103,7 @@ function StatusPill({ label, active }) {
 // ---------------------------------------------------------------------------
 // Main page
 // ---------------------------------------------------------------------------
-export default function CalendarSettingsPage() {
+export default function CalendarPreferencePage() {
   const toast = useToastify();
   const selectedOrg = useAtomValue(selectedOrganizationAtom);
   const parentOrg = useAtomValue(parentOrgAtom);
@@ -125,14 +125,16 @@ export default function CalendarSettingsPage() {
   const [savedValue, setSavedValue] = useState(null);
   const [updatedAt, setUpdatedAt] = useState(null);
 
-  const isDirty = savedValue !== null && isExternalSharingEnabled !== savedValue;
+  const isDirty =
+    savedValue !== null && isExternalSharingEnabled !== savedValue;
 
-  // Org has never saved Tasks & Calendar settings before - getTasksServiceConfig
-  // returns this shape (updated_at: null) instead of throwing when the
+  // Org has never saved Tasks & Calendar preferences before - getTasksServiceConfig
+  // returns defaults with updated_at: null instead of throwing when the
   // backend's 404 ends up re-wrapped as a 424 (see the "do not exist"
-  // handling in api/calendar.js). Only notify once per mount, not on every
-  // refetch.
-  const hasShownFirstTimeNotice = useRef(false);
+  // handling in api/calendar.js). Saving is what creates the configuration,
+  // so it must be allowed even when the defaults are left unchanged.
+  const isNewConfig = !!config && !config?.data?.updated_at;
+  const canSave = isDirty || isNewConfig;
 
   useEffect(() => {
     if (config) {
@@ -140,19 +142,11 @@ export default function CalendarSettingsPage() {
       setIsExternalSharingEnabled(value);
       setSavedValue(value);
       setUpdatedAt(config?.data?.updated_at || null);
-
-      if (!config?.data?.updated_at && !hasShownFirstTimeNotice.current) {
-        hasShownFirstTimeNotice.current = true;
-        toast(
-          "info",
-          "No Tasks & Calendar settings saved yet for this organization. Set your preferences below, then click Save Settings to get started.",
-        );
-      }
     }
-  }, [config, toast]);
+  }, [config]);
 
   const handleSave = async () => {
-    if (!isDirty || !organization_id) return;
+    if (!canSave || !organization_id) return;
 
     try {
       await updateConfig({
@@ -160,11 +154,16 @@ export default function CalendarSettingsPage() {
         is_external_sharing_enabled: isExternalSharingEnabled,
       });
       setSavedValue(isExternalSharingEnabled);
-      toast("success", "Tasks & Calendar settings saved successfully.");
+      toast(
+        "success",
+        isNewConfig
+          ? "Tasks & Calendar configuration created successfully."
+          : "Tasks & Calendar preferences saved successfully.",
+      );
       refetch();
     } catch (err) {
       const message = err?.message || "Unknown error";
-      toast("error", `Failed to save settings: ${message}`);
+      toast("error", `Failed to save preferences: ${message}`);
     }
   };
 
@@ -174,7 +173,7 @@ export default function CalendarSettingsPage() {
     !selectedOrg?.tasks_service_enabled
   ) {
     return (
-      <AccessDenied content="Don't have the access to view Tasks & Calendar Settings." />
+      <AccessDenied content="Don't have the access to view the Tasks & Calendar Preference." />
     );
   }
 
@@ -182,15 +181,20 @@ export default function CalendarSettingsPage() {
     <div className="flex h-full w-full flex-col px-2 text-left">
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="mb-4 flex w-full items-center justify-between gap-4">
-        <Breadcrumbs items={[{ name: "Calendar & Tasks" }, { name: "Settings" }]} />
+        <Breadcrumbs
+          items={[
+            { name: "Calendar & Tasks" },
+            { name: "Calendar & Tasks Preference" },
+          ]}
+        />
 
         <button
-          id="save-tasks-calendar-settings-btn"
+          id="save-tasks-calendar-preferences-btn"
           onClick={handleSave}
-          disabled={!isDirty || !canEdit || isSaving}
+          disabled={!canSave || !canEdit || isSaving}
           title={
             !canEdit
-              ? "You don't have permission to edit Tasks & Calendar settings"
+              ? "You don't have permission to edit Tasks & Calendar preferences"
               : undefined
           }
           className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-all
@@ -205,18 +209,38 @@ export default function CalendarSettingsPage() {
           ) : (
             <>
               <Save size={15} />
-              Save Settings
+              {isNewConfig ? "Create Configuration" : "Save Preferences"}
             </>
           )}
         </button>
       </div>
 
+      {/* ── Not-yet-configured notice ──────────────────────────────────── */}
+      {isNewConfig && !isLoading && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm text-primary">
+          <Info size={15} className="shrink-0" />
+          {canEdit ? (
+            <span>
+              Tasks &amp; Calendar hasn&apos;t been configured for this
+              organization yet. Review the preferences below and click{" "}
+              <span className="font-semibold">Create Configuration</span> to set
+              it up.
+            </span>
+          ) : (
+            <span>
+              Tasks &amp; Calendar hasn&apos;t been configured for this
+              organization yet. Ask an admin with edit access to set it up.
+            </span>
+          )}
+        </div>
+      )}
+
       {/* ── Unsaved-changes notice ───────────────────────────────────── */}
-      {isDirty && (
+      {isDirty && !isNewConfig && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-sm text-warning">
           <Info size={15} className="shrink-0" />
           You have unsaved changes. Click{" "}
-          <span className="mx-1 font-semibold">Save Settings</span> to apply
+          <span className="mx-1 font-semibold">Save Preferences</span> to apply
           them.
         </div>
       )}
@@ -225,14 +249,14 @@ export default function CalendarSettingsPage() {
       <div className="mb-6 flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
         <Info size={15} className="mt-0.5 shrink-0 text-primary" />
         <p className="text-xs leading-relaxed text-muted-foreground">
-          These settings control the Tasks &amp; Calendar functionality
+          These preferences control the Tasks &amp; Calendar functionality
           available to all users in your organization. Changes take effect
           immediately after saving.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* ── Settings card ─────────────────────────────────────────── */}
+        {/* ── Preferences card ─────────────────────────────────────────── */}
         <div className="col-span-1 space-y-3 lg:col-span-2">
           <h2 className="mb-1 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Sharing
@@ -257,10 +281,16 @@ export default function CalendarSettingsPage() {
               <h3 className="text-sm font-semibold text-foreground">
                 Current Configuration
               </h3>
-              {isDirty && (
-                <span className="ml-auto rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
-                  Unsaved
+              {isNewConfig ? (
+                <span className="ml-auto rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  Not configured
                 </span>
+              ) : (
+                isDirty && (
+                  <span className="ml-auto rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
+                    Unsaved
+                  </span>
+                )
               )}
             </div>
 

@@ -252,9 +252,9 @@ export const navItems = [
         permissionValue: "tasks_calendar:view",
       },
       {
-        name: "Settings",
+        name: "Preference",
         icon: <Settings size={16} />,
-        link: "/calendar/settings",
+        link: "/calendar/preference",
         hasPermission: true,
         serviceName: SERVICE_KEYS.TASKS,
         permissionValue: "tasks_calendar:view",

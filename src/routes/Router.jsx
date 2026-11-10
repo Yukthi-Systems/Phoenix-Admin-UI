@@ -320,7 +320,9 @@ const FilesDashboard = lazyRetry(() => import("@/pages/files/dashboard"));
 
 // Calendar & Tasks
 const CalendarDashboard = lazyRetry(() => import("@/pages/calendar/dashboard"));
-const CalendarSettings = lazyRetry(() => import("@/pages/calendar/settings"));
+const CalendarPreference = lazyRetry(
+  () => import("@/pages/calendar/preference"),
+);
 const CalendarUserList = lazyRetry(() => import("@/pages/calendar/users"));
 const MaintenanceStatusListing = lazyRetry(
   () => import("@/pages/maintenance/list"),
@@ -1479,12 +1481,18 @@ const Router = [
             ),
           },
           {
-            path: "/calendar/settings",
+            path: "/calendar/preference",
             element: (
               <LazyWrapper>
-                <CalendarSettings />
+                <CalendarPreference />
               </LazyWrapper>
             ),
+          },
+          {
+            // Renamed from "Settings" to match Chat/Files "Preference";
+            // keeps old bookmarks and links working.
+            path: "/calendar/settings",
+            element: <Navigate to="/calendar/preference" replace />,
           },
           {
             path: "/calendar/users",

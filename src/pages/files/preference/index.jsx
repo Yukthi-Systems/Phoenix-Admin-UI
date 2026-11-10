@@ -133,6 +133,7 @@ export default function FileServicePreferencePage() {
     data: config,
     isLoading,
     isError,
+    error,
     refetch,
   } = useGetFileServiceConfig(organization_id);
   const { mutateAsync: updateConfig, isPending: isSaving } =
@@ -144,9 +145,10 @@ export default function FileServicePreferencePage() {
   // Last-saved snapshot — used to detect unsaved changes
   const [savedPrefs, setSavedPrefs] = useState(null);
 
-  // No file_settings row exists yet for this organization (first time here) —
-  // the config GET 404s until the first Save creates it.
-  const [isNewConfig, setIsNewConfig] = useState(false);
+  // No file_settings row exists yet for this organization (first time here) -
+  // getFileServiceConfig returns defaults with updated_at: null for that
+  // case (see api/files.js), and the first Save is what creates the row.
+  const isNewConfig = !!config && !config?.data?.updated_at;
 
   const isDirty = !prefsEqual(prefs, savedPrefs);
 
@@ -158,19 +160,17 @@ export default function FileServicePreferencePage() {
       };
       setPrefs(mapped);
       setSavedPrefs(mapped);
-      setIsNewConfig(false);
-    } else if (isError && !isLoading) {
-      setSavedPrefs(DEFAULT_PREFS);
-      setIsNewConfig(true);
     }
-  }, [config, isError, isLoading]);
+  }, [config]);
 
   const toggle = useCallback(
     (key) => setPrefs((prev) => ({ ...prev, [key]: !prev[key] })),
     [],
   );
 
-  const canSave = isDirty || isNewConfig;
+  // A real load failure (not just "not configured yet") must not allow a save
+  // that would overwrite settings we couldn't read.
+  const canSave = !isError && (isDirty || isNewConfig);
 
   const handleSave = async () => {
     if (!canSave || !organization_id) return;
@@ -183,8 +183,12 @@ export default function FileServicePreferencePage() {
       };
       await updateConfig(payload);
       setSavedPrefs({ ...prefs });
-      setIsNewConfig(false);
-      toast("success", "File service preferences saved successfully.");
+      toast(
+        "success",
+        isNewConfig
+          ? "File service configuration created successfully."
+          : "File service preferences saved successfully.",
+      );
       refetch();
     } catch (err) {
       const message = err?.message || "Unknown error";
@@ -227,7 +231,7 @@ export default function FileServicePreferencePage() {
             ) : (
               <>
                 <Save size={15} />
-                Save Preferences
+                {isNewConfig ? "Create Configuration" : "Save Preferences"}
               </>
             )}
           </button>
@@ -235,18 +239,37 @@ export default function FileServicePreferencePage() {
       </div>
 
       {/* ── Not-yet-configured notice ──────────────────────────────────── */}
-      {isNewConfig && !isDirty && !isLoading && (
+      {/* ── Load error ─────────────────────────────────────────────────── */}
+      {isError && !isLoading && (
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-sm text-destructive">
+          <Info size={15} className="shrink-0" />
+          Couldn&apos;t load the file service settings
+          {error?.message ? `: ${error.message}` : "."} Please refresh and try
+          again.
+        </div>
+      )}
+
+      {isNewConfig && !isLoading && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm text-primary">
           <Info size={15} className="shrink-0" />
-          File service hasn't been configured for this organization yet. Review
-          the settings below and click{" "}
-          <span className="mx-1 font-semibold">Save Preferences</span> to create
-          the initial configuration.
+          {permissions.includes("file:edit") ? (
+            <span>
+              File service hasn&apos;t been configured for this organization
+              yet. Review the settings below and click{" "}
+              <span className="font-semibold">Create Configuration</span> to set
+              it up.
+            </span>
+          ) : (
+            <span>
+              File service hasn&apos;t been configured for this organization
+              yet. Ask an admin with edit access to set it up.
+            </span>
+          )}
         </div>
       )}
 
       {/* ── Unsaved-changes notice ───────────────────────────────────── */}
-      {isDirty && (
+      {isDirty && !isNewConfig && (
         <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/30 bg-warning/10 px-4 py-2.5 text-sm text-warning">
           <Info size={15} className="shrink-0" />
           You have unsaved changes. Click{" "}
@@ -302,10 +325,16 @@ export default function FileServicePreferencePage() {
               <h3 className="text-sm font-semibold text-foreground">
                 Current Configuration
               </h3>
-              {isDirty && (
-                <span className="ml-auto rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
-                  Unsaved
+              {isNewConfig ? (
+                <span className="ml-auto rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                  Not configured
                 </span>
+              ) : (
+                isDirty && (
+                  <span className="ml-auto rounded-full bg-warning/15 px-2 py-0.5 text-[10px] font-semibold text-warning">
+                    Unsaved
+                  </span>
+                )
               )}
             </div>
 

@@ -55,6 +55,7 @@ import {
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { useToastify } from "@/hooks/useToastify";
 import { useTablePagination } from "@/hooks/useTablePagination";
+import ServiceSetupBanner from "@/components/common/ServiceSetupBanner";
 
 const FileUsers = () => {
   const [domainName, setDomainName] = useState(null);
@@ -518,6 +519,8 @@ const FileUsers = () => {
           </div>
         </div>
       </div>
+
+      <ServiceSetupBanner service="files" />
 
       {domainName ? (
         <>

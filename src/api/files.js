@@ -16,6 +16,7 @@
  */
 
 import axios from "axios";
+import { isServiceConfigMissing } from "@/utils/serviceConfig";
 import { adminStore } from "../store/store";
 import { csrfTokenAtom } from "../store/csrftoken";
 import { addLogs } from "./logs";
@@ -44,6 +45,19 @@ export const getFileServiceConfig = async (organization_id) => {
   } catch (error) {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
+
+    // No settings saved yet for this org - see isServiceConfigMissing.
+    if (isServiceConfigMissing(response)) {
+      return {
+        data: {
+          organization_id,
+          is_sharing_enabled: false,
+          is_file_versioning_enabled: false,
+          updated_at: null,
+        },
+      };
+    }
+
     await addLogs({
       values: response,
       type: "error",

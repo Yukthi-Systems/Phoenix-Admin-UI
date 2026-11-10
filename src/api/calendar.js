@@ -16,6 +16,7 @@
  */
 
 import axios from "axios";
+import { isServiceConfigMissing } from "@/utils/serviceConfig";
 import { adminStore } from "../store/store";
 import { csrfTokenAtom } from "../store/csrftoken";
 import { addLogs } from "./logs";
@@ -48,15 +49,8 @@ export const getTasksServiceConfig = async (organization_id) => {
     const response = error?.response || {};
     AuthAPI({ status: response?.status });
 
-    // get_tasks_settings_for_organization raises a clean 404 when no row
-    // exists yet (org has never saved settings), but that 404 is itself
-    // caught by the handler's own blanket `except Exception` and re-raised
-    // as a 424 "Failed to fetch tasks service settings: ... do not exist" -
-    // a backend bug (Phoenix-Admin-API), same shape as Chat's config
-    // endpoint (see getChatConfig in api/chat.js). Treat that specific shape
-    // as "nothing saved yet" rather than a hard error.
-    const message = response?.data?.message || "";
-    if (response?.status === 424 && /do(es)? not exist/i.test(message)) {
+    // No settings saved yet for this org - see isServiceConfigMissing.
+    if (isServiceConfigMissing(response)) {
       return {
         data: {
           organization_id,
@@ -120,7 +114,8 @@ export const updateTasksServiceConfig = async (data) => {
     });
 
     throw new Error(
-      response?.data?.message || "Failed to update tasks service configuration.",
+      response?.data?.message ||
+        "Failed to update tasks service configuration.",
     );
   }
 };
