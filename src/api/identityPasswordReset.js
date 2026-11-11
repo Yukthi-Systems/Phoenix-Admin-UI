@@ -15,8 +15,9 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-// TEMPORARY: backs the standalone identity password reset portal
-// (pages/identityPasswordReset). Expected to be removed along with it.
+// TEMPORARY: identity password reset by existing password / email link, used
+// by /reset/admin's Email Identity tab and the /reset/link landing page
+// (pages/identityPasswordReset). Expected to be removed after ~1 month.
 //
 // All three endpoints are public (no session) - they're used by mailbox
 // users who are not admin-panel users.

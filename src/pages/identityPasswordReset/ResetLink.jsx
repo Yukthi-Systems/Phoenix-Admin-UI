@@ -18,7 +18,7 @@
 // TEMPORARY: landing page for the emailed reset link
 // (template `password_reset_link` in V3-Notifications-Worker), which points at
 // /reset/link?s=<base64url of {"email","secret"}> (see decodeResetLinkParam).
-// See index.jsx for the rest of the portal.
+// The other methods live in /reset/admin's Email Identity tab.
 //
 // Both values come from the link, so the user only types the new password.
 // The backend needs the email to find the secret (it's cached per address).
@@ -54,7 +54,7 @@ const DeadLink = ({ title, message }) => {
         <p className="text-muted-foreground text-center text-sm">{message}</p>
         <button
           type="button"
-          onClick={() => navigate("/reset/password?method=link")}
+          onClick={() => navigate("/reset/admin?mode=identity&method=link")}
           className="cosmic-button bg-primary text-primary-foreground hover:bg-primary/90 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-all"
         >
           <Send className="h-4 w-4" />

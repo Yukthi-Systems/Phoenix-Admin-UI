@@ -15,8 +15,8 @@
  * <https://www.gnu.org/licenses/>.
  */
 
-// TEMPORARY: hooks for the standalone identity password reset portal
-// (pages/identityPasswordReset). Expected to be removed along with it.
+// TEMPORARY: hooks for identity password reset by existing password / email
+// link (see api/identityPasswordReset.js). Expected to be removed after ~1 month.
 
 import { useMutation } from "@tanstack/react-query";
 import {
