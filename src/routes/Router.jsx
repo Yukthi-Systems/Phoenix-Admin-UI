@@ -48,6 +48,13 @@ const StatusPage = lazyRetry(() => import("@/pages/status"));
 const AppSession = lazyRetry(() => import("@/pages/appSession/list"));
 const SsoSession = lazyRetry(() => import("@/pages/ssoSession/list"));
 const ResetPassword = lazyRetry(() => import("@/pages/auth/resetPassword"));
+// TEMPORARY: standalone identity password reset portal (see its index.jsx)
+const IdentityPasswordReset = lazyRetry(
+  () => import("@/pages/identityPasswordReset"),
+);
+const IdentityPasswordResetLink = lazyRetry(
+  () => import("@/pages/identityPasswordReset/ResetLink"),
+);
 const ListAdminTickets = lazyRetry(() => import("@/pages/tickets/admin/list"));
 const ServerProcsCopy = lazyRetry(
   () => import("@/pages/server/procs/ProcsCopy"),
@@ -1566,6 +1573,24 @@ const Router = [
       {
         path: "/reset/email",
         element: <Navigate to="/reset/admin?mode=identity" replace />,
+      },
+      // TEMPORARY: standalone identity password reset portal
+      {
+        path: "/reset/password",
+        element: (
+          <LazyWrapper>
+            <IdentityPasswordReset />
+          </LazyWrapper>
+        ),
+      },
+      {
+        // Target of the `password_reset_link` email template
+        path: "/reset/link",
+        element: (
+          <LazyWrapper>
+            <IdentityPasswordResetLink />
+          </LazyWrapper>
+        ),
       },
     ],
   },
