@@ -98,7 +98,7 @@ const CurrentPasswordForm = ({ onComplete }) => {
 
       <PasswordField
         id="current_password"
-        label="Current password"
+        label="Existing password"
         autoComplete="current-password"
         error={errors.current_password}
         registration={register("current_password")}

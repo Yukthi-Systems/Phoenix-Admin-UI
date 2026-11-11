@@ -20,20 +20,14 @@ import { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Reaptcha from "react-google-recaptcha";
 import { RECAPTCHA_SITE_KEY } from "@/constants/constants";
-import {
-  ArrowLeft,
-  Loader,
-  Mail,
-  Phone,
-  KeyRound,
-  CheckCircle,
-} from "lucide-react";
+import { ArrowLeft, Loader, Mail, KeyRound } from "lucide-react";
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { themeAtom } from "@/store/theme";
 import { useToastify } from "@/hooks/useToastify";
 import { useInitiatePasswordResetIdentity } from "@/hooks/usePasswordReset";
 import * as yup from "yup";
+import IdentityMethodPicker from "./IdentityMethodPicker";
 
 const initiateSchema = yup.object({
   email_id: yup
@@ -50,6 +44,8 @@ const Step1InitiateIdentityReset = ({
   onSuccess,
   initialEmailId = "",
   initialVerifyVia = "email",
+  // Called when a non-OTP method (current password / email link) is picked
+  onSwitchMethod,
 }) => {
   const [verifyMethod, setVerifyMethod] = useState(initialVerifyVia);
   const [recaptchaToken, setRecaptchaToken] = useState(null);
@@ -64,6 +60,7 @@ const Step1InitiateIdentityReset = ({
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+    setValue,
     watch,
   } = useForm({
     resolver: yupResolver(initiateSchema),
@@ -126,7 +123,7 @@ const Step1InitiateIdentityReset = ({
         onSuccess: () => {
           toast(
             "success",
-            `OTP sent to your ${data.verify_via === "email" ? "email" : "phone number"}`,
+            `OTP sent to the identity's ${data.verify_via === "email" ? "secondary email" : "registered phone number"}`,
           );
           recaptchaRef.current?.reset();
           setRecaptchaToken(null);
@@ -164,11 +161,24 @@ const Step1InitiateIdentityReset = ({
           Reset Identity Password
         </h2>
         <p className="text-muted-foreground text-sm">
-          Enter the email identity's address and choose a verification method
+          Choose how to reset, then enter the email identity's address
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {/* Reset method: email/phone stay in this OTP flow, the others
+            hand off to their own single-step forms */}
+        <IdentityMethodPicker
+          value={verifyMethod}
+          onChange={(method) => {
+            if (method === "email" || method === "phone") {
+              setValue("verify_via", method, { shouldValidate: true });
+            } else {
+              onSwitchMethod?.(method);
+            }
+          }}
+        />
+
         {/* Email Identity Field */}
         <div className="space-y-2">
           <label
@@ -192,76 +202,6 @@ const Step1InitiateIdentityReset = ({
             <p className="text-destructive flex items-center gap-1 text-sm">
               <span className="bg-destructive h-1 w-1 rounded-full" />
               {errors.email_id.message}
-            </p>
-          )}
-        </div>
-
-        {/* Verification Method */}
-        <div className="space-y-2">
-          <label className="text-card-foreground block text-left text-sm font-medium">
-            Verification Method
-          </label>
-          <div className="grid grid-cols-2 gap-3">
-            <label
-              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition-all ${
-                verifyMethod === "email"
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50"
-              }`}
-            >
-              <input
-                type="radio"
-                value="email"
-                {...register("verify_via")}
-                className="sr-only"
-              />
-              <Mail
-                className={`h-5 w-5 ${verifyMethod === "email" ? "text-primary" : "text-muted-foreground"}`}
-              />
-              <div className="flex-1">
-                <p
-                  className={`text-sm font-medium ${verifyMethod === "email" ? "text-primary" : "text-foreground"}`}
-                >
-                  Email
-                </p>
-              </div>
-              {verifyMethod === "email" && (
-                <CheckCircle className="text-primary h-5 w-5" />
-              )}
-            </label>
-
-            <label
-              className={`relative flex cursor-pointer items-center gap-3 rounded-lg border-2 p-4 transition-all ${
-                verifyMethod === "phone"
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/50"
-              }`}
-            >
-              <input
-                type="radio"
-                value="phone"
-                {...register("verify_via")}
-                className="sr-only"
-              />
-              <Phone
-                className={`h-5 w-5 ${verifyMethod === "phone" ? "text-primary" : "text-muted-foreground"}`}
-              />
-              <div className="flex-1">
-                <p
-                  className={`text-sm font-medium ${verifyMethod === "phone" ? "text-primary" : "text-foreground"}`}
-                >
-                  Phone
-                </p>
-              </div>
-              {verifyMethod === "phone" && (
-                <CheckCircle className="text-primary h-5 w-5" />
-              )}
-            </label>
-          </div>
-          {errors.verify_via && (
-            <p className="text-destructive flex items-center gap-1 text-sm">
-              <span className="bg-destructive h-1 w-1 rounded-full" />
-              {errors.verify_via.message}
             </p>
           )}
         </div>

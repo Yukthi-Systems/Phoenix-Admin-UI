@@ -43,10 +43,10 @@ import { LinkButton } from "./components/FormBits";
 const METHODS = {
   current: {
     icon: KeyRound,
-    title: "I know my current password",
-    description: "Enter your current password and choose a new one.",
+    title: "I know my existing password",
+    description: "Enter your existing password and choose a new one.",
     pageTitle: "Change your password",
-    pageSubtitle: "Confirm your current password to set a new one",
+    pageSubtitle: "Confirm your existing password to set a new one",
     Form: CurrentPasswordForm,
   },
   link: {

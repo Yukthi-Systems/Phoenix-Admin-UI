@@ -63,10 +63,10 @@ const confirmPassword = yup
 
 export const currentPasswordSchema = yup.object({
   email,
-  current_password: yup.string().required("Current password is required"),
+  current_password: yup.string().required("Existing password is required"),
   new_password: newPassword.notOneOf(
     [yup.ref("current_password")],
-    "New password must be different from the current one",
+    "New password must be different from the existing one",
   ),
   confirm_password: confirmPassword,
 });

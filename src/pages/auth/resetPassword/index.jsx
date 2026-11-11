@@ -17,11 +17,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CheckCircle, KeyRound, ShieldUser, Mail } from "lucide-react";
+import {
+  CheckCircle,
+  KeyRound,
+  ShieldUser,
+  Mail,
+  LockKeyhole,
+  Link2,
+} from "lucide-react";
 import Step1InitiateReset from "./InitialReset";
 import Step2CompleteReset from "./CompleteReset";
 import Step1InitiateIdentityReset from "./IdentityInitiateReset";
 import Step2CompleteIdentityReset from "./IdentityCompleteReset";
+import IdentityMethodPicker from "./IdentityMethodPicker";
+// Extra Email Identity methods, shared with the standalone portal
+import CurrentPasswordForm from "@/pages/identityPasswordReset/components/CurrentPasswordForm";
+import RequestLinkForm from "@/pages/identityPasswordReset/components/RequestLinkForm";
 
 const MODES = {
   admin: {
@@ -36,9 +47,29 @@ const MODES = {
     icon: Mail,
     subtitle: "Secure Identity Recovery",
     description:
-      "Reset the password of an E-Mail Identity using its secondary email or phone.",
+      "Reset the password of an E-Mail Identity with an OTP, its existing password, or a one-time email link.",
   },
 };
+
+
+const IDENTITY_METHODS = {
+  otp: { label: "OTP" },
+  current: {
+    label: "Existing password",
+    icon: LockKeyhole,
+    title: "Change Identity Password",
+    subtitle: "Confirm the existing password to set a new one",
+    Form: CurrentPasswordForm,
+  },
+  link: {
+    label: "Email link",
+    icon: Link2,
+    title: "Get a Reset Link",
+    subtitle: "We'll email a one-time link to the identity's own mailbox",
+    Form: RequestLinkForm,
+  },
+};
+const IDENTITY_METHOD_KEYS = Object.keys(IDENTITY_METHODS);
 
 const MODE_KEYS = Object.keys(MODES);
 const SWIPE_THRESHOLD = 50;
@@ -51,6 +82,13 @@ const ResetPassword = () => {
     requestedMode === "identity" ? "identity" : "admin",
   );
   const [step, setStep] = useState(1);
+  const requestedMethod = searchParams.get("method");
+  const [identityMethod, setIdentityMethod] = useState(
+    IDENTITY_METHOD_KEYS.includes(requestedMethod) ? requestedMethod : "otp",
+  );
+  // A single-step identity method finished (password changed): hide the
+  // method/mode switchers since there's nothing left to switch to
+  const [identityDone, setIdentityDone] = useState(false);
   const [adminData, setAdminData] = useState({
     username: "",
     verify_via: "email",
@@ -70,26 +108,38 @@ const ResetPassword = () => {
     dragX: 0,
   });
 
-  // Keep the URL in sync so the mode survives a refresh / can be deep-linked
   useEffect(() => {
-    const current = searchParams.get("mode");
-    const desired = mode === "identity" ? "identity" : null;
-    if (current !== desired) {
+    const desiredMode = mode === "identity" ? "identity" : null;
+    const desiredMethod =
+      mode === "identity" && identityMethod !== "otp" ? identityMethod : null;
+    if (
+      searchParams.get("mode") !== desiredMode ||
+      searchParams.get("method") !== desiredMethod
+    ) {
       const next = new URLSearchParams(searchParams);
-      if (desired) {
-        next.set("mode", desired);
-      } else {
-        next.delete("mode");
-      }
+      if (desiredMode) next.set("mode", desiredMode);
+      else next.delete("mode");
+      if (desiredMethod) next.set("method", desiredMethod);
+      else next.delete("method");
       setSearchParams(next, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [mode, identityMethod]);
+
+  const switchIdentityMethod = (nextMethod) => {
+    if (nextMethod === identityMethod) return;
+    // Picked from inside the card, so just fade - no sideways slide
+    setSlideDir(0);
+    setIdentityMethod(nextMethod);
+    setIdentityDone(false);
+    setStep(1);
+  };
 
   const switchMode = (nextMode) => {
     if (nextMode === mode) return;
     setSlideDir(MODE_KEYS.indexOf(nextMode) > MODE_KEYS.indexOf(mode) ? 1 : -1);
     setMode(nextMode);
+    setIdentityDone(false);
     setStep(1);
   };
 
@@ -113,9 +163,7 @@ const ResetPassword = () => {
     setStep(1);
   };
 
-  // Mobile: swipe left/right on the card to switch between the Admin and
-  // Identity tabs (same effect as tapping the pill switcher). Only active
-  // on step 1 so an in-progress OTP/password entry can't be swiped away.
+  
   const handleTouchStart = (e) => {
     if (step !== 1) return;
     const t = e.touches[0];
@@ -174,6 +222,8 @@ const ResetPassword = () => {
   };
 
   const activeMode = MODES[mode];
+  const isIdentitySingleStep = mode === "identity" && identityMethod !== "otp";
+  const activeIdentityMethod = IDENTITY_METHODS[identityMethod];
 
   const ModeSwitcher = (
     <div className="bg-muted/50 border-border/60 relative inline-flex w-full rounded-full border p-1 shadow-sm backdrop-blur-sm">
@@ -240,8 +290,10 @@ const ResetPassword = () => {
               </p>
             </div>
 
-            {/* Progress Indicator */}
-            <div className="space-y-3">
+            {/* Progress Indicator (two-step flows only) */}
+            <div
+              className={`space-y-3 ${isIdentitySingleStep ? "hidden" : ""}`}
+            >
               <div className="flex items-center gap-3">
                 <div
                   className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 ${
@@ -302,7 +354,9 @@ const ResetPassword = () => {
                 Reset Password
               </h1>
               <p className="text-muted-foreground text-sm">
-                Step {step} of 2 &middot;{" "}
+                {isIdentitySingleStep
+                  ? `${activeIdentityMethod.label} \u00b7 `
+                  : `Step ${step} of 2 \u00b7 `}
                 {step === 1 ? activeMode.subtitle : "Verify OTP & set password"}
               </p>
               {step === 1 && (
@@ -313,7 +367,7 @@ const ResetPassword = () => {
             </div>
 
             {/* Mode Switcher */}
-            {ModeSwitcher}
+            {!identityDone && ModeSwitcher}
 
             <div
               ref={swipeTrackRef}
@@ -329,7 +383,7 @@ const ResetPassword = () => {
 
               {/* Step Components */}
               <div
-                key={`${mode}-${step}`}
+                key={`${mode}-${mode === "identity" ? identityMethod : ""}-${step}`}
                 className="reset-content-fade-in"
                 style={{
                   "--reset-slide-x": `${slideDir * 24}px`,
@@ -350,20 +404,61 @@ const ResetPassword = () => {
                     onBack={handleBackToStep1}
                   />
                 )}
-                {mode === "identity" && step === 1 && (
-                  <Step1InitiateIdentityReset
-                    onSuccess={handleIdentityStep1Success}
-                    initialEmailId={identityData.email_id}
-                    initialVerifyVia={identityData.verify_via}
-                  />
+                {isIdentitySingleStep && (
+                  <div className="space-y-6 text-left">
+                    {!identityDone && (
+                      <div className="space-y-2 text-center">
+                        <div className="bg-primary/10 border-primary/20 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border">
+                          <activeIdentityMethod.icon className="text-primary h-6 w-6" />
+                        </div>
+                        <h2 className="text-card-foreground text-2xl font-semibold">
+                          {activeIdentityMethod.title}
+                        </h2>
+                        <p className="text-muted-foreground text-sm">
+                          {activeIdentityMethod.subtitle}
+                        </p>
+                      </div>
+                    )}
+                    {!identityDone && (
+                      <IdentityMethodPicker
+                        value={identityMethod}
+                        onChange={(method) => {
+                          if (method === "email" || method === "phone") {
+                            setIdentityData((prev) => ({
+                              ...prev,
+                              verify_via: method,
+                            }));
+                            switchIdentityMethod("otp");
+                          } else {
+                            switchIdentityMethod(method);
+                          }
+                        }}
+                      />
+                    )}
+                    <activeIdentityMethod.Form
+                      onComplete={() => setIdentityDone(true)}
+                    />
+                  </div>
                 )}
-                {mode === "identity" && step === 2 && (
-                  <Step2CompleteIdentityReset
-                    emailId={identityData.email_id}
-                    verifyMethod={identityData.verify_via}
-                    onBack={handleBackToStep1}
-                  />
-                )}
+                {mode === "identity" &&
+                  identityMethod === "otp" &&
+                  step === 1 && (
+                    <Step1InitiateIdentityReset
+                      onSuccess={handleIdentityStep1Success}
+                      initialEmailId={identityData.email_id}
+                      initialVerifyVia={identityData.verify_via}
+                      onSwitchMethod={switchIdentityMethod}
+                    />
+                  )}
+                {mode === "identity" &&
+                  identityMethod === "otp" &&
+                  step === 2 && (
+                    <Step2CompleteIdentityReset
+                      emailId={identityData.email_id}
+                      verifyMethod={identityData.verify_via}
+                      onBack={handleBackToStep1}
+                    />
+                  )}
               </div>
             </div>
           </div>

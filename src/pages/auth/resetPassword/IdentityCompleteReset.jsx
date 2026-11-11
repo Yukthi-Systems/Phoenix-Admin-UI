@@ -162,8 +162,9 @@ const Step2CompleteIdentityReset = ({ emailId, verifyMethod, onBack }) => {
           Enter OTP
         </h2>
         <p className="text-muted-foreground text-sm">
-          Check your {verifyMethod === "email" ? "email" : "phone"} for the
-          6-digit code
+          Check the identity&apos;s{" "}
+          {verifyMethod === "email" ? "secondary email" : "registered phone"}{" "}
+          for the 6-digit code
         </p>
 
         {/* Timer Display */}
