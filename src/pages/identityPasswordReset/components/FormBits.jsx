@@ -16,6 +16,12 @@
  */
 
 import { useState } from "react";
+
+// These forms take an Email Identity's credentials, never the logged-in
+// admin's, so browser/password-manager autofill would put the wrong
+// account in. Callers pass autoComplete="off" (text) or "new-password"
+// (password - browsers ignore "off" there); these cover 1Password/LastPass.
+const NO_PASSWORD_MANAGER = { "data-1p-ignore": true, "data-lpignore": "true" };
 import { AlertCircle, Eye, EyeClosed, Loader } from "lucide-react";
 
 const inputClass = (hasError) =>
@@ -49,6 +55,7 @@ export const TextField = ({
     </label>
     <input
       id={id}
+      {...NO_PASSWORD_MANAGER}
       className={inputClass(error)}
       {...inputProps}
       {...registration}
@@ -76,6 +83,7 @@ export const PasswordField = ({
       <div className="relative">
         <input
           id={id}
+          {...NO_PASSWORD_MANAGER}
           type={visible ? "text" : "password"}
           autoComplete={autoComplete}
           className={`${inputClass(error)} pr-12`}

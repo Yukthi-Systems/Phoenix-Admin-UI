@@ -91,7 +91,7 @@ const CurrentPasswordForm = ({ onComplete }) => {
         label="Email address"
         type="email"
         placeholder="you@yourdomain.com"
-        autoComplete="username"
+        autoComplete="off"
         error={errors.email}
         registration={register("email")}
       />
@@ -99,7 +99,7 @@ const CurrentPasswordForm = ({ onComplete }) => {
       <PasswordField
         id="current_password"
         label="Existing password"
-        autoComplete="current-password"
+        autoComplete="new-password"
         error={errors.current_password}
         registration={register("current_password")}
       />

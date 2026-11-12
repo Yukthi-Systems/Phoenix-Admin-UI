@@ -16,6 +16,7 @@
  */
 
 import * as yup from "yup";
+import { emailDotsTest } from "@/utils/emailValidation";
 
 // The backend only enforces a breach check, so the strength rules live here.
 // Kept identical to the existing identity reset flow's rules. Checked in this
@@ -48,7 +49,8 @@ const email = yup
   .string()
   .trim()
   .required("Email address is required")
-  .email("Enter a valid email address");
+  .email("Enter a valid email address")
+  .test(...emailDotsTest);
 
 const newPassword = PASSWORD_RULES.reduce(
   (schema, rule) =>

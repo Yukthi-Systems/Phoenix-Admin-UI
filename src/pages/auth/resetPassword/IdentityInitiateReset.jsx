@@ -27,13 +27,15 @@ import { themeAtom } from "@/store/theme";
 import { useToastify } from "@/hooks/useToastify";
 import { useInitiatePasswordResetIdentity } from "@/hooks/usePasswordReset";
 import * as yup from "yup";
+import { emailDotsTest } from "@/utils/emailValidation";
 import IdentityMethodPicker from "./IdentityMethodPicker";
 
 const initiateSchema = yup.object({
   email_id: yup
     .string()
     .required("Identity email is required")
-    .email("Please enter a valid email address"),
+    .email("Please enter a valid email address")
+    .test(...emailDotsTest),
   verify_via: yup
     .string()
     .oneOf(["email", "phone"], "Please select a verification method")
@@ -190,6 +192,9 @@ const Step1InitiateIdentityReset = ({
           <input
             type="email"
             id="email_id"
+            // An identity's address, not the admin login - keep the
+            // browser from filling in saved admin credentials
+            autoComplete="off"
             placeholder="user@example.com"
             className={`cosmic-input w-full rounded-lg border px-4 py-3 transition-all duration-200 ${
               errors.email_id

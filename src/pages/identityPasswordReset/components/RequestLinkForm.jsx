@@ -104,7 +104,7 @@ const RequestLinkForm = () => {
         label="Email address"
         type="email"
         placeholder="you@yourdomain.com"
-        autoComplete="username"
+        autoComplete="off"
         error={errors.email}
         registration={register("email")}
       />
