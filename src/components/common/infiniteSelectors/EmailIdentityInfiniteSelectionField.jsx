@@ -33,6 +33,8 @@ export function EmailIdentityInfiniteSelectionField({
   placeholder = "Select email identity...",
   customStyle = "",
   existingMailboxEmails = [],
+  // Multi-select: the field value becomes an array of emails.
+  isMulti = false,
 }) {
   const error = errors?.[name];
 
@@ -164,6 +166,38 @@ export function EmailIdentityInfiniteSelectionField({
         name={name}
         control={control}
         render={({ field }) => {
+          if (isMulti) {
+            const values = Array.isArray(field.value) ? field.value : [];
+            const selectedOptions = values.map(
+              (v) =>
+                options.find((opt) => opt.value === v) || {
+                  label: v,
+                  value: v,
+                },
+            );
+            return (
+              <Select
+                {...field}
+                isMulti
+                value={selectedOptions}
+                options={options}
+                placeholder={placeholder}
+                onChange={(selected) =>
+                  field.onChange((selected || []).map((opt) => opt.value))
+                }
+                onMenuScrollToBottom={handleMenuScrollToBottom}
+                onInputChange={handleInputChange}
+                closeMenuOnSelect={false}
+                isClearable
+                isLoading={loading}
+                menuPlacement="auto"
+                styles={getReactSelectStyles()}
+                menuPortalTarget={document.body}
+                classNamePrefix="react-select"
+              />
+            );
+          }
+
           let selectedOption = null;
 
           if (field.value) {

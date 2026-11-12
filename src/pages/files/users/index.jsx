@@ -53,6 +53,7 @@ import {
   useUpdateFileUserQuota,
 } from "@/hooks/useFiles";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
+import { runInBatches } from "@/utils/batchUtils";
 import { useToastify } from "@/hooks/useToastify";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import ServiceSetupBanner from "@/components/common/ServiceSetupBanner";
@@ -67,15 +68,17 @@ const FileUsers = () => {
     register: registerAddUser,
     watch: watchAddUser,
     reset: resetAddUser,
+    setValue: setAddUserValue,
     formState: { errors: addUserErrors },
   } = useForm({
     defaultValues: {
-      email_identity: "",
+      email_identity: [],
       quota_allocated: 1,
       enable_user: true,
     },
   });
-  const selectedIdentity = watchAddUser("email_identity");
+  const selectedIdentities = watchAddUser("email_identity") || [];
+  const [isCreating, setIsCreating] = useState(false);
   const selectedQuota = watchAddUser("quota_allocated");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
@@ -97,7 +100,7 @@ const FileUsers = () => {
     pagination.pageSize,
   );
 
-  const { mutate: createFileUser, isPending: isCreating } = useCreateFileUser();
+  const { mutateAsync: createFileUser } = useCreateFileUser();
   const { mutate: toggleStatus } = useToggleFileUserStatus();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteFileUser();
   const { mutate: updateQuota, isPending: isUpdatingQuota } =
@@ -157,37 +160,52 @@ const FileUsers = () => {
     }
   };
 
-  const handleAddUser = (e) => {
+  const handleAddUser = async (e) => {
     e.preventDefault();
-    if (domainName && selectedIdentity) {
-      createFileUser(
-        {
-          domain_name: domainName,
-          email_identity: selectedIdentity,
-          quota_allocated: Number(selectedQuota),
-          enable_user: watchAddUser("enable_user"),
-        },
-        {
-          onSuccess: () => {
-            toast(
-              "success",
-              `Successfully created file user ${selectedIdentity}`,
-            );
-            setShowAddModal(false);
-            resetAddUser({
-              email_identity: "",
-              quota_allocated: 1,
-              enable_user: true,
-            });
-          },
-          onError: (error) => {
-            const message =
-              error.response?.data?.message || error.message || "Unknown error";
-            toast("error", `Failed to create file user: ${message}`);
-          },
-        },
+    if (!domainName || selectedIdentities.length === 0) return;
+
+    setIsCreating(true);
+    const results = await runInBatches(selectedIdentities, (email) =>
+      createFileUser({
+        domain_name: domainName,
+        email_identity: email,
+        quota_allocated: Number(selectedQuota),
+        enable_user: watchAddUser("enable_user"),
+      }),
+    );
+    setIsCreating(false);
+
+    const failed = results.filter((result) => !result.ok);
+    const succeeded = results.length - failed.length;
+    if (succeeded > 0) {
+      toast(
+        "success",
+        `Enabled Files for ${succeeded} user${succeeded === 1 ? "" : "s"}`,
       );
     }
+    if (failed.length === 0) {
+      setShowAddModal(false);
+      resetAddUser({
+        email_identity: [],
+        quota_allocated: 1,
+        enable_user: true,
+      });
+      return;
+    }
+    // Leave only the failures selected so they can be retried as-is.
+    setAddUserValue(
+      "email_identity",
+      failed.map((result) => result.item),
+    );
+    toast(
+      "error",
+      `Failed for ${failed
+        .map(
+          (result) =>
+            `${result.item}: ${result.error?.response?.data?.message || result.error?.message || "Unknown error"}`,
+        )
+        .join("; ")}`,
+    );
   };
 
   const handleDelete = (user) => {
@@ -480,6 +498,9 @@ const FileUsers = () => {
   }
 
   const maxQuota = parentOrg?.available_size || 0;
+  // The quota is applied to every selected identity.
+  const totalRequestedQuota =
+    (Number(selectedQuota) || 0) * Math.max(selectedIdentities.length, 1);
 
   return (
     <div className="h-full w-full px-2">
@@ -549,7 +570,7 @@ const FileUsers = () => {
         handleCancel={() => {
           setShowAddModal(false);
           resetAddUser({
-            email_identity: "",
+            email_identity: [],
             quota_allocated: 1,
             enable_user: true,
           });
@@ -566,13 +587,14 @@ const FileUsers = () => {
               <EmailIdentityInfiniteSelectionField
                 control={addUserControl}
                 name="email_identity"
-                label="Select Identity for File Access"
+                isMulti
+                label="Select Identities for File Access"
                 domain_name={domainName}
-                placeholder="Search and select email identity..."
+                placeholder="Search and select email identities..."
               />
 
               <Input
-                label="Quota Allocated (GB)"
+                label="Quota per User (GB)"
                 type="number"
                 min={0}
                 max={maxQuota}
@@ -580,7 +602,11 @@ const FileUsers = () => {
                 register={registerAddUser}
                 name="quota_allocated"
                 isRequired
-                info={`Up to ${maxQuota.toFixed(2)} GB available in this organization`}
+                info={
+                  selectedIdentities.length > 1
+                    ? `${selectedIdentities.length} users x ${Number(selectedQuota) || 0} GB = ${totalRequestedQuota.toFixed(2)} GB of ${maxQuota.toFixed(2)} GB available`
+                    : `Up to ${maxQuota.toFixed(2)} GB available in this organization`
+                }
               />
 
               <div className="flex items-center gap-2">
@@ -604,10 +630,10 @@ const FileUsers = () => {
                 label="Add File User"
                 isPending={isCreating}
                 disabled={
-                  !selectedIdentity ||
+                  selectedIdentities.length === 0 ||
                   !selectedQuota ||
                   Number(selectedQuota) <= 0 ||
-                  Number(selectedQuota) > maxQuota
+                  totalRequestedQuota > maxQuota
                 }
               />
             </div>

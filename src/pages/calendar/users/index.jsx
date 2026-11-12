@@ -46,6 +46,7 @@ import {
   useDeleteTasksUser,
 } from "@/hooks/useCalendar";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
+import { runInBatches } from "@/utils/batchUtils";
 import { useToastify } from "@/hooks/useToastify";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import ServiceSetupBanner from "@/components/common/ServiceSetupBanner";
@@ -59,10 +60,12 @@ const TasksUsers = () => {
     control: addUserControl,
     watch: watchAddUser,
     reset: resetAddUser,
+    setValue: setAddUserValue,
   } = useForm({
-    defaultValues: { email_identity: "" },
+    defaultValues: { email_identity: [] },
   });
-  const selectedIdentity = watchAddUser("email_identity");
+  const selectedIdentities = watchAddUser("email_identity") || [];
+  const [isCreating, setIsCreating] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [deleteValue, setDeleteValue] = useState("");
@@ -78,8 +81,7 @@ const TasksUsers = () => {
     pagination.pageSize,
   );
 
-  const { mutate: createTasksUser, isPending: isCreating } =
-    useCreateTasksUser();
+  const { mutateAsync: createTasksUser } = useCreateTasksUser();
   const { mutate: toggleStatus } = useToggleTasksUserStatus();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteTasksUser();
 
@@ -124,29 +126,43 @@ const TasksUsers = () => {
     }
   };
 
-  const handleAddUser = (e) => {
+  const handleAddUser = async (e) => {
     e.preventDefault();
-    if (domainName && selectedIdentity) {
-      createTasksUser(
-        { domain: domainName, email: selectedIdentity, enable: true },
-        {
-          onSuccess: () => {
-            toast(
-              "success",
-              `Successfully enabled Tasks & Calendar for ${selectedIdentity}`,
-            );
-            queryClient.invalidateQueries({ queryKey: ["tasks_users"] });
-            setShowAddModal(false);
-            resetAddUser({ email_identity: "" });
-          },
-          onError: (error) => {
-            const message =
-              error.response?.data?.message || error.message || "Unknown error";
-            toast("error", `Failed to enable Tasks & Calendar: ${message}`);
-          },
-        },
+    if (!domainName || selectedIdentities.length === 0) return;
+
+    setIsCreating(true);
+    const results = await runInBatches(selectedIdentities, (email) =>
+      createTasksUser({ domain: domainName, email, enable: true }),
+    );
+    setIsCreating(false);
+
+    const failed = results.filter((result) => !result.ok);
+    const succeeded = results.length - failed.length;
+    if (succeeded > 0) {
+      toast(
+        "success",
+        `Enabled Tasks & Calendar for ${succeeded} user${succeeded === 1 ? "" : "s"}`,
       );
     }
+    if (failed.length === 0) {
+      setShowAddModal(false);
+      resetAddUser({ email_identity: [] });
+      return;
+    }
+    // Leave only the failures selected so they can be retried as-is.
+    setAddUserValue(
+      "email_identity",
+      failed.map((result) => result.item),
+    );
+    toast(
+      "error",
+      `Failed for ${failed
+        .map(
+          (result) =>
+            `${result.item}: ${result.error?.response?.data?.message || result.error?.message || "Unknown error"}`,
+        )
+        .join("; ")}`,
+    );
   };
 
   const handleDelete = (user) => {
@@ -452,7 +468,7 @@ const TasksUsers = () => {
         isOpen={showAddModal}
         handleCancel={() => {
           setShowAddModal(false);
-          resetAddUser({ email_identity: "" });
+          resetAddUser({ email_identity: [] });
         }}
         label="Add Task User"
         outsideClick={false}
@@ -466,9 +482,10 @@ const TasksUsers = () => {
               <EmailIdentityInfiniteSelectionField
                 control={addUserControl}
                 name="email_identity"
-                label="Select Identity to Enable Tasks & Calendar"
+                isMulti
+                label="Select Identities to Enable Tasks & Calendar"
                 domain_name={domainName}
-                placeholder="Search and select email identity..."
+                placeholder="Search and select email identities..."
               />
             </div>
 
@@ -476,7 +493,7 @@ const TasksUsers = () => {
               <SubmitButton
                 label="Enable Tasks"
                 isPending={isCreating}
-                disabled={!selectedIdentity}
+                disabled={selectedIdentities.length === 0}
               />
             </div>
           </form>

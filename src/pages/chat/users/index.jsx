@@ -46,6 +46,7 @@ import {
   useDeleteChatUser,
 } from "@/hooks/useChat";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
+import { runInBatches } from "@/utils/batchUtils";
 import { useToastify } from "@/hooks/useToastify";
 import { useTablePagination } from "@/hooks/useTablePagination";
 import ServiceSetupBanner, {
@@ -61,10 +62,12 @@ const ChatUsers = () => {
     control: addUserControl,
     watch: watchAddUser,
     reset: resetAddUser,
+    setValue: setAddUserValue,
   } = useForm({
-    defaultValues: { email_identity: "" },
+    defaultValues: { email_identity: [] },
   });
-  const selectedIdentity = watchAddUser("email_identity");
+  const selectedIdentities = watchAddUser("email_identity") || [];
+  const [isCreating, setIsCreating] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [deleteValue, setDeleteValue] = useState("");
@@ -82,7 +85,7 @@ const ChatUsers = () => {
     pagination.pageSize,
   );
 
-  const { mutate: createChatUser, isPending: isCreating } = useCreateChatUser();
+  const { mutateAsync: createChatUser } = useCreateChatUser();
   const { mutate: toggleStatus } = useToggleChatUserStatus();
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteChatUser();
 
@@ -127,29 +130,43 @@ const ChatUsers = () => {
     }
   };
 
-  const handleAddUser = (e) => {
+  const handleAddUser = async (e) => {
     e.preventDefault();
-    if (domainName && selectedIdentity) {
-      createChatUser(
-        { domain: domainName, email: selectedIdentity },
-        {
-          onSuccess: () => {
-            toast(
-              "success",
-              `Successfully enabled chat for ${selectedIdentity}`,
-            );
-            queryClient.invalidateQueries({ queryKey: ["chat_users"] });
-            setShowAddModal(false);
-            resetAddUser({ email_identity: "" });
-          },
-          onError: (error) => {
-            const message =
-              error.response?.data?.message || error.message || "Unknown error";
-            toast("error", `Failed to enable chat: ${message}`);
-          },
-        },
+    if (!domainName || selectedIdentities.length === 0) return;
+
+    setIsCreating(true);
+    const results = await runInBatches(selectedIdentities, (email) =>
+      createChatUser({ domain: domainName, email }),
+    );
+    setIsCreating(false);
+
+    const failed = results.filter((result) => !result.ok);
+    const succeeded = results.length - failed.length;
+    if (succeeded > 0) {
+      toast(
+        "success",
+        `Enabled Chat for ${succeeded} user${succeeded === 1 ? "" : "s"}`,
       );
     }
+    if (failed.length === 0) {
+      setShowAddModal(false);
+      resetAddUser({ email_identity: [] });
+      return;
+    }
+    // Leave only the failures selected so they can be retried as-is.
+    setAddUserValue(
+      "email_identity",
+      failed.map((result) => result.item),
+    );
+    toast(
+      "error",
+      `Failed for ${failed
+        .map(
+          (result) =>
+            `${result.item}: ${result.error?.response?.data?.message || result.error?.message || "Unknown error"}`,
+        )
+        .join("; ")}`,
+    );
   };
 
   const handleDelete = (user) => {
@@ -459,7 +476,7 @@ const ChatUsers = () => {
         isOpen={showAddModal}
         handleCancel={() => {
           setShowAddModal(false);
-          resetAddUser({ email_identity: "" });
+          resetAddUser({ email_identity: [] });
         }}
         label="Add Chat User"
         outsideClick={false}
@@ -473,9 +490,10 @@ const ChatUsers = () => {
               <EmailIdentityInfiniteSelectionField
                 control={addUserControl}
                 name="email_identity"
-                label="Select Identity to Enable Chat"
+                isMulti
+                label="Select Identities to Enable Chat"
                 domain_name={domainName}
-                placeholder="Search and select email identity..."
+                placeholder="Search and select email identities..."
               />
             </div>
 
@@ -483,7 +501,7 @@ const ChatUsers = () => {
               <SubmitButton
                 label="Enable Chat"
                 isPending={isCreating}
-                disabled={!selectedIdentity}
+                disabled={selectedIdentities.length === 0}
               />
             </div>
           </form>
