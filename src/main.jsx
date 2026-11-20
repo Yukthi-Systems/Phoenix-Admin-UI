@@ -25,6 +25,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Provider as JotaiProvider } from "jotai";
 import { adminStore } from "./store/store.js";
 import "./i18n";
+// Logs out (clears cookies + storage) when the API reports a missing CSRF token
+import "./utils/csrfLogout";
 // import { GoogleReCaptchaProvider } from "react-google-recaptcha";
 
 const queryClient = new QueryClient();
