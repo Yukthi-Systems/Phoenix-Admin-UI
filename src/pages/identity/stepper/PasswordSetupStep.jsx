@@ -23,7 +23,6 @@ import { Switch } from "@/components/common/Switch";
 import EditModelBox from "@/components/common/EditModelBox";
 import { APP_STORE_LINKS, SMS_EMAIL_2FA_ENABLED } from "@/constants/constants";
 
-// TODO: replace with real store listings once the app is published
 
 function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
   const secondaryEmail = watch("secondary_email");

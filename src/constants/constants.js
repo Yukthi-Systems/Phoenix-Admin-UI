@@ -84,8 +84,8 @@ export const SERVER_ACTIONS = {
 };
 
 export const APP_STORE_LINKS = {
-  ios: "https://apps.apple.com/app/mail25/id0000000000",
-  android: "https://play.google.com/store/apps/details?id=com.mail25.app",
+  ios: "https://apps.apple.com/app/mail-25/id6786602864",
+  android: "https://play.google.com/store/apps/details?id=com.yukthi.mail25",
 };
 
 export const EMPLOYEE_ID_MAX_LENGTH = 50;
