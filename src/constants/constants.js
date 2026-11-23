@@ -92,3 +92,8 @@ export const EMPLOYEE_ID_MAX_LENGTH = 50;
 export const EMPLOYEE_ID_REGEX = /^[a-zA-Z0-9._/-]+$/;
 export const EMPLOYEE_ID_MESSAGE =
   "Employee ID can only contain letters, numbers and . _ / - (no spaces)";
+
+// SMS and Email 2FA for identities are switched off for now: the toggles are
+// hidden on identity create/edit and both flags are always sent as false.
+// Set to true to bring them back.
+export const SMS_EMAIL_2FA_ENABLED = false;

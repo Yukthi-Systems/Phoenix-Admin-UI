@@ -21,7 +21,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { Input, PasswordInput } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 import EditModelBox from "@/components/common/EditModelBox";
-import { APP_STORE_LINKS } from "@/constants/constants";
+import { APP_STORE_LINKS, SMS_EMAIL_2FA_ENABLED } from "@/constants/constants";
 
 // TODO: replace with real store listings once the app is published
 
@@ -110,65 +110,70 @@ function PasswordSetupStep({ register, errors, control, watch, isEdit }) {
             )}
           </div>
 
-          <div>
-            <Switch
-              control={control}
-              name="is_sms_2fa_enabled"
-              register={register}
-              watch={watch}
-              errors={errors}
-              falseLabel="SMS 2FA Disabled"
-              trueLabel="SMS 2FA Enabled"
-            />
-            {isSmsEnabled && (
-              <p
-                className={`mt-2 flex items-start gap-1 text-left text-xs ${primaryPhone ? "text-muted-foreground" : "text-warning"}`}
-              >
-                {primaryPhone ? (
-                  <>
-                    <Info className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
-                    Codes will be sent to {primaryPhone}.
-                  </>
-                ) : (
-                  <>
-                    <AlertTriangle className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
-                    Add a primary phone number in the previous step for SMS 2FA
-                    to work.
-                  </>
+          {/* SMS & Email 2FA hidden for now - see SMS_EMAIL_2FA_ENABLED */}
+          {SMS_EMAIL_2FA_ENABLED && (
+            <>
+              <div>
+                <Switch
+                  control={control}
+                  name="is_sms_2fa_enabled"
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  falseLabel="SMS 2FA Disabled"
+                  trueLabel="SMS 2FA Enabled"
+                />
+                {isSmsEnabled && (
+                  <p
+                    className={`mt-2 flex items-start gap-1 text-left text-xs ${primaryPhone ? "text-muted-foreground" : "text-warning"}`}
+                  >
+                    {primaryPhone ? (
+                      <>
+                        <Info className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
+                        Codes will be sent to {primaryPhone}.
+                      </>
+                    ) : (
+                      <>
+                        <AlertTriangle className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
+                        Add a primary phone number in the previous step for SMS
+                        2FA to work.
+                      </>
+                    )}
+                  </p>
                 )}
-              </p>
-            )}
-          </div>
+              </div>
 
-          <div>
-            <Switch
-              control={control}
-              name="is_email_2fa_enabled"
-              register={register}
-              watch={watch}
-              errors={errors}
-              falseLabel="Email 2FA Disabled"
-              trueLabel="Email 2FA Enabled"
-            />
-            {isEmailEnabled && (
-              <p
-                className={`mt-2 flex items-start gap-1 text-left text-xs ${secondaryEmail ? "text-muted-foreground" : "text-warning"}`}
-              >
-                {secondaryEmail ? (
-                  <>
-                    <Info className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
-                    Codes will be sent to {secondaryEmail}.
-                  </>
-                ) : (
-                  <>
-                    <AlertTriangle className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
-                    Add a secondary email in the previous step — it's mandatory
-                    once Email 2FA is enabled.
-                  </>
+              <div>
+                <Switch
+                  control={control}
+                  name="is_email_2fa_enabled"
+                  register={register}
+                  watch={watch}
+                  errors={errors}
+                  falseLabel="Email 2FA Disabled"
+                  trueLabel="Email 2FA Enabled"
+                />
+                {isEmailEnabled && (
+                  <p
+                    className={`mt-2 flex items-start gap-1 text-left text-xs ${secondaryEmail ? "text-muted-foreground" : "text-warning"}`}
+                  >
+                    {secondaryEmail ? (
+                      <>
+                        <Info className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
+                        Codes will be sent to {secondaryEmail}.
+                      </>
+                    ) : (
+                      <>
+                        <AlertTriangle className="mt-0 h-3.5 w-3.5 flex-shrink-0" />
+                        Add a secondary email in the previous step — it's
+                        mandatory once Email 2FA is enabled.
+                      </>
+                    )}
+                  </p>
                 )}
-              </p>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 

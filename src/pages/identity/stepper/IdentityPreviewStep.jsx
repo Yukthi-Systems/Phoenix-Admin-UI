@@ -21,6 +21,7 @@ import StatusBadge from "@/components/common/StatusBadge";
 import GetRestrictionPolicyName from "@/components/common/GetRestrictionPolicyName";
 import GetDepartmentName from "@/components/common/GetDepartmentName";
 import { User, ShieldCheck } from "lucide-react";
+import { SMS_EMAIL_2FA_ENABLED } from "@/constants/constants";
 
 function IdentityPreviewStep({ formData, organization_id }) {
   const { watch } = formData;
@@ -127,7 +128,9 @@ function IdentityPreviewStep({ formData, organization_id }) {
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-3">
                 Two-Factor Authentication Status
               </span>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div
+                className={`grid grid-cols-1 gap-4 ${SMS_EMAIL_2FA_ENABLED ? "md:grid-cols-3" : ""}`}
+              >
                 <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
                   <span
                     className={`h-2.5 w-2.5 rounded-full ${is_app_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
@@ -136,23 +139,28 @@ function IdentityPreviewStep({ formData, organization_id }) {
                     App-Based 2FA: {is_app_2fa_enabled ? "Enabled" : "Disabled"}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
-                  <span
-                    className={`h-2.5 w-2.5 rounded-full ${is_sms_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    SMS-Based 2FA: {is_sms_2fa_enabled ? "Enabled" : "Disabled"}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
-                  <span
-                    className={`h-2.5 w-2.5 rounded-full ${is_email_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
-                  />
-                  <span className="text-sm font-medium text-foreground">
-                    Email-Based 2FA:{" "}
-                    {is_email_2fa_enabled ? "Enabled" : "Disabled"}
-                  </span>
-                </div>
+                {SMS_EMAIL_2FA_ENABLED && (
+                  <>
+                    <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${is_sms_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                      />
+                      <span className="text-sm font-medium text-foreground">
+                        SMS-Based 2FA:{" "}
+                        {is_sms_2fa_enabled ? "Enabled" : "Disabled"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 p-3 bg-muted/40 rounded-lg border border-border">
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${is_email_2fa_enabled ? "bg-green-500" : "bg-muted-foreground/30"}`}
+                      />
+                      <span className="text-sm font-medium text-foreground">
+                        Email-Based 2FA:{" "}
+                        {is_email_2fa_enabled ? "Enabled" : "Disabled"}
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

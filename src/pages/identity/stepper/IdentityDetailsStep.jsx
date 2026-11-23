@@ -19,7 +19,10 @@ import React, { useEffect, useRef } from "react";
 import { Input } from "@/components/common/Inputs";
 import { Switch } from "@/components/common/Switch";
 import PhoneInput from "@/components/common/PhoneInput";
-import { EMPLOYEE_ID_MAX_LENGTH } from "@/constants/constants";
+import {
+  EMPLOYEE_ID_MAX_LENGTH,
+  SMS_EMAIL_2FA_ENABLED,
+} from "@/constants/constants";
 
 function IdentityDetailsStep({
   register,
@@ -181,9 +184,11 @@ function IdentityDetailsStep({
           placeholder="recovery@example.com"
           isRequired={isEmailTwoFAEnabled}
           info={
-            isEmailTwoFAEnabled
-              ? "Mandatory since Email 2FA is enabled"
-              : "Required to enable Email 2FA"
+            !SMS_EMAIL_2FA_ENABLED
+              ? undefined
+              : isEmailTwoFAEnabled
+                ? "Mandatory since Email 2FA is enabled"
+                : "Required to enable Email 2FA"
           }
         />
 

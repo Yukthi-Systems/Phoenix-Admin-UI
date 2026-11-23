@@ -40,6 +40,7 @@ import IdentityPoliciesStep from "../stepper/IdentityPoliciesStep";
 import { jumpToErroredStep } from "@/utils/formUtils";
 import {
   EMPLOYEE_ID_MAX_LENGTH,
+  SMS_EMAIL_2FA_ENABLED,
   EMPLOYEE_ID_MESSAGE,
   EMPLOYEE_ID_REGEX,
 } from "@/constants/constants";
@@ -278,8 +279,9 @@ const EditIdentity = () => {
       base64_password: "",
       is_enabled: formData.is_enabled,
       is_app_2fa_enabled: formData.is_app_2fa_enabled,
-      is_sms_2fa_enabled: formData.is_sms_2fa_enabled,
-      is_email_2fa_enabled: formData.is_email_2fa_enabled,
+      is_sms_2fa_enabled: SMS_EMAIL_2FA_ENABLED && formData.is_sms_2fa_enabled,
+      is_email_2fa_enabled:
+        SMS_EMAIL_2FA_ENABLED && formData.is_email_2fa_enabled,
       restriction_policy_id: formData.restriction_policy_id || null,
       department_id: formData.department_id || null,
     };
