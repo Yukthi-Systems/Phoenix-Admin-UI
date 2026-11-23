@@ -75,7 +75,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import useBulkImport, { useBulkEdit } from "@/hooks/useImport";
-import { PER_PAGE } from "@/constants/constants";
+import { PER_PAGE, SMS_EMAIL_2FA_ENABLED } from "@/constants/constants";
 import DataErrorWithReload from "@/components/common/DataErrorWithReload";
 import { useUserTimezone } from "@/hooks/useTimezone";
 import TableActionsDropdown from "@/components/common/TableActionDropdown";
@@ -380,8 +380,10 @@ const ListIdentities = () => {
         base64_password: rest.base64_password,
         is_enabled: rest.is_enabled ?? true,
         is_app_2fa_enabled: rest.is_app_2fa_enabled ?? false,
-        is_sms_2fa_enabled: rest.is_sms_2fa_enabled ?? false,
-        is_email_2fa_enabled: rest.is_email_2fa_enabled ?? false,
+        is_sms_2fa_enabled:
+          SMS_EMAIL_2FA_ENABLED && (rest.is_sms_2fa_enabled ?? false),
+        is_email_2fa_enabled:
+          SMS_EMAIL_2FA_ENABLED && (rest.is_email_2fa_enabled ?? false),
         restriction_policy_id: rest.restriction_policy_id || null,
         department_id: rest.department_id || null,
       };
@@ -459,8 +461,10 @@ const ListIdentities = () => {
       base64_password: "",
       is_enabled: rest.is_enabled ?? true,
       is_app_2fa_enabled: rest.is_app_2fa_enabled ?? false,
-      is_sms_2fa_enabled: rest.is_sms_2fa_enabled ?? false,
-      is_email_2fa_enabled: rest.is_email_2fa_enabled ?? false,
+      is_sms_2fa_enabled:
+        SMS_EMAIL_2FA_ENABLED && (rest.is_sms_2fa_enabled ?? false),
+      is_email_2fa_enabled:
+        SMS_EMAIL_2FA_ENABLED && (rest.is_email_2fa_enabled ?? false),
       restriction_policy_id: rest.restriction_policy_id || null,
       department_id: rest.department_id || null,
     };
@@ -850,8 +854,12 @@ const ListIdentities = () => {
             restriction_policy_id: currentData.restriction_policy_id || null,
             is_enabled: statusValue,
             is_app_2fa_enabled: currentData.is_app_2fa_enabled ?? false,
-            is_sms_2fa_enabled: currentData.is_sms_2fa_enabled ?? false,
-            is_email_2fa_enabled: currentData.is_email_2fa_enabled ?? false,
+            is_sms_2fa_enabled:
+              SMS_EMAIL_2FA_ENABLED &&
+              (currentData.is_sms_2fa_enabled ?? false),
+            is_email_2fa_enabled:
+              SMS_EMAIL_2FA_ENABLED &&
+              (currentData.is_email_2fa_enabled ?? false),
           };
 
           updateMutate(
@@ -1034,8 +1042,10 @@ const ListIdentities = () => {
       restriction_policy_id: identity.restriction_policy_id || null,
       is_enabled: identity.is_enabled ?? true,
       is_app_2fa_enabled: identity.is_app_2fa_enabled ?? false,
-      is_sms_2fa_enabled: identity.is_sms_2fa_enabled ?? false,
-      is_email_2fa_enabled: identity.is_email_2fa_enabled ?? false,
+      is_sms_2fa_enabled:
+        SMS_EMAIL_2FA_ENABLED && (identity.is_sms_2fa_enabled ?? false),
+      is_email_2fa_enabled:
+        SMS_EMAIL_2FA_ENABLED && (identity.is_email_2fa_enabled ?? false),
     }),
   };
 
