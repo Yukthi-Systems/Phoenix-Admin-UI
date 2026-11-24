@@ -26,8 +26,6 @@ export const servers = [
   { name: "Relay In - 2", url: "ri2", id: "ri2", category: "Relay In" },
   { name: "Relay In - 3", url: "ri3", id: "ri3", category: "Relay In" },
   { name: "Relay In - 4", url: "ri4", id: "ri4", category: "Relay In" },
-  { name: "Relay In - 7", url: "ri7", id: "ri7", category: "Relay In" },
-  { name: "Relay In - 8", url: "ri8", id: "ri8", category: "Relay In" },
 
   // Cloud
   { name: "Cloud - 17", url: "c17", id: "c17", category: "Cloud" },

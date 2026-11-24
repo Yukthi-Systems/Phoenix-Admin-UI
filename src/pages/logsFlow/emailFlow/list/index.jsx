@@ -169,24 +169,48 @@ function EmailFlowLog() {
     };
   };
 
+  // Show the backend's own message (e.g. "Oops! Invalid input: to_email_ids:
+  // Input should be a valid list") plus its traceback_id, so the toast alone
+  // is enough to debug from - instead of axios's generic "status code 422".
+  const getApiErrorMessage = (err, fallback) => {
+    const data = err?.response?.data;
+    const status = err?.response?.status;
+    let message = data?.message;
+    if (!message && typeof data?.detail === "string") message = data.detail;
+    if (!message && status) message = `${fallback} (HTTP ${status})`;
+    if (!message && err?.code === "ECONNABORTED")
+      message = `${fallback}: the server took too long to respond`;
+    if (!message) message = `${fallback}: ${err?.message || "network error"}`;
+    return data?.traceback_id
+      ? `${message} (Ref: ${data.traceback_id})`
+      : message;
+  };
+
+  // The "To Email IDs" box is free text ("a@x.com, b@y.com") but the backend
+  // expects to_email_ids as a list of strings - sending the raw string 422s.
+  const parseEmailList = (value) =>
+    (Array.isArray(value) ? value : String(value || "").split(/[,;\s]+/))
+      .map((email) => String(email).trim())
+      .filter(Boolean);
+
+  // Builds the request body without mutating the form's own values.
+  const buildSearchPayload = (values) => {
+    const { date_range, to_email_ids, ...rest } = values;
+    return {
+      ...removeEmptyValues(rest),
+      date_range: convertDateRangeForAPI(date_range),
+      to_email_ids: parseEmailList(to_email_ids),
+      organization_id,
+    };
+  };
+
   const fetchLogs = async (filters) => {
     // Don't fetch if no domain is selected
     if (!filters.domain_name) {
       return;
     }
 
-    const apiFilters = { ...filters };
-    if (filters.date_range) {
-      const convertedDates = convertDateRangeForAPI(filters.date_range);
-      delete apiFilters.date_range?.startDate;
-      delete apiFilters.date_range?.endDate;
-      Object.assign(apiFilters.date_range, convertedDates);
-    }
-
-    const payload = {
-      ...removeEmptyValues(apiFilters),
-      organization_id,
-    };
+    const payload = buildSearchPayload(filters);
 
     mutate(
       {
@@ -201,7 +225,7 @@ function EmailFlowLog() {
           setTotalCount(response?.total_count || 0);
         },
         onError: (err) => {
-          toast("error", err.message || "Failed to fetch email logs");
+          toast("error", getApiErrorMessage(err, "Failed to fetch email logs"));
         },
       },
     );
@@ -215,15 +239,8 @@ function EmailFlowLog() {
       return;
     }
 
-    const apiFilters = { ...currentValues };
-    if (currentValues.date_range) {
-      const convertedDates = convertDateRangeForAPI(currentValues.date_range);
-      delete apiFilters.date_range;
-      Object.assign(apiFilters.date_range, convertedDates);
-    }
-
     requestEmailLogs(
-      { filters: { ...removeEmptyValues(apiFilters), organization_id } },
+      { filters: buildSearchPayload(currentValues) },
       {
         onSuccess: (response) => {
           setLogList(response?.data || []);
@@ -232,7 +249,10 @@ function EmailFlowLog() {
           toast("success", "Email logs requested successfully");
         },
         onError: (err) => {
-          toast("error", err.message || "Failed to request email logs");
+          toast(
+            "error",
+            getApiErrorMessage(err, "Failed to request email logs"),
+          );
         },
       },
     );
@@ -317,6 +337,7 @@ function EmailFlowLog() {
       {
         accessorKey: "subject",
         header: "Subject",
+        meta: { align: "left" },
         cell: ({ getValue, row }) => {
           const subject = getValue();
           const truncatedSubject =
@@ -339,6 +360,7 @@ function EmailFlowLog() {
       {
         accessorKey: "from_email_id",
         header: "From",
+        meta: { align: "left" },
         cell: ({ getValue }) => {
           const fromEmail = getValue();
           const truncatedEmail =
@@ -361,6 +383,7 @@ function EmailFlowLog() {
       {
         accessorKey: "to_email_ids",
         header: "To",
+        meta: { align: "left" },
         cell: ({ getValue }) => {
           const toEmails = getValue();
           const emailArray = Array.isArray(toEmails) ? toEmails : [toEmails];
@@ -394,6 +417,7 @@ function EmailFlowLog() {
       {
         accessorKey: "status",
         header: "Status",
+        meta: { align: "left" },
         cell: ({ getValue }) => {
           const status = getValue();
           return (
@@ -409,6 +433,7 @@ function EmailFlowLog() {
       {
         accessorKey: "type",
         header: "Type",
+        meta: { align: "left" },
         cell: ({ getValue }) => {
           const type = getValue();
           return (
@@ -424,6 +449,7 @@ function EmailFlowLog() {
       {
         accessorKey: "email_timestamp",
         header: "Timestamp",
+        meta: { align: "left" },
         cell: ({ getValue }) => {
           const timestamp = getValue();
           if (!timestamp)
